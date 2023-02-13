@@ -1,8 +1,8 @@
 {
-  "name": "hmpps-template-typescript",
+  "name": "hmpps-vsip-internal-admin-ui",
   "version": "0.0.1",
-  "description": "HMPPS Typescript Template",
-  "repository": "git@github.com:ministryofjustice/hmpps-template-typescript.git",
+  "description": "Hmpps Vsip Internal Admin Ui",
+  "repository": "git@github.com:ministryofjustice/hmpps-vsip-internal-admin-ui.git",
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
