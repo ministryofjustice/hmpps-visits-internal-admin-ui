@@ -1,11 +1,11 @@
 ---
 generic-service:
-  nameOverride: hmpps-template-typescript
+  nameOverride: hmpps-vsip-internal-admin-ui
 
   replicaCount: 4
 
   image:
-    repository: quay.io/hmpps/hmpps-template-typescript
+    repository: quay.io/hmpps/hmpps-vsip-internal-admin-ui
     tag: app_version    # override at deployment time
     port: 3000
 
@@ -14,7 +14,7 @@ generic-service:
     v1_2_enabled: true
     v0_47_enabled: false
     host: app-hostname.local    # override per environment
-    tlsSecretName: hmpps-template-typescript-cert
+    tlsSecretName: hmpps-vsip-internal-admin-ui-cert
 
   livenessProbe:
     httpGet:
@@ -43,7 +43,7 @@ generic-service:
   #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
 
   namespace_secrets:
-    hmpps-template-typescript:
+    hmpps-vsip-internal-admin-ui:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
       API_CLIENT_ID: "API_CLIENT_ID"
       API_CLIENT_SECRET: "API_CLIENT_SECRET"
@@ -65,4 +65,4 @@ generic-service:
     cloudplatform-live-3: "35.177.252.54/32"
 
 generic-prometheus-alerts:
-  targetApplication: hmpps-template-typescript
+  targetApplication: hmpps-vsip-internal-admin-ui
