@@ -148,7 +148,6 @@ workflows:
           jira_update: true
           context: 
             - hmpps-common-vars
-            - hmpps-vsip-internal-admin-ui-stage
           filters:
             branches:
               only:
