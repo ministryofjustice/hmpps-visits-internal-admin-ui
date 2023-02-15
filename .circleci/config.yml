@@ -135,20 +135,26 @@ workflows:
             branches:
               only:
                 - main
-      - hmpps/deploy_env:
-          name: deploy_dev
-          env: "dev"
-          jira_update: true
-          context: hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
+      - request-dev-approval:
+          type: approval
           requires:
             - helm_lint
             - unit_test
             - integration_test
             - build_docker
+      - hmpps/deploy_env:
+          name: deploy_dev
+          env: "dev"
+          jira_update: true
+          context: 
+            - hmpps-common-vars
+            - hmpps-vsip-internal-admin-ui-stage
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - request-dev-approval
           helm_timeout: 5m
 #      - request-preprod-approval:
 #          type: approval
