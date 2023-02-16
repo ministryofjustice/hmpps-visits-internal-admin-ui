@@ -115,7 +115,68 @@ jobs:
 
 workflows:
   version: 2
+  build-test-and-deploy-develop:
+    when:
+      and:
+        - equal: [ develop, << pipeline.git.branch >> ]
+    jobs:
+      - build:
+          filters:
+            tags:
+              ignore: /.*/
+      - unit_test:
+          requires:
+            - build
+      - integration_test:
+          requires:
+            - build
+      - hmpps/helm_lint:
+          name: helm_lint
+      - hmpps/build_docker:
+          name: build_docker
+          filters:
+            branches:
+              only:
+                - main
+      - request-dev-approval:
+          type: approval
+          requires:
+            - helm_lint
+            - unit_test
+            - integration_test
+            - build_docker
+      - hmpps/deploy_env:
+          name: deploy_dev
+          env: "dev"
+          jira_update: true
+          context:
+            - hmpps-common-vars
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - request-dev-approval
+          helm_timeout: 5m
+      - request-staging-approval:
+          type: approval
+          requires:
+            - deploy_dev
+      - hmpps/deploy_env:
+          name: deploy_staging
+          env: "staging"
+          jira_update: true
+          jira_env_type: staging
+          context:
+            - hmpps-common-vars
+            - hmpps-vsip-internal-admin-ui-stage
+          requires:
+            - request-staging-approval
+          helm_timeout: 5m
   build-test-and-deploy:
+    when:
+      and:
+        - equal: [ main, << pipeline.git.branch >> ]
     jobs:
       - build:
           filters:
