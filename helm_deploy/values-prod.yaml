@@ -5,7 +5,7 @@ generic-service:
   replicaCount: 2
 
   ingress:
-    host: hmpps-vsip-internal-admin-ui-dev.prison.service.justice.gov.uk
+    host: hmpps-vsip-internal-admin-ui.prison.service.justice.gov.uk
     contextColour: green
     v1_2_enabled: true
     v0_47_enabled: false
