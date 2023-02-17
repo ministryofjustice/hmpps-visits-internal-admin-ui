@@ -148,10 +148,6 @@ workflows:
           jira_update: true
           context:
             - hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
           requires:
             - request-dev-approval
           helm_timeout: 5m
@@ -202,10 +198,6 @@ workflows:
           jira_update: true
           context: 
             - hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
           requires:
             - request-dev-approval
           helm_timeout: 5m
