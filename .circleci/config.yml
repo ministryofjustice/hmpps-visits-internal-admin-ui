@@ -135,10 +135,6 @@ workflows:
           name: helm_lint
       - hmpps/build_docker:
           name: build_docker
-          filters:
-            branches:
-              only:
-                - main
       - request-dev-approval:
           type: approval
           requires:
@@ -152,10 +148,6 @@ workflows:
           jira_update: true
           context:
             - hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
           requires:
             - request-dev-approval
           helm_timeout: 5m
@@ -193,10 +185,6 @@ workflows:
           name: helm_lint
       - hmpps/build_docker:
           name: build_docker
-          filters:
-            branches:
-              only:
-                - main
       - request-dev-approval:
           type: approval
           requires:
@@ -210,10 +198,6 @@ workflows:
           jira_update: true
           context: 
             - hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
           requires:
             - request-dev-approval
           helm_timeout: 5m
