@@ -193,10 +193,6 @@ workflows:
           name: helm_lint
       - hmpps/build_docker:
           name: build_docker
-          filters:
-            branches:
-              only:
-                - main
       - request-dev-approval:
           type: approval
           requires:
