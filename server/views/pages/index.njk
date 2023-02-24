@@ -1,11 +1,37 @@
 {% extends "../partials/layout.njk" %}
-
+{% from "components/card/card.njk" import card %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {% set pageTitle = applicationName + " - Home" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
-  <h1>This site is under construction...</h1>
-  <p>Please check back later when there is content to view.</p>
+<div class="govuk-body">
+    <div class="govuk-width-container">
+      <h1 class="govuk-heading-l bapv-index-header">{{ govukTag({
+        text: "beta"
+      }) }}<span>{{ pageHeaderTitle }}</span></h1>
+      <ul class="govuk-grid-row card-group">
+        <li class="govuk-grid-column-one-third card-group__item">
+              {{ card({
+                "href": "/prisons",
+                "clickable": "true",
+                "heading": "Administer supported prisons",
+                "description": "Add, enable, disable prisons for VSiP",
+                "id": "administer-prison"
+              }) }}
+        </li>
+        <li class="govuk-grid-column-one-third card-group__item">
+            {{ card({
+              "href": "/timetable",
+              "clickable": "true",
+              "heading": "Administer visit timetable",
+              "description": "Administer the visits schedule",
+              "id": "administer-timetable"
+            }) }}
+        </li>
+      </ul>
+    </div>
+  </div>
 
 {% endblock %}
