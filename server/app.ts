@@ -35,7 +35,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpStaticResources())
   nunjucksSetup(app, path)
   app.use(setUpAuthentication())
-  app.use(authorisationMiddleware())
+  app.use(authorisationMiddleware(['PRISON_VISITS_ADMIN']))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
 
