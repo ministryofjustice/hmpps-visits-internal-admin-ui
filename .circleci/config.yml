@@ -162,7 +162,7 @@ workflows:
           jira_env_type: staging
           context:
             - hmpps-common-vars
-            - hmpps-vsip-internal-admin-ui-stage
+            - hmpps-visits-internal-admin-ui-stage
           requires:
             - request-staging-approval
           helm_timeout: 5m
@@ -212,7 +212,7 @@ workflows:
           jira_env_type: staging
           context:
             - hmpps-common-vars
-            - hmpps-vsip-internal-admin-ui-stage
+            - hmpps-visits-internal-admin-ui-stage
           requires:
             - request-staging-approval
           helm_timeout: 5m
@@ -227,7 +227,7 @@ workflows:
           jira_env_type: staging
           context:
             - hmpps-common-vars
-            - hmpps-vsip-internal-admin-ui-preprod
+            - hmpps-visits-internal-admin-ui-preprod
           requires:
             - request-preprod-approval
           helm_timeout: 5m
@@ -244,7 +244,7 @@ workflows:
 #          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
 #          context:
 #            - hmpps-common-vars
-#            - hmpps-vsip-internal-admin-ui-prod
+#            - hmpps-visits-internal-admin-ui-prod
 #          requires:
 #            - request-prod-approval
 #          helm_timeout: 5m
