@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@7
+  hmpps: ministryofjustice/hmpps@7.2.1
   slack: circleci/slack@4.12.1
 
 parameters:
@@ -15,7 +15,7 @@ parameters:
 
   node-version:
     type: string
-    default: 18.12-browsers
+    default: 18.15-browsers
 
 jobs:
   build:
