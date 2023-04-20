@@ -1,0 +1,46 @@
+{% extends "layout.njk" %}
+
+{% set pageHeaderTitle = "Search for a prison" %}
+{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+{% set backLinkHref = "/" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
+    </div>
+    {% from "govuk/components/input/macro.njk" import govukInput %}
+    {% from "govuk/components/button/macro.njk" import govukButton %}
+    <div class="govuk-grid-column-full">
+        <div class="block-background">
+            <div class="moj-search govuk-!-width-one-half">
+                <form action="/search/prison" method="POST" novalidate>
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+                    {{ govukInput({
+                    classes: "moj-search__input",
+                    label: {
+                    text: "Enter name or prison code"
+                    },
+                    id: "search",
+                    name: "search",
+                    spellcheck: false,
+                    value: search,
+                    autocomplete: "off",
+                    errorMessage: error
+                    }) }}
+
+                    {{ govukButton({
+                    classes: "moj-search__button",
+                    text: "Search",
+                    preventDoubleClick: true,
+                    attributes: {
+                    "data-test": "search"
+                    }
+                    }) }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
