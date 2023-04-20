@@ -17,7 +17,7 @@ import VisitSchedulerApiClient from "./visitSchedulerApiClient";
 type RestClientBuilder<T> = (token: string) => T
 
 export const dataAccess = () => ({
-  hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient({ legacyMode: false }))),
+  hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
   prisonRegisterApiClientBuilder: ((token: string) =>
       new PrisonRegisterApiClient(token)) as RestClientBuilder<PrisonRegisterApiClient>,
   visitSchedulerApiClientBuilder: ((token: string) =>

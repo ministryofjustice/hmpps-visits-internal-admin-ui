@@ -1,24 +1,21 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@7
+  hmpps: ministryofjustice/hmpps@7.2.1
   slack: circleci/slack@4.12.1
 
 parameters:
   alerts-slack-channel:
     type: string
-    # Normally team specific alert channel e.g. hmpps_tech_alerts, syscon-alerts, dps_sed_alerts
-    # This is to avoid a general alert dumping ground that no-one then monitors
-    default: hmpps_typescript_notifications
+    default: prison-visit-booking-alerts
 
   releases-slack-channel:
     type: string
-    # Normally dps-releases for most teams / projects
-    default: hmpps_typescript_notifications
+    default: prison-visit-booking-alerts
 
   node-version:
     type: string
-    default: 18.12-browsers
+    default: 18.15-browsers
 
 jobs:
   build:
