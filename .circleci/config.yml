@@ -40,10 +40,6 @@ jobs:
       - run:
           command: |
             npm run build
-            DATE=$(date '+%Y-%m-%d')
-            export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
-            export GIT_REF="$CIRCLE_SHA1"
-            npm run record-build-info
       - run: # Run linter after build because the integration test code depend on compiled typescript...
           name: Linter check
           command: npm run lint
@@ -51,7 +47,6 @@ jobs:
           root: .
           paths:
             - node_modules
-            - build-info.json
             - build
             - dist
             - .cache/Cypress
@@ -76,7 +71,7 @@ jobs:
     executor:
       name: hmpps/node_redis
       node_tag: << pipeline.parameters.node-version >>
-      redis_tag: "6.2"
+      redis_tag: "7.0"
     steps:
       - checkout
       - attach_workspace:
@@ -87,8 +82,8 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Get wiremock
-          command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
+          name: Get wiremock # match version in docker-compose-test.yml
+          command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-jre8-standalone/2.35.0/wiremock-jre8-standalone-2.35.0.jar
       - run:
           name: Run wiremock
           command: java -jar wiremock.jar --port 9091
@@ -106,9 +101,9 @@ jobs:
       - store_test_results:
           path: test_results
       - store_artifacts:
-          path: integration-tests/videos
+          path: integration_tests/videos
       - store_artifacts:
-          path: integration-tests/screenshots
+          path: integration_tests/screenshots
 
 workflows:
   version: 2

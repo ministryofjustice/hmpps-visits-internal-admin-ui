@@ -1,6 +1,7 @@
 import express, { Router, Request, Response, NextFunction } from 'express'
 import helmet from 'helmet'
 import crypto from 'crypto'
+import config from '../config'
 
 export default function setUpWebSecurity(): Router {
   const router = express.Router()
@@ -26,6 +27,8 @@ export default function setUpWebSecurity(): Router {
           scriptSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
           styleSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
           fontSrc: ["'self'"],
+          formaction: [`'self' ${config.apis.hmppsAuth.externalUrl}`],
+          upgradeInsecureRequests: process.env.NODE_ENV === 'development' ? null : [],
         },
       },
       crossOriginEmbedderPolicy: true,

@@ -2,6 +2,7 @@ import IndexPage from '../pages/index'
 import AuthSignInPage from '../pages/authSignIn'
 import Page from '../pages/page'
 import AuthManageDetailsPage from '../pages/authManageDetails'
+import AuthorisationErrorPage from '../pages/authorisationError'
 
 context('SignIn', () => {
   beforeEach(() => {
@@ -64,5 +65,12 @@ context('SignIn', () => {
     cy.signIn()
 
     indexPage.headerUserName().contains('B. Brown')
+  })
+
+  it('User without required role is directed to Authorisation Error page', () => {
+    cy.task('stubSignIn', 'SOME_OTHER_ROLE')
+    cy.signIn({ failOnStatusCode: false })
+    const authorisationErrorPage = Page.verifyOnPage(AuthorisationErrorPage)
+    authorisationErrorPage.message().contains('You are not authorised to use this application')
   })
 })
