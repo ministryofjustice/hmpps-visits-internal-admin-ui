@@ -17,7 +17,7 @@ import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 
 import indexRoutes from './routes'
-import prisonsRoutes from './routes/prisons/prisons'
+import prisonsRoutes from './routes/prisons'
 
 import type { Services } from './services'
 
