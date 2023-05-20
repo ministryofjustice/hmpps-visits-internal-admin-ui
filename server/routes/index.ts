@@ -8,7 +8,7 @@ export default function routes(service: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  get('/', (req, res, next) => {
+  get('/', (req, res) => {
     res.render('pages/index')
   })
 

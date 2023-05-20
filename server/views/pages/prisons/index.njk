@@ -1,0 +1,31 @@
+{% extends "../../partials/layout.njk" %}
+{% from "components/card/card.njk" import card %}
+
+{% set pageHeaderTitle = "Supported prisons" %}
+{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+
+{% block content %}
+
+<div class="govuk-body">
+    <div class="govuk-width-container">
+
+      <h1 class="govuk-heading-l vsip-page-title">
+        <span>{{ pageHeaderTitle }}</span>
+      </h1>
+
+      <ul class="govuk-grid-row card-group">
+        <li class="govuk-grid-column-one-third card-group__item">
+              {{ card({
+                "href": "/prisons/supported",
+                "clickable": "true",
+                "heading": "View supported prisons",
+                "description": "View supported prisons",
+                "id": "supported-prisons"
+              }) }}
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+{% endblock %}

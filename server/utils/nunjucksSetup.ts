@@ -11,7 +11,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
-  app.locals.applicationName = 'VSIP Internal Admin'
+  app.locals.applicationName = 'Visits internal admin'
 
   // Cachebusting version string
   if (production) {
