@@ -1,0 +1,25 @@
+{% extends "../../partials/layout.njk" %}
+{% from "components/card/card.njk" import card %}
+
+{% set pageHeaderTitle = "All supported prisons" %}
+{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+
+{% block content %}
+
+<div class="govuk-body">
+    <div class="govuk-width-container">
+
+      <h1 class="govuk-heading-l vsip-page-title">
+        <span>{{ pageHeaderTitle }}</span>
+      </h1>
+
+      <ul class="govuk-list govuk-list--bullet">
+        {% for prisonId, prisonName in supportedPrisons  %}
+          <li>{{ prisonId }} - {{ prisonName }}</li>
+        {% endfor %}
+      </ul>
+
+    </div>
+  </div>
+
+{% endblock %}
