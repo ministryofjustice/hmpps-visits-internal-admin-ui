@@ -1,3 +1,18 @@
+/* eslint-disable import/first */
+// eslint-disable-next-line import/order
+import type { ApplicationInfo } from '../../applicationInfo'
+
+const testAppInfo: ApplicationInfo = {
+  applicationName: 'test',
+  buildNumber: '1',
+  gitRef: 'long ref',
+  gitShortHash: 'short ref',
+}
+
+jest.mock('../../applicationInfo', () => {
+  return jest.fn(() => testAppInfo)
+})
+
 import express, { Express } from 'express'
 import cookieSession from 'cookie-session'
 import createError from 'http-errors'
@@ -9,14 +24,6 @@ import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
-import type { ApplicationInfo } from '../../applicationInfo'
-
-const testAppInfo: ApplicationInfo = {
-  applicationName: 'test',
-  buildNumber: '1',
-  gitRef: 'long ref',
-  gitShortHash: 'short ref',
-}
 
 export const user = {
   firstName: 'first',
