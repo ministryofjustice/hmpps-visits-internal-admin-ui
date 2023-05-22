@@ -68,6 +68,22 @@ export default {
       agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
+    prisonRegister: {
+      url: get('PRISON_REGISTER_API_URL', 'http://localhost:8080', requiredInProduction),
+      timeout: {
+        response: Number(get('PRISON_REGISTER_API_URL_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('PRISON_REGISTER_API_URL_TIMEOUT_DEADLINE', 10000)),
+      },
+      agent: new AgentConfig(Number(get('PRISON_REGISTER_API_URL_TIMEOUT_RESPONSE', 10000))),
+    },
+    visitScheduler: {
+      url: get('VISIT_SCHEDULER_API_URL', 'http://localhost:8080', requiredInProduction),
+      timeout: {
+        response: Number(get('VISIT_SCHEDULER_API_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('VISIT_SCHEDULER_API_TIMEOUT_DEADLINE', 10000)),
+      },
+      agent: new AgentConfig(Number(get('VISIT_SCHEDULER_API_TIMEOUT_RESPONSE', 10000))),
+    },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
 }

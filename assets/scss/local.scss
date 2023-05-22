@@ -1,3 +1,18 @@
 .govuk-main-wrapper {
   min-height: 600px;
 }
+
+.govuk-main-wrapper a:visited {
+  color: $govuk-link-colour;
+}
+
+.vsip-page-title  {
+  & > * {
+    vertical-align: middle;
+  }
+
+  & span {
+    padding-left: govuk-spacing(1);
+
+  }
+}
