@@ -3,6 +3,8 @@ import cookieSession from 'cookie-session'
 import createError from 'http-errors'
 
 import routes from '../index'
+import prisonsRoutes from '../prisons/prisons'
+
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import * as auth from '../../authentication/auth'
@@ -45,7 +47,10 @@ function appSetup(services: Services, production: boolean, userSupplier: () => E
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(routes(services))
+
+  app.use('/', routes(services))
+  app.use('/prisons', prisonsRoutes(services))
+
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(production))
 
