@@ -2,52 +2,7 @@
 [![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-visits-internal-admin-ui)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-visits-internal-admin-ui "Link to report")
 [![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-visits-internal-admin-ui/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-visits-internal-admin-ui)
 
-Template github repo used for new Typescript based projects.
-
-# Instructions
-
-If this is a HMPPS project then the project will be created as part of bootstrapping - 
-see https://github.com/ministryofjustice/dps-project-bootstrap.
-
-This bootstrap is community managed by the mojdt `#typescript` slack channel. 
-Please raise any questions or queries there. Contributions welcome!
-
-Our security policy is located [here](https://github.com/ministryofjustice/hmpps-visits-internal-admin-ui/security/policy). 
-
-More information about the template project including features can be found [here](https://dsdmoj.atlassian.net/wiki/spaces/NDSS/pages/3488677932/Typescript+template+project).
-
-## Creating a CloudPlatform namespace
-
-When deploying to a new namespace, you may wish to use this template typescript project namespace as the basis for your new namespace:
-
-<https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-visits-internal-admin-ui>
-
-This template namespace includes an AWS elasticache setup - which is required by this template project.
-
-Copy this folder, update all the existing namespace references, and submit a PR to the CloudPlatform team. Further instructions from the CloudPlatform team can be found here: <https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide>
-
-## Renaming from HMPPS Template Typescript - github Actions
-
-Once the new repository is deployed. Navigate to the repository in github, and select the `Actions` tab.
-Click the link to `Enable Actions on this repository`.
-
-Find the Action workflow named: `rename-project-create-pr` and click `Run workflow`.  This workflow will
-execute the `rename-project.bash` and create Pull Request for you to review.  Review the PR and merge.
-
-Note: ideally this workflow would run automatically however due to a recent change github Actions are not
-enabled by default on newly created repos. There is no way to enable Actions other then to click the button in the UI.
-If this situation changes we will update this project so that the workflow is triggered during the bootstrap project.
-Further reading: <https://github.community/t/workflow-isnt-enabled-in-repos-generated-from-template/136421>
-
-## Manually branding from template app
-Run the `rename-project.bash` and create a PR.
-
-The rename-project.bash script takes a single argument - the name of the project and calculates from it the project description
-It then performs a search and replace and directory renames so the project is ready to be used.
-
-## Ensuring slack notifications are raised correctly
-
-To ensure notifications are routed to the correct slack channels, update the `alerts-slack-channel` and `releases-slack-channel` parameters in `.circle/config.yml` to an appropriate channel.
+Allows internal staff to administer prison visit bookings system.
 
 ## Running the app
 The easiest way to run the app is to use docker compose to create the service and all dependencies. 
@@ -63,13 +18,36 @@ The app requires:
 
 ### Running the app for development
 
-To start the main services excluding the example typescript template app: 
+It is simplest to use HMPPS Auth dev, in which case just Redis is needed:
+
+`docker-compose up redis`
+
+
+Or, to start the main services excluding the typescript app: 
 
 `docker-compose up --scale=app=0`
 
 Install dependencies using `npm install`, ensuring you are using `node v18.x` and `npm v9.x`
 
 Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json` and the CircleCI build config.
+
+Using your personal client credentials, create a `.env` local settings file
+```bash
+REDIS_HOST=localhost
+HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
+HMPPS_AUTH_EXTERNAL_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
+NOMIS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
+NODE_ENV=development
+
+# Use personal client credentials for API and SYSTEM client
+API_CLIENT_ID=clientid
+API_CLIENT_SECRET=clientsecret
+SYSTEM_CLIENT_ID=clientid
+SYSTEM_CLIENT_SECRET=clientsecret
+
+PRISON_REGISTER_API_URL="https://prison-register-dev.hmpps.service.justice.gov.uk"
+VISIT_SCHEDULER_API_URL="https://visit-scheduler-dev.prison.service.justice.gov.uk"
+```
 
 And then, to build the assets and start the app with nodemon:
 
@@ -106,3 +84,28 @@ Or run tests with the cypress UI:
 
 The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
 If these are not desired in the cloned project, remove references to `check_outdated` job from `.circleci/config.yml`
+
+## Imported types
+
+Some TypeScript types are imported via the Open API (Swagger) docs, e.g. from the Visit Scheduler, Prisoner Contact Registry, Prison API, etc.
+
+These are stored in [`./server/@types/`](./server/@types/), for example [`./server/@types/visit-scheduler-api.d.ts`](./server/@types/visit-scheduler-api.d.ts). There are also some corresponding files such as [`./server/data/visitSchedulerApiTypes.ts`](./server/data/visitSchedulerApiTypes.ts) that contain the particular imported types that are actually used in the project.
+
+For example, to update types for the Visit Scheduler use the [API docs URL](https://visit-scheduler-dev.prison.service.justice.gov.uk/v3/api-docs) from [Swagger](https://visit-scheduler-dev.prison.service.justice.gov.uk/swagger-ui/index.html) and the appropriate output filename:
+
+```
+npx openapi-typescript https://visit-scheduler-dev.prison.service.justice.gov.uk/v3/api-docs --output ./server/@types/visit-scheduler-api.d.ts
+```
+
+The downloaded file will need tidying (e.g. single rather than double quotes, etc):
+* `npm run lint-fix` should tidy most of the formatting
+* there may be some remaining errors about empty interfaces; these can be fixed be either removing the line or putting `// eslint-disable-next-line @typescript-eslint/no-empty-interface` before.
+
+After updating the types, running the TypeScript complier across the project (`npx tsc`) will show any issues that have been caused by the change.
+
+### Import all types
+To download and update all the API types and tidy up the files, run:
+
+```
+./bin/update-types.sh
+```

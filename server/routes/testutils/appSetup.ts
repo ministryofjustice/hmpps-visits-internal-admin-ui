@@ -1,12 +1,5 @@
-import express, { Express } from 'express'
-import cookieSession from 'cookie-session'
-import createError from 'http-errors'
-
-import routes from '../index'
-import nunjucksSetup from '../../utils/nunjucksSetup'
-import errorHandler from '../../errorHandler'
-import * as auth from '../../authentication/auth'
-import type { Services } from '../../services'
+/* eslint-disable import/first */
+// eslint-disable-next-line import/order
 import type { ApplicationInfo } from '../../applicationInfo'
 
 const testAppInfo: ApplicationInfo = {
@@ -15,6 +8,22 @@ const testAppInfo: ApplicationInfo = {
   gitRef: 'long ref',
   gitShortHash: 'short ref',
 }
+
+jest.mock('../../applicationInfo', () => {
+  return jest.fn(() => testAppInfo)
+})
+
+import express, { Express } from 'express'
+import cookieSession from 'cookie-session'
+import createError from 'http-errors'
+
+import routes from '../index'
+import prisonsRoutes from '../prisons/prisons'
+
+import nunjucksSetup from '../../utils/nunjucksSetup'
+import errorHandler from '../../errorHandler'
+import * as auth from '../../authentication/auth'
+import type { Services } from '../../services'
 
 export const user = {
   firstName: 'first',
@@ -45,7 +54,10 @@ function appSetup(services: Services, production: boolean, userSupplier: () => E
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(routes(services))
+
+  app.use('/', routes(services))
+  app.use('/prisons', prisonsRoutes(services))
+
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(production))
 
