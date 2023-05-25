@@ -12,7 +12,10 @@ export default function routes({ supportedPrisonsService }: Services): Router {
     res.render('pages/prisons/prisons')
   })
 
-  get('/HEI/edit', async (req, res) => {
+  get('/:prisonId([A-Z]{3})/edit', async (req, res) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { prisonId } = req.params
+
     res.render('pages/prisons/edit')
   })
 
