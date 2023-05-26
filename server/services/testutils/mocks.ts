@@ -1,8 +1,7 @@
-import { SupportedPrisonsService, UserService } from '..'
+import { PrisonService, UserService } from '..'
 
 jest.mock('..')
 
-export const createMockSupportedPrisonsService = () =>
-  new SupportedPrisonsService(null, null, null) as jest.Mocked<SupportedPrisonsService>
+export const createMockPrisonService = () => new PrisonService(null, null, null) as jest.Mocked<PrisonService>
 
 export const createMockUserService = () => new UserService(null) as jest.Mocked<UserService>

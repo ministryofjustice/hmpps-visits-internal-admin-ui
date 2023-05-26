@@ -1,5 +1,5 @@
 import { NotFound } from 'http-errors'
-import SupportedPrisonsService from './supportedPrisonsService'
+import PrisonService from './prisonService'
 import TestData from '../routes/testutils/testData'
 import {
   createMockHmppsAuthClient,
@@ -14,7 +14,7 @@ describe('Supported prisons service', () => {
   const prisonRegisterApiClient = createMockPrisonRegisterApiClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()
 
-  let supportedPrisonsService: SupportedPrisonsService
+  let supportedPrisonsService: PrisonService
 
   const PrisonRegisterApiClientFactory = jest.fn()
   const VisitSchedulerApiClientFactory = jest.fn()
@@ -28,7 +28,7 @@ describe('Supported prisons service', () => {
   beforeEach(() => {
     PrisonRegisterApiClientFactory.mockReturnValue(prisonRegisterApiClient)
     VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
-    supportedPrisonsService = new SupportedPrisonsService(
+    supportedPrisonsService = new PrisonService(
       VisitSchedulerApiClientFactory,
       PrisonRegisterApiClientFactory,
       hmppsAuthClient,

@@ -4,7 +4,7 @@ import { Prison } from '../data/visitSchedulerApiTypes'
 
 const A_DAY_IN_MS = 24 * 60 * 60 * 1000
 
-export default class SupportedPrisonsService {
+export default class PrisonService {
   constructor(
     private readonly visitSchedulerApiClientFactory: RestClientBuilder<VisitSchedulerApiClient>,
     private readonly prisonRegisterApiClientFactory: RestClientBuilder<PrisonRegisterApiClient>,
