@@ -5,7 +5,9 @@ export default class TestData {
   static prison = ({ active = true, code = 'HEI', excludeDates = [] }: Partial<Prison> = {}): Prison =>
     ({ active, code, excludeDates } as Prison)
 
-  static prisons = ({ prisons = [this.prison(), this.prison({ code: 'PNI' })] as Prison[] } = {}): Prison[] => prisons
+  static prisons = ({
+    prisons = [this.prison(), this.prison({ code: 'PNI' }), this.prison({ active: false, code: 'WWI' })] as Prison[],
+  } = {}): Prison[] => prisons
 
   static prisonRegisterPrison = ({
     prisonId = 'HEI',
@@ -16,6 +18,7 @@ export default class TestData {
     prisons = [
       this.prisonRegisterPrison(),
       this.prisonRegisterPrison({ prisonId: 'PNI', prisonName: 'Preston (HMP & YOI)' }),
+      this.prisonRegisterPrison({ prisonId: 'WWI', prisonName: 'Wandsworth (HMP & YOI)' }),
     ] as PrisonRegisterPrison[],
   } = {}): PrisonRegisterPrison[] => prisons
 }

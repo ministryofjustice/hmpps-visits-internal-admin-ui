@@ -29,7 +29,7 @@ export default defineConfig({
         stubPrisons: prisonRegister.stubPrisons,
 
         // Visit scheduler
-        stubSupportedPrisonIds: visitScheduler.stubSupportedPrisonIds,
+        stubGetAllPrisons: visitScheduler.stubGetAllPrisons,
       })
     },
     baseUrl: 'http://localhost:3007',
