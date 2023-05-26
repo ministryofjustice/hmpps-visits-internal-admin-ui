@@ -22,13 +22,11 @@ describe('GET /', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('h1 span').text().trim()).toBe('Visits internal admin')
+        expect($('h1').text().trim()).toBe('Visits internal admin')
 
-        expect($('.card').length).toBe(2)
+        expect($('.card').length).toBe(1)
         expect($('[data-test="administer-prisons"] .card__link').text()).toBe('Supported prisons')
         expect($('[data-test="administer-prisons"] .card__link').attr('href')).toBe('/prisons')
-        expect($('[data-test="administer-timetables"] .card__link').text()).toBe('Visit timetables')
-        expect($('[data-test="administer-timetables"] .card__link').attr('href')).toBe('/timetables')
       })
   })
 })

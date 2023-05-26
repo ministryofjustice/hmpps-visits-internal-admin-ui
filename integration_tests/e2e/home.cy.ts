@@ -12,7 +12,6 @@ context('Home page', () => {
   it('should render the index page with the correct tiles', () => {
     const homePage = Page.verifyOnPage(HomePage)
 
-    homePage.supportedPrisonsTile().contains('Supported prisons')
-    homePage.timetablesTile().contains('Visit timetables')
+    homePage.supportedPrisonsCard().contains('Supported prisons')
   })
 })

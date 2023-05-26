@@ -1,7 +1,6 @@
 import HomePage from '../../pages/home'
 import Page from '../../pages/page'
-import ListSupportedPrisonsPage from '../../pages/prisons/listSupportedPrisons'
-import PrisonsIndexPage from '../../pages/prisons/prisonsIndex'
+import SupportedPrisonsPage from '../../pages/prisons/prisons'
 
 context('Supported prisons', () => {
   beforeEach(() => {
@@ -17,16 +16,9 @@ context('Supported prisons', () => {
 
     const homePage = Page.verifyOnPage(HomePage)
 
-    homePage.supportedPrisonsTile().contains('Add')
-    homePage.supportedPrisonsTile().click()
+    homePage.supportedPrisonsCard().contains('Supported prisons')
+    homePage.supportedPrisonsCard().click()
 
-    const prisonsIndexPage = Page.verifyOnPage(PrisonsIndexPage)
-    prisonsIndexPage.viewSupportedPrisonsTile().click()
-
-    const listSupportedPrisonsPage = Page.verifyOnPage(ListSupportedPrisonsPage)
-    listSupportedPrisonsPage.supportedPrisonsList().within(() => {
-      cy.contains('BLI - Bristol')
-      cy.contains('HEI - Hewell')
-    })
+    Page.verifyOnPage(SupportedPrisonsPage)
   })
 })
