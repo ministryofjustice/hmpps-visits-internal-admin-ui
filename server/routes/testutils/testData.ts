@@ -1,25 +1,12 @@
-import { Prison } from '../../data/prisonRegisterApiTypes'
+import { PrisonRegisterPrison } from '../../data/prisonRegisterApiTypes'
+import { Prison } from '../../data/visitSchedulerApiTypes'
 
 export default class TestData {
-  static prisons = ({
-    prisons = [
-      {
-        prisonId: 'BLI',
-        prisonName: 'Bristol (HMP & YOI)',
-      },
-      {
-        prisonId: 'HEI',
-        prisonName: 'Hewell (HMP)',
-      },
-    ] as Prison[],
-  } = {}): Prison[] => prisons
+  static prison = ({ active = true, code = 'HEI', excludeDates = [] }: Partial<Prison> = {}): Prison =>
+    ({ active, code, excludeDates } as Prison)
 
-  static supportedPrisonIds = ({ prisonIds = ['BLI', 'HEI'] } = {}): string[] => prisonIds
-
-  static supportedPrisons = ({
-    prisons = <Record<string, string>>{
-      BLI: 'Bristol (HMP & YOI)',
-      HEI: 'Hewell (HMP)',
-    },
-  } = {}): Record<string, string> => prisons
+  static prisonRegisterPrison = ({
+    prisonId = 'HEI',
+    prisonName = 'Hewell (HMP)',
+  }: Partial<PrisonRegisterPrison> = {}): PrisonRegisterPrison => ({ prisonId, prisonName } as PrisonRegisterPrison)
 }

@@ -1,5 +1,6 @@
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
+import { Prison } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
   private restClient: RestClient
@@ -8,9 +9,9 @@ export default class VisitSchedulerApiClient {
     this.restClient = new RestClient('visitSchedulerApiClient', config.apis.visitScheduler as ApiConfig, token)
   }
 
-  async getSupportedPrisonIds(): Promise<string[]> {
+  async getAllPrisons(): Promise<Prison[]> {
     return this.restClient.get({
-      path: '/config/prisons/supported',
+      path: '/config/prisons',
     })
   }
 }

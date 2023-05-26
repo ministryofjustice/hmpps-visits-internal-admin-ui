@@ -1,6 +1,6 @@
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
-import { Prison } from './prisonRegisterApiTypes'
+import { PrisonRegisterPrison } from './prisonRegisterApiTypes'
 
 export default class PrisonRegisterApiClient {
   private restClient: RestClient
@@ -9,7 +9,7 @@ export default class PrisonRegisterApiClient {
     this.restClient = new RestClient('prisonRegisterApiClient', config.apis.prisonRegister as ApiConfig, token)
   }
 
-  async getPrisons(): Promise<Prison[]> {
+  async getPrisons(): Promise<PrisonRegisterPrison[]> {
     return this.restClient.get({ path: '/prisons' })
   }
 }

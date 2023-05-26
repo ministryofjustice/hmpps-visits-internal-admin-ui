@@ -1,6 +1,6 @@
 import { NotFound } from 'http-errors'
-import { Prison } from '../data/prisonRegisterApiTypes'
 import { HmppsAuthClient, PrisonRegisterApiClient, RestClientBuilder, VisitSchedulerApiClient } from '../data'
+import { Prison } from '../data/visitSchedulerApiTypes'
 
 const A_DAY_IN_MS = 24 * 60 * 60 * 1000
 
@@ -11,47 +11,43 @@ export default class SupportedPrisonsService {
     private readonly hmppsAuthClient: HmppsAuthClient,
   ) {}
 
-  private allPrisons: Prison[]
+  // store all prisons in object by prisonId, e.g. { HEI: 'Hewell (HMP), ... }
+  private allPrisonRegisterPrisons: Record<string, string>
 
   private lastUpdated = 0
 
-  async getSupportedPrisons(username: string): Promise<Record<string, string>> {
-    await this.refreshAllPrisons(username)
-    const supportedPrisonIds = await this.getSupportedPrisonIds(username)
-
-    const supportedPrisons: Record<string, string> = {}
-
-    supportedPrisonIds.forEach(prisonId => {
-      const supportedPrison = this.allPrisons.find(prison => prison.prisonId === prisonId)
-      if (supportedPrison) {
-        supportedPrisons[supportedPrison.prisonId] = supportedPrison.prisonName
-      }
-    })
-
-    return supportedPrisons
-  }
-
-  async getSupportedPrisonIds(username: string): Promise<string[]> {
+  async getAllPrisons(username: string): Promise<Prison[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-    return visitSchedulerApiClient.getSupportedPrisonIds()
+
+    return visitSchedulerApiClient.getAllPrisons()
   }
 
   async getPrisonName(username: string, prisonId: string): Promise<string> {
     await this.refreshAllPrisons(username)
-    const foundPrison = this.allPrisons.find(prison => prison.prisonId === prisonId)
+    const prisonName = this.allPrisonRegisterPrisons[prisonId]
 
-    if (!foundPrison) throw new NotFound(`Prison ID '${prisonId}' not found`)
+    if (!prisonName) throw new NotFound(`Prison ID '${prisonId}' not found`)
 
-    return foundPrison.prisonName
+    return prisonName
+  }
+
+  async getPrisonNames(username: string): Promise<Record<string, string>> {
+    await this.refreshAllPrisons(username)
+
+    return this.allPrisonRegisterPrisons
   }
 
   private async refreshAllPrisons(username: string): Promise<void> {
     if (this.lastUpdated <= Date.now() - A_DAY_IN_MS) {
       const token = await this.hmppsAuthClient.getSystemClientToken(username)
       const prisonRegisterApiClient = this.prisonRegisterApiClientFactory(token)
-      this.allPrisons = (await prisonRegisterApiClient.getPrisons()).map(prison => {
-        return { prisonId: prison.prisonId, prisonName: prison.prisonName }
+
+      const allPrisonsFullDetails = await prisonRegisterApiClient.getPrisons()
+      this.allPrisonRegisterPrisons = {}
+
+      allPrisonsFullDetails.forEach(prison => {
+        this.allPrisonRegisterPrisons[prison.prisonId] = prison.prisonName
       })
       this.lastUpdated = Date.now()
     }

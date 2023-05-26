@@ -1,3 +1,3 @@
 import { components } from '../@types/prison-register-api'
 
-export type Prison = Pick<components['schemas']['PrisonDto'], 'prisonId' | 'prisonName'>
+export type PrisonRegisterPrison = Pick<components['schemas']['PrisonDto'], 'prisonId' | 'prisonName'>
