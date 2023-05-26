@@ -1,5 +1,5 @@
 import { NotFound } from 'http-errors'
-import PrisonService from './prisonService'
+import PrisonService from './TEMPprisonService'
 import TestData from '../routes/testutils/testData'
 import {
   createMockHmppsAuthClient,
