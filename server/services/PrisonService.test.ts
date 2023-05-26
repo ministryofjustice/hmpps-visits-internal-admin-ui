@@ -66,6 +66,7 @@ describe('Supported prisons service', () => {
       expect(results).toStrictEqual({
         [prisonRegisterPrisons[0].prisonId]: prisonRegisterPrisons[0].prisonName,
         [prisonRegisterPrisons[1].prisonId]: prisonRegisterPrisons[1].prisonName,
+        [prisonRegisterPrisons[2].prisonId]: prisonRegisterPrisons[2].prisonName,
       })
     })
   })
