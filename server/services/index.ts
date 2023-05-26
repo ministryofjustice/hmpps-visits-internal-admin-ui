@@ -1,6 +1,6 @@
 import { dataAccess } from '../data'
 import UserService from './userService'
-import PrisonService from './TEMPprisonService'
+import PrisonService from './prisonService'
 
 export const services = () => {
   const { hmppsAuthClient, applicationInfo, prisonRegisterApiClientBuilder, visitSchedulerApiClientBuilder } =
