@@ -6,7 +6,7 @@ export const services = () => {
   const { hmppsAuthClient, applicationInfo, prisonRegisterApiClientBuilder, visitSchedulerApiClientBuilder } =
     dataAccess()
 
-  const supportedPrisonsService = new PrisonService(
+  const prisonService = new PrisonService(
     visitSchedulerApiClientBuilder,
     prisonRegisterApiClientBuilder,
     hmppsAuthClient,
@@ -16,7 +16,7 @@ export const services = () => {
 
   return {
     applicationInfo,
-    supportedPrisonsService,
+    prisonService,
     userService,
   }
 }

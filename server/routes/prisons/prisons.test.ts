@@ -2,19 +2,19 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from '../testutils/appSetup'
-import { createMockSupportedPrisonsService } from '../../services/testutils/mocks'
+import { createMockPrisonService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 
 let app: Express
 
-const supportedPrisonsService = createMockSupportedPrisonsService()
+const prisonService = createMockPrisonService()
 
-const supportedPrisons = TestData.supportedPrisons()
+// const supportedPrisons = TestData.supportedPrisons()
 
 beforeEach(() => {
-  supportedPrisonsService.getSupportedPrisons.mockResolvedValue(supportedPrisons)
+  // supportedPrisonsService.getSupportedPrisons.mockResolvedValue(supportedPrisons)
 
-  app = appWithAllRoutes({ services: { supportedPrisonsService } })
+  app = appWithAllRoutes({ services: { prisonService } })
 })
 
 afterEach(() => {

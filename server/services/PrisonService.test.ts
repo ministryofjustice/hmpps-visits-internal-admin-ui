@@ -19,11 +19,8 @@ describe('Supported prisons service', () => {
   const PrisonRegisterApiClientFactory = jest.fn()
   const VisitSchedulerApiClientFactory = jest.fn()
 
-  const allPrisons = [TestData.prison()]
-  const prisonRegisterPrisons = [
-    TestData.prisonRegisterPrison(),
-    TestData.prisonRegisterPrison({ prisonId: 'PNI', prisonName: 'Preston (HMP & YOI)' }),
-  ]
+  const allPrisons = TestData.prisons()
+  const prisonRegisterPrisons = TestData.prisonRegisterPrisons()
 
   beforeEach(() => {
     PrisonRegisterApiClientFactory.mockReturnValue(prisonRegisterApiClient)

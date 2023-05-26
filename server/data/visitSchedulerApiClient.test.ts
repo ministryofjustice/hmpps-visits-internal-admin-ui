@@ -24,7 +24,7 @@ describe('visitSchedulerApiClient', () => {
 
   describe('getAllPrisons', () => {
     it('should return an array of all supported Prisons', async () => {
-      const results = [TestData.prison()]
+      const results = TestData.prisons()
 
       fakeVisitSchedulerApi.get('/config/prisons').matchHeader('authorization', `Bearer ${token}`).reply(200, results)
 
