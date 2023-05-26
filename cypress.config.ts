@@ -16,6 +16,8 @@ export default defineConfig({
   },
   videoUploadOnPasses: false,
   taskTimeout: 60000,
+  viewportWidth: 1280,
+  viewportHeight: 1400,
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
