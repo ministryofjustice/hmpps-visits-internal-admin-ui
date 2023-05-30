@@ -12,7 +12,7 @@ context('Supported prisons', () => {
 
   it('should navigate to the list of all supported prisons', () => {
     cy.task('stubPrisons')
-    cy.task('stubSupportedPrisonIds')
+    cy.task('stubGetAllPrisons')
 
     const homePage = Page.verifyOnPage(HomePage)
 

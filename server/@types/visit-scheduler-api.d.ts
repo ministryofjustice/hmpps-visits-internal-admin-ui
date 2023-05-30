@@ -4,19 +4,47 @@
  */
 
 export interface paths {
+  '/config/prisons': {
+    /**
+     * Get all prisons
+     * @description Get all prisons
+     */
+    get: operations['getPrisons']
+  }
+  '/config/prisons/prison': {
+    /**
+     * Create a prison
+     * @description Create a prison
+     */
+    post: operations['createPrison']
+  }
+  '/config/prisons/prison/{prisonCode}': {
+    /**
+     * Gets prison by given prison id/code
+     * @description Gets prison by given prison id/code
+     */
+    get: operations['getPrison']
+  }
+  '/config/prisons/prison/{prisonCode}/activate': {
+    /**
+     * Activate prison using given prison id/code
+     * @description Activate prison using given prison id/code
+     */
+    put: operations['activatePrison']
+  }
+  '/config/prisons/prison/{prisonCode}/deactivate': {
+    /**
+     * Deactivate prison using given prison id/code
+     * @description Deactivate prison using given prison id/code
+     */
+    put: operations['deActivatePrison']
+  }
   '/config/prisons/supported': {
     /**
      * Get supported prisons
      * @description Get all supported prisons id's
      */
     get: operations['getSupportedPrisons']
-  }
-  '/config/prisons/{prisonCode}': {
-    /**
-     * Gets prison by given prison id/code
-     * @description Gets prison by given prison id/code
-     */
-    get: operations['getPrison']
   }
   '/location-groups/group': {
     /**
@@ -1070,16 +1098,16 @@ export interface components {
 export type external = Record<string, never>
 
 export interface operations {
-  getSupportedPrisons: {
+  getPrisons: {
     /**
-     * Get supported prisons
-     * @description Get all supported prisons id's
+     * Get all prisons
+     * @description Get all prisons
      */
     responses: {
-      /** @description Supported prisons returned */
+      /** @description prison returned */
       200: {
         content: {
-          'application/json': string[]
+          'application/json': components['schemas']['PrisonDto'][]
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -1088,7 +1116,38 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Incorrect permissions to view session templates */
+      /** @description Incorrect permissions to get all prisons */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createPrison: {
+    /**
+     * Create a prison
+     * @description Create a prison
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonDto']
+      }
+    }
+    responses: {
+      /** @description Prison created */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create prison */
       403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
@@ -1114,7 +1173,7 @@ export interface operations {
       /** @description prison returned */
       200: {
         content: {
-          'application/json': components['schemas']['PrisonDto'][]
+          'application/json': components['schemas']['PrisonDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -1123,7 +1182,115 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Incorrect permissions to view session templates */
+      /** @description Incorrect permissions to get prison */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  activatePrison: {
+    /**
+     * Activate prison using given prison id/code
+     * @description Activate prison using given prison id/code
+     */
+    parameters: {
+      /**
+       * @description prison id
+       * @example BHI
+       */
+      path: {
+        prisonCode: string
+      }
+    }
+    responses: {
+      /** @description prison activated */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to activate prison */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description prison cant be found to activate */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deActivatePrison: {
+    /**
+     * Deactivate prison using given prison id/code
+     * @description Deactivate prison using given prison id/code
+     */
+    parameters: {
+      /**
+       * @description prison id
+       * @example BHI
+       */
+      path: {
+        prisonCode: string
+      }
+    }
+    responses: {
+      /** @description prison deactivated */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to deactivate prison */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description prison cant be found to deactivate */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getSupportedPrisons: {
+    /**
+     * Get supported prisons
+     * @description Get all supported prisons id's
+     */
+    responses: {
+      /** @description Supported prisons returned */
+      200: {
+        content: {
+          'application/json': string[]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get supported prisons */
       403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']

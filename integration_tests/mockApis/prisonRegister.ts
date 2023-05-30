@@ -1,10 +1,10 @@
 import { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
 import TestData from '../../server/routes/testutils/testData'
-import { Prison } from '../../server/data/prisonRegisterApiTypes'
+import { PrisonRegisterPrison } from '../../server/data/prisonRegisterApiTypes'
 
 export default {
-  stubPrisons: (prisons: Prison[] = TestData.prisons()): SuperAgentRequest => {
+  stubPrisons: (prisons: PrisonRegisterPrison[] = TestData.prisonRegisterPrisons()): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',

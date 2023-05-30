@@ -2,19 +2,21 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from '../testutils/appSetup'
-import { createMockSupportedPrisonsService } from '../../services/testutils/mocks'
+import { createMockPrisonService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 
 let app: Express
 
-const supportedPrisonsService = createMockSupportedPrisonsService()
+const prisonService = createMockPrisonService()
 
-const supportedPrisons = TestData.supportedPrisons()
+const allPrisons = TestData.prisons()
+const prisonNames = TestData.prisonNames()
 
 beforeEach(() => {
-  supportedPrisonsService.getSupportedPrisons.mockResolvedValue(supportedPrisons)
+  prisonService.getAllPrisons.mockResolvedValue(allPrisons)
+  prisonService.getPrisonNames.mockResolvedValue(prisonNames)
 
-  app = appWithAllRoutes({ services: { supportedPrisonsService } })
+  app = appWithAllRoutes({ services: { prisonService } })
 })
 
 afterEach(() => {
@@ -30,8 +32,17 @@ describe('GET /prisons', () => {
         const $ = cheerio.load(res.text)
         expect($('h1').text().trim()).toBe('Supported prisons')
 
-        // expect($('.govuk-body ul').text()).toContain('BLI - Bristol')
-        // expect($('.govuk-body ul').text()).toContain('HEI - Hewell')
+        expect($('[data-test="prison-code"]').eq(0).text()).toBe('HEI')
+        expect($('[data-test="prison-code"]').eq(2).text()).toBe('WWI')
+
+        expect($('[data-test="prison-name"]').eq(0).text()).toContain('Hewell')
+        expect($('[data-test="prison-name"]').eq(2).text()).toContain('Wandsworth')
+
+        expect($('[data-test="prison-status"]').eq(0).text().trim()).toBe('Active')
+        expect($('[data-test="prison-status"]').eq(2).text().trim()).toBe('Inactive')
+
+        expect($('[data-test="prison-edit-link"] a').eq(0).attr('href')).toBe('/prisons/HEI/edit')
+        expect($('[data-test="prison-edit-link"] a').eq(2).attr('href')).toBe('/prisons/WWI/edit')
       })
   })
 })

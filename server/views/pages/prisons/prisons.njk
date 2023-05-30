@@ -33,6 +33,32 @@
       <span>{{ pageHeaderTitle }}</span>
     </h1>
 
+    {# Build rows for prisons #}
+    {% set prisonRows = [] %}
+    {% for prison in prisons %}
+      {% set prisonRows = (prisonRows.push([
+        {
+          text: prison.code,
+          attributes: { "data-test": "prison-code" }
+        },
+        {
+          text: prisonNames[prison.code],
+          attributes: { "data-test": "prison-name" }
+        },
+        {
+          html: govukTag({
+            text: 'Active' if prison.active == true else 'Inactive',
+            classes: 'govuk-tag--blue' if prison.active else 'govuk-tag--grey',
+            attributes: { "data-test": "prison-status" }
+          })
+        },
+        {
+          html: '<a href="/prisons/' + prison.code + '/edit">Change</a>',
+          attributes: { "data-test": "prison-edit-link" }
+        }
+        ]), prisonRows) %}
+    {% endfor %}
+    
     {{ govukTable({
       classes: "govuk-!-width-three-quarters",
       head: [
@@ -49,36 +75,7 @@
           text: "Action"
         }
       ],
-      rows: [
-        [
-          {
-            text: 'HEI'
-          },
-          {
-            text: "Hewell (HMP)"
-          },
-          {
-            html: govukTag({ text: "Active", classes: "govuk-tag--blue" })
-          },
-          {
-            html: "<a href='/prisons/HEI/edit'>Change</a>"
-          }
-        ],
-        [
-          {
-            text: 'BLI'
-          },
-          {
-            text: "Brisol (HMP & YOI)"
-          },
-          {
-            html: govukTag({ text: "Inactive", classes: "govuk-tag--grey" })
-          },
-          {
-            html: "<a href='/prisons/BLI/edit'>Change</a>"
-          }
-        ]
-      ]
+      rows: prisonRows
     }) }}
   </div>
 </div>

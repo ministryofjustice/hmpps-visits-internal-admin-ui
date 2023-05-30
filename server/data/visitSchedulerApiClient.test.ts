@@ -1,6 +1,7 @@
 import nock from 'nock'
 import config from '../config'
 import VisitSchedulerApiClient from './visitSchedulerApiClient'
+import TestData from '../routes/testutils/testData'
 
 describe('visitSchedulerApiClient', () => {
   let fakeVisitSchedulerApi: nock.Scope
@@ -21,16 +22,13 @@ describe('visitSchedulerApiClient', () => {
     nock.cleanAll()
   })
 
-  describe('getSupportedPrisonIds', () => {
-    it('should return an array of supported prison IDs', async () => {
-      const results = ['BLI', 'HEI']
+  describe('getAllPrisons', () => {
+    it('should return an array of all supported Prisons', async () => {
+      const results = TestData.prisons()
 
-      fakeVisitSchedulerApi
-        .get('/config/prisons/supported')
-        .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, results)
+      fakeVisitSchedulerApi.get('/config/prisons').matchHeader('authorization', `Bearer ${token}`).reply(200, results)
 
-      const output = await visitSchedulerApiClient.getSupportedPrisonIds()
+      const output = await visitSchedulerApiClient.getAllPrisons()
 
       expect(output).toEqual(results)
     })

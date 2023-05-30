@@ -3,16 +3,16 @@ import { stubFor } from './wiremock'
 import TestData from '../../server/routes/testutils/testData'
 
 export default {
-  stubSupportedPrisonIds: (): SuperAgentRequest => {
+  stubGetAllPrisons: (): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
-        url: '/visitScheduler/config/prisons/supported',
+        url: '/visitScheduler/config/prisons',
       },
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: TestData.supportedPrisonIds(),
+        jsonBody: TestData.prisons(),
       },
     })
   },

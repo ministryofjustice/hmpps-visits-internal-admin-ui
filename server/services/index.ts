@@ -1,12 +1,12 @@
 import { dataAccess } from '../data'
 import UserService from './userService'
-import SupportedPrisonsService from './supportedPrisonsService'
+import PrisonService from './prisonService'
 
 export const services = () => {
   const { hmppsAuthClient, applicationInfo, prisonRegisterApiClientBuilder, visitSchedulerApiClientBuilder } =
     dataAccess()
 
-  const supportedPrisonsService = new SupportedPrisonsService(
+  const prisonService = new PrisonService(
     visitSchedulerApiClientBuilder,
     prisonRegisterApiClientBuilder,
     hmppsAuthClient,
@@ -16,11 +16,11 @@ export const services = () => {
 
   return {
     applicationInfo,
-    supportedPrisonsService,
+    prisonService,
     userService,
   }
 }
 
 export type Services = ReturnType<typeof services>
 
-export { SupportedPrisonsService, UserService }
+export { PrisonService, UserService }
