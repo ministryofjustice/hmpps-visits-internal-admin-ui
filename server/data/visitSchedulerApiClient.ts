@@ -25,4 +25,16 @@ export default class VisitSchedulerApiClient {
       },
     })
   }
+
+  async activatePrison(prisonCode: string): Promise<Prison> {
+    return this.restClient.put({
+      path: `/config/prisons/prison/${prisonCode}/activate`,
+    })
+  }
+
+  async deactivatePrison(prisonCode: string): Promise<Prison> {
+    return this.restClient.put({
+      path: `/config/prisons/prison/${prisonCode}/deactivate`,
+    })
+  }
 }

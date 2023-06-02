@@ -42,18 +42,20 @@
     <p>{{ prisonName }} is: {{ govukTag({ text: "Active" if prisonInfo.active else "Inactive", classes: "govuk-tag--blue"}) }}</p>
 
     {{ mojButtonMenu({
-      items: [{
-        text: "Enable",
-        preventDoubleClick: true,
-        disabled: true if prisonInfo.active else false,
-        href: "/config/prison/prisons/" + {{ prinsonInfo.code }} + "/activate"
-      }, {
-        text: "Disable",
-        preventDoubleClick: true,
-        classes: "govuk-button--secondary",
-        disabled: false if prisonInfo.active else true,
-        href: "/config/prison/prisons/" + {{ prinsonInfo.code }} + "/deactivate"
-      }]
+      items: [
+        {
+          text: "Enable",
+          preventDoubleClick: true,
+          disabled: true if prisonInfo.active else false,
+          href: "activate"
+        }, {
+          text: "Disable",
+          preventDoubleClick: true,
+          classes: "govuk-button--secondary",
+          disabled: false if prisonInfo.active else true,
+          href: "deactivate"
+        }
+      ]
     }) }}
 
   </div>
