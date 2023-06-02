@@ -1,9 +1,10 @@
 {% extends "../../partials/layout.njk" %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
-{% from "govuk/components/button/macro.njk" import govukButton %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "moj/components/button-menu/macro.njk" import mojButtonMenu -%}
 {%- from "moj/components/banner/macro.njk" import mojBanner -%}
 
-{% set pageHeaderTitle = "Hewell (HMP)" %}
+{% set pageHeaderTitle = prisonName %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
 
 {% set breadCrumbs = {
@@ -16,13 +17,12 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
 
-
     {# for notification via req.flash ? #}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         {{ mojBanner({
           type: 'success',
-          text: 'Hewell (HMP) has been successfully enabled.',
+          text: prisonName + ' has been successfully enabled.',
           iconFallbackText: 'Success'
         }) }}
       </div>
@@ -39,11 +39,21 @@
       <p class="govuk-body">Contact <a class="govuk-notification-banner__link" href="#">example@department.gov.uk</a> if you think there’s a problem.</p>
     {% endset %}
 
-    <p>Hewell (HMP) is: {{ govukTag({ text: "Active", classes: "govuk-tag--blue"}) }}</p>
+    <p>{{ prisonName }} is: {{ govukTag({ text: "Active" if prisonInfo.active else "Inactive", classes: "govuk-tag--blue"}) }}</p>
 
-    {{ govukButton({
-      text: "Disable",
-      preventDoubleClick: true
+    {{ mojButtonMenu({
+      items: [{
+        text: "Enable",
+        preventDoubleClick: true,
+        disabled: true if prisonInfo.active else false,
+        href: "/config/prison/prisons/" + {{ prinsonInfo.code }} + "/activate"
+      }, {
+        text: "Disable",
+        preventDoubleClick: true,
+        classes: "govuk-button--secondary",
+        disabled: false if prisonInfo.active else true,
+        href: "/config/prison/prisons/" + {{ prinsonInfo.code }} + "/deactivate"
+      }]
     }) }}
 
   </div>
