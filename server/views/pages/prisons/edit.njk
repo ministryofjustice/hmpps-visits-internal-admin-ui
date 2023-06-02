@@ -39,19 +39,19 @@
       <p class="govuk-body">Contact <a class="govuk-notification-banner__link" href="#">example@department.gov.uk</a> if you think there’s a problem.</p>
     {% endset %}
 
-    <p>{{ prisonName }} is: {{ govukTag({ text: "Active" if prison.active else "Inactive", classes: "govuk-tag--blue"}) }}</p>
+    <p>{{ prisonName }} is: {{ govukTag({ text: "Active" if prisonInfo.active else "Inactive", classes: "govuk-tag--blue"}) }}</p>
 
     {{ mojButtonMenu({
       items: [{
         text: "Enable",
         preventDoubleClick: true,
-        disabled: true if prison.active else false,
+        disabled: true if prisonInfo.active else false,
         href: "#"
       }, {
         text: "Disable",
         preventDoubleClick: true,
         classes: "govuk-button--secondary",
-        disabled: false if prison.active else true,
+        disabled: false if prisonInfo.active else true,
         href: "#"
       }]
     }) }}
