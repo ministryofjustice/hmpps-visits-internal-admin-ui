@@ -2,7 +2,6 @@ import { type RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../../middleware/asyncMiddleware'
 import type { Services } from '../../services'
-import logger from '../../../logger'
 
 export default function routes({ prisonService }: Services): Router {
   const router = Router()
@@ -16,17 +15,14 @@ export default function routes({ prisonService }: Services): Router {
   get('/', async (req, res) => {
     const prisons = await prisonService.getAllPrisons(res.locals.user.username)
     const prisonNames = await prisonService.getPrisonNames(res.locals.user.username)
-    logger.info('------------')
-    logger.info('------------')
+
     res.render('pages/prisons/prisons', { prisons, prisonNames })
   })
 
   get('/:prisonId([A-Z]{3})/edit', async (req, res) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { prisonId } = req.params
-    logger.info('------------')
-    logger.info(req.params)
-    logger.info('------------')
+
     const prisons = await prisonService.getAllPrisons(res.locals.user.username)
     const prisonName = await prisonService.getPrisonName(res.locals.user.username, prisonId)
     const prisonInfo = prisons.find(prison => prison.code === prisonId)
