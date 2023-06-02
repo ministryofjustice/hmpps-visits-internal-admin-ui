@@ -2,6 +2,7 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "moj/components/button-menu/macro.njk" import mojButtonMenu -%}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {%- from "moj/components/banner/macro.njk" import mojBanner -%}
 
 {% set pageHeaderTitle = prisonName %}
@@ -10,23 +11,42 @@
 {% set breadCrumbs = {
   enabled: true,
   pageTitle:  pageHeaderTitle,
-  data: [{ title: 'Supported prisons', href: '/prisons' }]} %}
+  data: [{ title: 'Supported prisons', href: '/prisons' }]
+} %}
+
+{% set prisonStatus = 'Active' if prisonInfo.active else 'Inactive' %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
 
-    {# for notification via req.flash ? #}
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        {{ mojBanner({
-          type: 'success',
-          text: prisonName + ' has been successfully enabled.',
-          iconFallbackText: 'Success'
-        }) }}
-      </div>
-    </div>
+  {% if errors | length %}
+    {% set errorSummaryList = errors | errorSummaryList %}
+
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList:  errorSummaryList 
+    }) }}
+  {% endif %}
+
+  {% if confirmedChange %}
+    {% set confirmedChangeHtml %}
+        {{ govukWarningText({
+          classes: "govuk-!-margin-bottom-0",
+          html: "<p class='govuk-!-font-size-24 govuk-!-font-weight-bold'> " + prisonName + " has been sucessfully changed to " + prisonStatus + "</p>",
+          iconFallbackText: "Warning",
+          attributes: {
+            "data-test": "slot-change-reason"
+        }
+      }) }}
+    {% endset %}
+
+    {{ mojBanner({
+      classes: "govuk-!-padding-left-4",
+      html: confirmedChangeHtml
+    }) }}
+  {% endif %}
 
     <h1 class="govuk-heading-l">
       <span>{{ pageHeaderTitle }}</span>
@@ -39,7 +59,7 @@
       <p class="govuk-body">Contact <a class="govuk-notification-banner__link" href="#">example@department.gov.uk</a> if you think there’s a problem.</p>
     {% endset %}
 
-    <p>{{ prisonName }} is: {{ govukTag({ text: "Active" if prisonInfo.active else "Inactive", classes: "govuk-tag--blue"}) }}</p>
+    <p>{{ prisonName }} is: {{ govukTag({ text: prisonStatus, classes: "govuk-tag--blue"}) }}</p>
 
     {{ mojButtonMenu({
       items: [
