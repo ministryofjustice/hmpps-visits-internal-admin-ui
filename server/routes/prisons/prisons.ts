@@ -15,7 +15,7 @@ export default function routes({ prisonService }: Services): Router {
   get('/', async (req, res) => {
     const prisons = await prisonService.getAllPrisons(res.locals.user.username)
     const prisonNames = await prisonService.getPrisonNames(res.locals.user.username)
-    console.log(prisons)
+
     res.render('pages/prisons/prisons', { prisons, prisonNames })
   })
 
