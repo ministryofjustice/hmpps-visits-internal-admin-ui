@@ -46,13 +46,13 @@
         text: "Enable",
         preventDoubleClick: true,
         disabled: true if prisonInfo.active else false,
-        href: "#"
+        href: "/config/prisons/prison/prinsonId/activate"
       }, {
         text: "Disable",
         preventDoubleClick: true,
         classes: "govuk-button--secondary",
         disabled: false if prisonInfo.active else true,
-        href: "#"
+        href: "/config/prison/prisons/prinsonId/deactivate"
       }]
     }) }}
 
