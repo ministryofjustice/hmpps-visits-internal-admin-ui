@@ -222,6 +222,11 @@ export interface components {
        */
       endTimestamp?: string
       /**
+       * @description Session template reference
+       * @example v9d.7ed.7u
+       */
+      sessionTemplateReference: string
+      /**
        * Format: date-time
        * @description The date and time of the visit
        */

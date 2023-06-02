@@ -14,4 +14,15 @@ export default class VisitSchedulerApiClient {
       path: '/config/prisons',
     })
   }
+
+  async createPrison(prison: Prison): Promise<Prison> {
+    return this.restClient.post({
+      path: '/config/prisons/prison',
+      data: <Prison>{
+        active: prison.active,
+        code: prison.code,
+        excludeDates: prison.excludeDates,
+      },
+    })
+  }
 }

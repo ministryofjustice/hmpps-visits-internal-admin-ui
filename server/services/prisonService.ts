@@ -1,6 +1,7 @@
 import { NotFound } from 'http-errors'
 import { HmppsAuthClient, PrisonRegisterApiClient, RestClientBuilder, VisitSchedulerApiClient } from '../data'
 import { Prison } from '../data/visitSchedulerApiTypes'
+import logger from '../../logger'
 
 const A_DAY_IN_MS = 24 * 60 * 60 * 1000
 
@@ -21,6 +22,24 @@ export default class PrisonService {
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     return visitSchedulerApiClient.getAllPrisons()
+  }
+
+  async createPrison(prisonCode: string, username: string): Promise<void> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    const prison = <Prison>{
+      active: false,
+      code: prisonCode,
+      excludeDates: [],
+    }
+
+    logger.info(`Adding prison ${prisonCode} to list of supported prisons`)
+    try {
+      await visitSchedulerApiClient.createPrison(prison)
+    } catch (error) {
+      logger.error(`Couldn't add prison ${prisonCode} to list of supported prisons`, error)
+    }
   }
 
   async getPrisonName(username: string, prisonId: string): Promise<string> {

@@ -84,6 +84,11 @@
   <div class="govuk-grid-column-full">
     <h2 class="govuk-heading-m">Add a prison</h2>
 
+    <form action="/prisons" method="POST" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+
+
     {{ govukInput({
       label: {
         text: "Enter prison code or name"
@@ -95,8 +100,10 @@
 
     {{ govukButton({
       text: "Add prison",
-      preventDoubleClick: true
-    }) }}
+      preventDoubleClick: true,
+      attributes: { "data-test": "submit" }
+    }) }} 
+    </form>
 
   </div>
 </div>
