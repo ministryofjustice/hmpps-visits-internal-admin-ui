@@ -95,16 +95,13 @@ describe('Supported prisons service', () => {
     })
   })
 
-  // describe('createPrison', () => {
-  //   it('should set validation errors if no establishment selected', async () => {
-  //     supportedPrisonsService.createPrison.mockResolvedValue()
-  //     const result = await supportedPrisonsService.createPrison('BLI', 'user')
-
-  //     expect(supportedPrisonsService.createPrison).toHaveBeenCalledTimes(1)
-  //     expect(supportedPrisonsService.createPrison).toHaveBeenCalledWith('BLI', 'user')
-  //     expect(result).toEqual(null)
-  //   })
-  // })
+  describe('deactivatePrison', () => {
+    it('should change prison to deactive', async () => {
+      await fakePrisonService.deactivatePrison('user', 'HEI')
+      expect(fakePrisonService.deactivatePrison).toHaveBeenCalledTimes(1)
+      expect(fakePrisonService.deactivatePrison).toHaveBeenCalledWith('user', 'HEI')
+    })
+  })
 
   describe('API response caching', () => {
     it('should call Prison register API to get all prison names and then use internal cache for subsequent calls', async () => {
