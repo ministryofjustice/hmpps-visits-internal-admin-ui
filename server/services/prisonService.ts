@@ -17,13 +17,6 @@ export default class PrisonService {
 
   private lastUpdated = 0
 
-  async getAllPrisons(username: string): Promise<Prison[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    return visitSchedulerApiClient.getAllPrisons()
-  }
-
   async getPrison(username: string, prisonId: string): Promise<{ prison: Prison; prisonName: string }> {
     await this.refreshAllPrisons(username)
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
@@ -33,6 +26,27 @@ export default class PrisonService {
     const prisonName = this.allPrisonRegisterPrisons[prisonId]
 
     return { prison, prisonName }
+  }
+
+  async getAllPrisons(username: string): Promise<Prison[]> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    return visitSchedulerApiClient.getAllPrisons()
+  }
+
+  async createPrison(username: string, prisonCode: string): Promise<void> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    const prison: Prison = {
+      active: false,
+      code: prisonCode,
+      excludeDates: [],
+    }
+
+    logger.info(`Adding prison ${prisonCode} to list of supported prisons`)
+    await visitSchedulerApiClient.createPrison(prison)
   }
 
   async activatePrison(username: string, prisonCode: string): Promise<void> {
@@ -49,20 +63,6 @@ export default class PrisonService {
 
     logger.info(`Deactivating prison ${prisonCode}`)
     await visitSchedulerApiClient.deactivatePrison(prisonCode)
-  }
-
-  async createPrison(prisonCode: string, username: string): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    const prison = <Prison>{
-      active: false,
-      code: prisonCode,
-      excludeDates: [],
-    }
-
-    logger.info(`Adding prison ${prisonCode} to list of supported prisons`)
-    await visitSchedulerApiClient.createPrison(prison)
   }
 
   async getPrisonName(username: string, prisonId: string): Promise<string> {

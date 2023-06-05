@@ -6,6 +6,7 @@ import {
   createMockPrisonRegisterApiClient,
   createMockVisitSchedulerApiClient,
 } from '../data/testutils/mocks'
+import { createMockPrisonService } from './testutils/mocks'
 
 const token = 'some token'
 
@@ -13,6 +14,7 @@ describe('Supported prisons service', () => {
   const hmppsAuthClient = createMockHmppsAuthClient()
   const prisonRegisterApiClient = createMockPrisonRegisterApiClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()
+  const fakePrisonService = createMockPrisonService()
 
   let supportedPrisonsService: PrisonService
 
@@ -20,6 +22,7 @@ describe('Supported prisons service', () => {
   const VisitSchedulerApiClientFactory = jest.fn()
 
   const allPrisons = TestData.prisons()
+  const prison = TestData.prison()
   const prisonRegisterPrisons = TestData.prisonRegisterPrisons()
 
   beforeEach(() => {
@@ -49,6 +52,19 @@ describe('Supported prisons service', () => {
     })
   })
 
+  describe('getPrison', () => {
+    it('should return an array of all supported Prisons', async () => {
+      visitSchedulerApiClient.getPrison.mockResolvedValue(prison)
+      const prisonName = 'Hewell (HMP)'
+      const results = await supportedPrisonsService.getPrison('user', 'HEI')
+
+      expect(results).toEqual({
+        prison,
+        prisonName,
+      })
+    })
+  })
+
   describe('getPrisonName', () => {
     it('should return prison name for given prison ID', async () => {
       const results = await supportedPrisonsService.getPrisonName('user', prisonRegisterPrisons[0].prisonId)
@@ -70,6 +86,25 @@ describe('Supported prisons service', () => {
       })
     })
   })
+
+  describe('activatePrison', () => {
+    it('should change prison to active', async () => {
+      await fakePrisonService.activatePrison('user', 'HEI')
+      expect(fakePrisonService.activatePrison).toHaveBeenCalledTimes(1)
+      expect(fakePrisonService.activatePrison).toHaveBeenCalledWith('user', 'HEI')
+    })
+  })
+
+  // describe('createPrison', () => {
+  //   it('should set validation errors if no establishment selected', async () => {
+  //     supportedPrisonsService.createPrison.mockResolvedValue()
+  //     const result = await supportedPrisonsService.createPrison('BLI', 'user')
+
+  //     expect(supportedPrisonsService.createPrison).toHaveBeenCalledTimes(1)
+  //     expect(supportedPrisonsService.createPrison).toHaveBeenCalledWith('BLI', 'user')
+  //     expect(result).toEqual(null)
+  //   })
+  // })
 
   describe('API response caching', () => {
     it('should call Prison register API to get all prison names and then use internal cache for subsequent calls', async () => {

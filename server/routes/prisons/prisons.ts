@@ -24,7 +24,7 @@ export default function routes({ prisonService }: Services): Router {
   post('/', async (req, res) => {
     const prisonCode = req.body.prisonId.toUpperCase()
 
-    await prisonService.createPrison(prisonCode, res.locals.user.username)
+    await prisonService.createPrison(res.locals.user.username, prisonCode)
     req.flash('message', prisonCode)
 
     return res.redirect(`/prisons`)
