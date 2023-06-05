@@ -24,28 +24,31 @@ export default class PrisonService {
     return visitSchedulerApiClient.getAllPrisons()
   }
 
-  async activatePrison(prisonCode: string, username: string): Promise<void> {
+  async getPrison(username: string, prisonId: string): Promise<{ prison: Prison; prisonName: string }> {
+    await this.refreshAllPrisons(username)
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    const prison = await visitSchedulerApiClient.getPrison(prisonId)
+    const prisonName = this.allPrisonRegisterPrisons[prisonId]
+
+    return { prison, prisonName }
+  }
+
+  async activatePrison(username: string, prisonCode: string): Promise<void> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     logger.info(`Activating prison ${prisonCode}`)
-    try {
-      await visitSchedulerApiClient.activatePrison(prisonCode)
-    } catch (error) {
-      logger.error(`Unable to activate prison ${prisonCode}`, error)
-    }
+    await visitSchedulerApiClient.activatePrison(prisonCode)
   }
 
-  async deactivatePrison(prisonCode: string, username: string): Promise<void> {
+  async deactivatePrison(username: string, prisonCode: string): Promise<void> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     logger.info(`Deactivating prison ${prisonCode}`)
-    try {
-      await visitSchedulerApiClient.deactivatePrison(prisonCode)
-    } catch (error) {
-      logger.error(`Unable to deactivate prison ${prisonCode}`, error)
-    }
+    await visitSchedulerApiClient.deactivatePrison(prisonCode)
   }
 
   async createPrison(prisonCode: string, username: string): Promise<void> {
@@ -59,11 +62,7 @@ export default class PrisonService {
     }
 
     logger.info(`Adding prison ${prisonCode} to list of supported prisons`)
-    try {
-      await visitSchedulerApiClient.createPrison(prison)
-    } catch (error) {
-      logger.error(`Couldn't add prison ${prisonCode} to list of supported prisons`, error)
-    }
+    await visitSchedulerApiClient.createPrison(prison)
   }
 
   async getPrisonName(username: string, prisonId: string): Promise<string> {
