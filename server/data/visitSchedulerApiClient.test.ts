@@ -35,9 +35,24 @@ describe('visitSchedulerApiClient', () => {
     })
   })
 
+  describe('getPrison', () => {
+    it('should return details of specified prison', async () => {
+      const prison = TestData.prison()
+
+      fakeVisitSchedulerApi
+        .get(`/config/prisons/prison/${prison.code}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, prison)
+
+      const output = await visitSchedulerApiClient.getPrison(prison.code)
+
+      expect(output).toEqual(prison)
+    })
+  })
+
   describe('createPrison', () => {
     it('should add prison to list of supported prisons', async () => {
-      const prison = <Prison>{
+      const prison: Prison = {
         active: false,
         code: 'BHI',
         excludeDates: [],
@@ -53,6 +68,36 @@ describe('visitSchedulerApiClient', () => {
         .reply(201, prison)
 
       const output = await visitSchedulerApiClient.createPrison(prison)
+
+      expect(output).toEqual(prison)
+    })
+  })
+
+  describe('activatePrison', () => {
+    it('should return activated prison', async () => {
+      const prison = TestData.prison()
+
+      fakeVisitSchedulerApi
+        .put(`/config/prisons/prison/${prison.code}/activate`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, prison)
+
+      const output = await visitSchedulerApiClient.activatePrison(prison.code)
+
+      expect(output).toEqual(prison)
+    })
+  })
+
+  describe('deactivatePrison', () => {
+    it('should return deactivated prison', async () => {
+      const prison = TestData.prison()
+
+      fakeVisitSchedulerApi
+        .put(`/config/prisons/prison/${prison.code}/deactivate`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, prison)
+
+      const output = await visitSchedulerApiClient.deactivatePrison(prison.code)
 
       expect(output).toEqual(prison)
     })
