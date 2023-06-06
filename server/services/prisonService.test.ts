@@ -9,7 +9,7 @@ import {
 
 const token = 'some token'
 
-describe('Supported prisons service', () => {
+describe('Prisons service', () => {
   const hmppsAuthClient = createMockHmppsAuthClient()
   const prisonRegisterApiClient = createMockPrisonRegisterApiClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()

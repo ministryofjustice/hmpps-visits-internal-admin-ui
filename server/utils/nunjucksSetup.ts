@@ -1,7 +1,8 @@
 /* eslint-disable no-param-reassign */
-import nunjucks from 'nunjucks'
+import nunjucks, { Environment } from 'nunjucks'
 import express from 'express'
 import path from 'path'
+import { FieldValidationError } from 'express-validator'
 import { initialiseName } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 
@@ -25,6 +26,10 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     })
   }
 
+  registerNunjucks(app)
+}
+
+export function registerNunjucks(app: express.Express): Environment {
   const njkEnv = nunjucks.configure(
     [
       path.join(__dirname, '../../server/views'),
@@ -40,4 +45,28 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   )
 
   njkEnv.addFilter('initialiseName', initialiseName)
+
+  // convert errors to format for GOV.UK error summary component
+  njkEnv.addFilter('errorSummaryList', (errors = []) => {
+    return Object.keys(errors).map(error => {
+      return {
+        text: errors[error].msg,
+        href: `#${errors[error].path}-error`,
+      }
+    })
+  })
+
+  // find specific error and return errorMessage for field validation
+  njkEnv.addFilter('findError', (errors: FieldValidationError[], formFieldId) => {
+    if (!errors || !formFieldId) return null
+    const errorForMessage = errors.find(error => error.path === formFieldId)
+
+    if (errorForMessage === undefined) return null
+
+    return {
+      text: errorForMessage?.msg,
+    }
+  })
+
+  return njkEnv
 }

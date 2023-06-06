@@ -12,7 +12,9 @@
   <link href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel="stylesheet" nonce="{{ cspNonce }}" crossorigin>
 {% endblock %}
 
-{% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}
+{% block pageTitle %}
+  {% if errors.length %}Error: {% endif %}{{pageTitle | default(applicationName)}}
+{% endblock %}
 
 {% block header %}
   {% include "./header.njk" %}

@@ -1,5 +1,6 @@
 import { type RequestHandler, Router } from 'express'
 
+import { body, validationResult } from 'express-validator'
 import asyncMiddleware from '../../middleware/asyncMiddleware'
 import type { Services } from '../../services'
 
@@ -18,14 +19,41 @@ export default function routes({ prisonService }: Services): Router {
 
     const message = req.flash('message')
 
-    res.render('pages/prisons/prisons', { prisons, prisonNames, message })
+    res.render('pages/prisons/prisons', {
+      errors: req.flash('errors'),
+      prisons,
+      prisonNames,
+      message,
+    })
   })
 
   post('/', async (req, res) => {
-    const prisonCode = req.body.prisonId.toUpperCase()
+    await body('prisonId')
+      .trim()
+      .toUpperCase()
+      .matches(/^[A-Z]{3}$/)
+      .withMessage('Enter three letter prison code')
+      .bail()
+      .custom(async prisonId => {
+        try {
+          await prisonService.getPrisonName(res.locals.user.username, prisonId)
+        } catch (error) {
+          throw new Error(`Prison '${prisonId}' is not in the prison register`)
+        }
+        return true
+      })
+      .run(req)
 
-    await prisonService.createPrison(res.locals.user.username, prisonCode)
-    req.flash('message', prisonCode)
+    const { prisonId } = req.body
+
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      req.flash('errors', errors.array() as [])
+      return res.redirect(`/prisons`)
+    }
+
+    await prisonService.createPrison(res.locals.user.username, prisonId)
+    req.flash('message', prisonId)
 
     return res.redirect(`/prisons`)
   })
