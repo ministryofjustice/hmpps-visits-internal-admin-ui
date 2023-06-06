@@ -35,7 +35,7 @@
         <span>{{ pageHeaderTitle }}</span>
       </h1>
 
-      <p>{{ prisonName }} is: {{ govukTag({ text: prisonStatus, classes: "govuk-tag--blue" }) }}</p>
+      <p data-test="prison-name-status">{{ prisonName }} is: {{ govukTag({ text: prisonStatus, classes: "govuk-tag--blue" }) }}</p>
 
       <form action="/prisons/{{ prison.code }}/edit" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
