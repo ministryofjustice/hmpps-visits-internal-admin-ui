@@ -18,16 +18,17 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
 
-    {# for notification via req.flash ? #}
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        {{ mojBanner({
-          type: 'success',
-          text: 'Hewell (HMP) has been successfully added.',
-          iconFallbackText: 'Success'
-        }) }}
+    {% if message | length %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          {{ mojBanner({
+            type: 'success',
+            text: prisonNames[message] | default('UNKNOWN') + ' has been successfully added.',
+            iconFallbackText: 'Success'
+          }) }}
+        </div>
       </div>
-    </div>
+    {% endif %}
 
     <h1 class="govuk-heading-l">
       <span>{{ pageHeaderTitle }}</span>
@@ -42,7 +43,7 @@
           attributes: { "data-test": "prison-code" }
         },
         {
-          text: prisonNames[prison.code],
+          text: prisonNames[prison.code] | default('UNKNOWN'),
           attributes: { "data-test": "prison-name" }
         },
         {
@@ -84,19 +85,24 @@
   <div class="govuk-grid-column-full">
     <h2 class="govuk-heading-m">Add a prison</h2>
 
-    {{ govukInput({
-      label: {
-        text: "Enter prison code or name"
-      },
-      classes: "govuk-input--width-20",
-      id: "prisonId",
-      name: "prisonId"
-    }) }}
+    <form action="/prisons" method="POST" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-    {{ govukButton({
-      text: "Add prison",
-      preventDoubleClick: true
-    }) }}
+      {{ govukInput({
+        label: {
+          text: "Enter prison code or name"
+        },
+        classes: "govuk-input--width-20",
+        id: "prisonId",
+        name: "prisonId"
+      }) }}
+
+      {{ govukButton({
+        text: "Add prison",
+        preventDoubleClick: true,
+        attributes: { "data-test": "submit" }
+      }) }} 
+    </form>
 
   </div>
 </div>
