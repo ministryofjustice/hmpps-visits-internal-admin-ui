@@ -27,28 +27,36 @@ export default function routes({ prisonService }: Services): Router {
     })
   })
 
-  post(
-    '/',
-    body('prisonId')
+  post('/', async (req, res) => {
+    await body('prisonId')
       .trim()
       .toUpperCase()
       .matches(/^[A-Z]{3}$/)
-      .withMessage('Enter three letter prison code'),
-    async (req, res) => {
-      const { prisonId } = req.body
+      .withMessage('Enter three letter prison code')
+      .bail()
+      .custom(async prisonId => {
+        try {
+          await prisonService.getPrisonName(res.locals.user.username, prisonId)
+        } catch (error) {
+          throw new Error(`Prison '${prisonId}' is not in the prison register`)
+        }
+        return true
+      })
+      .run(req)
 
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        req.flash('errors', errors.array() as [])
-        return res.redirect(`/prisons`)
-      }
+    const { prisonId } = req.body
 
-      await prisonService.createPrison(res.locals.user.username, prisonId)
-      req.flash('message', prisonId)
-
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      req.flash('errors', errors.array() as [])
       return res.redirect(`/prisons`)
-    },
-  )
+    }
+
+    await prisonService.createPrison(res.locals.user.username, prisonId)
+    req.flash('message', prisonId)
+
+    return res.redirect(`/prisons`)
+  })
 
   get('/:prisonId([A-Z]{3})/edit', async (req, res) => {
     const { prisonId } = req.params
