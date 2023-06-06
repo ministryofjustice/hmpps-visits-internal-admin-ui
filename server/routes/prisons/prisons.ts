@@ -1,5 +1,6 @@
 import { type RequestHandler, Router } from 'express'
 
+import { body, validationResult } from 'express-validator'
 import asyncMiddleware from '../../middleware/asyncMiddleware'
 import type { Services } from '../../services'
 
@@ -18,17 +19,36 @@ export default function routes({ prisonService }: Services): Router {
 
     const message = req.flash('message')
 
-    res.render('pages/prisons/prisons', { prisons, prisonNames, message })
+    res.render('pages/prisons/prisons', {
+      errors: req.flash('errors'),
+      prisons,
+      prisonNames,
+      message,
+    })
   })
 
-  post('/', async (req, res) => {
-    const prisonCode = req.body.prisonId.toUpperCase()
+  post(
+    '/',
+    body('prisonId')
+      .trim()
+      .toUpperCase()
+      .matches(/^[A-Z]{3}$/)
+      .withMessage('Enter three letter prison code'),
+    async (req, res) => {
+      const { prisonId } = req.body
 
-    await prisonService.createPrison(res.locals.user.username, prisonCode)
-    req.flash('message', prisonCode)
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array() as [])
+        return res.redirect(`/prisons`)
+      }
 
-    return res.redirect(`/prisons`)
-  })
+      await prisonService.createPrison(res.locals.user.username, prisonId)
+      req.flash('message', prisonId)
+
+      return res.redirect(`/prisons`)
+    },
+  )
 
   get('/:prisonId([A-Z]{3})/edit', async (req, res) => {
     const { prisonId } = req.params
