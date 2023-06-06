@@ -97,7 +97,7 @@ describe('POST /prisons/HEI/edit', () => {
       })
   })
 
-  it('should change prison status and display message when submit (deactivate)', () => {
+  it('should change prison status and display message when submit (activate)', () => {
     return request(app)
       .post('/prisons/HEI/edit')
       .send('action=activate')
