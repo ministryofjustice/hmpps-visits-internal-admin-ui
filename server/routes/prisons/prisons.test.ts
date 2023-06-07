@@ -84,6 +84,8 @@ describe('GET /prisons/HEI/edit', () => {
 
 describe('POST /prisons/HEI/edit', () => {
   it('should change prison status and display message when submit (deactivate)', () => {
+    const inactivePrison = TestData.prison({ active: false })
+    prisonService.deactivatePrison.mockResolvedValue(inactivePrison)
     return request(app)
       .post('/prisons/HEI/edit')
       .send('action=deactivate')
@@ -98,6 +100,7 @@ describe('POST /prisons/HEI/edit', () => {
   })
 
   it('should change prison status and display message when submit (activate)', () => {
+    prisonService.activatePrison.mockResolvedValue(prison)
     return request(app)
       .post('/prisons/HEI/edit')
       .send('action=activate')

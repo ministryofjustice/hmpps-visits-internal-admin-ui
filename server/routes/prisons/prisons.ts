@@ -51,9 +51,12 @@ export default function routes({ prisonService }: Services): Router {
       req.flash('errors', errors.array() as [])
       return res.redirect(`/prisons`)
     }
-
-    await prisonService.createPrison(res.locals.user.username, prisonId)
-    req.flash('message', prisonId)
+    try {
+      await prisonService.createPrison(res.locals.user.username, prisonId)
+      req.flash('message', prisonId)
+    } catch (error) {
+      req.flash('errors', [{ msg: `${error.status}: ${error.message}` }] as unknown as [])
+    }
 
     return res.redirect(`/prisons`)
   })
@@ -64,7 +67,7 @@ export default function routes({ prisonService }: Services): Router {
     const { prison, prisonName } = await prisonService.getPrison(res.locals.user.username, prisonId)
     const message = req.flash('message')
 
-    res.render('pages/prisons/edit', { prison, prisonName, message })
+    res.render('pages/prisons/edit', { errors: req.flash('errors'), prison, prisonName, message })
   })
 
   post('/:prisonId([A-Z]{3})/edit', async (req, res) => {
@@ -72,13 +75,21 @@ export default function routes({ prisonService }: Services): Router {
     const { action } = req.body
 
     if (action === 'activate') {
-      await prisonService.activatePrison(res.locals.user.username, prisonId)
-      req.flash('message', 'activated')
+      const prison = await prisonService.activatePrison(res.locals.user.username, prisonId)
+      if (prison.active) {
+        req.flash('message', 'activated')
+      } else {
+        req.flash('errors', [{ msg: 'Failed to change prison status' }] as unknown as [])
+      }
     }
 
     if (action === 'deactivate') {
-      await prisonService.deactivatePrison(res.locals.user.username, prisonId)
-      req.flash('message', 'deactivated')
+      const prison = await prisonService.deactivatePrison(res.locals.user.username, prisonId)
+      if (!prison.active) {
+        req.flash('message', 'deactivated')
+      } else {
+        req.flash('errors', [{ msg: 'Failed to change prison status' }] as unknown as [])
+      }
     }
 
     res.redirect(`/prisons/${prisonId}/edit`)

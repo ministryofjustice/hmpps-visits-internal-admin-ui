@@ -19,6 +19,8 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
+      {% include "partials/errorSummary.njk" %}
+
       {% if message | length %}
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">

@@ -49,20 +49,20 @@ export default class PrisonService {
     await visitSchedulerApiClient.createPrison(prison)
   }
 
-  async activatePrison(username: string, prisonCode: string): Promise<void> {
+  async activatePrison(username: string, prisonCode: string): Promise<Prison> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     logger.info(`Activating prison ${prisonCode}`)
-    await visitSchedulerApiClient.activatePrison(prisonCode)
+    return visitSchedulerApiClient.activatePrison(prisonCode)
   }
 
-  async deactivatePrison(username: string, prisonCode: string): Promise<void> {
+  async deactivatePrison(username: string, prisonCode: string): Promise<Prison> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     logger.info(`Deactivating prison ${prisonCode}`)
-    await visitSchedulerApiClient.deactivatePrison(prisonCode)
+    return visitSchedulerApiClient.deactivatePrison(prisonCode)
   }
 
   async getPrisonName(username: string, prisonId: string): Promise<string> {
