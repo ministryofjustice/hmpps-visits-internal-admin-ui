@@ -51,7 +51,7 @@ export function registerNunjucks(app: express.Express): Environment {
     return Object.keys(errors).map(error => {
       return {
         text: errors[error].msg,
-        href: `#${errors[error].path}-error`,
+        href: errors[error].path ? `#${errors[error].path}-error` : undefined,
       }
     })
   })
