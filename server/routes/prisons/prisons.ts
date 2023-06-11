@@ -32,7 +32,7 @@ export default function routes({ prisonService }: Services): Router {
       .trim()
       .toUpperCase()
       .matches(/^[A-Z]{3}$/)
-      .withMessage('Enter three letter prison code')
+      .withMessage('Enter a three letter prison code')
       .bail()
       .custom(async prisonId => {
         try {
@@ -48,14 +48,15 @@ export default function routes({ prisonService }: Services): Router {
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      req.flash('errors', errors.array() as [])
+      req.flash('errors', errors.array())
       return res.redirect(`/prisons`)
     }
+
     try {
       await prisonService.createPrison(res.locals.user.username, prisonId)
       req.flash('message', prisonId)
     } catch (error) {
-      req.flash('errors', [{ msg: `${error.status}: ${error.message}` }] as unknown as [])
+      req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
     }
 
     return res.redirect(`/prisons`)
@@ -78,8 +79,7 @@ export default function routes({ prisonService }: Services): Router {
       const prison = await prisonService.activatePrison(res.locals.user.username, prisonId)
       if (prison.active) {
         req.flash('message', 'activated')
-      } else {
-        req.flash('errors', [{ msg: 'Failed to change prison status' }] as unknown as [])
+        return res.redirect(`/prisons/${prisonId}/edit`)
       }
     }
 
@@ -87,12 +87,12 @@ export default function routes({ prisonService }: Services): Router {
       const prison = await prisonService.deactivatePrison(res.locals.user.username, prisonId)
       if (!prison.active) {
         req.flash('message', 'deactivated')
-      } else {
-        req.flash('errors', [{ msg: 'Failed to change prison status' }] as unknown as [])
+        return res.redirect(`/prisons/${prisonId}/edit`)
       }
     }
 
-    res.redirect(`/prisons/${prisonId}/edit`)
+    req.flash('errors', [{ msg: 'Failed to change prison status' }])
+    return res.redirect(`/prisons/${prisonId}/edit`)
   })
 
   return router
