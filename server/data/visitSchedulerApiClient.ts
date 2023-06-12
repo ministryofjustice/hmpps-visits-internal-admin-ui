@@ -1,12 +1,12 @@
 import RestClient from './restClient'
-import config, { ApiConfig } from '../config'
+import config from '../config'
 import { Prison } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
   private restClient: RestClient
 
   constructor(token: string) {
-    this.restClient = new RestClient('visitSchedulerApiClient', config.apis.visitScheduler as ApiConfig, token)
+    this.restClient = new RestClient('visitSchedulerApiClient', config.apis.visitScheduler, token)
   }
 
   async getAllPrisons(): Promise<Prison[]> {

@@ -59,6 +59,26 @@ describe('Nunjucks Filters', () => {
       )
     })
 
+    it('should map error with no path to text with no href', () => {
+      viewContext = {
+        errors: [
+          {
+            msg: 'Field 1 message with no path',
+          },
+        ],
+      }
+      const nunjucksString = '{{ errors | errorSummaryList | dump }}'
+      compiledTemplate = nunjucks.compile(nunjucksString, njkEnv)
+      const $ = cheerio.load(compiledTemplate.render(viewContext))
+      expect($('body').text()).toBe(
+        JSON.stringify([
+          {
+            text: 'Field 1 message with no path',
+          },
+        ]),
+      )
+    })
+
     it('should handle empty errors object', () => {
       viewContext = {}
       const nunjucksString = '{{ errors | errorSummaryList }}'
