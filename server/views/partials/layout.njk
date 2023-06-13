@@ -1,4 +1,5 @@
 {% extends "govuk/template.njk" %}
+{%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
 
 {% block head %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
@@ -17,6 +18,12 @@
 
 {% block header %}
   {% include "./header.njk" %}
+  {% if primaryNavItems %}
+    {{ mojPrimaryNavigation({
+      label: 'Primary navigation',
+      items: primaryNavItems
+    }) }}
+  {% endif %}
 {% endblock %}
 
 {% block bodyStart %}
