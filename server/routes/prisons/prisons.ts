@@ -32,7 +32,7 @@ export default function routes({ prisonService }: Services): Router {
       .trim()
       .toUpperCase()
       .matches(/^[A-Z]{3}$/)
-      .withMessage('Enter three letter prison code')
+      .withMessage('Enter a three letter prison code')
       .bail()
       .custom(async prisonId => {
         try {
@@ -48,12 +48,16 @@ export default function routes({ prisonService }: Services): Router {
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      req.flash('errors', errors.array() as [])
+      req.flash('errors', errors.array())
       return res.redirect(`/prisons`)
     }
 
-    await prisonService.createPrison(res.locals.user.username, prisonId)
-    req.flash('message', prisonId)
+    try {
+      await prisonService.createPrison(res.locals.user.username, prisonId)
+      req.flash('message', prisonId)
+    } catch (error) {
+      req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
+    }
 
     return res.redirect(`/prisons`)
   })
@@ -64,7 +68,7 @@ export default function routes({ prisonService }: Services): Router {
     const { prison, prisonName } = await prisonService.getPrison(res.locals.user.username, prisonId)
     const message = req.flash('message')
 
-    res.render('pages/prisons/edit', { prison, prisonName, message })
+    res.render('pages/prisons/edit', { errors: req.flash('errors'), prison, prisonName, message })
   })
 
   post('/:prisonId([A-Z]{3})/edit', async (req, res) => {
@@ -72,16 +76,23 @@ export default function routes({ prisonService }: Services): Router {
     const { action } = req.body
 
     if (action === 'activate') {
-      await prisonService.activatePrison(res.locals.user.username, prisonId)
-      req.flash('message', 'activated')
+      const prison = await prisonService.activatePrison(res.locals.user.username, prisonId)
+      if (prison.active) {
+        req.flash('message', 'activated')
+        return res.redirect(`/prisons/${prisonId}/edit`)
+      }
     }
 
     if (action === 'deactivate') {
-      await prisonService.deactivatePrison(res.locals.user.username, prisonId)
-      req.flash('message', 'deactivated')
+      const prison = await prisonService.deactivatePrison(res.locals.user.username, prisonId)
+      if (!prison.active) {
+        req.flash('message', 'deactivated')
+        return res.redirect(`/prisons/${prisonId}/edit`)
+      }
     }
 
-    res.redirect(`/prisons/${prisonId}/edit`)
+    req.flash('errors', [{ msg: 'Failed to change prison status' }])
+    return res.redirect(`/prisons/${prisonId}/edit`)
   })
 
   return router

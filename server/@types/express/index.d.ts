@@ -1,3 +1,5 @@
+import { FlashErrorMessage } from '../vists-admin'
+
 export default {}
 
 declare module 'express-session' {
@@ -19,6 +21,7 @@ export declare global {
     interface Request {
       verified?: boolean
       id: string
+      flash(type: 'errors', message: FlashErrorMessage): number
       logout(done: (err: unknown) => void): void
     }
   }
