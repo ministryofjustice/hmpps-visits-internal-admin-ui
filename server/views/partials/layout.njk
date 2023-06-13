@@ -1,5 +1,4 @@
 {% extends "govuk/template.njk" %}
-{% from "./breadCrumb.njk" import breadCrumb %}
 
 {% block head %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
@@ -21,12 +20,6 @@
 {% endblock %}
 
 {% block bodyStart %}
-{% endblock %}
-
-{% block beforeContent %}
-  {% if breadCrumbs.enabled === true %}
-    {{ breadCrumb(breadCrumbs.pageTitle, breadCrumbs.data) }}
-  {% endif %}
 {% endblock %}
 
 {% block bodyEnd %}

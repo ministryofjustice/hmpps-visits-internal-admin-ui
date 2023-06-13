@@ -6,12 +6,6 @@
 {% set pageHeaderTitle = prisonName %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
 
-{% set breadCrumbs = {
-  enabled: true,
-  pageTitle:  pageHeaderTitle,
-  data: [{ title: 'Supported prisons', href: '/prisons' }]
-} %}
-
 {% set prisonStatus = 'Active' if prison.active else 'Inactive' %}
 {% set action = "deactivate" if prison.active else "activate" %}
 
