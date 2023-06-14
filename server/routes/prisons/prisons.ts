@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 
 import { body, validationResult } from 'express-validator'
 import asyncMiddleware from '../../middleware/asyncMiddleware'
-import type { Services } from '../../services'
+import { Services } from '../../services'
 
 export default function routes({ prisonService }: Services): Router {
   const router = Router()
@@ -67,6 +67,9 @@ export default function routes({ prisonService }: Services): Router {
 
     const { prison, prisonName } = await prisonService.getPrison(res.locals.user.username, prisonId)
     const message = req.flash('message')
+
+    // const sessionTemplates = await sessionTemplateService.getSessionTemplates(res.locals.username, prisonId)
+    // console.log(sessionTemplates)
 
     res.render('pages/prisons/viewSessionTemplates', { errors: req.flash('errors'), prison, prisonName, message })
   })
