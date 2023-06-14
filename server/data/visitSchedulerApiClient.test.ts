@@ -102,4 +102,23 @@ describe('visitSchedulerApiClient', () => {
       expect(output).toEqual(prison)
     })
   })
+
+  describe('getSessionTemplates', () => {
+    it('should return all session templates for a prison', async () => {
+      const sessionTemplates = [TestData.sessionTemplate()]
+
+      fakeVisitSchedulerApi
+        .get(`/admin/session-templates`)
+        .query({
+          prisonCode: 'HEI',
+          rangeType: 'ALL',
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, sessionTemplates)
+
+      const output = await visitSchedulerApiClient.getSessionTemplates('HEI')
+
+      expect(output).toEqual(sessionTemplates)
+    })
+  })
 })
