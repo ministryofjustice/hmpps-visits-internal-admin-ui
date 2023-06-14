@@ -22,6 +22,9 @@ describe('GET /', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
+        expect($('.moj-primary-navigation__item').length).toBe(2)
+        expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/')
+
         expect($('h1').text().trim()).toBe('Visits internal admin')
 
         expect($('.card').length).toBe(1)

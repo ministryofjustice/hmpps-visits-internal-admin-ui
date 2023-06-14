@@ -1,5 +1,6 @@
 {% extends "govuk/template.njk" %}
-{% from "./breadCrumb.njk" import breadCrumb %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
 
 {% block head %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
@@ -18,14 +19,23 @@
 
 {% block header %}
   {% include "./header.njk" %}
+  {% if primaryNavItems %}
+    {{ mojPrimaryNavigation({
+      label: 'Primary navigation',
+      items: primaryNavItems
+    }) }}
+  {% endif %}
 {% endblock %}
 
 {% block bodyStart %}
 {% endblock %}
 
 {% block beforeContent %}
-  {% if breadCrumbs.enabled === true %}
-    {{ breadCrumb(breadCrumbs.pageTitle, breadCrumbs.data) }}
+  {% if backLinkHref %}
+    {{ govukBackLink({
+      text: "Back",
+      href: backLinkHref
+    }) }}
   {% endif %}
 {% endblock %}
 
