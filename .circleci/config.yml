@@ -179,12 +179,21 @@ workflows:
           name: helm_lint
       - hmpps/build_docker:
           name: build_docker
+      - request-dev-approval:
+          type: approval
+          requires:
+            - helm_lint
+            - unit_test
+            - integration_test
+            - build_docker
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
           jira_update: true
           context: 
             - hmpps-common-vars
+          requires:
+            - request-dev-approval
           helm_timeout: 5m
       - request-staging-approval:
           type: approval
