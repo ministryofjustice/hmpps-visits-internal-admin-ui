@@ -41,6 +41,9 @@ describe('GET /prisons', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
+        expect($('.moj-primary-navigation__item').length).toBe(2)
+        expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/prisons')
+
         expect($('h1').text().trim()).toBe('Supported prisons')
 
         expect($('.moj-banner__message').length).toBe(0)
@@ -50,13 +53,12 @@ describe('GET /prisons', () => {
         expect($('[data-test="prison-code"]').eq(2).text()).toBe('WWI')
 
         expect($('[data-test="prison-name"]').eq(0).text()).toContain('Hewell')
+        expect($('[data-test="prison-name"] a').eq(0).attr('href')).toBe('/prisons/HEI/session-templates')
         expect($('[data-test="prison-name"]').eq(2).text()).toContain('Wandsworth')
+        expect($('[data-test="prison-name"] a').eq(2).attr('href')).toBe('/prisons/WWI/session-templates')
 
         expect($('[data-test="prison-status"]').eq(0).text().trim()).toBe('Active')
         expect($('[data-test="prison-status"]').eq(2).text().trim()).toBe('Inactive')
-
-        expect($('[data-test="prison-edit-link"] a').eq(0).attr('href')).toBe('/prisons/HEI/edit')
-        expect($('[data-test="prison-edit-link"] a').eq(2).attr('href')).toBe('/prisons/WWI/edit')
       })
   })
 
