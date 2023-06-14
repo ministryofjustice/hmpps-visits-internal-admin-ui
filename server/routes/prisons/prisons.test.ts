@@ -152,85 +152,140 @@ describe('POST /prisons', () => {
   })
 })
 
-describe('GET /prisons/HEI/edit', () => {
-  it('should display correct prison specific information and offer correct action', () => {
+describe('GET /prisons/{:prisonId}/session-templates', () => {
+  describe('Prison status', () => {
+    it('should display prison status information and offer correct action (active prison)', () => {
+      return request(app)
+        .get('/prisons/HEI/session-templates')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+
+          expect($('.moj-primary-navigation__item').length).toBe(2)
+          expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/prisons')
+          expect($('.govuk-back-link').attr('href')).toBe('/prisons')
+
+          expect($('h1').text().trim()).toBe(prisonName)
+
+          expect($('.moj-banner__message').length).toBe(0)
+          expect($('.govuk-error-summary').length).toBe(0)
+
+          expect($('[data-test="prison-status"]').text().trim()).toBe('active')
+
+          expect($('[data-test="prison-change-status-form"]').attr('action').trim()).toBe('/prisons/HEI/deactivate')
+          expect($('[data-test="prison-change-status"]').text().trim()).toBe('Deactivate')
+        })
+    })
+
+    it('should display prison status information and offer correct action (inactive prison)', () => {
+      prisonService.getPrison.mockResolvedValue({ prison: inactivePrison, prisonName })
+
+      return request(app)
+        .get('/prisons/HEI/session-templates')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('h1').text().trim()).toBe(prisonName)
+
+          expect($('[data-test="prison-status"]').text().trim()).toBe('inactive')
+
+          expect($('[data-test="prison-change-status-form"]').attr('action').trim()).toBe('/prisons/HEI/activate')
+          expect($('[data-test="prison-change-status"]').text().trim()).toBe('Activate')
+        })
+    })
+
+    it('should render success message set in flash', () => {
+      flashData = {
+        message: 'activated',
+      }
+
+      return request(app)
+        .get('/prisons/HEI/session-templates')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('h1').text().trim()).toBe(prisonName)
+          expect($('.moj-banner__message').text()).toBe('Hewell (HMP) has been activated.')
+        })
+    })
+
+    it('should render any error messages set in flash', () => {
+      const error = { msg: 'Failed to change prison status' }
+      flashData = { errors: [error] }
+
+      return request(app)
+        .get('/prisons/HEI/session-templates')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('h1').text().trim()).toBe(prisonName)
+          expect($('.govuk-error-summary').text()).toContain(error.msg)
+        })
+    })
+  })
+
+  describe('Sub navigation', () => {
+    it('should render sub navigation with session templates selected', () => {
+      return request(app)
+        .get('/prisons/HEI/session-templates')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('h1').text().trim()).toBe(prisonName)
+
+          expect($('.moj-sub-navigation__item').length).toBe(5)
+          expect($('.moj-sub-navigation__link[aria-current]').text()).toBe('Session templates')
+          expect($('.moj-sub-navigation__link[aria-current]').attr('href')).toBe('/prisons/HEI/session-templates')
+
+          expect($('h2').text().trim()).toBe('Session templates')
+        })
+    })
+  })
+})
+
+describe('POST /prisons/{:prisonId}/activate', () => {
+  it('should change prison status and set flash message', () => {
+    prisonService.activatePrison.mockResolvedValue(activePrison)
+
     return request(app)
-      .get('/prisons/HEI/edit')
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('h1').text().trim()).toBe(prisonName)
-
-        expect($('.moj-banner__message').length).toBe(0)
-        expect($('.govuk-error-summary').length).toBe(0)
-
-        expect($('[data-test="prison-name-status"]').eq(0).text()).toContain(prisonName)
-        expect($('[data-test="prison-name-status"]').eq(0).text()).toContain('Active')
-
-        expect($('.govuk-button').text()).toContain('Deactivate')
+      .post('/prisons/HEI/activate')
+      .expect(302)
+      .expect('location', `/prisons/HEI/session-templates`)
+      .expect(() => {
+        expect(flashProvider).toHaveBeenCalledWith('message', 'activated')
+        expect(prisonService.activatePrison).toHaveBeenCalledTimes(1)
+        expect(prisonService.activatePrison).toHaveBeenCalledWith('user1', 'HEI')
       })
   })
 
-  it('should render success message set in flash', () => {
-    flashData = {
-      message: 'activated',
-    }
-
-    return request(app)
-      .get('/prisons/HEI/edit')
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('h1').text().trim()).toBe(prisonName)
-        expect($('.moj-banner__message').text()).toBe('Hewell (HMP) has been activated.')
-      })
-  })
-
-  it('should render any error messages set in flash', () => {
+  it('should set error in flash if prison status not changed', () => {
+    prisonService.activatePrison.mockResolvedValue(inactivePrison)
     const error = { msg: 'Failed to change prison status' }
-    flashData = { errors: [error] }
 
     return request(app)
-      .get('/prisons/HEI/edit')
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('h1').text().trim()).toBe(prisonName)
-        expect($('.govuk-error-summary').text()).toContain(error.msg)
+      .post('/prisons/HEI/activate')
+      .expect(302)
+      .expect('location', `/prisons/HEI/session-templates`)
+      .expect(() => {
+        expect(flashProvider).toHaveBeenCalledWith('errors', [error])
+        expect(prisonService.activatePrison).toHaveBeenCalledTimes(1)
+        expect(prisonService.activatePrison).toHaveBeenCalledWith('user1', 'HEI')
       })
   })
 })
 
-describe('POST /prisons/HEI/edit', () => {
-  it('should change prison status and display message when submit (deactivate)', () => {
+describe('POST /prisons/{:prisonId}/deactivate', () => {
+  it('should change prison status and set flash message', () => {
     prisonService.deactivatePrison.mockResolvedValue(inactivePrison)
 
     return request(app)
-      .post('/prisons/HEI/edit')
-      .send('action=deactivate')
+      .post('/prisons/HEI/deactivate')
       .expect(302)
-      .expect('location', `/prisons/HEI/edit`)
+      .expect('location', `/prisons/HEI/session-templates`)
       .expect(() => {
         expect(flashProvider).toHaveBeenCalledWith('message', 'deactivated')
         expect(prisonService.deactivatePrison).toHaveBeenCalledTimes(1)
         expect(prisonService.deactivatePrison).toHaveBeenCalledWith('user1', 'HEI')
-        expect(prisonService.activatePrison).toHaveBeenCalledTimes(0)
-      })
-  })
-
-  it('should change prison status and display message when submit (activate)', () => {
-    prisonService.activatePrison.mockResolvedValue(activePrison)
-
-    return request(app)
-      .post('/prisons/HEI/edit')
-      .send('action=activate')
-      .expect(302)
-      .expect('location', `/prisons/HEI/edit`)
-      .expect(() => {
-        expect(flashProvider).toHaveBeenCalledWith('message', 'activated')
-        expect(prisonService.deactivatePrison).toHaveBeenCalledTimes(0)
-        expect(prisonService.activatePrison).toHaveBeenCalledTimes(1)
-        expect(prisonService.activatePrison).toHaveBeenCalledWith('user1', 'HEI')
       })
   })
 
@@ -239,15 +294,13 @@ describe('POST /prisons/HEI/edit', () => {
     const error = { msg: 'Failed to change prison status' }
 
     return request(app)
-      .post('/prisons/HEI/edit')
-      .send('action=deactivate')
+      .post('/prisons/HEI/deactivate')
       .expect(302)
-      .expect('location', `/prisons/HEI/edit`)
+      .expect('location', `/prisons/HEI/session-templates`)
       .expect(() => {
         expect(flashProvider).toHaveBeenCalledWith('errors', [error])
         expect(prisonService.deactivatePrison).toHaveBeenCalledTimes(1)
         expect(prisonService.deactivatePrison).toHaveBeenCalledWith('user1', 'HEI')
-        expect(prisonService.activatePrison).toHaveBeenCalledTimes(0)
       })
   })
 })
