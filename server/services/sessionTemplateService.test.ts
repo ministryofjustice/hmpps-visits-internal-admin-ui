@@ -4,7 +4,7 @@ import { createMockHmppsAuthClient, createMockVisitSchedulerApiClient } from '..
 
 const token = 'some token'
 
-describe('Prisons service', () => {
+describe('Session template service', () => {
   const hmppsAuthClient = createMockHmppsAuthClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()
 
