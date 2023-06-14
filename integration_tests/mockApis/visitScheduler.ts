@@ -7,7 +7,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        url: '/visitScheduler/config/prisons',
+        url: '/visitScheduler/admin/prisons',
       },
       response: {
         status: 200,

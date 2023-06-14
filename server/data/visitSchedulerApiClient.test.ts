@@ -27,7 +27,7 @@ describe('visitSchedulerApiClient', () => {
     it('should return an array of all supported Prisons', async () => {
       const results = TestData.prisons()
 
-      fakeVisitSchedulerApi.get('/config/prisons').matchHeader('authorization', `Bearer ${token}`).reply(200, results)
+      fakeVisitSchedulerApi.get('/admin/prisons').matchHeader('authorization', `Bearer ${token}`).reply(200, results)
 
       const output = await visitSchedulerApiClient.getAllPrisons()
 
@@ -40,7 +40,7 @@ describe('visitSchedulerApiClient', () => {
       const prison = TestData.prison()
 
       fakeVisitSchedulerApi
-        .get(`/config/prisons/prison/${prison.code}`)
+        .get(`/admin/prisons/prison/${prison.code}`)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, prison)
 
@@ -59,7 +59,7 @@ describe('visitSchedulerApiClient', () => {
       }
 
       fakeVisitSchedulerApi
-        .post('/config/prisons/prison', <Prison>{
+        .post('/admin/prisons/prison', <Prison>{
           active: prison.active,
           code: prison.code,
           excludeDates: prison.excludeDates,
@@ -78,7 +78,7 @@ describe('visitSchedulerApiClient', () => {
       const prison = TestData.prison()
 
       fakeVisitSchedulerApi
-        .put(`/config/prisons/prison/${prison.code}/activate`)
+        .put(`/admin/prisons/prison/${prison.code}/activate`)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, prison)
 
@@ -93,7 +93,7 @@ describe('visitSchedulerApiClient', () => {
       const prison = TestData.prison()
 
       fakeVisitSchedulerApi
-        .put(`/config/prisons/prison/${prison.code}/deactivate`)
+        .put(`/admin/prisons/prison/${prison.code}/deactivate`)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, prison)
 
