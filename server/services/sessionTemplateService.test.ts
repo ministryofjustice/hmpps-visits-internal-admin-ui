@@ -26,7 +26,7 @@ describe('Prisons service', () => {
   })
 
   describe('getSessionTemplates', () => {
-    it('should return an array of all supported Prisons', async () => {
+    it('should return an array of all session templates for a prison', async () => {
       visitSchedulerApiClient.getSessionTemplates.mockResolvedValue(sessionTemplates)
 
       const results = await sessionTemplateService.getSessionTemplates('user', 'HEI')
