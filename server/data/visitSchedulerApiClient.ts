@@ -11,19 +11,19 @@ export default class VisitSchedulerApiClient {
 
   async getAllPrisons(): Promise<Prison[]> {
     return this.restClient.get({
-      path: '/config/prisons',
+      path: '/admin/prisons',
     })
   }
 
   async getPrison(prisonId: string): Promise<Prison> {
     return this.restClient.get({
-      path: `/config/prisons/prison/${prisonId}`,
+      path: `/admin/prisons/prison/${prisonId}`,
     })
   }
 
   async createPrison(prison: Prison): Promise<Prison> {
     return this.restClient.post({
-      path: '/config/prisons/prison',
+      path: '/admin/prisons/prison',
       data: <Prison>{
         active: prison.active,
         code: prison.code,
@@ -34,13 +34,13 @@ export default class VisitSchedulerApiClient {
 
   async activatePrison(prisonCode: string): Promise<Prison> {
     return this.restClient.put({
-      path: `/config/prisons/prison/${prisonCode}/activate`,
+      path: `/admin/prisons/prison/${prisonCode}/activate`,
     })
   }
 
   async deactivatePrison(prisonCode: string): Promise<Prison> {
     return this.restClient.put({
-      path: `/config/prisons/prison/${prisonCode}/deactivate`,
+      path: `/admin/prisons/prison/${prisonCode}/deactivate`,
     })
   }
 }
