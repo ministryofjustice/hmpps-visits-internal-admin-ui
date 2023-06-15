@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 
 import { body, validationResult } from 'express-validator'
 import asyncMiddleware from '../../middleware/asyncMiddleware'
-import type { Services } from '../../services'
+import { Services } from '../../services'
 
 export default function routes({ prisonService }: Services): Router {
   const router = Router()
@@ -62,37 +62,42 @@ export default function routes({ prisonService }: Services): Router {
     return res.redirect(`/prisons`)
   })
 
-  get('/:prisonId([A-Z]{3})/edit', async (req, res) => {
+  get('/:prisonId([A-Z]{3})/session-templates', async (req, res) => {
     const { prisonId } = req.params
 
     const { prison, prisonName } = await prisonService.getPrison(res.locals.user.username, prisonId)
     const message = req.flash('message')
 
-    res.render('pages/prisons/edit', { errors: req.flash('errors'), prison, prisonName, message })
+    // const sessionTemplates = await sessionTemplateService.getSessionTemplates(res.locals.username, prisonId)
+    // console.log(sessionTemplates)
+
+    res.render('pages/prisons/viewSessionTemplates', { errors: req.flash('errors'), prison, prisonName, message })
   })
 
-  post('/:prisonId([A-Z]{3})/edit', async (req, res) => {
+  post('/:prisonId([A-Z]{3})/activate', async (req, res) => {
     const { prisonId } = req.params
-    const { action } = req.body
 
-    if (action === 'activate') {
-      const prison = await prisonService.activatePrison(res.locals.user.username, prisonId)
-      if (prison.active) {
-        req.flash('message', 'activated')
-        return res.redirect(`/prisons/${prisonId}/edit`)
-      }
+    const prison = await prisonService.activatePrison(res.locals.user.username, prisonId)
+    if (prison.active) {
+      req.flash('message', 'activated')
+    } else {
+      req.flash('errors', [{ msg: 'Failed to change prison status' }])
     }
 
-    if (action === 'deactivate') {
-      const prison = await prisonService.deactivatePrison(res.locals.user.username, prisonId)
-      if (!prison.active) {
-        req.flash('message', 'deactivated')
-        return res.redirect(`/prisons/${prisonId}/edit`)
-      }
+    res.redirect(`/prisons/${prisonId}/session-templates`)
+  })
+
+  post('/:prisonId([A-Z]{3})/deactivate', async (req, res) => {
+    const { prisonId } = req.params
+
+    const prison = await prisonService.deactivatePrison(res.locals.user.username, prisonId)
+    if (!prison.active) {
+      req.flash('message', 'deactivated')
+    } else {
+      req.flash('errors', [{ msg: 'Failed to change prison status' }])
     }
 
-    req.flash('errors', [{ msg: 'Failed to change prison status' }])
-    return res.redirect(`/prisons/${prisonId}/edit`)
+    res.redirect(`/prisons/${prisonId}/session-templates`)
   })
 
   return router

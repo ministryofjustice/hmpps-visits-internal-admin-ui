@@ -4,56 +4,14 @@
  */
 
 export interface paths {
-  '/config/prisons': {
-    /**
-     * Get all prisons
-     * @description Get all prisons
-     */
-    get: operations['getPrisons']
-  }
-  '/config/prisons/prison': {
-    /**
-     * Create a prison
-     * @description Create a prison
-     */
-    post: operations['createPrison']
-  }
-  '/config/prisons/prison/{prisonCode}': {
-    /**
-     * Gets prison by given prison id/code
-     * @description Gets prison by given prison id/code
-     */
-    get: operations['getPrison']
-  }
-  '/config/prisons/prison/{prisonCode}/activate': {
-    /**
-     * Activate prison using given prison id/code
-     * @description Activate prison using given prison id/code
-     */
-    put: operations['activatePrison']
-  }
-  '/config/prisons/prison/{prisonCode}/deactivate': {
-    /**
-     * Deactivate prison using given prison id/code
-     * @description Deactivate prison using given prison id/code
-     */
-    put: operations['deActivatePrison']
-  }
-  '/config/prisons/supported': {
-    /**
-     * Get supported prisons
-     * @description Get all supported prisons id's
-     */
-    get: operations['getSupportedPrisons']
-  }
-  '/location-groups/group': {
+  '/admin/location-groups/group': {
     /**
      * Create location group
      * @description Create location group
      */
     post: operations['createLocationGroup']
   }
-  '/location-groups/group/{reference}': {
+  '/admin/location-groups/group/{reference}': {
     /**
      * Get location group
      * @description Get location group by reference
@@ -70,12 +28,99 @@ export interface paths {
      */
     delete: operations['deleteSessionLocationGroup']
   }
-  '/location-groups/{prisonCode}': {
+  '/admin/location-groups/{prisonCode}': {
     /**
      * Get location groups
      * @description Get all location groups for given prison
      */
     get: operations['getLocationGroups']
+  }
+  '/admin/prisons': {
+    /**
+     * Get all prisons
+     * @description Get all prisons
+     */
+    get: operations['getPrisons']
+  }
+  '/admin/prisons/prison': {
+    /**
+     * Create a prison
+     * @description Create a prison
+     */
+    post: operations['createPrison']
+  }
+  '/admin/prisons/prison/{prisonCode}': {
+    /**
+     * Gets prison by given prison id/code
+     * @description Gets prison by given prison id/code
+     */
+    get: operations['getPrison']
+  }
+  '/admin/prisons/prison/{prisonCode}/activate': {
+    /**
+     * Activate prison using given prison id/code
+     * @description Activate prison using given prison id/code
+     */
+    put: operations['activatePrison']
+  }
+  '/admin/prisons/prison/{prisonCode}/deactivate': {
+    /**
+     * Deactivate prison using given prison id/code
+     * @description Deactivate prison using given prison id/code
+     */
+    put: operations['deActivatePrison']
+  }
+  '/admin/prisons/prison/{prisonCode}/exclude-dates/add/{excludeDate}': {
+    /**
+     * Add exclude date to a prison.
+     * @description Add exclude date to a prison.
+     */
+    put: operations['addPrisonExcludeDate']
+  }
+  '/admin/prisons/prison/{prisonCode}/exclude-dates/remove/{excludeDate}': {
+    /**
+     * Remove exclude date from a prison.
+     * @description Remove exclude date from a prison.
+     */
+    put: operations['removePrisonExcludeDate']
+  }
+  '/admin/session-templates': {
+    /**
+     * Get session templates
+     * @description Get session templates by given parameters
+     */
+    get: operations['getSessionTemplates']
+  }
+  '/admin/session-templates/template': {
+    /**
+     * Create a session template
+     * @description Create a session templates
+     */
+    post: operations['createSessionTemplate']
+  }
+  '/admin/session-templates/template/{reference}': {
+    /**
+     * Get session template
+     * @description Get session template by reference
+     */
+    get: operations['getSessionTemplate']
+    /**
+     * Update a session template
+     * @description Update a session templates
+     */
+    put: operations['updateSessionTemplate']
+    /**
+     * Delete session template by reference
+     * @description Delete session template by reference
+     */
+    delete: operations['deleteSessionTemplate']
+  }
+  '/config/prisons/supported': {
+    /**
+     * Get supported prisons
+     * @description Get all supported prisons id's
+     */
+    get: operations['getSupportedPrisons']
   }
   '/migrate-visits': {
     /** Migrate a visit */
@@ -100,37 +145,6 @@ export interface paths {
   '/v2/visits/{reference}/cancel': {
     /** Cancel an existing booked visit */
     put: operations['cancelVisit_1']
-  }
-  '/visit-session-templates': {
-    /**
-     * Get session templates
-     * @description Get session templates by given parameters
-     */
-    get: operations['getSessionTemplates']
-  }
-  '/visit-session-templates/template': {
-    /**
-     * Create a session template
-     * @description Create a session templates
-     */
-    post: operations['createSessionTemplate']
-  }
-  '/visit-session-templates/template/{reference}': {
-    /**
-     * Get session template
-     * @description Get session template by reference
-     */
-    get: operations['getSessionTemplate']
-    /**
-     * Update a session template
-     * @description Update a session templates
-     */
-    put: operations['updateSessionTemplate']
-    /**
-     * Delete session template by reference
-     * @description Delete session template by reference
-     */
-    delete: operations['deleteSessionTemplate']
   }
   '/visit-sessions': {
     /**
@@ -1103,206 +1117,6 @@ export interface components {
 export type external = Record<string, never>
 
 export interface operations {
-  getPrisons: {
-    /**
-     * Get all prisons
-     * @description Get all prisons
-     */
-    responses: {
-      /** @description prison returned */
-      200: {
-        content: {
-          'application/json': components['schemas']['PrisonDto'][]
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to get all prisons */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  createPrison: {
-    /**
-     * Create a prison
-     * @description Create a prison
-     */
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['PrisonDto']
-      }
-    }
-    responses: {
-      /** @description Prison created */
-      200: {
-        content: {
-          'application/json': components['schemas']['PrisonDto']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to create prison */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  getPrison: {
-    /**
-     * Gets prison by given prison id/code
-     * @description Gets prison by given prison id/code
-     */
-    parameters: {
-      /**
-       * @description prison id
-       * @example BHI
-       */
-      path: {
-        prisonCode: string
-      }
-    }
-    responses: {
-      /** @description prison returned */
-      200: {
-        content: {
-          'application/json': components['schemas']['PrisonDto']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to get prison */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  activatePrison: {
-    /**
-     * Activate prison using given prison id/code
-     * @description Activate prison using given prison id/code
-     */
-    parameters: {
-      /**
-       * @description prison id
-       * @example BHI
-       */
-      path: {
-        prisonCode: string
-      }
-    }
-    responses: {
-      /** @description prison activated */
-      200: {
-        content: {
-          'application/json': components['schemas']['PrisonDto']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to activate prison */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description prison cant be found to activate */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  deActivatePrison: {
-    /**
-     * Deactivate prison using given prison id/code
-     * @description Deactivate prison using given prison id/code
-     */
-    parameters: {
-      /**
-       * @description prison id
-       * @example BHI
-       */
-      path: {
-        prisonCode: string
-      }
-    }
-    responses: {
-      /** @description prison deactivated */
-      200: {
-        content: {
-          'application/json': components['schemas']['PrisonDto']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to deactivate prison */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description prison cant be found to deactivate */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  getSupportedPrisons: {
-    /**
-     * Get supported prisons
-     * @description Get all supported prisons id's
-     */
-    responses: {
-      /** @description Supported prisons returned */
-      200: {
-        content: {
-          'application/json': string[]
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to get supported prisons */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
   createLocationGroup: {
     /**
      * Create location group
@@ -1497,6 +1311,481 @@ export interface operations {
       }
     }
   }
+  getPrisons: {
+    /**
+     * Get all prisons
+     * @description Get all prisons
+     */
+    responses: {
+      /** @description prison returned */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonDto'][]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get all prisons */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createPrison: {
+    /**
+     * Create a prison
+     * @description Create a prison
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonDto']
+      }
+    }
+    responses: {
+      /** @description Prison created */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create prison */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getPrison: {
+    /**
+     * Gets prison by given prison id/code
+     * @description Gets prison by given prison id/code
+     */
+    parameters: {
+      /**
+       * @description prison id
+       * @example BHI
+       */
+      path: {
+        prisonCode: string
+      }
+    }
+    responses: {
+      /** @description prison returned */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get prison */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  activatePrison: {
+    /**
+     * Activate prison using given prison id/code
+     * @description Activate prison using given prison id/code
+     */
+    parameters: {
+      /**
+       * @description prison id
+       * @example BHI
+       */
+      path: {
+        prisonCode: string
+      }
+    }
+    responses: {
+      /** @description prison activated */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to activate prison */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description prison cant be found to activate */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deActivatePrison: {
+    /**
+     * Deactivate prison using given prison id/code
+     * @description Deactivate prison using given prison id/code
+     */
+    parameters: {
+      /**
+       * @description prison id
+       * @example BHI
+       */
+      path: {
+        prisonCode: string
+      }
+    }
+    responses: {
+      /** @description prison deactivated */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to deactivate prison */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description prison cant be found to deactivate */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  addPrisonExcludeDate: {
+    /**
+     * Add exclude date to a prison.
+     * @description Add exclude date to a prison.
+     */
+    parameters: {
+      /**
+       * @description prison id
+       * @example BHI
+       */
+      path: {
+        prisonCode: string
+        excludeDate: string
+      }
+    }
+    responses: {
+      /** @description successfully added exclude date to a prison */
+      200: never
+      /** @description exclude date  provided already exists for prison or prison can't be found */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to add exclude dates to a prison */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  removePrisonExcludeDate: {
+    /**
+     * Remove exclude date from a prison.
+     * @description Remove exclude date from a prison.
+     */
+    parameters: {
+      /**
+       * @description prison id
+       * @example BHI
+       */
+      path: {
+        prisonCode: string
+        excludeDate: string
+      }
+    }
+    responses: {
+      /** @description successfully removed exclude date from a prison */
+      200: never
+      /** @description exclude date does not exist for prison or prison can't be found */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to add exclude dates to a prison */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getSessionTemplates: {
+    /**
+     * Get session templates
+     * @description Get session templates by given parameters
+     */
+    parameters: {
+      /**
+       * @description Filter results by prison id/code
+       * @example MDI
+       */
+      /**
+       * @description Filters session templates depending on their from and to Date
+       * @example ACTIVE_OR_FUTURE
+       */
+      query: {
+        prisonCode: string
+        rangeType: 'ACTIVE_OR_FUTURE' | 'HISTORIC' | 'ALL'
+      }
+    }
+    responses: {
+      /** @description Session templates returned */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionTemplateDto'][]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to view session templates */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createSessionTemplate: {
+    /**
+     * Create a session template
+     * @description Create a session templates
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateSessionTemplateDto']
+      }
+    }
+    responses: {
+      /** @description Session templates created */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionTemplateDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create session templates */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getSessionTemplate: {
+    /**
+     * Get session template
+     * @description Get session template by reference
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example v9-d7-ed-7u
+       */
+      path: {
+        reference: string
+      }
+    }
+    responses: {
+      /** @description Session templates returned */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionTemplateDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to view session templates */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Session Template not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateSessionTemplate: {
+    /**
+     * Update a session template
+     * @description Update a session templates
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example v9-d7-ed-7u
+       */
+      path: {
+        reference: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateSessionTemplateDto']
+      }
+    }
+    responses: {
+      /** @description Session templates updated */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionTemplateDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to update session templates */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Session Template not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteSessionTemplate: {
+    /**
+     * Delete session template by reference
+     * @description Delete session template by reference
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example v9-d7-ed-7u
+       */
+      path: {
+        reference: string
+      }
+    }
+    responses: {
+      /** @description Session templates deleted */
+      200: {
+        content: {
+          'application/json': string
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to view session templates */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Session Template not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getSupportedPrisons: {
+    /**
+     * Get supported prisons
+     * @description Get all supported prisons id's
+     */
+    responses: {
+      /** @description Supported prisons returned */
+      200: {
+        content: {
+          'application/json': string[]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get supported prisons */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   migrateVisit: {
     /** Migrate a visit */
     requestBody: {
@@ -1680,215 +1969,6 @@ export interface operations {
         }
       }
       /** @description Visit not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  getSessionTemplates: {
-    /**
-     * Get session templates
-     * @description Get session templates by given parameters
-     */
-    parameters: {
-      /**
-       * @description Filter results by prison id/code
-       * @example MDI
-       */
-      /**
-       * @description Filter results by day of week
-       * @example MONDAY
-       */
-      /**
-       * @description Filter results by that when the session template is valid from
-       * @example 2021-11-03
-       */
-      /**
-       * @description Filter results by that when the session template is valid to
-       * @example 2021-11-03
-       */
-      query: {
-        prisonCode: string
-        dayOfWeek?: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
-        validFrom?: string
-        validTo?: string
-      }
-    }
-    responses: {
-      /** @description Session templates returned */
-      200: {
-        content: {
-          'application/json': components['schemas']['SessionTemplateDto'][]
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to view session templates */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  createSessionTemplate: {
-    /**
-     * Create a session template
-     * @description Create a session templates
-     */
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateSessionTemplateDto']
-      }
-    }
-    responses: {
-      /** @description Session templates created */
-      200: {
-        content: {
-          'application/json': components['schemas']['SessionTemplateDto']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to create session templates */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  getSessionTemplate: {
-    /**
-     * Get session template
-     * @description Get session template by reference
-     */
-    parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
-      path: {
-        reference: string
-      }
-    }
-    responses: {
-      /** @description Session templates returned */
-      200: {
-        content: {
-          'application/json': components['schemas']['SessionTemplateDto']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to view session templates */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Session Template not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  updateSessionTemplate: {
-    /**
-     * Update a session template
-     * @description Update a session templates
-     */
-    parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
-      path: {
-        reference: string
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['UpdateSessionTemplateDto']
-      }
-    }
-    responses: {
-      /** @description Session templates updated */
-      200: {
-        content: {
-          'application/json': components['schemas']['SessionTemplateDto']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to update session templates */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Session Template not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  deleteSessionTemplate: {
-    /**
-     * Delete session template by reference
-     * @description Delete session template by reference
-     */
-    parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
-      path: {
-        reference: string
-      }
-    }
-    responses: {
-      /** @description Session templates deleted */
-      200: {
-        content: {
-          'application/json': string
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to view session templates */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Session Template not found */
       404: {
         content: {
           'application/json': components['schemas']['ErrorResponse']

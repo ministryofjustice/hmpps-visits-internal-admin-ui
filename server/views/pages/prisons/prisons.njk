@@ -8,10 +8,17 @@
 {% set pageHeaderTitle = "Supported prisons" %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
 
-{% set breadCrumbs = {
-  enabled: true,
-  pageTitle:  pageHeaderTitle,
-  data: []} %}
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+  ] %}
 
 {% block content %}
 
@@ -24,9 +31,9 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
           {{ mojBanner({
-            type: 'success',
-            text: prisonNames[message] | default('UNKNOWN') + ' has been successfully added.',
-            iconFallbackText: 'Success'
+            type: "success",
+            text: prisonNames[message] | default("UNKNOWN") + " has been successfully added.",
+            iconFallbackText: "Success"
           }) }}
         </div>
       </div>
@@ -45,19 +52,15 @@
           attributes: { "data-test": "prison-code" }
         },
         {
-          text: prisonNames[prison.code] | default('UNKNOWN'),
+          html: '<a href="/prisons/' + prison.code + '/session-templates">' + prisonNames[prison.code] | default('UNKNOWN') + "</a>",
           attributes: { "data-test": "prison-name" }
         },
         {
           html: govukTag({
-            text: 'Active' if prison.active == true else 'Inactive',
-            classes: 'govuk-tag--blue' if prison.active else 'govuk-tag--grey',
+            text: "Active" if prison.active == true else "Inactive",
+            classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
             attributes: { "data-test": "prison-status" }
           })
-        },
-        {
-          html: '<a href="/prisons/' + prison.code + '/edit">Change</a>',
-          attributes: { "data-test": "prison-edit-link" }
         }
         ]), prisonRows) %}
     {% endfor %}
@@ -73,9 +76,6 @@
         },
         {
           text: "Status"
-        },
-        {
-          text: "Action"
         }
       ],
       rows: prisonRows

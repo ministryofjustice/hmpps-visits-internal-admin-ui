@@ -1,5 +1,5 @@
 import { PrisonRegisterPrison } from '../../data/prisonRegisterApiTypes'
-import { Prison } from '../../data/visitSchedulerApiTypes'
+import { Prison, SessionTemplate } from '../../data/visitSchedulerApiTypes'
 
 export default class TestData {
   // PrisonDto from Visit Scheduler
@@ -28,4 +28,41 @@ export default class TestData {
       { prisonId: 'WWI', prisonName: 'Wandsworth (HMP & YOI)' },
     ] as PrisonRegisterPrison[],
   } = {}): PrisonRegisterPrison[] => prisons
+
+  static sessionTemplate = ({
+    reference = '-afe.dcc.0f',
+    name = 'WEDNESDAY, 2023-03-21, 13:45',
+    prisonId = 'HEI',
+    startTime = '13:45',
+    endTime = '14:45',
+    validFromDate = '2023-03-21',
+    validToDate = undefined,
+    visitType = 'SOCIAL',
+    biWeekly = false,
+    visitRoom = 'Visits Main Room',
+    closedCapacity = 2,
+    openCapacity = 35,
+    dayOfWeek = 'WEDNESDAY',
+    permittedLocationGroups = [],
+    prisonerCategoryGroups = [],
+    prisonerIncentiveLevelGroups = [],
+  }: Partial<SessionTemplate> = {}): SessionTemplate =>
+    ({
+      reference,
+      name,
+      prisonId,
+      startTime,
+      endTime,
+      validFromDate,
+      validToDate,
+      visitType,
+      biWeekly,
+      visitRoom,
+      closedCapacity,
+      openCapacity,
+      dayOfWeek,
+      permittedLocationGroups,
+      prisonerCategoryGroups,
+      prisonerIncentiveLevelGroups,
+    } as SessionTemplate)
 }

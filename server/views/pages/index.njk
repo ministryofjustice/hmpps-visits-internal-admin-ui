@@ -6,6 +6,18 @@
 
 {% set mainClasses = "govuk-main-wrapper--auto-spacing" %}
 
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/",
+    active: true
+  },
+  {
+    text: "Prisons",
+    href: "/prisons"
+  }
+  ] %}
+
 {% block content %}
 
 <div class="govuk-grid-row">
