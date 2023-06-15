@@ -3,6 +3,7 @@ import nunjucks, { Environment } from 'nunjucks'
 import express from 'express'
 import path from 'path'
 import { FieldValidationError } from 'express-validator'
+import { format, parseISO } from 'date-fns'
 import { initialiseName } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 
@@ -66,6 +67,11 @@ export function registerNunjucks(app: express.Express): Environment {
     return {
       text: errorForMessage?.msg,
     }
+  })
+
+  njkEnv.addFilter('formatDate', (dateToFormat: string, dateFormat = 'd MMMM yyyy') => {
+    if (typeof dateFormat !== 'string') return null
+    return dateToFormat ? format(parseISO(dateToFormat), dateFormat) : null
   })
 
   return njkEnv

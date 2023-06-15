@@ -45,7 +45,7 @@
 
     {# Build rows for prisons #}
     {% set prisonRows = [] %}
-    {% for prison in prisons %}
+    {% for prison in prisons -%}
       {% set prisonRows = (prisonRows.push([
         {
           text: prison.code,
@@ -63,8 +63,8 @@
           })
         }
         ]), prisonRows) %}
-    {% endfor %}
-    
+    {%- endfor %}
+
     {{ govukTable({
       classes: "govuk-!-width-three-quarters",
       head: [
