@@ -4,7 +4,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import { createMockPrisonService } from '../../services/testutils/mocks'
+import { createMockPrisonService, createMockSessionTemplateService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { FlashErrorMessage } from '../../@types/vists-admin'
 
@@ -12,6 +12,7 @@ let app: Express
 let flashData: Record<string, string | FlashErrorMessage>
 
 const prisonService = createMockPrisonService()
+const sessionTemplateService = createMockSessionTemplateService()
 
 const allPrisons = TestData.prisons()
 const prisonNames = TestData.prisonNames()
@@ -27,7 +28,7 @@ beforeEach(() => {
   prisonService.getPrisonNames.mockResolvedValue(prisonNames)
   prisonService.getPrison.mockResolvedValue({ prison: activePrison, prisonName })
 
-  app = appWithAllRoutes({ services: { prisonService } })
+  app = appWithAllRoutes({ services: { prisonService, sessionTemplateService } })
 })
 
 afterEach(() => {
@@ -153,6 +154,12 @@ describe('POST /prisons', () => {
 })
 
 describe('GET /prisons/{:prisonId}/session-templates', () => {
+  const sessionTemplates = [TestData.sessionTemplate()]
+
+  beforeEach(() => {
+    sessionTemplateService.getSessionTemplates.mockResolvedValue(sessionTemplates)
+  })
+
   describe('Prison status', () => {
     it('should display prison status information and offer correct action (active prison)', () => {
       return request(app)
