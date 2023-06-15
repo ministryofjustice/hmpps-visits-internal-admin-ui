@@ -1,5 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {%- from "moj/components/banner/macro.njk" import mojBanner -%}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
@@ -60,7 +61,7 @@
         }) }}
       </form>
 
-      <p>{{ prisonName }} is: 
+      <p>This prison is currently
         {{ govukTag({
           text: "active" if prison.active else "inactive",
           classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
@@ -97,6 +98,72 @@
 
       <h2 class="govuk-heading-m">Session templates</h2>
 
+      {# Build rows of session templates with day as a spanned cell #}
+      {% set rows = [] %}
+      {% for day, sessionTemplates in sessionTemplatesByDay %}
+
+        {% if sessionTemplates | length %}
+          {% set rows = (rows.push([
+            {
+              html: '<h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-3">' + day | capitalize + "</h3>",
+              colspan: 7
+            }
+            ]), rows) %}
+
+            {% for sessionTemplate in sessionTemplates %}
+              {% set categoriesCount = sessionTemplate.prisonerCategoryGroups | length %}
+              {% set incentivesCount = sessionTemplate.prisonerIncentiveLevelGroups | length %}
+              {% set locationsCount = sessionTemplate.permittedLocationGroups | length %}
+      
+              {% set groupsText = 'Category (' + categoriesCount + ')\n' if categoriesCount %}
+              {% set groupsText = groupsText + 'Incentive (' + incentivesCount + ')\n' if incentivesCount %}
+              {% set groupsText = groupsText + 'Location (' + locationsCount + ')\n' if locationsCount %}
+              {% if groupsText == "" %}{% set groupsText = "None" %}{% endif %}
+      
+              {% set rows = (rows.push([
+                { html: sessionTemplate.name + '<br><a style="white-space: nowrap" href="sessionTemplate/' + sessionTemplate.reference + '">' + sessionTemplate.reference + '</a>' },
+                { text: sessionTemplate.startTime + ' to ' + sessionTemplate.endTime },
+                { html: 'Open: ' + sessionTemplate.openCapacity + '<br>Closed:&nbsp;' + sessionTemplate.closedCapacity },
+                { html: 'From: ' + sessionTemplate.validFromDate + '<br>To: ' + sessionTemplate.validToDate | default('ONGOING') },
+                { text: sessionTemplate.visitRoom },
+                { text: 'Yes' if sessionTemplate.biWeekly else 'No' },
+                { html: groupsText | nl2br }
+                ]), rows) %}
+            {% endfor %}
+        {% endif %}
+      {% endfor %}
+
+      {% if rows | length %}
+        {{ govukTable({
+          head: [
+            {
+              text: "Name and reference"
+            },
+            {
+              text: "Time"
+            },
+            {
+              text: "Capacity"
+            },
+            {
+              text: "Valid from and to"
+            },
+            {
+              text: "Visit room"
+            },
+            {
+              text: "Bi-weekly"
+            },
+            {
+              text: "Groups"
+            }
+          ],
+          rows: rows
+        }) }}
+      {% else %}
+        <p>There are no session templates for this prison.</p>
+      {% endif %}
+        
     </div>
   </div>
 {% endblock %}
