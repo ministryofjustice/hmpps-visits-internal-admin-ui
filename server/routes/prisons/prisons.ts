@@ -3,8 +3,9 @@ import { type RequestHandler, Router } from 'express'
 import { body, validationResult } from 'express-validator'
 import asyncMiddleware from '../../middleware/asyncMiddleware'
 import { Services } from '../../services'
+import { SessionTemplate } from '../../data/visitSchedulerApiTypes'
 
-export default function routes({ prisonService }: Services): Router {
+export default function routes({ prisonService, sessionTemplateService }: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, ...handlers: RequestHandler[]) =>
@@ -68,10 +69,26 @@ export default function routes({ prisonService }: Services): Router {
     const { prison, prisonName } = await prisonService.getPrison(res.locals.user.username, prisonId)
     const message = req.flash('message')
 
-    // const sessionTemplates = await sessionTemplateService.getSessionTemplates(res.locals.username, prisonId)
-    // console.log(sessionTemplates)
+    const sessionTemplates = await sessionTemplateService.getSessionTemplates(res.locals.username, prisonId)
 
-    res.render('pages/prisons/viewSessionTemplates', { errors: req.flash('errors'), prison, prisonName, message })
+    const sessionTemplatesByDay: Record<SessionTemplate['dayOfWeek'], SessionTemplate[]> = {
+      MONDAY: [],
+      TUESDAY: [],
+      WEDNESDAY: [],
+      THURSDAY: [],
+      FRIDAY: [],
+      SATURDAY: [],
+      SUNDAY: [],
+    }
+    sessionTemplates.forEach(template => sessionTemplatesByDay[template.dayOfWeek].push(template))
+
+    res.render('pages/prisons/viewSessionTemplates', {
+      errors: req.flash('errors'),
+      message,
+      prison,
+      prisonName,
+      sessionTemplatesByDay,
+    })
   })
 
   post('/:prisonId([A-Z]{3})/activate', async (req, res) => {
