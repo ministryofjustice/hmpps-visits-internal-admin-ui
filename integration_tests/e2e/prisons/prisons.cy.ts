@@ -7,12 +7,12 @@ context('Supported prisons', () => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    cy.task('stubPrisons')
+    cy.task('stubGetAllPrisons')
     cy.signIn()
   })
 
   it('should navigate to the list of all supported prisons', () => {
-    cy.task('stubPrisons')
-    cy.task('stubGetAllPrisons')
     const homePage = Page.verifyOnPage(HomePage)
 
     homePage.supportedPrisonsCard().contains('Supported prisons')

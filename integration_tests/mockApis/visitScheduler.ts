@@ -19,19 +19,19 @@ export default {
       },
     })
   },
-  stubGetPrison: (prisonId: string): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        url: `/visitScheduler/config/prisons/${prisonId}`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: TestData.prison,
-      },
-    })
-  },
+  // stubGetPrison: (prisonId: string): SuperAgentRequest => {
+  //   return stubFor({
+  //     request: {
+  //       method: 'GET',
+  //       url: `/visitScheduler/config/prisons/${prisonId}`,
+  //     },
+  //     response: {
+  //       status: 200,
+  //       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+  //       jsonBody: TestData.prison,
+  //     },
+  //   })
+  // },
   stubCreatePrison: (prison: Prison): SuperAgentRequest => {
     return stubFor({
       request: {
