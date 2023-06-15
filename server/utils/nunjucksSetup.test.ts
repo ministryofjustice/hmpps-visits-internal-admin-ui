@@ -116,4 +116,34 @@ describe('Nunjucks Filters', () => {
       expect($('body').text()).toBe('')
     })
   })
+
+  describe('formatDate', () => {
+    it('should format a date using default format', () => {
+      viewContext = {
+        date: '2022-02-14T10:00:00',
+      }
+      const nunjucksString = '{{ date | formatDate }}'
+      compiledTemplate = nunjucks.compile(nunjucksString, njkEnv)
+      const $ = cheerio.load(compiledTemplate.render(viewContext))
+      expect($('body').text()).toBe('14 February 2022')
+    })
+
+    it('should format a date using specified format', () => {
+      viewContext = {
+        date: '2022-02-14T10:00:00',
+      }
+      const nunjucksString = '{{ date | formatDate("yy MMM d") }}'
+      compiledTemplate = nunjucks.compile(nunjucksString, njkEnv)
+      const $ = cheerio.load(compiledTemplate.render(viewContext))
+      expect($('body').text()).toBe('22 Feb 14')
+    })
+
+    it('should handle missing date', () => {
+      viewContext = {}
+      const nunjucksString = '{{ date | formatDate }}'
+      compiledTemplate = nunjucks.compile(nunjucksString, njkEnv)
+      const $ = cheerio.load(compiledTemplate.render(viewContext))
+      expect($('body').text()).toBe('')
+    })
+  })
 })
