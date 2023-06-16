@@ -13,6 +13,7 @@ describe('Session template service', () => {
   const VisitSchedulerApiClientFactory = jest.fn()
 
   const sessionTemplates = [TestData.sessionTemplate()]
+  const singleSessionTemplate = TestData.sessionTemplate()
 
   beforeEach(() => {
     VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
@@ -32,6 +33,16 @@ describe('Session template service', () => {
       const results = await sessionTemplateService.getSessionTemplates('user', 'HEI')
 
       expect(results).toEqual(sessionTemplates)
+    })
+  })
+
+  describe('getSingleSessionTemplate', () => {
+    it('should return an array of all session templates for a prison', async () => {
+      visitSchedulerApiClient.getSingleSessionTemplate.mockResolvedValue(singleSessionTemplate)
+
+      const results = await sessionTemplateService.getSingleSessionTemplate('user', 'HEI')
+
+      expect(results).toEqual(singleSessionTemplate)
     })
   })
 })

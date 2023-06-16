@@ -250,6 +250,39 @@ describe('GET /prisons/{:prisonId}/session-templates', () => {
   })
 })
 
+describe('GET /prisons/{:prisonId}/session-templates/{:reference}', () => {
+  const singleSessionTemplate = TestData.sessionTemplate()
+
+  beforeEach(() => {
+    sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(singleSessionTemplate)
+  })
+
+  it('should display all session template information', () => {
+    return request(app)
+      .get('/prisons/HEI/session-templates/-afe.dcc.0f')
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('h1').text().replace(/\s+/g, ' ')).toContain('Hewell (HMP)')
+        expect($('h1').text().replace(/\s+/g, ' ')).toContain(singleSessionTemplate.name)
+
+        expect($('[data-test="reference"]').text()).toBe(singleSessionTemplate.reference)
+        expect($('[data-test="dayOfWeek"]').text()).toBe('Wednesday')
+        expect($('[data-test="startTime"]').text()).toBe(singleSessionTemplate.startTime)
+        expect($('[data-test="endTime"]').text()).toBe(singleSessionTemplate.endTime)
+        expect($('[data-test="openCapacity"]').text()).toBe(singleSessionTemplate.openCapacity.toString())
+        expect($('[data-test="closedCapacity"]').text()).toBe(singleSessionTemplate.closedCapacity.toString())
+        expect($('[data-test="validFromDate"]').text()).toBe('21 March 2023')
+        // expect($('[data-test="validToDate"]').text()).toBe('No end date')
+        expect($('[data-test="visitRoom"]').text()).toBe(singleSessionTemplate.visitRoom)
+        // expect($('[data-test="biWeekly"]').text()).toBe('No')
+        expect($('[data-test="locationGroups"]').text()).toBe('None')
+        expect($('[data-test="categoryGroups"]').text()).toBe('None')
+        expect($('[data-test="incentiveGroups"]').text()).toBe('None')
+      })
+  })
+})
+
 describe('POST /prisons/{:prisonId}/activate', () => {
   it('should change prison status and set flash message', () => {
     prisonService.activatePrison.mockResolvedValue(activePrison)

@@ -73,7 +73,7 @@
               text: "Reference"
             },
             value: {
-              text: sessionTemplate.reference
+              html: "<span data-test='reference'>" + sessionTemplate.reference + "</span>"
             }
           },
           { 
@@ -81,7 +81,7 @@
               text: "Day of week"
             },
             value: {
-              text: sessionTemplate.dayOfWeek | capitalize
+              html: "<span data-test='dayOfWeek'>" + sessionTemplate.dayOfWeek | capitalize + "</span>"
             }
           },
           { 
@@ -89,7 +89,7 @@
               text: "Start time"
             },
             value: {
-              text: sessionTemplate.startTime
+              html: "<span data-test='startTime'>" + sessionTemplate.startTime + "</span>"
             }
           },
           { 
@@ -97,7 +97,7 @@
               text: "End time"
             },
             value: {
-              text: sessionTemplate.endTime
+              html: "<span data-test='endTime'>" + sessionTemplate.endTime + "</span>"
             }
           },
           { 
@@ -105,7 +105,7 @@
               text: "Open capacity"
             },
             value: {
-              text: sessionTemplate.openCapacity
+              html: "<span data-test='openCapacity'>" + sessionTemplate.openCapacity + "</span>"
             }
           },
           { 
@@ -113,7 +113,7 @@
               text: "Closed capacity"
             },
             value: {
-              text: sessionTemplate.closedCapacity
+              html: "<span data-test='closedCapacity'>" + sessionTemplate.closedCapacity + "</span>"
             }
           },
           { 
@@ -121,7 +121,7 @@
               text: "Valid from"
             },
             value: {
-              text: sessionTemplate.validFromDate | formatDate
+              html: "<span data-test='validFromDate'>" + sessionTemplate.validFromDate | formatDate + "</span>"
             }
           },
           { 
@@ -129,7 +129,7 @@
               text: "Valid to"
             },
             value: {
-              text: sessionTemplate.validToDate | formatDate if sessionTemplate.validToDate else "No end date"
+              html: "<span data-test='validToDate'>" + sessionTemplate.validToDate | formatDate if sessionTemplate.validToDate else "No end date" + "</span>"
             }
           },
           { 
@@ -137,15 +137,15 @@
               text: "Visit room"
             },
             value: {
-              text: sessionTemplate.visitRoom
+              html: "<span data-test='visitRoom'>" + sessionTemplate.visitRoom + "</span>"
             }
           },
           { 
             key: {
-              text: "Bi-weekly"
+              text: "Bi-weekly" 
             },
             value: {
-              text: 'Yes' if sessionTemplate.biWeekly else 'No'
+              html: "<span data-test='biWeekly'>" + 'Yes' if sessionTemplate.biWeekly else 'No' + "</span>"
             }
           },
           { 
@@ -153,7 +153,7 @@
               text: "Location groups"
             },
             value: {
-              html: locationGroups 
+              html: "<span data-test='locationGroups'>" + locationGroups + "</span>"
             }
           },
           { 
@@ -161,7 +161,7 @@
               text: "Prisoner category groups"
             },
             value: {
-              html: categoryGroups 
+              html: "<span data-test='categoryGroups'>" + categoryGroups + "</span>"
             }
           },
           { 
@@ -169,7 +169,7 @@
               text: "Incentive level groups"
             },
             value: {
-              html: incentiveGroups 
+              html: "<span data-test='incentiveGroups'>" + incentiveGroups + "</span>"
             }
           }
         ]
