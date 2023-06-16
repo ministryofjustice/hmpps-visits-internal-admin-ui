@@ -13,4 +13,11 @@ export default class SessionTemplateService {
 
     return visitSchedulerApiClient.getSessionTemplates(prisonCode)
   }
+
+  async getSingleSessionTemplate(username: string, reference: string): Promise<SessionTemplate> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    return visitSchedulerApiClient.getSingleSessionTemplate(reference)
+  }
 }

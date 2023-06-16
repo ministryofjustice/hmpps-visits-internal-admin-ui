@@ -1,0 +1,180 @@
+{% extends "../../partials/layout.njk" %}
+{%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
+{%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
+
+{% set pageHeaderTitle = sessionTemplate.name %}
+{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+  ] %}
+
+{% set backLinkHref = "/prisons/" + sessionTemplate.prisonId + "/session-templates" %}
+
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prisonName }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+      {%- set locationGroups -%}
+        {%- if sessionTemplate.permittedLocationGroups.length -%}
+          <ul class="govuk-list govuk-list--bullet">
+            {%- for locationGroup in sessionTemplate.permittedLocationGroups -%} 
+              <li>{{ locationGroup.name }}</li>
+            {%- endfor -%}
+          </ul>
+        {%- else -%}
+          None
+        {%- endif -%}
+      {%- endset -%}
+
+      {%- set categoryGroups -%}
+        {%- if sessionTemplate.prisonerCategoryGroups.length -%}
+          <ul class="govuk-list govuk-list--bullet">
+            {%- for locationGroup in sessionTemplate.prisonerCategoryGroups -%} 
+              <li>{{ locationGroup.name }}</li>
+            {%- endfor -%}
+          </ul>
+        {%- else -%}
+          None
+        {%- endif -%}
+      {%- endset -%}
+
+
+      {%- set incentiveGroups -%}
+        {%- if sessionTemplate.prisonerIncentiveLevelGroups.length -%}
+          <ul class="govuk-list govuk-list--bullet">
+            {%- for locationGroup in sessionTemplate.prisonerIncentiveLevelGroups -%} 
+              <li>{{ locationGroup.name }}</li>
+            {%- endfor -%}
+          </ul>
+        {%- else -%}
+          None
+        {%- endif -%}
+      {%- endset -%}
+
+      {{ govukSummaryList({
+        rows: [
+          { 
+            key: {
+              text: "Reference"
+            },
+            value: {
+              text: sessionTemplate.reference
+            }
+          },
+          { 
+            key: {
+              text: "Day of week"
+            },
+            value: {
+              text: sessionTemplate.dayOfWeek
+            }
+          },
+          { 
+            key: {
+              text: "Start time"
+            },
+            value: {
+              text: sessionTemplate.startTime
+            }
+          },
+          { 
+            key: {
+              text: "End time"
+            },
+            value: {
+              text: sessionTemplate.endTime
+            }
+          },
+          { 
+            key: {
+              text: "Open capacity"
+            },
+            value: {
+              text: sessionTemplate.openCapacity
+            }
+          },
+          { 
+            key: {
+              text: "Closed capacity"
+            },
+            value: {
+              text: sessionTemplate.closedCapacity
+            }
+          },
+          { 
+            key: {
+              text: "Valid from"
+            },
+            value: {
+              text: sessionTemplate.validFromDate | formatDate
+            }
+          },
+          { 
+            key: {
+              text: "Valid to"
+            },
+            value: {
+              text: sessionTemplate.validToDate | formatDate if sessionTemplate.validToDate else "No end date"
+            }
+          },
+          { 
+            key: {
+              text: "Visit room"
+            },
+            value: {
+              text: sessionTemplate.visitRoom
+            }
+          },
+          { 
+            key: {
+              text: "Bi-weekly"
+            },
+            value: {
+              text: 'Yes' if sessionTemplate.biWeekly else 'No'
+            }
+          },
+          { 
+            key: {
+              text: "Location groups"
+            },
+            value: {
+              html: locationGroups 
+            }
+          },
+          { 
+            key: {
+              text: "Prisoner category groups"
+            },
+            value: {
+              html: categoryGroups 
+            }
+          },
+          { 
+            key: {
+              text: "Incentive level groups"
+            },
+            value: {
+              html: incentiveGroups 
+            }
+          }
+        ]
+      }) }}
+
+    </div>
+  </div>
+{% endblock %}
