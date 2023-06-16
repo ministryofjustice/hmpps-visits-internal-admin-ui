@@ -5,7 +5,7 @@ export default class SupportedPrisonsPage extends Page {
     super('Supported prisons')
   }
 
-  selectedPrison = (): PageElement => cy.get('????')
+  selectedPrison = (prisonId: string): PageElement => cy.get(`#${prisonId}`)
   // TODO
 
   typePrison = (): PageElement => cy.get('input').type('BLI')
