@@ -1,3 +1,4 @@
+import TestData from '../../../server/routes/testutils/testData'
 import HomePage from '../../pages/home'
 import Page from '../../pages/page'
 import SupportedPrisonsPage from '../../pages/prisons/prisons'
@@ -22,9 +23,16 @@ context('Supported prisons', () => {
   })
 
   it('should create a Prison', () => {
-    const supportedPrisonPage = Page.verifyOnPage(SupportedPrisonsPage)
+    const homePage = Page.verifyOnPage(HomePage)
 
-    supportedPrisonPage.typePrison()
-    supportedPrisonPage.createPrison()
+    homePage.supportedPrisonsCard().contains('Supported prisons')
+    homePage.supportedPrisonsCard().click()
+
+    const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
+    const newPrison = TestData.prison({ active: false })
+    cy.task('stubCreatePrison', newPrison)
+    supportedPrisonsPage.enterPrisonCode('HEI')
+    supportedPrisonsPage.createPrison().click()
+    supportedPrisonsPage.succesfulMessage().contains('Hewell (HMP) has been successfully added.')
   })
 })

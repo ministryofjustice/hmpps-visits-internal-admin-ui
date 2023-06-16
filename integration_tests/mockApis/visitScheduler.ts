@@ -20,15 +20,20 @@ export default {
     })
   },
   stubCreatePrison: (prison: Prison): SuperAgentRequest => {
+    console.log(prison)
     return stubFor({
       request: {
         method: 'POST',
-        url: '/admin/prisons/prison',
-        data: <Prison>{
-          active: prison.active,
-          code: prison.code,
-          excludeDates: prison.excludeDates,
-        },
+        url: '/visitScheduler/admin/prisons/prison',
+        bodyPatterns: [
+          {
+            equalToJson: {
+              active: prison.active,
+              code: prison.code,
+              excludeDates: prison.excludeDates,
+            },
+          },
+        ],
       },
       response: {
         status: 201,
@@ -37,7 +42,7 @@ export default {
       },
     })
   },
-  stubActivePrison: (prisonCode: string): SuperAgentRequest => {
+  stubActivatePrison: (prisonCode: string): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
@@ -50,7 +55,7 @@ export default {
       },
     })
   },
-  stubDeactivePrison: (prisonCode: string): SuperAgentRequest => {
+  stubDeactivatePrison: (prisonCode: string): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
@@ -67,13 +72,12 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/admin/prisons/prison/${prisonCode}/deactivate`,
+        url: `/admin/session-templates`,
       },
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: { ...TestData.prison },
-        // TODO: return sessionTemplate
+        jsonBody: [TestData.sessionTemplate()],
       },
     })
   },

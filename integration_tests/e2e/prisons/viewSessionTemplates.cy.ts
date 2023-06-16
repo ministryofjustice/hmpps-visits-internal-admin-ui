@@ -1,3 +1,4 @@
+import HomePage from '../../pages/home'
 import Page from '../../pages/page'
 import SupportedPrisonsPage from '../../pages/prisons/prisons'
 import ViewSessionTemplatePage from '../../pages/prisons/viewSessionTemplate'
@@ -9,23 +10,28 @@ context('Supported prisons', () => {
     cy.task('stubAuthUser')
     cy.task('stubPrisons')
     cy.task('stubGetAllPrisons')
-    cy.task('selectPrison')
 
     cy.signIn()
   })
 
   it('should navigate to the selected prison', () => {
-    const supportedPrisonPage = Page.verifyOnPage(SupportedPrisonsPage)
+    const homePage = Page.verifyOnPage(HomePage)
 
-    // supportedPrisonPage.selectedPrison().click();
-    // Page.verifyOnPage(ViewSessionTemplatePage)
+    homePage.supportedPrisonsCard().contains('Supported prisons')
+    homePage.supportedPrisonsCard().click()
+
+    const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
+
+    supportedPrisonsPage.selectPrison('HEI').click()
+
+    Page.verifyOnPage(ViewSessionTemplatePage)
   })
 
   it('should active a Prison', () => {
-    const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
+    // const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
   })
 
   it('should deactive a Prison', () => {
-    const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
+    // const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
   })
 })

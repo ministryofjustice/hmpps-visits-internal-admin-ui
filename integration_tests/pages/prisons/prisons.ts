@@ -5,10 +5,11 @@ export default class SupportedPrisonsPage extends Page {
     super('Supported prisons')
   }
 
-  selectedPrison = (prisonId: string): PageElement => cy.get(`#${prisonId}`)
-  // TODO
+  selectPrison = (prisonId: string): PageElement => cy.get(`a[href="/prisons/${prisonId}/session-templates"]`)
 
-  typePrison = (): PageElement => cy.get('input').type('BLI')
+  enterPrisonCode = (prisonId: string): PageElement => cy.get('.govuk-input').type(prisonId)
 
-  createPrison = (): PageElement => cy.get('form').submit()
+  createPrison = (): PageElement => cy.get('[data-test="submit"]')
+
+  succesfulMessage = (): PageElement => cy.get('.moj-banner--success')
 }
