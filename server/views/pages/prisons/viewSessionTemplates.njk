@@ -112,7 +112,7 @@
           {%- set rows = (rows.push([
             {
               html: '<h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-3">' + day | capitalize + "</h3>",
-              colspan: 8
+              colspan: 9
             }
             ]), rows) %}
 
@@ -134,10 +134,14 @@
                   attributes: { "data-test": "template-start-end-time" }
                 },
                 {
-                  html: "Open: " + sessionTemplate.openCapacity
-                    + "<br>Closed: " + sessionTemplate.closedCapacity,
+                  text: sessionTemplate.openCapacity,
                   classes: "nowrap",
-                  attributes: { "data-test": "template-capacity" }
+                  attributes: { "data-test": "template-capacity-open" }
+                },
+                {
+                  text: sessionTemplate.closedCapacity,
+                  classes: "nowrap",
+                  attributes: { "data-test": "template-capacity-closed" }
                 },
                 {
                   text: sessionTemplate.validFromDate | formatDate('dd MMM yyyy'),
@@ -177,7 +181,10 @@
               text: "Time"
             },
             {
-              text: "Capacity"
+              text: "Open"
+            },
+            {
+              text: "Closed"
             },
             {
               text: "Valid from"
