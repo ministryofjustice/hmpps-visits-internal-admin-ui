@@ -1,10 +1,5 @@
 {% extends "../../partials/layout.njk" %}
-{%- from "govuk/components/tag/macro.njk" import govukTag -%}
-{%- from "govuk/components/button/macro.njk" import govukButton -%}
-{%- from "moj/components/banner/macro.njk" import mojBanner -%}
-{%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
-{%- from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions -%}
 {%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
 
 {% set pageHeaderTitle = sessionTemplate.name %}
@@ -34,22 +29,8 @@
         {{ pageHeaderTitle }}
       </h1>
 
-      {% include "partials/errorSummary.njk" %}     
-
-      {% if message | length %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-two-thirds">
-            {{ mojBanner({
-              type: 'success',
-              text: prisonName + " has been " + message + '.',
-              iconFallbackText: 'Success'
-            }) }}
-          </div>
-        </div>
-      {% endif %}
-
       {%- set locationGroups -%}
-        {%- if sessionTemplate.permittedLocationGroups.length !== 0 -%}
+        {%- if sessionTemplate.permittedLocationGroups.length -%}
           <ul class="govuk-list govuk-list--bullet">
             {%- for locationGroup in sessionTemplate.permittedLocationGroups -%} 
               <li>{{ locationGroup.name }}</li>
@@ -61,7 +42,7 @@
       {%- endset -%}
 
       {%- set categoryGroups -%}
-        {%- if sessionTemplate.prisonerCategoryGroups.length !== 0 -%}
+        {%- if sessionTemplate.prisonerCategoryGroups.length -%}
           <ul class="govuk-list govuk-list--bullet">
             {%- for locationGroup in sessionTemplate.prisonerCategoryGroups -%} 
               <li>{{ locationGroup.name }}</li>
@@ -74,7 +55,7 @@
 
 
       {%- set incentiveGroups -%}
-        {%- if sessionTemplate.prisonerIncentiveLevelGroups.length !== 0 -%}
+        {%- if sessionTemplate.prisonerIncentiveLevelGroups.length -%}
           <ul class="govuk-list govuk-list--bullet">
             {%- for locationGroup in sessionTemplate.prisonerIncentiveLevelGroups -%} 
               <li>{{ locationGroup.name }}</li>
@@ -86,7 +67,6 @@
       {%- endset -%}
 
       {{ govukSummaryList({
-        firstCellIsHeader: true,
         rows: [
           { 
             key: {
