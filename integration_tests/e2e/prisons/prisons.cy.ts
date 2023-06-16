@@ -22,13 +22,9 @@ context('Supported prisons', () => {
   })
 
   it('should create a Prison', () => {
-    cy.task('stubPrisons')
-    cy.task('stubGetPrison')
-    const homePage = Page.verifyOnPage(HomePage)
+    const supportedPrisonPage = Page.verifyOnPage(SupportedPrisonsPage)
 
-    homePage.supportedPrisonsCard().contains('Supported prisons')
-    homePage.supportedPrisonsCard().click()
-
-    Page.verifyOnPage(SupportedPrisonsPage)
+    supportedPrisonPage.typePrison()
+    supportedPrisonPage.createPrison()
   })
 })

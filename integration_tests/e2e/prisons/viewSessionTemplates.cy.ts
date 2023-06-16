@@ -1,6 +1,6 @@
-import HomePage from '../../pages/home'
 import Page from '../../pages/page'
 import SupportedPrisonsPage from '../../pages/prisons/prisons'
+import ViewSessionTemplatePage from '../../pages/prisons/viewSessionTemplate'
 
 context('Supported prisons', () => {
   beforeEach(() => {
@@ -9,33 +9,23 @@ context('Supported prisons', () => {
     cy.task('stubAuthUser')
     cy.task('stubPrisons')
     cy.task('stubGetAllPrisons')
+    cy.task('selectPrison')
 
-    // cy.task('selectPrison')
     cy.signIn()
   })
 
-  it('should navigate to the list of all supported prisons', () => {
-    // const homePage = Page.verifyOnPage(HomePage)
-    // homePage.supportedPrisonsCard().contains('Supported prisons')
-    // homePage.supportedPrisonsCard().click()
-    // Page.verifyOnPage(SupportedPrisonsPage)
+  it('should navigate to the selected prison', () => {
+    const supportedPrisonPage = Page.verifyOnPage(SupportedPrisonsPage)
+
+    // supportedPrisonPage.selectedPrison().click();
+    // Page.verifyOnPage(ViewSessionTemplatePage)
   })
 
   it('should active a Prison', () => {
-    // cy.task('stubPrisons')
-    // cy.task('stubActivePrison')
-    // const homePage = Page.verifyOnPage(HomePage)
-    // homePage.supportedPrisonsCard().contains('Supported prisons')
-    // homePage.supportedPrisonsCard().click()
-    // Page.verifyOnPage(SupportedPrisonsPage)
+    const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
   })
 
   it('should deactive a Prison', () => {
-    // cy.task('stubPrisons')
-    // cy.task('stubDeactivePrison')
-    // const homePage = Page.verifyOnPage(HomePage)
-    // homePage.supportedPrisonsCard().contains('Supported prisons')
-    // homePage.supportedPrisonsCard().click()
-    // Page.verifyOnPage(SupportedPrisonsPage)
+    const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
   })
 })
