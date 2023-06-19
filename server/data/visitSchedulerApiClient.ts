@@ -54,4 +54,10 @@ export default class VisitSchedulerApiClient {
       }).toString(),
     })
   }
+
+  async getSingleSessionTemplate(reference: string): Promise<SessionTemplate> {
+    return this.restClient.get({
+      path: `/admin/session-templates/template/${reference}`,
+    })
+  }
 }

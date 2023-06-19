@@ -91,6 +91,20 @@ export default function routes({ prisonService, sessionTemplateService }: Servic
     })
   })
 
+  get('/:prisonId/session-templates/:reference', async (req, res) => {
+    const { reference, prisonId } = req.params
+    const { prison, prisonName } = await prisonService.getPrison(res.locals.user.username, prisonId)
+
+    const sessionTemplate = await sessionTemplateService.getSingleSessionTemplate(res.locals.user.username, reference)
+
+    res.render('pages/prisons/viewSingleSessionTemplate', {
+      errors: req.flash('errors'),
+      prison,
+      prisonName,
+      sessionTemplate,
+    })
+  })
+
   post('/:prisonId([A-Z]{3})/activate', async (req, res) => {
     const { prisonId } = req.params
 

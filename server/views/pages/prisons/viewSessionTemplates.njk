@@ -25,6 +25,12 @@
 
 {% set changeStatusAction = "deactivate" if prison.active else "activate" %}
 
+{% macro groupCountIfNotEmpty(groupArray, label) %}
+  {% if groupArray | length %}
+    {{ label }} ({{ groupArray | length }})
+  {% endif %}
+{% endmacro %}
+
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -100,53 +106,91 @@
 
       {# Build rows of session templates with day as a spanned cell #}
       {% set rows = [] %}
-      {% for day, sessionTemplates in sessionTemplatesByDay %}
+      {% for day, sessionTemplates in sessionTemplatesByDay -%}
 
         {% if sessionTemplates | length %}
-          {% set rows = (rows.push([
+          {%- set rows = (rows.push([
             {
               html: '<h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-3">' + day | capitalize + "</h3>",
-              colspan: 7
+              colspan: 9
             }
             ]), rows) %}
 
-            {% for sessionTemplate in sessionTemplates %}
-              {% set categoriesCount = sessionTemplate.prisonerCategoryGroups | length %}
-              {% set incentivesCount = sessionTemplate.prisonerIncentiveLevelGroups | length %}
-              {% set locationsCount = sessionTemplate.permittedLocationGroups | length %}
-      
-              {% set groupsText = 'Category (' + categoriesCount + ')\n' if categoriesCount %}
-              {% set groupsText = groupsText + 'Incentive (' + incentivesCount + ')\n' if incentivesCount %}
-              {% set groupsText = groupsText + 'Location (' + locationsCount + ')\n' if locationsCount %}
-              {% if groupsText == "" %}{% set groupsText = "None" %}{% endif %}
-      
-              {% set rows = (rows.push([
-                { html: sessionTemplate.name + '<br><a style="white-space: nowrap" href="sessionTemplate/' + sessionTemplate.reference + '">' + sessionTemplate.reference + '</a>' },
-                { text: sessionTemplate.startTime + ' to ' + sessionTemplate.endTime },
-                { html: 'Open: ' + sessionTemplate.openCapacity + '<br>Closed:&nbsp;' + sessionTemplate.closedCapacity },
-                { html: 'From: ' + sessionTemplate.validFromDate + '<br>To: ' + sessionTemplate.validToDate | default('ONGOING') },
-                { text: sessionTemplate.visitRoom },
-                { text: 'Yes' if sessionTemplate.biWeekly else 'No' },
-                { html: groupsText | nl2br }
+            {%- for sessionTemplate in sessionTemplates -%}
+
+              {%- set groupsListWithCount = [
+                groupCountIfNotEmpty(sessionTemplate.prisonerCategoryGroups, 'Category') | trim,
+                groupCountIfNotEmpty(sessionTemplate.prisonerIncentiveLevelGroups, 'Incentive') | trim,
+                groupCountIfNotEmpty(sessionTemplate.permittedLocationGroups, 'Location') | trim
+              ] | join("\n") | trim -%}
+
+              {%- set rows = (rows.push([
+                {
+                  html: '<a href="/prisons/' + prison.code + '/session-templates/' + sessionTemplate.reference + '">' + sessionTemplate.name + "</a>",
+                  attributes: { "data-test": "template-name" }
+                },
+                {
+                  text: sessionTemplate.startTime + " to " + sessionTemplate.endTime,
+                  attributes: { "data-test": "template-start-end-time" }
+                },
+                {
+                  text: sessionTemplate.openCapacity,
+                  classes: "nowrap",
+                  attributes: { "data-test": "template-capacity-open" }
+                },
+                {
+                  text: sessionTemplate.closedCapacity,
+                  classes: "nowrap",
+                  attributes: { "data-test": "template-capacity-closed" }
+                },
+                {
+                  text: sessionTemplate.validFromDate | formatDate('dd MMM yyyy'),
+                  classes: "nowrap",
+                  attributes: { "data-test": "template-valid-from-date" }
+                },
+                {
+                  text: sessionTemplate.validToDate | formatDate('dd MMM yyyy') if sessionTemplate.validToDate else "No end date",
+                  classes: "nowrap",
+                  attributes: { "data-test": "template-valid-to-date" }
+                },
+                {
+                  text: sessionTemplate.visitRoom,
+                  attributes: { "data-test": "template-visit-room" }
+                },
+                {
+                  text: "Yes" if sessionTemplate.biWeekly else "No",
+                  attributes: { "data-test": "template-bi-weekly" }
+                },
+                {
+                  html: groupsListWithCount | nl2br if groupsListWithCount else "None",
+                  classes: "nowrap",
+                  attributes: { "data-test": "template-groups" }
+                }
                 ]), rows) %}
-            {% endfor %}
+            {%- endfor %}
         {% endif %}
-      {% endfor %}
+      {%- endfor %}
 
       {% if rows | length %}
         {{ govukTable({
           head: [
             {
-              text: "Name and reference"
+              text: "Name"
             },
             {
               text: "Time"
             },
             {
-              text: "Capacity"
+              text: "Open"
             },
             {
-              text: "Valid from and to"
+              text: "Closed"
+            },
+            {
+              text: "Valid from"
+            },
+            {
+              text: "Valid to"
             },
             {
               text: "Visit room"
