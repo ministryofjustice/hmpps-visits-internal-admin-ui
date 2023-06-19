@@ -68,109 +68,124 @@
 
       {{ govukSummaryList({
         rows: [
-          { 
+          {
             key: {
               text: "Reference"
             },
             value: {
-              html: "<span data-test='reference'>" + sessionTemplate.reference + "</span>"
-            }
+              text: sessionTemplate.reference
+            },
+            classes: "test-template-reference"
           },
           { 
             key: {
               text: "Day of week"
             },
             value: {
-              html: "<span data-test='dayOfWeek'>" + sessionTemplate.dayOfWeek | capitalize + "</span>"
-            }
+              text: sessionTemplate.dayOfWeek | capitalize
+            },
+            classes: "test-template-dayOfWeek"
+
           },
           { 
             key: {
               text: "Start time"
             },
             value: {
-              html: "<span data-test='startTime'>" + sessionTemplate.startTime + "</span>"
-            }
+              text: sessionTemplate.startTime
+            },
+            classes: "test-template-startTime"
           },
           { 
             key: {
               text: "End time"
             },
             value: {
-              html: "<span data-test='endTime'>" + sessionTemplate.endTime + "</span>"
-            }
+             text: sessionTemplate.endTime
+            },
+            classes: "test-template-endTime"
           },
           { 
             key: {
               text: "Open capacity"
             },
             value: {
-              html: "<span data-test='openCapacity'>" + sessionTemplate.openCapacity + "</span>"
-            }
+              text: sessionTemplate.openCapacity
+            },
+            classes: "test-template-openCapacity"
           },
           { 
             key: {
               text: "Closed capacity"
             },
             value: {
-              html: "<span data-test='closedCapacity'>" + sessionTemplate.closedCapacity + "</span>"
-            }
+              text: sessionTemplate.closedCapacity
+            },
+            classes: "test-template-closedCapacity"
           },
           { 
             key: {
               text: "Valid from"
             },
             value: {
-              html: "<span data-test='validFromDate'>" + sessionTemplate.validFromDate | formatDate + "</span>"
-            }
+             text: sessionTemplate.validFromDate | formatDate
+            },
+            classes: "test-template-validFromDate"
           },
           { 
             key: {
               text: "Valid to"
             },
             value: {
-              html: "<span data-test='validToDate'>" + sessionTemplate.validToDate | formatDate if sessionTemplate.validToDate else "No end date" + "</span>"
-            }
+              text: sessionTemplate.validToDate | formatDate if sessionTemplate.validToDate else "No end date"
+            },
+            classes: "test-template-validToDate"
           },
           { 
             key: {
               text: "Visit room"
             },
             value: {
-              html: "<span data-test='visitRoom'>" + sessionTemplate.visitRoom + "</span>"
-            }
+              text: sessionTemplate.visitRoom
+            },
+            classes: "test-template-visitRoom"
           },
           { 
             key: {
               text: "Bi-weekly" 
             },
             value: {
-              html: "<span data-test='biWeekly'>" + 'Yes' if sessionTemplate.biWeekly else 'No' + "</span>"
-            }
+              text: 'Yes' if sessionTemplate.biWeekly else 'No'
+            },
+            classes: "test-template-biWeekly"
+
           },
           { 
             key: {
               text: "Location groups"
             },
             value: {
-              html: "<span data-test='locationGroups'>" + locationGroups + "</span>"
-            }
+              text: locationGroups
+            },
+            classes: "test-template-locationGroups"
           },
           { 
             key: {
               text: "Prisoner category groups"
             },
             value: {
-              html: "<span data-test='categoryGroups'>" + categoryGroups + "</span>"
-            }
+             text: categoryGroups
+            },
+            classes: "test-template-categoryGroups"
           },
           { 
             key: {
               text: "Incentive level groups"
             },
             value: {
-              html: "<span data-test='incentiveGroups'>" + incentiveGroups + "</span>"
-            }
+              text: incentiveGroups
+            },
+            classes: "test-template-incentiveGroups"
           }
         ]
       }) }}
