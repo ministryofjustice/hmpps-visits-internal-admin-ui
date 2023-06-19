@@ -268,10 +268,12 @@ describe('GET /prisons/{:prisonId}/session-templates/{:reference}', () => {
 
         expect($('.test-template-reference').text()).toContain(singleSessionTemplate.reference)
         expect($('.test-template-dayOfWeek').text()).toContain('Wednesday')
-        expect($('.test-template-startTime').text()).toContain(singleSessionTemplate.startTime)
-        expect($('.test-template-endTime').text()).toContain(singleSessionTemplate.endTime)
-        expect($('.test-template-openCapacity').text()).toContain(singleSessionTemplate.openCapacity.toString())
-        expect($('.test-template-closedCapacity').text()).toContain(singleSessionTemplate.closedCapacity.toString())
+        expect($('.test-template-startTime').text()).toContain(singleSessionTemplate.sessionTimeSlot.startTime)
+        expect($('.test-template-endTime').text()).toContain(singleSessionTemplate.sessionTimeSlot.endTime)
+        expect($('.test-template-openCapacity').text()).toContain(singleSessionTemplate.sessionCapacity.open.toString())
+        expect($('.test-template-closedCapacity').text()).toContain(
+          singleSessionTemplate.sessionCapacity.closed.toString(),
+        )
         expect($('.test-template-validFromDate').text()).toContain('21 March 2023')
         expect($('.test-template-validToDate').text()).toContain('No end date')
         expect($('.test-template-visitRoom').text()).toContain(singleSessionTemplate.visitRoom)

@@ -126,30 +126,32 @@
 
               {%- set rows = (rows.push([
                 {
-                  html: '<a href="/prisons/' + prison.code + '/session-templates/' + sessionTemplate.reference + '">' + sessionTemplate.name + "</a>",
+                  html: '<a href="/prisons/' + prison.code + '/session-templates/' + sessionTemplate.reference + '">'
+                    + sessionTemplate.name + "</a>",
                   attributes: { "data-test": "template-name" }
                 },
                 {
-                  text: sessionTemplate.startTime + " to " + sessionTemplate.endTime,
+                  text: sessionTemplate.sessionTimeSlot.startTime + " to " + sessionTemplate.sessionTimeSlot.endTime,
                   attributes: { "data-test": "template-start-end-time" }
                 },
                 {
-                  text: sessionTemplate.openCapacity,
+                  text: sessionTemplate.sessionCapacity.open,
                   classes: "nowrap",
                   attributes: { "data-test": "template-capacity-open" }
                 },
                 {
-                  text: sessionTemplate.closedCapacity,
+                  text: sessionTemplate.sessionCapacity.closed,
                   classes: "nowrap",
                   attributes: { "data-test": "template-capacity-closed" }
                 },
                 {
-                  text: sessionTemplate.validFromDate | formatDate('dd MMM yyyy'),
+                  text: sessionTemplate.sessionDateRange.validFromDate | formatDate('dd MMM yyyy'),
                   classes: "nowrap",
                   attributes: { "data-test": "template-valid-from-date" }
                 },
                 {
-                  text: sessionTemplate.validToDate | formatDate('dd MMM yyyy') if sessionTemplate.validToDate else "No end date",
+                  text: sessionTemplate.sessionDateRange.validToDate | formatDate('dd MMM yyyy')
+                    if sessionTemplate.sessionDateRange.validToDate else "No end date",
                   classes: "nowrap",
                   attributes: { "data-test": "template-valid-to-date" }
                 },
