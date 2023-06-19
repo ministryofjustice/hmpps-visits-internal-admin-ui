@@ -250,6 +250,39 @@ describe('GET /prisons/{:prisonId}/session-templates', () => {
   })
 })
 
+describe('GET /prisons/{:prisonId}/session-templates/{:reference}', () => {
+  const singleSessionTemplate = TestData.sessionTemplate()
+
+  beforeEach(() => {
+    sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(singleSessionTemplate)
+  })
+
+  it('should display all session template information', () => {
+    return request(app)
+      .get('/prisons/HEI/session-templates/-afe.dcc.0f')
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('h1').text().replace(/\s+/g, ' ')).toContain('Hewell (HMP)')
+        expect($('h1').text().replace(/\s+/g, ' ')).toContain(singleSessionTemplate.name)
+
+        expect($('.test-template-reference').text()).toContain(singleSessionTemplate.reference)
+        expect($('.test-template-dayOfWeek').text()).toContain('Wednesday')
+        expect($('.test-template-startTime').text()).toContain(singleSessionTemplate.startTime)
+        expect($('.test-template-endTime').text()).toContain(singleSessionTemplate.endTime)
+        expect($('.test-template-openCapacity').text()).toContain(singleSessionTemplate.openCapacity.toString())
+        expect($('.test-template-closedCapacity').text()).toContain(singleSessionTemplate.closedCapacity.toString())
+        expect($('.test-template-validFromDate').text()).toContain('21 March 2023')
+        expect($('.test-template-validToDate').text()).toContain('No end date')
+        expect($('.test-template-visitRoom').text()).toContain(singleSessionTemplate.visitRoom)
+        expect($('.test-template-biWeekly').text()).toContain('No')
+        expect($('.test-template-locationGroups').text()).toContain('None')
+        expect($('.test-template-categoryGroups').text()).toContain('None')
+        expect($('.test-template-incentiveGroups').text()).toContain('None')
+      })
+  })
+})
+
 describe('POST /prisons/{:prisonId}/activate', () => {
   it('should change prison status and set flash message', () => {
     prisonService.activatePrison.mockResolvedValue(activePrison)

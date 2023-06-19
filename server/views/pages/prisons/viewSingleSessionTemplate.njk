@@ -68,13 +68,14 @@
 
       {{ govukSummaryList({
         rows: [
-          { 
+          {
             key: {
               text: "Reference"
             },
             value: {
               text: sessionTemplate.reference
-            }
+            },
+            classes: "test-template-reference"
           },
           { 
             key: {
@@ -82,7 +83,9 @@
             },
             value: {
               text: sessionTemplate.dayOfWeek | capitalize
-            }
+            },
+            classes: "test-template-dayOfWeek"
+
           },
           { 
             key: {
@@ -90,15 +93,17 @@
             },
             value: {
               text: sessionTemplate.startTime
-            }
+            },
+            classes: "test-template-startTime"
           },
           { 
             key: {
               text: "End time"
             },
             value: {
-              text: sessionTemplate.endTime
-            }
+             text: sessionTemplate.endTime
+            },
+            classes: "test-template-endTime"
           },
           { 
             key: {
@@ -106,7 +111,8 @@
             },
             value: {
               text: sessionTemplate.openCapacity
-            }
+            },
+            classes: "test-template-openCapacity"
           },
           { 
             key: {
@@ -114,15 +120,17 @@
             },
             value: {
               text: sessionTemplate.closedCapacity
-            }
+            },
+            classes: "test-template-closedCapacity"
           },
           { 
             key: {
               text: "Valid from"
             },
             value: {
-              text: sessionTemplate.validFromDate | formatDate
-            }
+             text: sessionTemplate.validFromDate | formatDate
+            },
+            classes: "test-template-validFromDate"
           },
           { 
             key: {
@@ -130,7 +138,8 @@
             },
             value: {
               text: sessionTemplate.validToDate | formatDate if sessionTemplate.validToDate else "No end date"
-            }
+            },
+            classes: "test-template-validToDate"
           },
           { 
             key: {
@@ -138,39 +147,45 @@
             },
             value: {
               text: sessionTemplate.visitRoom
-            }
+            },
+            classes: "test-template-visitRoom"
           },
           { 
             key: {
-              text: "Bi-weekly"
+              text: "Bi-weekly" 
             },
             value: {
               text: 'Yes' if sessionTemplate.biWeekly else 'No'
-            }
+            },
+            classes: "test-template-biWeekly"
+
           },
           { 
             key: {
               text: "Location groups"
             },
             value: {
-              html: locationGroups 
-            }
+              text: locationGroups
+            },
+            classes: "test-template-locationGroups"
           },
           { 
             key: {
               text: "Prisoner category groups"
             },
             value: {
-              html: categoryGroups 
-            }
+             text: categoryGroups
+            },
+            classes: "test-template-categoryGroups"
           },
           { 
             key: {
               text: "Incentive level groups"
             },
             value: {
-              html: incentiveGroups 
-            }
+              text: incentiveGroups
+            },
+            classes: "test-template-incentiveGroups"
           }
         ]
       }) }}
