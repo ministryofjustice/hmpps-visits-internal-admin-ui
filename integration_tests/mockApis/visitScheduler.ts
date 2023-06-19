@@ -20,7 +20,6 @@ export default {
     })
   },
   stubCreatePrison: (prison: Prison): SuperAgentRequest => {
-    console.log(prison)
     return stubFor({
       request: {
         method: 'POST',
@@ -46,7 +45,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/admin/prisons/prison/${prisonCode}/activate`,
+        url: `/visitScheduler/admin/prisons/prison/${prisonCode}/activate`,
       },
       response: {
         status: 200,
@@ -59,7 +58,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/admin/prisons/prison/${prisonCode}/deactivate`,
+        url: `/visitScheduler/admin/prisons/prison/${prisonCode}/deactivate`,
       },
       response: {
         status: 200,
@@ -68,11 +67,11 @@ export default {
       },
     })
   },
-  stubGetSessionTemplate: (prisonCode: string): SuperAgentRequest => {
+  stubGetSessionTemplate: (): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/admin/session-templates`,
+        url: `/visitScheduler/admin/session-templates`,
       },
       response: {
         status: 200,

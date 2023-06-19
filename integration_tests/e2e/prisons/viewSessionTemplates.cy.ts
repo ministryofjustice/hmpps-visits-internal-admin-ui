@@ -29,9 +29,12 @@ context('Supported prisons', () => {
 
   it('should active a Prison', () => {
     // const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
+
+    cy.task('stubActivatePrison')
   })
 
   it('should deactive a Prison', () => {
     // const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
+    cy.task('stubDeactivatePrison')
   })
 })
