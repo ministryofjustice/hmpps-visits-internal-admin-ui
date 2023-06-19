@@ -30,9 +30,10 @@ describe('Session template service', () => {
     it('should return an array of all session templates for a prison', async () => {
       visitSchedulerApiClient.getSessionTemplates.mockResolvedValue(sessionTemplates)
 
-      const results = await sessionTemplateService.getSessionTemplates('user', 'HEI')
+      const results = await sessionTemplateService.getSessionTemplates('user', 'HEI', 'ALL')
 
       expect(results).toEqual(sessionTemplates)
+      expect(visitSchedulerApiClient.getSessionTemplates).toHaveBeenCalledWith('HEI', 'ALL')
     })
   })
 

@@ -5,6 +5,7 @@
 {%- from "moj/components/banner/macro.njk" import mojBanner -%}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
 
 {% set pageHeaderTitle = prisonName %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
@@ -103,6 +104,32 @@
       }) }}
 
       <h2 class="govuk-heading-m">Session templates</h2>
+
+      {# Build button items for session template range filter #}
+      {% set filterMenuItems = [] %}
+      {% for rangeKey, description in sessionTemplatesFilterRanges %}
+        {% set filterMenuItems = (filterMenuItems.push({
+          text: description | capitalize,
+          classes: "govuk-button--secondary",
+          href: "/prisons/" + prison.code + "/session-templates?rangeType=" + rangeKey
+        }), filterMenuItems)%}
+      {% endfor %}
+
+      {{ mojIdentityBar({
+        title: {
+          html: '<span class="govuk-body">Showing '
+            + '<strong>' + sessionTemplatesFilterRanges[selectedRange]+ '</strong>'
+            + ' session templates</span>'
+        },
+        classes: 'govuk-!-margin-bottom-7',
+        menus: [{
+          items: [{
+            text: "Add a session template"
+          }]
+        }, {
+          items: filterMenuItems
+        }]
+      }) }}
 
       {# Build rows of session templates with day as a spanned cell #}
       {% set rows = [] %}
@@ -207,9 +234,22 @@
           rows: rows
         }) }}
       {% else %}
-        <p>There are no session templates for this prison.</p>
+        <p>There are no session templates for this prison matching the selected filter.</p>
       {% endif %}
         
     </div>
   </div>
+{% endblock %}
+
+{% block pageScripts %}
+  <script nonce="{{ cspNonce }}">
+    new MOJFrontend.ButtonMenu({
+      container: $(".moj-identity-bar .moj-button-menu:last"),
+      mq: "(min-width: 1000em)",
+      buttonText: "Filter templates",
+      buttonClasses:
+        "govuk-button--secondary moj-button-menu__toggle-button--secondary",
+      menuClasses: "moj-button-menu__wrapper--right",
+    });
+  </script>
 {% endblock %}
