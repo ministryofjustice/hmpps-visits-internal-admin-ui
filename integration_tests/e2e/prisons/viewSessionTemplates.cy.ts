@@ -31,7 +31,7 @@ context('Supported prisons', () => {
 
     cy.task('stubDeactivatePrison', 'HEI')
     viewSessionTemplatePage.switchStatusButton().click()
-    viewSessionTemplatePage.succesfulMessage().contains('Hewell (HMP) has been deactivated')
+    viewSessionTemplatePage.succesMessage().contains('Hewell (HMP) has been deactivated')
 
     cy.task('stubActivatePrison', 'HEI')
     viewSessionTemplatePage.switchStatusButton().click()

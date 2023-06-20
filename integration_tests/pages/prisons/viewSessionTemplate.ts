@@ -8,5 +8,5 @@ export default class ViewSessionTemplatePage extends Page {
   // switch status Activate <-> Deactivate
   switchStatusButton = (): PageElement => cy.get('[data-test=prison-change-status]')
 
-  succesfulMessage = (): PageElement => cy.get('.moj-banner--success')
+  succesMessage = (): PageElement => cy.get('.moj-banner--success')
 }
