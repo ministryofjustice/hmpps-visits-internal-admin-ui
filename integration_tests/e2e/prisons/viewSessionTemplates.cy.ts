@@ -14,22 +14,6 @@ context('Supported prisons', () => {
     cy.signIn()
   })
 
-  // it('should navigate to the selected prison', () => {
-  //   const homePage = Page.verifyOnPage(HomePage)
-
-  //   homePage.supportedPrisonsCard().contains('Supported prisons')
-  //   homePage.supportedPrisonsCard().click()
-
-  //   const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
-
-  //   cy.task('stubGetPrison', 'HEI')
-  //   cy.task('stubGetSessionTemplates', 'HEI')
-
-  //   supportedPrisonsPage.selectPrison('HEI').click()
-
-  //   Page.verifyOnPage(ViewSessionTemplatePage)
-  // })
-
   it('should activate and deactivate a prison', () => {
     const homePage = Page.verifyOnPage(HomePage)
 
@@ -51,21 +35,5 @@ context('Supported prisons', () => {
 
     cy.task('stubActivatePrison', 'HEI')
     viewSessionTemplatePage.switchStatusButton().click()
-    // viewSessionTemplatePage.succesfulMessage().contains('Hewell (HMP) has been activated')
-
-    //
-    // cy.task('stubDeactivatePrison', 'HEI')
-    // viewSessionTemplatePage.switchStatusButton().click()
-    // viewSessionTemplatePage.switchStatusButton().contains('Activate')
-
-    // cy.task('stubActivatePrison')
-    // viewSessionTemplatePage.switchStatusButton().contains('Deactivate')
   })
-
-  // it('should Deactivate a prison', () => {
-  //   cy.task('stubActivatePrison')
-
-  //   const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
-  //   viewSessionTemplatePage.switchStatusButton().contains('Deactivate')
-  // })
 })

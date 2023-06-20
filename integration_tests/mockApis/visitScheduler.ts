@@ -84,7 +84,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/visitScheduler/admin/session-templates?prisonCode=${prisonCode}&rangeType=ALL`,
+        url: `/visitScheduler/admin/session-templates?prisonCode=${prisonCode}&rangeType=ACTIVE_OR_FUTURE`,
       },
       response: {
         status: 200,
