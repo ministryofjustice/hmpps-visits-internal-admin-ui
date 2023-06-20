@@ -1,6 +1,6 @@
 import RestClient from './restClient'
 import config from '../config'
-import { Prison, SessionTemplate } from './visitSchedulerApiTypes'
+import { Prison, SessionTemplate, SessionTemplatesRangeType } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
   private restClient: RestClient
@@ -45,12 +45,12 @@ export default class VisitSchedulerApiClient {
   }
 
   // Session template controller
-  async getSessionTemplates(prisonCode: string): Promise<SessionTemplate[]> {
+  async getSessionTemplates(prisonCode: string, rangeType: SessionTemplatesRangeType): Promise<SessionTemplate[]> {
     return this.restClient.get({
       path: `/admin/session-templates`,
       query: new URLSearchParams({
         prisonCode,
-        rangeType: 'ALL',
+        rangeType,
       }).toString(),
     })
   }

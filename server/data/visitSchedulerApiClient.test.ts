@@ -116,9 +116,24 @@ describe('visitSchedulerApiClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, sessionTemplates)
 
-      const output = await visitSchedulerApiClient.getSessionTemplates('HEI')
+      const output = await visitSchedulerApiClient.getSessionTemplates('HEI', 'ALL')
 
       expect(output).toEqual(sessionTemplates)
+    })
+  })
+
+  describe('getSingleSessionTemplate', () => {
+    it('should return a session template', async () => {
+      const singleSessionTemplate = TestData.sessionTemplate()
+
+      fakeVisitSchedulerApi
+        .get(`/admin/session-templates/template/${singleSessionTemplate.reference}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, singleSessionTemplate)
+
+      const output = await visitSchedulerApiClient.getSingleSessionTemplate(singleSessionTemplate.reference)
+
+      expect(output).toEqual(singleSessionTemplate)
     })
   })
 })

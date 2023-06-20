@@ -3,12 +3,17 @@ import { type RequestHandler, Router } from 'express'
 import { body, validationResult } from 'express-validator'
 import asyncMiddleware from '../../middleware/asyncMiddleware'
 import { Services } from '../../services'
-import { SessionTemplate } from '../../data/visitSchedulerApiTypes'
+import { SessionTemplate, SessionTemplatesRangeType } from '../../data/visitSchedulerApiTypes'
+import sessionTemplatesFilterRanges from '../../constants/sessionTemplatesFilterRanges'
 
 export default function routes({ prisonService, sessionTemplateService }: Services): Router {
   const router = Router()
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const post = (path: string, ...handlers: RequestHandler[]) =>
+  const get = (path: string | string[], ...handlers: RequestHandler[]) =>
+    router.get(
+      path,
+      handlers.map(handler => asyncMiddleware(handler)),
+    )
+  const post = (path: string | string[], ...handlers: RequestHandler[]) =>
     router.post(
       path,
       handlers.map(handler => asyncMiddleware(handler)),
@@ -66,10 +71,17 @@ export default function routes({ prisonService, sessionTemplateService }: Servic
   get('/:prisonId([A-Z]{3})/session-templates', async (req, res) => {
     const { prisonId } = req.params
 
+    const defaultRange: SessionTemplatesRangeType = 'ACTIVE_OR_FUTURE'
+    const selectedRange = isSessionTemplateRangeType(req.query?.rangeType) ? req.query.rangeType : defaultRange
+
     const { prison, prisonName } = await prisonService.getPrison(res.locals.user.username, prisonId)
     const message = req.flash('message')
 
-    const sessionTemplates = await sessionTemplateService.getSessionTemplates(res.locals.username, prisonId)
+    const sessionTemplates = await sessionTemplateService.getSessionTemplates(
+      res.locals.username,
+      prisonId,
+      selectedRange,
+    )
 
     const sessionTemplatesByDay: Record<SessionTemplate['dayOfWeek'], SessionTemplate[]> = {
       MONDAY: [],
@@ -88,6 +100,8 @@ export default function routes({ prisonService, sessionTemplateService }: Servic
       prison,
       prisonName,
       sessionTemplatesByDay,
+      selectedRange,
+      sessionTemplatesFilterRanges,
     })
   })
 
@@ -132,4 +146,8 @@ export default function routes({ prisonService, sessionTemplateService }: Servic
   })
 
   return router
+}
+
+function isSessionTemplateRangeType(rangeType: unknown): rangeType is SessionTemplatesRangeType {
+  return typeof rangeType === 'string' && rangeType in sessionTemplatesFilterRanges
 }
