@@ -19,6 +19,19 @@ export default {
       },
     })
   },
+  stubGetPrison: (prisonCode: string): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/visitScheduler/admin/prisons/prison/${prisonCode}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: TestData.prison(),
+      },
+    })
+  },
   stubCreatePrison: (prison: Prison): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -44,7 +57,7 @@ export default {
   stubActivatePrison: (prisonCode: string): SuperAgentRequest => {
     return stubFor({
       request: {
-        method: 'GET',
+        method: 'PUT',
         url: `/visitScheduler/admin/prisons/prison/${prisonCode}/activate`,
       },
       response: {
@@ -57,7 +70,7 @@ export default {
   stubDeactivatePrison: (prisonCode: string): SuperAgentRequest => {
     return stubFor({
       request: {
-        method: 'GET',
+        method: 'PUT',
         url: `/visitScheduler/admin/prisons/prison/${prisonCode}/deactivate`,
       },
       response: {
@@ -67,11 +80,11 @@ export default {
       },
     })
   },
-  stubGetSessionTemplate: (): SuperAgentRequest => {
+  stubGetSessionTemplates: (prisonCode: string): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/visitScheduler/admin/session-templates`,
+        url: `/visitScheduler/admin/session-templates?prisonCode=${prisonCode}&rangeType=ALL`,
       },
       response: {
         status: 200,
