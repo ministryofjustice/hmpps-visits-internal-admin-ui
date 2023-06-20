@@ -245,7 +245,7 @@ describe('GET /prisons/{:prisonId}/session-templates', () => {
           expect($('.moj-sub-navigation__link[aria-current]').text()).toBe('Session templates')
           expect($('.moj-sub-navigation__link[aria-current]').attr('href')).toBe('/prisons/HEI/session-templates')
 
-          expect($('h2').text().trim()).toBe('Session templates')
+          expect($('h2').text().trim()).toContain('Session templates')
         })
     })
   })

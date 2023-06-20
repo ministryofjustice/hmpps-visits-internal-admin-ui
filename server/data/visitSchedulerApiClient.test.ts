@@ -116,7 +116,7 @@ describe('visitSchedulerApiClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, sessionTemplates)
 
-      const output = await visitSchedulerApiClient.getSessionTemplates('HEI')
+      const output = await visitSchedulerApiClient.getSessionTemplates('HEI', 'ALL')
 
       expect(output).toEqual(sessionTemplates)
     })
