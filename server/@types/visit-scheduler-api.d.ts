@@ -4,6 +4,68 @@
  */
 
 export interface paths {
+  '/admin/category-groups/group': {
+    /**
+     * Create category group
+     * @description Create category group
+     */
+    post: operations['createCategoryGroup']
+  }
+  '/admin/category-groups/group/{reference}': {
+    /**
+     * Get category group
+     * @description Get category group by reference
+     */
+    get: operations['getCategoryGroup']
+    /**
+     * Update category group
+     * @description Update existing category group by reference
+     */
+    put: operations['updateCategoryGroup']
+    /**
+     * Delete category group
+     * @description Delete category group by reference
+     */
+    delete: operations['deleteSessionCategoryGroup']
+  }
+  '/admin/category-groups/{prisonCode}': {
+    /**
+     * Get category groups
+     * @description Get all category groups for given prison
+     */
+    get: operations['getCategoryGroups']
+  }
+  '/admin/incentive-groups/group': {
+    /**
+     * Create incentive group
+     * @description Create incentive group
+     */
+    post: operations['createIncentiveGroup']
+  }
+  '/admin/incentive-groups/group/{reference}': {
+    /**
+     * Get incentive group
+     * @description Get incentive group by reference
+     */
+    get: operations['getIncentiveGroup']
+    /**
+     * Update incentive group
+     * @description Update existing incentive group by reference
+     */
+    put: operations['updateIncentiveGroup']
+    /**
+     * Delete incentive group
+     * @description Delete incentive group by reference
+     */
+    delete: operations['deleteSessionIncentiveGroup']
+  }
+  '/admin/incentive-groups/{prisonCode}': {
+    /**
+     * Get incentive groups
+     * @description Get all incentive groups for given prison
+     */
+    get: operations['getIncentiveGroups']
+  }
   '/admin/location-groups/group': {
     /**
      * Create location group
@@ -270,6 +332,51 @@ export interface components {
        */
       telephone: string
     }
+    CreateCategoryGroupDto: {
+      /** @description list of categories for group */
+      categories: (
+        | 'A_EXCEPTIONAL'
+        | 'A_HIGH'
+        | 'A_PROVISIONAL'
+        | 'A_STANDARD'
+        | 'B'
+        | 'C'
+        | 'D'
+        | 'YOI_CLOSED'
+        | 'YOI_OPEN'
+        | 'YOI_RESTRICTED'
+        | 'UNSENTENCED'
+        | 'UNCATEGORISED_SENTENCED_MALE'
+        | 'FEMALE_RESTRICTED'
+        | 'FEMALE_CLOSED'
+        | 'FEMALE_SEMI'
+        | 'FEMALE_OPEN'
+      )[]
+      /**
+       * @description Group name
+       * @example Main group
+       */
+      name: string
+      /**
+       * @description prisonId
+       * @example MDI
+       */
+      prisonId: string
+    }
+    CreateIncentiveGroupDto: {
+      /** @description list of allowed incentive levels for group */
+      incentiveLevels: ('ENHANCED' | 'ENHANCED_2' | 'ENHANCED_3' | 'BASIC' | 'STANDARD')[]
+      /**
+       * @description Group name
+       * @example Main group
+       */
+      name: string
+      /**
+       * @description prisonId
+       * @example MDI
+       */
+      prisonId: string
+    }
     /** @description Contact associated with the visit */
     CreateLegacyContactOnVisitRequestDto: {
       /**
@@ -303,22 +410,11 @@ export interface components {
       /** @description list of group references for allowed prisoner category groups */
       categoryGroupReferences?: string[]
       /**
-       * Format: int32
-       * @description closed capacity
-       * @example 10
-       */
-      closedCapacity: number
-      /**
        * @description day of week fpr visit
        * @example MONDAY
        * @enum {string}
        */
       dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
-      /**
-       * Format: HH:mm
-       * @example 13:45
-       */
-      endTime: string
       /** @description list of group references for allowed prisoner incentive levels */
       incentiveLevelGroupReferences?: string[]
       /** @description list of group references for permitted session location groups */
@@ -329,33 +425,13 @@ export interface components {
        */
       name: string
       /**
-       * Format: int32
-       * @description open capacity
-       * @example 50
-       */
-      openCapacity: number
-      /**
        * @description prisonId
        * @example MDI
        */
       prisonId: string
-      /**
-       * Format: HH:mm
-       * @example 13:45
-       */
-      startTime: string
-      /**
-       * Format: date
-       * @description The start of the Validity period for the session template
-       * @example 2019-12-02
-       */
-      validFromDate: string
-      /**
-       * Format: date
-       * @description The end of the Validity period for the session template
-       * @example 2019-12-02
-       */
-      validToDate?: string
+      sessionCapacity: components['schemas']['SessionCapacityDto']
+      sessionDateRange: components['schemas']['SessionDateRangeDto']
+      sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
        * @description Visit Room
        * @example Visits Main Hall
@@ -631,7 +707,6 @@ export interface components {
        */
       open: number
     }
-    /** @description list of permitted prisoner category groups */
     SessionCategoryGroupDto: {
       /** @description list of allowed prisoner categories for group */
       categories: (
@@ -662,6 +737,21 @@ export interface components {
        * @example v9-d7-ed-7u
        */
       reference: string
+    }
+    /** @description The start and end date of the Validity period for the session template */
+    SessionDateRangeDto: {
+      /**
+       * Format: date
+       * @description The start of the Validity period for the session template
+       * @example 2019-12-02
+       */
+      validFromDate: string
+      /**
+       * Format: date
+       * @description The end of the Validity period for the session template
+       * @example 2019-12-02
+       */
+      validToDate?: string
     }
     /** @description list of permitted incentive level groups */
     SessionIncentiveLevelGroupDto: {
@@ -745,33 +835,16 @@ export interface components {
        */
       biWeekly: boolean
       /**
-       * Format: int32
-       * @description closed capacity
-       * @example 10
-       */
-      closedCapacity: number
-      /**
        * @description day of week for visit
        * @example MONDAY
        * @enum {string}
        */
       dayOfWeek?: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
       /**
-       * Format: HH:mm
-       * @example 13:45
-       */
-      endTime: string
-      /**
        * @description name
        * @example Monday Session
        */
       name: string
-      /**
-       * Format: int32
-       * @description open capacity
-       * @example 50
-       */
-      openCapacity: number
       /** @description list of permitted session location groups */
       permittedLocationGroups: components['schemas']['SessionLocationGroupDto'][]
       /**
@@ -788,23 +861,9 @@ export interface components {
        * @example v9d.7ed.7u
        */
       reference: string
-      /**
-       * Format: HH:mm
-       * @example 13:45
-       */
-      startTime: string
-      /**
-       * Format: date
-       * @description The start of the Validity period for the session template
-       * @example 2019-12-02
-       */
-      validFromDate: string
-      /**
-       * Format: date
-       * @description The end of the Validity period for the session template
-       * @example 2019-12-02
-       */
-      validToDate?: string
+      sessionCapacity: components['schemas']['SessionCapacityDto']
+      sessionDateRange: components['schemas']['SessionDateRangeDto']
+      sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
        * @description Visit Room
        * @example A1 L3
@@ -816,6 +875,19 @@ export interface components {
        * @enum {string}
        */
       visitType: 'SOCIAL'
+    }
+    /** @description The start and end time of the generated visit session(s) */
+    SessionTimeSlotDto: {
+      /**
+       * Format: HH:mm
+       * @example 13:45
+       */
+      endTime: string
+      /**
+       * Format: HH:mm
+       * @example 13:45
+       */
+      startTime: string
     }
     SortObject: {
       empty?: boolean
@@ -835,25 +907,23 @@ export interface components {
        */
       type: string
     }
+    UpdateIncentiveGroupDto: {
+      /** @description list of allowed incentive levels for group */
+      incentiveLevels: ('ENHANCED' | 'ENHANCED_2' | 'ENHANCED_3' | 'BASIC' | 'STANDARD')[]
+      /**
+       * @description Group name
+       * @example Main group
+       */
+      name: string
+    }
     UpdateSessionTemplateDto: {
       /**
        * @description biWeekly time table
        * @example true
        */
-      biWeekly: boolean
+      biWeekly?: boolean
       /** @description list of group references for allowed prisoner category groups */
       categoryGroupReferences?: string[]
-      /**
-       * Format: int32
-       * @description closed capacity
-       * @example 10
-       */
-      closedCapacity: number
-      /**
-       * Format: HH:mm
-       * @example 13:45
-       */
-      endTime: string
       /** @description list of group references for allowed prisoner incentive levels */
       incentiveLevelGroupReferences?: string[]
       /** @description list of group references for permitted session location groups */
@@ -863,29 +933,9 @@ export interface components {
        * @example Monday Xmas
        */
       name: string
-      /**
-       * Format: int32
-       * @description open capacity
-       * @example 50
-       */
-      openCapacity: number
-      /**
-       * Format: HH:mm
-       * @example 13:45
-       */
-      startTime: string
-      /**
-       * Format: date
-       * @description The start of the Validity period for the session template
-       * @example 2019-12-02
-       */
-      validFromDate: string
-      /**
-       * Format: date
-       * @description The end of the Validity period for the session template
-       * @example 2019-12-02
-       */
-      validToDate?: string
+      sessionCapacity?: components['schemas']['SessionCapacityDto']
+      sessionDateRange?: components['schemas']['SessionDateRangeDto']
+      sessionTimeSlot?: components['schemas']['SessionTimeSlotDto']
     }
     /** @description Visit */
     VisitDto: {
@@ -1117,6 +1167,394 @@ export interface components {
 export type external = Record<string, never>
 
 export interface operations {
+  createCategoryGroup: {
+    /**
+     * Create category group
+     * @description Create category group
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateCategoryGroupDto']
+      }
+    }
+    responses: {
+      /** @description Created category group */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionCategoryGroupDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create category group */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getCategoryGroup: {
+    /**
+     * Get category group
+     * @description Get category group by reference
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example afe~dcb~fc
+       */
+      path: {
+        reference: string
+      }
+    }
+    responses: {
+      /** @description Category groups returned for given prison */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionCategoryGroupDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to view category group */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Category group not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateCategoryGroup: {
+    /**
+     * Update category group
+     * @description Update existing category group by reference
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example v9-d7-ed-7u
+       */
+      path: {
+        reference: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SessionCategoryGroupDto']
+      }
+    }
+    responses: {
+      /** @description Updated category group */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionCategoryGroupDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to update category group */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Category group not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteSessionCategoryGroup: {
+    /**
+     * Delete category group
+     * @description Delete category group by reference
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example v9-d7-ed-7u
+       */
+      path: {
+        reference: string
+      }
+    }
+    responses: {
+      /** @description Category group deleted */
+      200: {
+        content: {
+          'application/json': string
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to view category group */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Session category group not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getCategoryGroups: {
+    /**
+     * Get category groups
+     * @description Get all category groups for given prison
+     */
+    parameters: {
+      /**
+       * @description prisonCode
+       * @example MDI
+       */
+      path: {
+        prisonCode: string
+      }
+    }
+    responses: {
+      /** @description Category groups returned for given prison */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionCategoryGroupDto'][]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to view category groups */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createIncentiveGroup: {
+    /**
+     * Create incentive group
+     * @description Create incentive group
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateIncentiveGroupDto']
+      }
+    }
+    responses: {
+      /** @description Created incentive group */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionIncentiveLevelGroupDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create incentive group */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getIncentiveGroup: {
+    /**
+     * Get incentive group
+     * @description Get incentive group by reference
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example afe~dcb~fc
+       */
+      path: {
+        reference: string
+      }
+    }
+    responses: {
+      /** @description Incentive group returned for given reference */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionIncentiveLevelGroupDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to view incentive group */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incentive group not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateIncentiveGroup: {
+    /**
+     * Update incentive group
+     * @description Update existing incentive group by reference
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example v9-d7-ed-7u
+       */
+      path: {
+        reference: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateIncentiveGroupDto']
+      }
+    }
+    responses: {
+      /** @description Updated incentive group */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionIncentiveLevelGroupDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to update incentive group */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incentive group not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteSessionIncentiveGroup: {
+    /**
+     * Delete incentive group
+     * @description Delete incentive group by reference
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example v9-d7-ed-7u
+       */
+      path: {
+        reference: string
+      }
+    }
+    responses: {
+      /** @description Incentive group deleted */
+      200: {
+        content: {
+          'application/json': string
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to view  incentive group */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Session incentive group not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getIncentiveGroups: {
+    /**
+     * Get incentive groups
+     * @description Get all incentive groups for given prison
+     */
+    parameters: {
+      /**
+       * @description prisonCode
+       * @example MDI
+       */
+      path: {
+        prisonCode: string
+      }
+    }
+    responses: {
+      /** @description Incentive groups returned for given prison */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionIncentiveLevelGroupDto'][]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to view incentive groups */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   createLocationGroup: {
     /**
      * Create location group
@@ -1746,7 +2184,7 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Incorrect permissions to view session templates */
+      /** @description Incorrect permissions to delete session templates */
       403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']

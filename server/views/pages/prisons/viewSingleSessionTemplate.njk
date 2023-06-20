@@ -92,7 +92,7 @@
               text: "Start time"
             },
             value: {
-              text: sessionTemplate.startTime
+              text: sessionTemplate.sessionTimeSlot.startTime
             },
             classes: "test-template-startTime"
           },
@@ -101,7 +101,7 @@
               text: "End time"
             },
             value: {
-             text: sessionTemplate.endTime
+             text: sessionTemplate.sessionTimeSlot.endTime
             },
             classes: "test-template-endTime"
           },
@@ -110,7 +110,7 @@
               text: "Open capacity"
             },
             value: {
-              text: sessionTemplate.openCapacity
+              text: sessionTemplate.sessionCapacity.open
             },
             classes: "test-template-openCapacity"
           },
@@ -119,7 +119,7 @@
               text: "Closed capacity"
             },
             value: {
-              text: sessionTemplate.closedCapacity
+              text: sessionTemplate.sessionCapacity.closed
             },
             classes: "test-template-closedCapacity"
           },
@@ -128,7 +128,7 @@
               text: "Valid from"
             },
             value: {
-             text: sessionTemplate.validFromDate | formatDate
+             text: sessionTemplate.sessionDateRange.validFromDate | formatDate
             },
             classes: "test-template-validFromDate"
           },
@@ -137,7 +137,8 @@
               text: "Valid to"
             },
             value: {
-              text: sessionTemplate.validToDate | formatDate if sessionTemplate.validToDate else "No end date"
+              text: sessionTemplate.sessionDateRange.validToDate | formatDate
+                if sessionTemplate.sessionDateRange.validToDate else "No end date"
             },
             classes: "test-template-validToDate"
           },
@@ -165,7 +166,7 @@
               text: "Location groups"
             },
             value: {
-              text: locationGroups
+              html: locationGroups
             },
             classes: "test-template-locationGroups"
           },
@@ -174,7 +175,7 @@
               text: "Prisoner category groups"
             },
             value: {
-             text: categoryGroups
+             html: categoryGroups
             },
             classes: "test-template-categoryGroups"
           },
@@ -183,7 +184,7 @@
               text: "Incentive level groups"
             },
             value: {
-              text: incentiveGroups
+              html: incentiveGroups
             },
             classes: "test-template-incentiveGroups"
           }
