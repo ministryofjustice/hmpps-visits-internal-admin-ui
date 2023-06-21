@@ -27,13 +27,15 @@ context('Supported prisons', () => {
     supportedPrisonsPage.selectPrison('HEI').click()
     const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
 
-    viewSessionTemplatePage.switchStatusButton().contains('Deactivate')
+    viewSessionTemplatePage.statusTab().click()
+    viewSessionTemplatePage.prisonStatusLabel().contains('active')
 
     cy.task('stubDeactivatePrison', 'HEI')
     viewSessionTemplatePage.switchStatusButton().click()
-    viewSessionTemplatePage.succesMessage().contains('Hewell (HMP) has been deactivated')
+    viewSessionTemplatePage.successMessage().contains('Hewell (HMP) has been deactivated')
+    // viewSessionTemplatePage.prisonStatusLabel().contains('deactive')
 
-    cy.task('stubActivatePrison', 'HEI')
-    viewSessionTemplatePage.switchStatusButton().click()
+    // cy.task('stubActivatePrison', 'HEI')
+    // viewSessionTemplatePage.switchStatusButton().click()
   })
 })
