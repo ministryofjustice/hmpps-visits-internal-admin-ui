@@ -1,3 +1,12 @@
+main_branch: &main_branch
+  filters:
+    branches:
+      only: main
+feature_branch: &feature_branch
+  filters:
+    branches:
+      ignore: main
+
 version: 2.1
 
 orbs:
@@ -109,11 +118,7 @@ jobs:
 
 workflows:
   version: 2
-  build-test-and-deploy-develop:
-    when:
-      and:
-        - not:
-            equal: [ main, << pipeline.git.branch >> ]
+  build-test-and-deploy:
     jobs:
       - build:
           filters:
@@ -129,7 +134,9 @@ workflows:
           name: helm_lint
       - hmpps/build_docker:
           name: build_docker
-      - request-dev-approval:
+
+      - request-dev-preview-approval:
+          <<: *feature_branch
           type: approval
           requires:
             - helm_lint
@@ -137,20 +144,22 @@ workflows:
             - integration_test
             - build_docker
       - hmpps/deploy_env:
-          name: deploy_dev
+          <<: *feature_branch
+          name: deploy_dev_preview
           env: "dev"
           jira_update: true
           context:
             - hmpps-common-vars
           requires:
-            - request-dev-approval
+            - request-dev-preview-approval
           helm_timeout: 5m
-      - request-staging-approval:
+      - request-staging-preview-approval:
+          <<: *feature_branch
           type: approval
           requires:
-            - deploy_dev
+            - deploy_dev_preview
       - hmpps/deploy_env:
-          name: deploy_staging
+          name: deploy_staging_preview
           env: "staging"
           jira_update: true
           jira_env_type: staging
@@ -158,44 +167,24 @@ workflows:
             - hmpps-common-vars
             - hmpps-visits-internal-admin-ui-stage
           requires:
-            - request-staging-approval
+            - request-staging-preview-approval
           helm_timeout: 5m
-  build-test-and-deploy:
-    when:
-      and:
-        - equal: [ main, << pipeline.git.branch >> ]
-    jobs:
-      - build:
-          filters:
-            tags:
-              ignore: /.*/
-      - unit_test:
-          requires:
-            - build
-      - integration_test:
-          requires:
-            - build
-      - hmpps/helm_lint:
-          name: helm_lint
-      - hmpps/build_docker:
-          name: build_docker
-      - request-dev-approval:
-          type: approval
+
+      - hmpps/deploy_env:
+          <<: *main_branch
+          name: deploy_dev
+          env: "dev"
+          jira_update: true
+          context:
+            - hmpps-common-vars
           requires:
             - helm_lint
             - unit_test
             - integration_test
             - build_docker
-      - hmpps/deploy_env:
-          name: deploy_dev
-          env: "dev"
-          jira_update: true
-          context: 
-            - hmpps-common-vars
-          requires:
-            - request-dev-approval
           helm_timeout: 5m
       - request-staging-approval:
+          <<: *main_branch
           type: approval
           requires:
             - deploy_dev
@@ -242,6 +231,7 @@ workflows:
           requires:
             - request-prod-approval
           helm_timeout: 5m
+
 
   security:
     triggers:
