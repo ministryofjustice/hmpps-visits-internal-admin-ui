@@ -75,7 +75,6 @@ export default function routes({ prisonService, sessionTemplateService }: Servic
     const selectedRange = isSessionTemplateRangeType(req.query?.rangeType) ? req.query.rangeType : defaultRange
 
     const { prison, prisonName } = await prisonService.getPrison(res.locals.user.username, prisonId)
-    const message = req.flash('message')
 
     const sessionTemplates = await sessionTemplateService.getSessionTemplates(
       res.locals.username,
@@ -95,8 +94,6 @@ export default function routes({ prisonService, sessionTemplateService }: Servic
     sessionTemplates.forEach(template => sessionTemplatesByDay[template.dayOfWeek].push(template))
 
     res.render('pages/prisons/viewSessionTemplates', {
-      errors: req.flash('errors'),
-      message,
       prison,
       prisonName,
       sessionTemplatesByDay,
@@ -119,6 +116,19 @@ export default function routes({ prisonService, sessionTemplateService }: Servic
     })
   })
 
+  get('/:prisonId/status', async (req, res) => {
+    const { prisonId } = req.params
+    const { prison, prisonName } = await prisonService.getPrison(res.locals.user.username, prisonId)
+
+    const message = req.flash('message')
+    res.render('pages/prisons/status', {
+      errors: req.flash('errors'),
+      prison,
+      prisonName,
+      message,
+    })
+  })
+
   post('/:prisonId([A-Z]{3})/activate', async (req, res) => {
     const { prisonId } = req.params
 
@@ -129,7 +139,7 @@ export default function routes({ prisonService, sessionTemplateService }: Servic
       req.flash('errors', [{ msg: 'Failed to change prison status' }])
     }
 
-    res.redirect(`/prisons/${prisonId}/session-templates`)
+    res.redirect(`/prisons/${prisonId}/status`)
   })
 
   post('/:prisonId([A-Z]{3})/deactivate', async (req, res) => {
@@ -142,7 +152,7 @@ export default function routes({ prisonService, sessionTemplateService }: Servic
       req.flash('errors', [{ msg: 'Failed to change prison status' }])
     }
 
-    res.redirect(`/prisons/${prisonId}/session-templates`)
+    res.redirect(`/prisons/${prisonId}/status`)
   })
 
   return router

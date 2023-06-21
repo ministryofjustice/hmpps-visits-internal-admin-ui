@@ -1,0 +1,101 @@
+{% extends "../../partials/layout.njk" %}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{%- from "moj/components/banner/macro.njk" import mojBanner -%}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% set pageHeaderTitle = prisonName %}
+{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+  ] %}
+
+{% set changeStatusAction = "deactivate" if prison.active else "activate" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {% include "partials/errorSummary.njk" %}
+
+      {% if message | length %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {{ mojBanner({
+              type: "success",
+              text: prisonName + " has been " + message + ".",
+              iconFallbackText: "Success"
+            }) }}
+          </div>
+        </div>
+      {% endif %}
+
+      <h1 class="govuk-heading-l">
+        <span>{{ pageHeaderTitle }}</span>
+      </h1>
+
+      <p>This prison is currently
+        {{ govukTag({
+          text: "active" if prison.active else "inactive",
+          classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
+          attributes: { "data-test": "prison-status" }
+        }) }}
+      </p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {{ mojSubNavigation({
+        label: "Sub navigation",
+        classes: "govuk-!-margin-top-3",
+        items: [{
+          text: "Session templates",
+          href: "/prisons/" + prison.code + "/session-templates"
+        }, {
+          text: "Exclusion dates",
+          href: "/prisons/" + prison.code + "/exclusion-dates"
+        }, {
+          text: "Category groups",
+          href: "/prisons/" + prison.code + "/category-groups"
+        }, {
+          text: "Incentive level groups",
+          href: "/prisons/" + prison.code + "/incentive-groups"
+        }, {
+          text: "Location groups",
+          href: "/prisons/" + prison.code + "/location-groups"
+        }, {
+          text: "Status",
+          href: "/prisons/" + prison.code + "/status",
+          active: true
+        }]
+      }) }}
+
+      <h2 class="govuk-heading-m">Change prison status</h2>
+
+      <form action="/prisons/{{ prison.code }}/{{ changeStatusAction }}" data-test="prison-change-status-form" method="POST" novalidate>
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukButton({
+          text: changeStatusAction | capitalize,
+          classes: "govuk-button--warning" if prison.active,
+          preventDoubleClick: true,
+          attributes: { "data-test": "prison-change-status" }
+        })}}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}
+
