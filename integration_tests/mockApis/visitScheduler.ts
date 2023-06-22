@@ -19,16 +19,16 @@ export default {
       },
     })
   },
-  stubGetPrison: (prisonCode: string): SuperAgentRequest => {
+  stubGetPrison: (prison: Prison): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/visitScheduler/admin/prisons/prison/${prisonCode}`,
+        url: `/visitScheduler/admin/prisons/prison/${prison.code}`,
       },
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: TestData.prison(),
+        jsonBody: prison,
       },
     })
   },

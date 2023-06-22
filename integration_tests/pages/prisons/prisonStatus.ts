@@ -1,6 +1,6 @@
 import Page, { PageElement } from '../page'
 
-export default class ViewSessionTemplatePage extends Page {
+export default class prisonStatusPage extends Page {
   constructor() {
     super('Hewell (HMP)')
   }
@@ -8,7 +8,7 @@ export default class ViewSessionTemplatePage extends Page {
   prisonStatusLabel = (): PageElement => cy.get('[data-test=prison-status]')
 
   // switch status Activate <-> Deactivate
-  switchStatusButton = (): PageElement => cy.get('[data-test=prison-change-status]')
+  switchStatus = (): PageElement => cy.get('[data-test=prison-change-status-form]')
 
   successMessage = (): PageElement => cy.get('.moj-banner__message')
 
