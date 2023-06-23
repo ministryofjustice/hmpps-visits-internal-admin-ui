@@ -13,7 +13,7 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('GET /', () => {
+describe('GET / - Home page', () => {
   it('should render the home page cards', () => {
     app = appWithAllRoutes({})
 

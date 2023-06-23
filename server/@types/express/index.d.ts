@@ -1,4 +1,4 @@
-import { FlashErrorMessage } from '../vists-admin'
+import { FlashErrorMessage } from '../visits-admin'
 
 export default {}
 

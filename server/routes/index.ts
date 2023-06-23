@@ -2,15 +2,18 @@ import { type RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
+import HomeController from './homeController'
+import prisonsRoutes from './prisons'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function routes(service: Services): Router {
+export default function routes(services: Services): Router {
   const router = Router()
+
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  get('/', (req, res) => {
-    res.render('pages/index')
-  })
+  const home = new HomeController()
+
+  get('/', home.view())
+  router.use(prisonsRoutes(services))
 
   return router
 }

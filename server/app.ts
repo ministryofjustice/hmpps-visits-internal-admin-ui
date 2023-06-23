@@ -16,9 +16,7 @@ import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 
-import indexRoutes from './routes'
-import prisonsRoutes from './routes/prisons/prisons'
-
+import routes from './routes'
 import type { Services } from './services'
 
 export default function createApp(services: Services): express.Application {
@@ -40,8 +38,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
 
-  app.use('/', indexRoutes(services))
-  app.use('/prisons', prisonsRoutes(services))
+  app.use(routes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
