@@ -1,0 +1,236 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+
+{% set pageHeaderTitle = 'Add session template' %}
+{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+  ] %}
+{% set backLinkHref = "/prisons/" + prisonId + "/session-templates" %}
+
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prisonName }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+      <form action="/prisons/{{prisonId}}/session-templates/add" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukInput({
+          label: {
+              text: "Template name",
+              classes: "govuk-label--m"
+          },
+          hint: {
+              text: "What is the name of the template?"
+          },
+          classes: "govuk-!-width-one-third",
+          id: "templateName",
+          name: "templateName",
+          autocomplete: "off",
+          errorMessage: errors | findError('templateName')
+        }) }}
+
+        {{ govukSelect({
+          id: "dayOfWeek",
+          name: "dayOfWeek",
+          label: {
+            text: "Day of the week",
+            classes: "govuk-label--m"
+
+          },
+          items: [
+            {
+              value: "choose",
+              text: "Choose day of the week",
+              selected: true
+            },
+            {
+              value: "MONDAY",
+              text: "Monday"
+            },
+            {
+              value: "TUESDAY",
+              text: "Tuesday"
+            },
+            {
+              value: "WEDNESDAY",
+              text: "Wednesday"
+            },
+            {
+              value: "THURSDAY",
+              text: "Thursday"
+            },
+            {
+              value: "FRIDAY",
+              text: "Friday"
+            },
+            {
+              value: "SATURDAY",
+              text: "Saturday"
+            },
+            {
+              value: "SUNDAY",
+              text: "Sunday"
+            }
+          ]
+
+        }) }}
+
+        {{ govukInput({
+          label: {
+              text: "Visit start time",
+              classes: "govuk-label--m"
+          },
+          hint: {
+              text: "What is the visit start time? (HH:MM)"
+          },
+          classes: "govuk-!-width-one-third",
+          id: "startTime",
+          name: "startTime",
+          autocomplete: "off",
+          errorMessage: errors | findError('startTime')
+        }) }}
+
+        {{ govukInput({
+          label: {
+              text: "Visit end time",
+              classes: "govuk-label--m"
+          },
+          hint: {
+              text: "What is the visit end time? (HH:MM)"
+          },
+          classes: "govuk-!-width-one-third",
+          id: "endTime",
+          name: "endTime",
+          autocomplete: "off",
+          errorMessage: errors | findError('endTime')
+        }) }}
+
+        {{ govukRadios({
+          name: "biWeekly",
+          fieldset: {
+            legend: {
+              text: "Bi-weekly?",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          items: [
+            {
+              value: "true",
+              text: "True"
+            },
+            {
+              value: "false",
+              text: "False"
+            }
+          ]
+        }) }}
+
+        {{ govukDateInput({
+          id: "validFromDate",
+          namePrefix: "validFromDate",
+          fieldset: {
+            legend: {
+              text: "When is the session template valid from?",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          hint: {
+            text: "For example, 27 3 2023"
+          }
+        }) }}
+
+        {{ govukDateInput({
+          id: "validToDate",
+          namePrefix: "validToDate",
+          fieldset: {
+            legend: {
+              text: "When is the session template valid to?",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          hint: {
+            text: "For example, 27 3 2023"
+          }
+        }) }}
+
+        {{ govukInput({
+          label: {
+              text: "Open Capacity",
+              classes: "govuk-label--m"
+          },
+          hint: {
+              text: "What is the open capacity?"
+          },
+          classes: "govuk-!-width-one-third",
+          id: "openCapacity",
+          name: "openCapacity",
+          inputmode: "numeric",
+          spellcheck: false,
+          errorMessage: errors | findError('openCapacity')
+        }) }}
+
+        {{ govukInput({
+          label: {
+              text: "Closed Capacity",
+              classes: "govuk-label--m"
+          },
+          hint: {
+              text: "What is the closed capacity?"
+          },
+          classes: "govuk-!-width-one-third",
+          id: "closedCapacity",
+          name: "closedCapacity",
+          inputmode: "numeric",
+          spellcheck: false,
+          errorMessage: errors | findError('closedCapacity')
+        }) }}
+
+        {{ govukInput({
+          label: {
+              text: "Visit room",
+              classes: "govuk-label--m"
+          },
+          hint: {
+              text: "What is the visit room name?"
+          },
+          classes: "govuk-!-width-one-third",
+          id: "visitRoom",
+          name: "visitRoom",
+          autocomplete: "off",
+          errorMessage: errors | findError('visitRoom')
+        }) }}
+
+        {{ govukButton({
+          text: "Add",
+          attributes: { "data-test": "submit" },
+          preventDoubleClick: true
+        }) }} 
+      </form>
+
+    
+
+    </div>
+  </div>
+{% endblock %}
