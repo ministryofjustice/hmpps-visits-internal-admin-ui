@@ -2,6 +2,7 @@ import { RequestHandler, Router } from 'express'
 import { Services } from '../../services'
 import SupportedPrisonsController from './supportedPrisonsController'
 import asyncMiddleware from '../../middleware/asyncMiddleware'
+import exclusionDatesRoutes from './exclusionDates'
 import prisonStatusRoutes from './prisonStatus'
 import sessionTemplatesRoutes from './sessionTemplates'
 
@@ -15,6 +16,7 @@ export default function routes(services: Services): Router {
 
   get('/prisons', supportedPrisons.view())
   post('/prisons', supportedPrisons.addPrison())
+  router.use(exclusionDatesRoutes(services))
   router.use(prisonStatusRoutes(services))
   router.use(sessionTemplatesRoutes(services))
 
