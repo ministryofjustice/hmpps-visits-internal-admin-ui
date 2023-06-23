@@ -31,7 +31,7 @@ export default defineConfig({
         stubPrisons: prisonRegister.stubPrisons,
 
         // Visit scheduler
-        stubGetAllPrisons: visitScheduler.stubGetAllPrisons,
+        ...visitScheduler,
       })
     },
     baseUrl: 'http://localhost:3007',
