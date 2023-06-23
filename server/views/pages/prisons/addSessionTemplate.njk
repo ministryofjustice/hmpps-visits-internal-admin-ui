@@ -5,6 +5,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 
 {% set pageHeaderTitle = 'Add session template' %}
@@ -23,6 +24,21 @@
   ] %}
 {% set backLinkHref = "/prisons/" + prisonId + "/session-templates" %}
 
+{% set endDateTextHtml %}
+  {{ govukDateInput({
+    id: "validToDate",
+    namePrefix: "validToDate",
+    fieldset: {
+      legend: {
+        text: "Template end date",
+        classes: "govuk-fieldset__legend--m"
+      }
+    },
+    hint: {
+      text: "For example, 27 3 2023"
+    }
+  }) }}
+{% endset -%}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -41,10 +57,7 @@
               text: "Template name",
               classes: "govuk-label--m"
           },
-          hint: {
-              text: "What is the name of the template?"
-          },
-          classes: "govuk-!-width-one-third",
+          classes: "govuk-!-width-three-quarters",
           id: "templateName",
           name: "templateName",
           autocomplete: "off",
@@ -103,7 +116,7 @@
               classes: "govuk-label--m"
           },
           hint: {
-              text: "What is the visit start time? (HH:MM)"
+              text: "For example, 13:00"
           },
           classes: "govuk-!-width-one-third",
           id: "startTime",
@@ -118,7 +131,7 @@
               classes: "govuk-label--m"
           },
           hint: {
-              text: "What is the visit end time? (HH:MM)"
+              text: "For example, 13:00"
           },
           classes: "govuk-!-width-one-third",
           id: "endTime",
@@ -152,7 +165,7 @@
           namePrefix: "validFromDate",
           fieldset: {
             legend: {
-              text: "When is the session template valid from?",
+              text: "Template start date",
               classes: "govuk-fieldset__legend--m"
             }
           },
@@ -160,24 +173,29 @@
             text: "For example, 27 3 2023"
           }
         }) }}
-
-        {{ govukDateInput({
-          id: "validToDate",
-          namePrefix: "validToDate",
+   
+        {{ govukCheckboxes({
+          name: "hasEndDate",
           fieldset: {
             legend: {
-              text: "When is the session template valid to?",
+              text: "Does this session have an end date?",
               classes: "govuk-fieldset__legend--m"
             }
           },
-          hint: {
-            text: "For example, 27 3 2023"
-          }
+          items: [
+            {
+              value: "hasEndDate",
+              text: "Yes",
+              conditional: {
+                html: endDateTextHtml
+              }
+            }
+          ]
         }) }}
 
         {{ govukInput({
           label: {
-              text: "Open Capacity",
+              text: "Open capacity",
               classes: "govuk-label--m"
           },
           hint: {
@@ -193,7 +211,7 @@
 
         {{ govukInput({
           label: {
-              text: "Closed Capacity",
+              text: "Closed capacity",
               classes: "govuk-label--m"
           },
           hint: {
