@@ -64,7 +64,7 @@ describe('Single session template page', () => {
           expect($('.test-template-validFromDate').text()).toContain('21 March 2023')
           expect($('.test-template-validToDate').text()).toContain('No end date')
           expect($('.test-template-visitRoom').text()).toContain(singleSessionTemplate.visitRoom)
-          expect($('.test-template-biWeekly').text()).toContain('No')
+          expect($('.test-template-weeklyFrequency').text()).toContain('1')
           expect($('.test-template-locationGroups').text()).toContain('None')
           expect($('.test-template-categoryGroups').text()).toContain('None')
           expect($('.test-template-incentiveGroups').text()).toContain('None')

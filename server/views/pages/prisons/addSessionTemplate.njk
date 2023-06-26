@@ -139,25 +139,21 @@
           autocomplete: "off",
           errorMessage: errors | findError('endTime')
         }) }}
-
-        {{ govukRadios({
-          name: "biWeekly",
-          fieldset: {
-            legend: {
-              text: "Bi-weekly?",
-              classes: "govuk-fieldset__legend--m"
-            }
+        
+        {{ govukInput({
+          label: {
+              text: "Weekly frequency",
+              classes: "govuk-label--m"
           },
-          items: [
-            {
-              value: "true",
-              text: "True"
-            },
-            {
-              value: "false",
-              text: "False"
-            }
-          ]
+          hint: {
+              text: "1 = weekly, 2 = fortnightly etc"
+          },
+          classes: "govuk-!-width-one-third",
+          id: "openCapacity",
+          name: "openCapacity",
+          inputmode: "numeric",
+          spellcheck: false,
+          errorMessage: errors | findError('openCapacity')
         }) }}
 
         {{ govukDateInput({
