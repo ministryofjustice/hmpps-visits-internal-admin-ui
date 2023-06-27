@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express'
+import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService, SessionTemplateService } from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 
@@ -27,6 +28,14 @@ export default class AddSessionTemplateController {
   public create(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
+
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array())
+        req.flash('formValues', req.body)
+        return res.redirect(req.originalUrl)
+      }
+
       const createSessionTemplateDto: CreateSessionTemplateDto = {
         name: req.body.name,
         weeklyFrequency: req.body.weeklyFrequency,
@@ -53,12 +62,21 @@ export default class AddSessionTemplateController {
         await this.sessionTemplateService.createSessionTemplate(res.locals.user.username, createSessionTemplateDto)
         // req.flash('message', sessionTemplate)
       } catch (error) {
-        req.flash('formValues', req.body)
         req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
-        return res.redirect(`/prisons/${prisonId}/session-templates/add`)
+        return res.redirect(req.originalUrl)
       }
 
       return res.redirect(`/prisons/${prisonId}/session-templates`)
     }
+  }
+
+  public validate(): ValidationChain[] {
+    return [
+      body('name').trim().isLength({ min: 3, max: 100 }).withMessage('Enter a name between 3 and 100 characters long'),
+      body('weeklyFrequency')
+        .trim()
+        .isInt({ min: 1, max: 12 })
+        .withMessage('Enter a weekly frequency value between 1 and 12'),
+    ]
   }
 }
