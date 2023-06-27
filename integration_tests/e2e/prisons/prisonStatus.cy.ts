@@ -6,8 +6,8 @@ import ViewSessionTemplatesPage from '../../pages/prisons/viewSessionTemplates'
 import PrisonStatusPage from '../../pages/prisons/prisonStatus'
 
 context('Supported prisons', () => {
-  const prisonId = 'HEI'
-  const templateFilter = 'CURRENT_OR_FUTURE'
+  const prisonCode = 'HEI'
+  const rangeType = 'CURRENT_OR_FUTURE'
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
@@ -28,9 +28,9 @@ context('Supported prisons', () => {
     const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
 
     cy.task('stubGetPrison', inactivePrison)
-    cy.task('stubGetSessionTemplates', { prisonId, templateFilter })
+    cy.task('stubGetSessionTemplates', { prisonCode, rangeType })
 
-    supportedPrisonsPage.selectPrison(prisonId).click()
+    supportedPrisonsPage.selectPrison(prisonCode).click()
     const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
     viewSessionTemplatePage.statusTab().click()
@@ -38,7 +38,7 @@ context('Supported prisons', () => {
 
     prisonStatusPage.prisonStatusLabel().contains('inactive')
 
-    cy.task('stubActivatePrison', prisonId)
+    cy.task('stubActivatePrison', prisonCode)
     cy.task('stubGetPrison', activePrison)
     prisonStatusPage.switchStatus().submit()
     prisonStatusPage.successMessage().contains('Hewell (HMP) has been activated')
@@ -55,9 +55,9 @@ context('Supported prisons', () => {
     const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
 
     cy.task('stubGetPrison', activePrison)
-    cy.task('stubGetSessionTemplates', { prisonId, templateFilter })
+    cy.task('stubGetSessionTemplates', { prisonCode, rangeType })
 
-    supportedPrisonsPage.selectPrison(prisonId).click()
+    supportedPrisonsPage.selectPrison(prisonCode).click()
     const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
     viewSessionTemplatePage.statusTab().click()
@@ -65,7 +65,7 @@ context('Supported prisons', () => {
 
     prisonStatusPage.prisonStatusLabel().contains('active')
 
-    cy.task('stubDeactivatePrison', prisonId)
+    cy.task('stubDeactivatePrison', prisonCode)
     cy.task('stubGetPrison', inactivePrison)
     prisonStatusPage.switchStatus().submit()
     prisonStatusPage.successMessage().contains('Hewell (HMP) has been deactivated')
