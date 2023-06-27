@@ -74,5 +74,7 @@ export function registerNunjucks(app: express.Express): Environment {
     return dateToFormat ? format(parseISO(dateToFormat), dateFormat) : null
   })
 
+  njkEnv.addFilter('pluralise', (word, count, plural = `${word}s`) => (count === 1 ? word : plural))
+
   return njkEnv
 }
