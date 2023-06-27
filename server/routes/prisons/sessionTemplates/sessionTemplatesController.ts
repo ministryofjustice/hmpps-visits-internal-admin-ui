@@ -13,7 +13,7 @@ export default class SessionTemplatesController {
     return async (req, res) => {
       const { prisonId } = req.params
 
-      const defaultRange: SessionTemplatesRangeType = 'ACTIVE_OR_FUTURE'
+      const defaultRange: SessionTemplatesRangeType = 'CURRENT_OR_FUTURE'
       const selectedRange = this.isSessionTemplateRangeType(req.query?.rangeType) ? req.query.rangeType : defaultRange
 
       const { prison, prisonName } = await this.prisonService.getPrison(res.locals.user.username, prisonId)

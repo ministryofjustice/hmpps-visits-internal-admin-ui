@@ -30,7 +30,6 @@ export default class TestData {
   } = {}): PrisonRegisterPrison[] => prisons
 
   static sessionTemplate = ({
-    biWeekly = false,
     dayOfWeek = 'WEDNESDAY',
     name = 'WEDNESDAY, 2023-03-21, 13:45',
     permittedLocationGroups = [],
@@ -52,9 +51,9 @@ export default class TestData {
     },
     visitRoom = 'Visits Main Room',
     visitType = 'SOCIAL',
+    weeklyFrequency = 1,
   }: Partial<SessionTemplate> = {}): SessionTemplate =>
     ({
-      biWeekly,
       dayOfWeek,
       name,
       permittedLocationGroups,
@@ -67,5 +66,6 @@ export default class TestData {
       sessionTimeSlot,
       visitRoom,
       visitType,
+      weeklyFrequency,
     } as SessionTemplate)
 }

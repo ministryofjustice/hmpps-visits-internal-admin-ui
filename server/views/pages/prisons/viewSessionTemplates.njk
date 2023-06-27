@@ -157,8 +157,8 @@
                   attributes: { "data-test": "template-visit-room" }
                 },
                 {
-                  text: "Yes" if sessionTemplate.biWeekly else "No",
-                  attributes: { "data-test": "template-bi-weekly" }
+                  text: sessionTemplate.weeklyFrequency,
+                  attributes: { "data-test": "template-weekly-frequency" }
                 },
                 {
                   html: groupsListWithCount | nl2br if groupsListWithCount else "None",
@@ -195,7 +195,7 @@
               text: "Visit room"
             },
             {
-              text: "Bi-weekly"
+              text: "Weekly frequency"
             },
             {
               text: "Groups"
