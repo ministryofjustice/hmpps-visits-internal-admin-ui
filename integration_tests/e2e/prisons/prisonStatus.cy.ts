@@ -4,10 +4,11 @@ import Page from '../../pages/page'
 import SupportedPrisonsPage from '../../pages/prisons/prisons'
 import ViewSessionTemplatesPage from '../../pages/prisons/viewSessionTemplates'
 import PrisonStatusPage from '../../pages/prisons/prisonStatus'
+import { SessionTemplatesRangeType } from '../../../server/data/visitSchedulerApiTypes'
 
 context('Supported prisons', () => {
   const prisonCode = 'HEI'
-  const rangeType = 'CURRENT_OR_FUTURE'
+  const rangeType: SessionTemplatesRangeType = 'CURRENT_OR_FUTURE'
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
