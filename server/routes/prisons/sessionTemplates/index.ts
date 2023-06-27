@@ -9,6 +9,7 @@ export default function routes(services: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+  const post = (path: string | string[], handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   const sessionTemplates = new SessionTemplatesController(services.prisonService, services.sessionTemplateService)
   const singleSessionTemplate = new SingleSessionTemplateController(
@@ -19,6 +20,7 @@ export default function routes(services: Services): Router {
 
   get('/prisons/:prisonId([A-Z]{3})/session-templates', sessionTemplates.view())
   get('/prisons/:prisonId/session-templates/add', addSessionTemplate.add())
+  post('/prisons/:prisonId/session-templates/add', addSessionTemplate.create())
   get('/prisons/:prisonId/session-templates/:reference', singleSessionTemplate.view())
 
   return router

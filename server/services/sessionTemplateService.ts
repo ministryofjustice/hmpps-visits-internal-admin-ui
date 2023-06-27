@@ -1,5 +1,6 @@
+import logger from '../../logger'
 import { RestClientBuilder, VisitSchedulerApiClient, HmppsAuthClient } from '../data'
-import { SessionTemplate, SessionTemplatesRangeType } from '../data/visitSchedulerApiTypes'
+import { CreateSessionTemplateDto, SessionTemplate, SessionTemplatesRangeType } from '../data/visitSchedulerApiTypes'
 
 export default class SessionTemplateService {
   constructor(
@@ -23,5 +24,13 @@ export default class SessionTemplateService {
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     return visitSchedulerApiClient.getSingleSessionTemplate(reference)
+  }
+
+  async createSessionTemplate(username: string, sessionTemplate: CreateSessionTemplateDto): Promise<void> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    logger.info(`Adding session template ${sessionTemplate.name} to prison ${sessionTemplate.prisonId}`)
+    await visitSchedulerApiClient.createSessionTemplate(sessionTemplate)
   }
 }
