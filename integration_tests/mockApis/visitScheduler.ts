@@ -2,6 +2,7 @@ import { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
 import TestData from '../../server/routes/testutils/testData'
 import { components } from '../../server/@types/visit-scheduler-api'
+import { SessionTemplatesRangeType } from '../../server/data/visitSchedulerApiTypes'
 
 type Prison = components['schemas']['PrisonDto']
 
@@ -80,11 +81,17 @@ export default {
       },
     })
   },
-  stubGetSessionTemplates: (prisonCode: string): SuperAgentRequest => {
+  stubGetSessionTemplates: ({
+    prisonCode,
+    rangeType,
+  }: {
+    prisonCode: string
+    rangeType: SessionTemplatesRangeType
+  }): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/visitScheduler/admin/session-templates?prisonCode=${prisonCode}&rangeType=ACTIVE_OR_FUTURE`,
+        url: `/visitScheduler/admin/session-templates?prisonCode=${prisonCode}&rangeType=${rangeType}`,
       },
       response: {
         status: 200,
