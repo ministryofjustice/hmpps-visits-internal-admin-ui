@@ -26,11 +26,15 @@ export default class SessionTemplateService {
     return visitSchedulerApiClient.getSingleSessionTemplate(reference)
   }
 
-  async createSessionTemplate(username: string, sessionTemplate: CreateSessionTemplateDto): Promise<void> {
+  async createSessionTemplate(
+    username: string,
+    createSessionTemplateDto: CreateSessionTemplateDto,
+  ): Promise<SessionTemplate> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
-    logger.info(`Adding session template ${sessionTemplate.name} to prison ${sessionTemplate.prisonId}`)
-    await visitSchedulerApiClient.createSessionTemplate(sessionTemplate)
+    const sessionTemplate = await visitSchedulerApiClient.createSessionTemplate(createSessionTemplateDto)
+    logger.info(`New session template '${sessionTemplate.reference}' created for prison '${sessionTemplate.prisonId}'`)
+    return sessionTemplate
   }
 }

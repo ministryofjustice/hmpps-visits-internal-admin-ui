@@ -27,7 +27,7 @@ export default class AddSessionTemplateController {
   public create(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
-      const sessionTemplate: CreateSessionTemplateDto = {
+      const createSessionTemplateDto: CreateSessionTemplateDto = {
         name: req.body.name,
         weeklyFrequency: req.body.weeklyFrequency,
         dayOfWeek: req.body.dayOfWeek,
@@ -50,7 +50,7 @@ export default class AddSessionTemplateController {
       }
 
       try {
-        await this.sessionTemplateService.createSessionTemplate(res.locals.user.username, sessionTemplate)
+        await this.sessionTemplateService.createSessionTemplate(res.locals.user.username, createSessionTemplateDto)
         // req.flash('message', sessionTemplate)
       } catch (error) {
         req.flash('formValues', req.body)
