@@ -25,4 +25,40 @@ export default class SingleSessionTemplateController {
       })
     }
   }
+
+  public activate(): RequestHandler {
+    return async (req, res) => {
+      const { reference } = req.params
+
+      const sessionTemplate = await this.sessionTemplateService.activeSessionTemplate(
+        res.locals.user.username,
+        reference,
+      )
+      if (sessionTemplate.active) {
+        req.flash('message', 'activated')
+      } else {
+        req.flash('errors', [{ msg: 'Failed to change  session template status' }])
+      }
+
+      return res.redirect(`/prisons/${sessionTemplate.prisonId}/session-templates/${sessionTemplate.reference}`)
+    }
+  }
+
+  public deactivate(): RequestHandler {
+    return async (req, res) => {
+      const { reference } = req.params
+
+      const sessionTemplate = await this.sessionTemplateService.deactivateSessionTemplate(
+        res.locals.user.username,
+        reference,
+      )
+      if (!sessionTemplate.active) {
+        req.flash('message', 'deactivated')
+      } else {
+        req.flash('errors', [{ msg: 'Failed to change session template status' }])
+      }
+
+      return res.redirect(`/prisons/${sessionTemplate.prisonId}/session-templates/${sessionTemplate.reference}`)
+    }
+  }
 }

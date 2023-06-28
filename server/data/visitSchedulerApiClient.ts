@@ -60,4 +60,16 @@ export default class VisitSchedulerApiClient {
       path: `/admin/session-templates/template/${reference}`,
     })
   }
+
+  activeSessionTemplate(reference: string): Promise<SessionTemplate> {
+    return this.restClient.put({
+      path: `/admin/session-templates/template/${reference}/activate`,
+    })
+  }
+
+  deactivateSessionTemplate(reference: string): Promise<SessionTemplate> {
+    return this.restClient.put({
+      path: `/admin/session-templates/template/${reference}/deactivate`,
+    })
+  }
 }
