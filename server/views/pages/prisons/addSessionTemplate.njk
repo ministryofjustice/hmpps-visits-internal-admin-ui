@@ -24,48 +24,6 @@
   ] %}
 {% set backLinkHref = "/prisons/" + prisonId + "/session-templates" %}
 
-{% set endDateTextHtml %}
-  {{ govukDateInput({
-    id: "validToDate",
-    fieldset: {
-      legend: {
-        text: "Template end date",
-        classes: "govuk-fieldset__legend--m"
-      }
-    },
-    hint: {
-      text: "For example, 27 3 2023"
-    },
-    items: [
-      {
-        label: "Day",
-        name: "validToDateDay",
-        classes: "govuk-input--width-2",
-        autocomplete: "off",
-        value: formValues.validToDateDay
-      },
-      {
-        label: "Month",
-        name: "validToDateMonth",
-        classes: "govuk-input--width-2",
-        autocomplete: "off",
-        value: formValues.validToDateMonth
-      },
-      {
-        label: "Year",
-        name: "validToDateYear",
-        classes: "govuk-input--width-4",
-        autocomplete: "off",
-        value: formValues.validToDateYear
-      }
-    ]
-  }) }}
-{% endset -%}
-
-{% if formValues.validToDateDay %}
-  {% set endDateCheckbox = true %}
-{% endif %}
-
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -93,6 +51,12 @@
           errorMessage: errors | findError('name')
         }) }}
 
+        {%- set dayItems = [{
+          text: "Choose day of the week"
+        }] -%}
+        {% for day in daysOfWeek %}
+          {%- set dayItems = (dayItems.push({ text: day | capitalize, value: day }), dayItems) -%}
+        {% endfor %}
         {{ govukSelect({
           id: "dayOfWeek",
           name: "dayOfWeek",
@@ -102,42 +66,7 @@
             classes: "govuk-label--m"
 
           },
-          items: [
-            {
-              value: "choose",
-              text: "Choose day of the week",
-              selected: true
-            },
-            {
-              value: "MONDAY",
-              text: "Monday"
-            },
-            {
-              value: "TUESDAY",
-              text: "Tuesday"
-            },
-            {
-              value: "WEDNESDAY",
-              text: "Wednesday"
-            },
-            {
-              value: "THURSDAY",
-              text: "Thursday"
-            },
-            {
-              value: "FRIDAY",
-              text: "Friday"
-            },
-            {
-              value: "SATURDAY",
-              text: "Saturday"
-            },
-            {
-              value: "SUNDAY",
-              text: "Sunday"
-            }
-          ]
-
+          items: dayItems
         }) }}
 
         {{ govukInput({
@@ -226,8 +155,45 @@
           ]
         }) }}
    
+        {%- set endDateHtml %}
+          {{ govukDateInput({
+            id: "validToDate",
+            fieldset: {
+              legend: {
+                text: "Template end date",
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            hint: {
+              text: "For example, 27 3 2023"
+            },
+            items: [
+              {
+                label: "Day",
+                name: "validToDateDay",
+                classes: "govuk-input--width-2",
+                autocomplete: "off",
+                value: formValues.validToDateDay
+              },
+              {
+                label: "Month",
+                name: "validToDateMonth",
+                classes: "govuk-input--width-2",
+                autocomplete: "off",
+                value: formValues.validToDateMonth
+              },
+              {
+                label: "Year",
+                name: "validToDateYear",
+                classes: "govuk-input--width-4",
+                autocomplete: "off",
+                value: formValues.validToDateYear
+              }
+            ]
+          }) }}
+        {% endset -%}
         {{ govukCheckboxes({
-          name: "validToDate",
+          name: "hasEndDate",
           fieldset: {
             legend: {
               text: "Does this session have an end date?",
@@ -237,10 +203,11 @@
           items: [
             {
               text: "Yes",
+              value: "yes",
               conditional: {
-                html: endDateTextHtml
+                html: endDateHtml
               },
-              checked: endDateCheckbox
+              checked: formValues.hasEndDate === "yes"
             }
           ]
         }) }}

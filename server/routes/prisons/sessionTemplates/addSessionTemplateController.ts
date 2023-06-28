@@ -2,6 +2,7 @@ import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService, SessionTemplateService } from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
+import daysOfWeek from '../../../constants/daysOfWeek'
 
 export default class AddSessionTemplateController {
   public constructor(
@@ -20,6 +21,7 @@ export default class AddSessionTemplateController {
         message: req.flash('message'),
         prisonId,
         prisonName,
+        daysOfWeek,
         formValues,
       })
     }
@@ -49,9 +51,10 @@ export default class AddSessionTemplateController {
         },
         sessionDateRange: {
           validFromDate: `${req.body.validFromDateYear}-${req.body.validFromDateMonth}-${req.body.validFromDateDay}`,
-          validToDate: req.body.hasEndDate
-            ? `${req.body.validToDateYear}-${req.body.validToDateMonth}-${req.body.validToDateDay}`
-            : undefined,
+          validToDate:
+            req.body.hasEndDate === 'yes'
+              ? `${req.body.validToDateYear}-${req.body.validToDateMonth}-${req.body.validToDateDay}`
+              : undefined,
         },
         sessionTimeSlot: {
           startTime: req.body.startTime,
@@ -65,6 +68,7 @@ export default class AddSessionTemplateController {
         // req.flash('message', sessionTemplate)
       } catch (error) {
         req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
+        req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }
 
