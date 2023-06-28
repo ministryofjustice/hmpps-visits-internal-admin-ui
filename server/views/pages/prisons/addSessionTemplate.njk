@@ -24,48 +24,6 @@
   ] %}
 {% set backLinkHref = "/prisons/" + prisonId + "/session-templates" %}
 
-{% set endDateTextHtml %}
-  {{ govukDateInput({
-    id: "validToDate",
-    fieldset: {
-      legend: {
-        text: "Template end date",
-        classes: "govuk-fieldset__legend--m"
-      }
-    },
-    hint: {
-      text: "For example, 27 3 2023"
-    },
-    items: [
-      {
-        label: "Day",
-        name: "validToDateDay",
-        classes: "govuk-input--width-2",
-        autocomplete: "off",
-        value: formValues.validToDateDay
-      },
-      {
-        label: "Month",
-        name: "validToDateMonth",
-        classes: "govuk-input--width-2",
-        autocomplete: "off",
-        value: formValues.validToDateMonth
-      },
-      {
-        label: "Year",
-        name: "validToDateYear",
-        classes: "govuk-input--width-4",
-        autocomplete: "off",
-        value: formValues.validToDateYear
-      }
-    ]
-  }) }}
-{% endset -%}
-
-{% if formValues.validToDateDay %}
-  {% set endDateCheckbox = true %}
-{% endif %}
-
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -226,8 +184,45 @@
           ]
         }) }}
    
+        {%- set endDateHtml %}
+          {{ govukDateInput({
+            id: "validToDate",
+            fieldset: {
+              legend: {
+                text: "Template end date",
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            hint: {
+              text: "For example, 27 3 2023"
+            },
+            items: [
+              {
+                label: "Day",
+                name: "validToDateDay",
+                classes: "govuk-input--width-2",
+                autocomplete: "off",
+                value: formValues.validToDateDay
+              },
+              {
+                label: "Month",
+                name: "validToDateMonth",
+                classes: "govuk-input--width-2",
+                autocomplete: "off",
+                value: formValues.validToDateMonth
+              },
+              {
+                label: "Year",
+                name: "validToDateYear",
+                classes: "govuk-input--width-4",
+                autocomplete: "off",
+                value: formValues.validToDateYear
+              }
+            ]
+          }) }}
+        {% endset -%}
         {{ govukCheckboxes({
-          name: "validToDate",
+          name: "hasEndDate",
           fieldset: {
             legend: {
               text: "Does this session have an end date?",
@@ -237,10 +232,11 @@
           items: [
             {
               text: "Yes",
+              value: "yes",
               conditional: {
-                html: endDateTextHtml
+                html: endDateHtml
               },
-              checked: endDateCheckbox
+              checked: formValues.hasEndDate === "yes"
             }
           ]
         }) }}
