@@ -14,5 +14,10 @@ generic-service:
     PRISON_REGISTER_API_URL: "https://prison-register-preprod.hmpps.service.justice.gov.uk"
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler-preprod.prison.service.justice.gov.uk"
 
+  namespace_secrets:
+    elasticache-redis:
+      REDIS_HOST: "primary_endpoint_address"
+      REDIS_AUTH_TOKEN: "auth_token"
+
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
