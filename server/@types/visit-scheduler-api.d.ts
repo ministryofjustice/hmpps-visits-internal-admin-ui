@@ -177,6 +177,20 @@ export interface paths {
      */
     delete: operations['deleteSessionTemplate']
   }
+  '/admin/session-templates/template/{reference}/activate': {
+    /**
+     * Activate session template using given session template reference
+     * @description Activate session template using given session template reference
+     */
+    put: operations['activateSessionTemplate']
+  }
+  '/admin/session-templates/template/{reference}/deactivate': {
+    /**
+     * Deactivate session template using given session template reference
+     * @description Deactivate session template using given session template reference
+     */
+    put: operations['deActivateSessionTemplate']
+  }
   '/config/prisons/supported': {
     /**
      * Get supported prisons
@@ -190,7 +204,7 @@ export interface paths {
   }
   '/migrate-visits/{reference}/cancel': {
     /** Migrate a canceled booked visit */
-    put: operations['cancelVisit_2']
+    put: operations['cancelVisit_1']
   }
   '/queue-admin/get-dlq-messages/{dlqName}': {
     get: operations['getDlqMessages']
@@ -203,10 +217,6 @@ export interface paths {
   }
   '/queue-admin/retry-dlq/{dlqName}': {
     put: operations['retryDlq']
-  }
-  '/v2/visits/{reference}/cancel': {
-    /** Cancel an existing booked visit */
-    put: operations['cancelVisit_1']
   }
   '/visit-sessions': {
     /**
@@ -263,10 +273,7 @@ export interface paths {
     get: operations['getVisitByReference']
   }
   '/visits/{reference}/cancel': {
-    /**
-     * Cancel an existing booked visit
-     * @deprecated
-     */
+    /** Cancel an existing booked visit */
     put: operations['cancelVisit']
   }
   '/visits/{reference}/change': {
@@ -402,11 +409,6 @@ export interface components {
       leadVisitorId: number
     }
     CreateSessionTemplateDto: {
-      /**
-       * @description biWeekly time table
-       * @example true
-       */
-      biWeekly: boolean
       /** @description list of group references for allowed prisoner category groups */
       categoryGroupReferences?: string[]
       /**
@@ -437,6 +439,12 @@ export interface components {
        * @example Visits Main Hall
        */
       visitRoom: string
+      /**
+       * Format: int32
+       * @description number of weeks until the weekly day is repeated
+       * @example 1
+       */
+      weeklyFrequency: number
     }
     DlqMessage: {
       body: {
@@ -743,7 +751,7 @@ export interface components {
       /**
        * Format: date
        * @description The start of the Validity period for the session template
-       * @example 2019-12-02
+       * @example 2019-11-02
        */
       validFromDate: string
       /**
@@ -786,11 +794,6 @@ export interface components {
     SessionScheduleDto: {
       capacity: components['schemas']['SessionCapacityDto']
       /**
-       * Format: HH:mm
-       * @example 13:45
-       */
-      endTime: string
-      /**
        * @description prisoner category groups
        * @example Category A Prisoners
        */
@@ -805,35 +808,26 @@ export interface components {
        * @example Wing C
        */
       prisonerLocationGroupNames: string[]
-      /**
-       * Format: date
-       * @description The end date of sessionTemplate
-       * @example 2020-11-01
-       */
-      sessionTemplateEndDate?: string
-      /**
-       * @description The session template frequency
-       * @example BI_WEEKLY
-       * @enum {string}
-       */
-      sessionTemplateFrequency: 'BI_WEEKLY' | 'WEEKLY' | 'ONE_OFF'
+      sessionDateRange: components['schemas']['SessionDateRangeDto']
       /**
        * @description Session Template Reference
        * @example v9d.7ed.7u
        */
       sessionTemplateReference: string
+      sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
-       * Format: HH:mm
-       * @example 13:45
+       * Format: int32
+       * @description number of weeks until the weekly day is repeated
+       * @example 1
        */
-      startTime: string
+      weeklyFrequency: number
     }
     SessionTemplateDto: {
       /**
-       * @description biWeekly
+       * @description is session template active
        * @example true
        */
-      biWeekly: boolean
+      active: boolean
       /**
        * @description day of week for visit
        * @example MONDAY
@@ -875,6 +869,12 @@ export interface components {
        * @enum {string}
        */
       visitType: 'SOCIAL'
+      /**
+       * Format: int32
+       * @description number of weeks until the weekly day is repeated
+       * @example 1
+       */
+      weeklyFrequency: number
     }
     /** @description The start and end time of the generated visit session(s) */
     SessionTimeSlotDto: {
@@ -917,11 +917,6 @@ export interface components {
       name: string
     }
     UpdateSessionTemplateDto: {
-      /**
-       * @description biWeekly time table
-       * @example true
-       */
-      biWeekly?: boolean
       /** @description list of group references for allowed prisoner category groups */
       categoryGroupReferences?: string[]
       /** @description list of group references for allowed prisoner incentive levels */
@@ -936,6 +931,12 @@ export interface components {
       sessionCapacity?: components['schemas']['SessionCapacityDto']
       sessionDateRange?: components['schemas']['SessionDateRangeDto']
       sessionTimeSlot?: components['schemas']['SessionTimeSlotDto']
+      /**
+       * Format: int32
+       * @description number of weeks until the weekly day is repeated
+       * @example 1
+       */
+      weeklyFrequency: number
     }
     /** @description Visit */
     VisitDto: {
@@ -2011,11 +2012,11 @@ export interface operations {
        */
       /**
        * @description Filters session templates depending on their from and to Date
-       * @example ACTIVE_OR_FUTURE
+       * @example CURRENT_OR_FUTURE
        */
       query: {
         prisonCode: string
-        rangeType: 'ACTIVE_OR_FUTURE' | 'HISTORIC' | 'ALL'
+        rangeType: 'CURRENT_OR_FUTURE' | 'HISTORIC' | 'ALL'
       }
     }
     responses: {
@@ -2198,6 +2199,88 @@ export interface operations {
       }
     }
   }
+  activateSessionTemplate: {
+    /**
+     * Activate session template using given session template reference
+     * @description Activate session template using given session template reference
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example v9-d7-ed-7u
+       */
+      path: {
+        reference: string
+      }
+    }
+    responses: {
+      /** @description session template activated */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionTemplateDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to activate session template */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description session template can't be found to activate */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deActivateSessionTemplate: {
+    /**
+     * Deactivate session template using given session template reference
+     * @description Deactivate session template using given session template reference
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example v9-d7-ed-7u
+       */
+      path: {
+        reference: string
+      }
+    }
+    responses: {
+      /** @description Session template deactivated */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionTemplateDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to deactivate session template */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description session template can't be found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   getSupportedPrisons: {
     /**
      * Get supported prisons
@@ -2258,7 +2341,7 @@ export interface operations {
       }
     }
   }
-  cancelVisit_2: {
+  cancelVisit_1: {
     /** Migrate a canceled booked visit */
     parameters: {
       /**
@@ -2361,55 +2444,6 @@ export interface operations {
       200: {
         content: {
           '*/*': components['schemas']['RetryDlqResult']
-        }
-      }
-    }
-  }
-  cancelVisit_1: {
-    /** Cancel an existing booked visit */
-    parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
-      path: {
-        reference: string
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CancelVisitDto']
-      }
-    }
-    responses: {
-      /** @description Visit cancelled */
-      200: {
-        content: {
-          'application/json': components['schemas']['VisitDto']
-        }
-      }
-      /** @description Incorrect request to cancel a visit */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to cancel a visit */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Visit not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
@@ -2837,10 +2871,7 @@ export interface operations {
     }
   }
   cancelVisit: {
-    /**
-     * Cancel an existing booked visit
-     * @deprecated
-     */
+    /** Cancel an existing booked visit */
     parameters: {
       /**
        * @description reference
@@ -2852,7 +2883,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['OutcomeDto']
+        'application/json': components['schemas']['CancelVisitDto']
       }
     }
     responses: {

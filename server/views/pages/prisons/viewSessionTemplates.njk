@@ -109,7 +109,7 @@
           {%- set rows = (rows.push([
             {
               html: '<h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-3">' + day | capitalize + "</h3>",
-              colspan: 9
+              colspan: 8
             }
             ]), rows) %}
 
@@ -153,12 +153,8 @@
                   attributes: { "data-test": "template-valid-to-date" }
                 },
                 {
-                  text: sessionTemplate.visitRoom,
-                  attributes: { "data-test": "template-visit-room" }
-                },
-                {
-                  text: "Yes" if sessionTemplate.biWeekly else "No",
-                  attributes: { "data-test": "template-bi-weekly" }
+                  text: sessionTemplate.weeklyFrequency + " week" | pluralise(sessionTemplate.weeklyFrequency),
+                  attributes: { "data-test": "template-weekly-frequency" }
                 },
                 {
                   html: groupsListWithCount | nl2br if groupsListWithCount else "None",
@@ -192,10 +188,7 @@
               text: "Valid to"
             },
             {
-              text: "Visit room"
-            },
-            {
-              text: "Bi-weekly"
+              text: "Frequency"
             },
             {
               text: "Groups"
