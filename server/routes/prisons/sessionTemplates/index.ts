@@ -21,11 +21,11 @@ export default function routes(services: Services): Router {
   const addSessionTemplate = new AddSessionTemplateController(services.prisonService, services.sessionTemplateService)
 
   get('/prisons/:prisonId([A-Z]{3})/session-templates', sessionTemplates.view())
-  get('/prisons/:prisonId/session-templates/add', addSessionTemplate.add())
+  get('/prisons/:prisonId/session-templates/add', addSessionTemplate.view())
   postWithValidation(
     '/prisons/:prisonId/session-templates/add',
     addSessionTemplate.validate(),
-    addSessionTemplate.create(),
+    addSessionTemplate.submit(),
   )
   get('/prisons/:prisonId/session-templates/:reference', singleSessionTemplate.view())
 

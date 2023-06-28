@@ -9,7 +9,7 @@ export default class AddSessionTemplateController {
     private readonly sessionTemplateService: SessionTemplateService,
   ) {}
 
-  public add(): RequestHandler {
+  public view(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
       const { prisonName } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
@@ -25,15 +25,17 @@ export default class AddSessionTemplateController {
     }
   }
 
-  public create(): RequestHandler {
+  public submit(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
+
+      const originalUrl = `/prisons/${prisonId}/session-templates/add`
 
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', req.body)
-        return res.redirect(req.originalUrl)
+        return res.redirect(originalUrl)
       }
 
       const createSessionTemplateDto: CreateSessionTemplateDto = {
@@ -63,7 +65,7 @@ export default class AddSessionTemplateController {
         // req.flash('message', sessionTemplate)
       } catch (error) {
         req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
-        return res.redirect(req.originalUrl)
+        return res.redirect(originalUrl)
       }
 
       return res.redirect(`/prisons/${prisonId}/session-templates`)
