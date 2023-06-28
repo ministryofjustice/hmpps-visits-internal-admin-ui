@@ -2,6 +2,7 @@ import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService, SessionTemplateService } from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
+import daysOfWeek from '../../../constants/daysOfWeek'
 
 export default class AddSessionTemplateController {
   public constructor(
@@ -20,6 +21,7 @@ export default class AddSessionTemplateController {
         message: req.flash('message'),
         prisonId,
         prisonName,
+        daysOfWeek,
         formValues,
       })
     }
