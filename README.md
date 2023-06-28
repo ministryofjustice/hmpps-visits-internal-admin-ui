@@ -14,13 +14,13 @@ The easiest way to run the app is to use docker compose to create the service an
 ### Dependencies
 The app requires: 
 * hmpps-auth - for authentication
-* redis - session store and token caching
+* redis-vsip-admi (redis) - session store and token caching
 
 ### Running the app for development
 
 It is simplest to use HMPPS Auth dev, in which case just Redis is needed:
 
-`docker-compose up redis`
+`docker-compose up redis-vsip-admin`
 
 
 Or, to start the main services excluding the typescript app: 
