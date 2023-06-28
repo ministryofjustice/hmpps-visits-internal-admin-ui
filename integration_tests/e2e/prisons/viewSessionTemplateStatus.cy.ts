@@ -74,11 +74,10 @@ context('Change active/inactive session template', () => {
     viewSessionTemplatePage.getStatusSwitchButton().click()
 
     // Then
-    const viewSessionTemplatePage2 = Page.verifyOnPage(ViewSessionTemplatePage)
-    const lable = viewSessionTemplatePage2.sessionTemplateStatusLabel()
+    const lable = viewSessionTemplatePage.sessionTemplateStatusLabel()
     lable.should('include.text', 'activated')
     lable.should('not.include.text', 'deactivated')
-    viewSessionTemplatePage2.getStatusSwitchButton().should('include.text', 'Deactivate')
+    viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Deactivate')
   })
 
   it('session template should be activated and button should deactivate', () => {
@@ -108,9 +107,8 @@ context('Change active/inactive session template', () => {
     viewSessionTemplatePage.getStatusSwitchButton().click()
 
     // Then
-    const viewSessionTemplatePage2 = Page.verifyOnPage(ViewSessionTemplatePage)
-    const lable = viewSessionTemplatePage2.sessionTemplateStatusLabel()
+    const lable = viewSessionTemplatePage.sessionTemplateStatusLabel()
     lable.should('include.text', 'deactivated')
-    viewSessionTemplatePage2.getStatusSwitchButton().should('include.text', 'Activate')
+    viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Activate')
   })
 })
