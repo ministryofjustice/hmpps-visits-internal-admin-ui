@@ -27,7 +27,6 @@
 {% set endDateTextHtml %}
   {{ govukDateInput({
     id: "validToDate",
-    namePrefix: "validToDate",
     fieldset: {
       legend: {
         text: "Template end date",
@@ -36,13 +35,42 @@
     },
     hint: {
       text: "For example, 27 3 2023"
-    }
+    },
+    items: [
+      {
+        label: "Day",
+        name: "validToDateDay",
+        classes: "govuk-input--width-2",
+        autocomplete: "off",
+        value: formValues.validToDateDay
+      },
+      {
+        label: "Month",
+        name: "validToDateMonth",
+        classes: "govuk-input--width-2",
+        autocomplete: "off",
+        value: formValues.validToDateMonth
+      },
+      {
+        label: "Year",
+        name: "validToDateYear",
+        classes: "govuk-input--width-4",
+        autocomplete: "off",
+        value: formValues.validToDateYear
+      }
+    ]
   }) }}
 {% endset -%}
+
+{% if formValues.validToDateDay %}
+  {% set endDateCheckbox = true %}
+{% endif %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
 
       <h1 class="govuk-heading-l">
         <span class="govuk-caption-l">{{ prisonName }}</span>
@@ -58,15 +86,17 @@
               classes: "govuk-label--m"
           },
           classes: "govuk-!-width-three-quarters",
-          id: "templateName",
-          name: "templateName",
+          id: "name",
+          name: "name",
+          value: formValues.name,
           autocomplete: "off",
-          errorMessage: errors | findError('templateName')
+          errorMessage: errors | findError('name')
         }) }}
 
         {{ govukSelect({
           id: "dayOfWeek",
           name: "dayOfWeek",
+          value: formValues.dayOfWeek,
           label: {
             text: "Day of the week",
             classes: "govuk-label--m"
@@ -121,6 +151,7 @@
           classes: "govuk-!-width-one-third",
           id: "startTime",
           name: "startTime",
+          value: formValues.startTime,
           autocomplete: "off",
           errorMessage: errors | findError('startTime')
         }) }}
@@ -136,6 +167,7 @@
           classes: "govuk-!-width-one-third",
           id: "endTime",
           name: "endTime",
+          value: formValues.endTime,
           autocomplete: "off",
           errorMessage: errors | findError('endTime')
         }) }}
@@ -149,16 +181,17 @@
               text: "1 = weekly, 2 = fortnightly etc"
           },
           classes: "govuk-!-width-one-third",
-          id: "openCapacity",
-          name: "openCapacity",
+          id: "weeklyFrequency",
+          name: "weeklyFrequency",
           inputmode: "numeric",
           spellcheck: false,
-          errorMessage: errors | findError('openCapacity')
+          value: formValues.weeklyFrequency,
+          autocomplete: "off",
+          errorMessage: errors | findError('weeklyFrequency')
         }) }}
 
         {{ govukDateInput({
           id: "validFromDate",
-          namePrefix: "validFromDate",
           fieldset: {
             legend: {
               text: "Template start date",
@@ -166,12 +199,35 @@
             }
           },
           hint: {
-            text: "For example, 27 3 2023"
-          }
+            text: "For example, 27 03 2023"
+          },
+          items: [
+            {
+              label: "Day",
+              name: "validFromDateDay",
+              classes: "govuk-input--width-2",
+              autocomplete: "off",
+              value: formValues.validFromDateDay
+            },
+            {
+              label: "Month",
+              name: "validFromDateMonth",
+              classes: "govuk-input--width-2",
+              autocomplete: "off",
+              value: formValues.validFromDateMonth
+            },
+            {
+              label: "Year",
+              name: "validFromDateYear",
+              classes: "govuk-input--width-4",
+              autocomplete: "off",
+              value: formValues.validFromDateYear
+            }
+          ]
         }) }}
    
         {{ govukCheckboxes({
-          name: "hasEndDate",
+          name: "validToDate",
           fieldset: {
             legend: {
               text: "Does this session have an end date?",
@@ -180,11 +236,11 @@
           },
           items: [
             {
-              value: "hasEndDate",
               text: "Yes",
               conditional: {
                 html: endDateTextHtml
-              }
+              },
+              checked: endDateCheckbox
             }
           ]
         }) }}
@@ -201,7 +257,8 @@
           id: "openCapacity",
           name: "openCapacity",
           inputmode: "numeric",
-          spellcheck: false,
+          value: formValues.openCapacity,
+          autocomplete: "off",
           errorMessage: errors | findError('openCapacity')
         }) }}
 
@@ -217,7 +274,8 @@
           id: "closedCapacity",
           name: "closedCapacity",
           inputmode: "numeric",
-          spellcheck: false,
+          value: formValues.closedCapacity,
+          autocomplete: "off",
           errorMessage: errors | findError('closedCapacity')
         }) }}
 
@@ -232,6 +290,7 @@
           classes: "govuk-!-width-one-third",
           id: "visitRoom",
           name: "visitRoom",
+          value: formValues.visitRoom,
           autocomplete: "off",
           errorMessage: errors | findError('visitRoom')
         }) }}

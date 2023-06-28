@@ -1,6 +1,6 @@
 import RestClient from './restClient'
 import config from '../config'
-import { Prison, SessionTemplate, SessionTemplatesRangeType } from './visitSchedulerApiTypes'
+import { CreateSessionTemplateDto, Prison, SessionTemplate, SessionTemplatesRangeType } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
   private restClient: RestClient
@@ -61,15 +61,34 @@ export default class VisitSchedulerApiClient {
     })
   }
 
-  activeSessionTemplate(reference: string): Promise<SessionTemplate> {
+  async activeSessionTemplate(reference: string): Promise<SessionTemplate> {
     return this.restClient.put({
       path: `/admin/session-templates/template/${reference}/activate`,
     })
   }
 
-  deactivateSessionTemplate(reference: string): Promise<SessionTemplate> {
+  async deactivateSessionTemplate(reference: string): Promise<SessionTemplate> {
     return this.restClient.put({
       path: `/admin/session-templates/template/${reference}/deactivate`,
+    })
+  }
+
+  async createSessionTemplate(createSessionTemplateDto: CreateSessionTemplateDto): Promise<SessionTemplate> {
+    return this.restClient.post({
+      path: `/admin/session-templates/template`,
+      data: <CreateSessionTemplateDto>{
+        name: createSessionTemplateDto.name,
+        weeklyFrequency: createSessionTemplateDto.weeklyFrequency,
+        dayOfWeek: createSessionTemplateDto.dayOfWeek,
+        prisonId: createSessionTemplateDto.prisonId,
+        sessionCapacity: createSessionTemplateDto.sessionCapacity,
+        sessionDateRange: createSessionTemplateDto.sessionDateRange,
+        sessionTimeSlot: createSessionTemplateDto.sessionTimeSlot,
+        visitRoom: createSessionTemplateDto.visitRoom,
+        categoryGroupReferences: [],
+        incentiveLevelGroupReferences: [],
+        locationGroupReferences: [],
+      },
     })
   }
 }
