@@ -6,11 +6,8 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
-
-
 {% set pageHeaderTitle = 'Add / Remove exclusion dates' %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
-
 {% set primaryNavItems = [
   {
     text: "Home",
@@ -23,9 +20,8 @@
   }
   ] %}
 {% set backLinkHref = "/prisons/" + prisonId + "/session-templates" %}
-
 {% set endDateTextHtml %}
-  {{ govukDateInput({
+{{ govukDateInput({
     id: "validToDate",
     namePrefix: "validToDate",
     fieldset: {
@@ -39,20 +35,45 @@
     }
   }) }}
 {% endset -%}
-
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
       <h1 class="govuk-heading-l">
         <span class="govuk-caption-l">{{ prisonName }}</span>
         {{ pageHeaderTitle }}
       </h1>
 
-      Exclusion DATES
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
 
-    
+          <form action="/prisons/{{prisonId}}/exclusion-dates/add" method="POST" novalidate>
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+              {{ govukDateInput({
+                  id: "excludeDate",
+                  namePrefix: "excludeDate",
+                  fieldset: {
+                    legend: {
+                      text: "Exclusion date",
+                      classes: "govuk-fieldset__legend--m"
+                    }
+                  },
+                  hint: {
+                    text: "For example, 27 3 2023"
+                  },
+                  errorMessage: errors | findError('templateName')
+                }) 
+              }}
+              {{ govukButton({
+                text: "Add",
+                preventDoubleClick: true,
+                attributes: { "data-test": "submit" }
+                }) 
+              }}
+          </form>
 
+          </div>
+        </div>
+
+      </div>
     </div>
-  </div>
-{% endblock %}
+  {% endblock %}

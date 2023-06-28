@@ -20,4 +20,12 @@ export default class ExclusionDatesController {
       })
     }
   }
+
+  public addDate(): RequestHandler {
+    return async (req, res) => {
+      const { prisonId } = req.params
+
+      return res.redirect(`/prisons/${prisonId}/exclusion-dates`)
+    }
+  }
 }
