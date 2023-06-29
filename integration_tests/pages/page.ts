@@ -8,13 +8,13 @@ export default abstract class Page {
   static verifyOnPage<T>(constructor: new () => T): T {
     const page = new constructor() as Page
     page.checkOnPage()
-    return page as any
+    return page as T
   }
 
   static verifyOnPageTitle = <T>(constructor: new (string) => T, title?: string): T => {
     const page = new constructor(title) as Page
     page.checkOnPage()
-    return page as any
+    return page as T
   }
 
   constructor(private readonly title: string) {}
