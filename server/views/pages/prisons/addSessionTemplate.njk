@@ -25,6 +25,8 @@
 {% set backLinkHref = "/prisons/" + prisonId + "/session-templates" %}
 
 {% block content %}
+<pre>{{ formValues | dump(2) }}</pre>
+<pre>{{ errors | dump(2) }}</pre>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
@@ -66,7 +68,8 @@
             classes: "govuk-label--m"
 
           },
-          items: dayItems
+          items: dayItems,
+          errorMessage: errors | findError('dayOfWeek')
         }) }}
 
         {{ govukInput({
@@ -130,6 +133,7 @@
           hint: {
             text: "For example, 27 03 2023"
           },
+          errorMessage: errors | findError('validFromDate'),
           items: [
             {
               label: "Day",
@@ -200,6 +204,7 @@
               classes: "govuk-fieldset__legend--m"
             }
           },
+          errorMessage: errors | findError('hasEndDate'),
           items: [
             {
               text: "Yes",

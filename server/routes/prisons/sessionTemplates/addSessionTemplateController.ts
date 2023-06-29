@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
+import { isDate, isValid, parse } from 'date-fns'
 import { PrisonService, SessionTemplateService } from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
@@ -29,6 +30,7 @@ export default class AddSessionTemplateController {
 
   public submit(): RequestHandler {
     return async (req, res) => {
+      console.log(req.body)
       const { prisonId } = req.params
 
       const originalUrl = `/prisons/${prisonId}/session-templates/add`
@@ -79,10 +81,46 @@ export default class AddSessionTemplateController {
   public validate(): ValidationChain[] {
     return [
       body('name').trim().isLength({ min: 3, max: 100 }).withMessage('Enter a name between 3 and 100 characters long'),
+      body('dayOfWeek').isIn(daysOfWeek).withMessage('Select a day of the week'),
+      body('startTime').trim().isTime({ hourFormat: 'hour24' }).withMessage('Enter a valid time'),
+      body('endTime').trim().isTime({ hourFormat: 'hour24' }).withMessage('Enter a valid time'),
       body('weeklyFrequency')
         .trim()
         .isInt({ min: 1, max: 12 })
         .withMessage('Enter a weekly frequency value between 1 and 12'),
+      body(['validFromDateDay', 'validFromDateMonth', 'validFromDateYear'])
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Enter the date in number format for template start date'),
+      body('validFromDate').custom((_value, { req }) => {
+        const theDate = `${req.body.validFromDateYear}-${req.body.validFromDateMonth}-${req.body.validFromDateDay}`
+
+        const validDate = isValid(parse(theDate, 'yyyy-MM-dd', new Date()))
+        if (!validDate) {
+          throw new Error('Enter a valid date for template start date')
+        }
+        return true
+      }),
+      body(['validToDateDay', 'validToDateMonth', 'validToDateYear'])
+        .optional()
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Enter the date in number format for template end date'),
+      body('hasEndDate')
+        .optional()
+        .isIn(['yes'])
+        .custom((_value, { req }) => {
+          const theDate = `${req.body.validFromDateYear}-${req.body.validFromDateMonth}-${req.body.validFromDateDay}`
+
+          const validDate = isValid(parse(theDate, 'yyyy-MM-dd', new Date()))
+          if (!validDate) {
+            throw new Error('Enter a valid date for template end date')
+          }
+          return true
+        }),
+      body('openCapacity').trim().isInt().withMessage('Enter a number'),
+      body('closedCapacity').trim().isInt().withMessage('Enter a number'),
+      body('visitRoom').trim().isLength({ min: 3 }).withMessage('Enter a name over 3 characters long'),
     ]
   }
 }
