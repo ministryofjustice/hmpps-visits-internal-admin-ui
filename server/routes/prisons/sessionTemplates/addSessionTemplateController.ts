@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { getTime, isDate, isValid, parse, parseISO } from 'date-fns'
+import { getTime, isValid, parse, parseISO } from 'date-fns'
 import { PrisonService, SessionTemplateService } from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
