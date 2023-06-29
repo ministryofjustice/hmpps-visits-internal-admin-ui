@@ -1,14 +1,9 @@
 import TestData from '../../../server/routes/testutils/testData'
-import HomePage from '../../pages/home'
 import Page from '../../pages/page'
-import SupportedPrisonsPage from '../../pages/prisons/prisons'
-import ViewSessionTemplatesPage from '../../pages/prisons/viewSessionTemplates'
 import ViewSessionTemplatePage from '../../pages/prisons/viewSessionTemplate'
-import { SessionTemplatesRangeType } from '../../../server/data/visitSchedulerApiTypes'
 
 context('Change active/inactive session template', () => {
   const prisonCode = 'HEI'
-  const rangeType: SessionTemplatesRangeType = 'CURRENT_OR_FUTURE'
   let deactivatedSessionTemplate = null
   let activeSessionTemplate = null
 
@@ -20,14 +15,10 @@ context('Change active/inactive session template', () => {
       reference: '-ina.dcc.0f',
     })
     activeSessionTemplate = TestData.sessionTemplate({ active: true, prisonId: prisonCode, reference: '-act.dcc.0f' })
-    const sessionTemplates = [deactivatedSessionTemplate, activeSessionTemplate]
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
-    cy.task('stubPrisons')
-    cy.task('stubGetAllPrisons')
     cy.task('stubGetPrison', activePrison)
-    cy.task('stubGetSessionTemplates', { prisonCode, rangeType, sessionTemplates })
     cy.task('stubGetSessionTemplate', { sessionTemplate: deactivatedSessionTemplate })
     cy.task('stubGetSessionTemplate', { sessionTemplate: activeSessionTemplate })
     cy.task('stubActivateSessionTemplate', {
@@ -40,23 +31,14 @@ context('Change active/inactive session template', () => {
     })
 
     cy.signIn()
-
-    const homePage = Page.verifyOnPage(HomePage)
-    const prisonCard = homePage.supportedPrisonsCard()
-    prisonCard.click()
-
-    const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
-    supportedPrisonsPage.selectPrison(prisonCode).click()
   })
 
   it('session template should be deactivated and button should activate', () => {
     // Given
-    const viewSessionTemplatesPage = Page.verifyOnPage(ViewSessionTemplatesPage)
-    const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
-    const link = viewSessionTemplatesPage.selectTemplatePrison(prisonCode, deactivatedSessionTemplate.reference)
+    const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
 
     // When
-    link.click()
+    viewSessionTemplatePage.goTo(prisonCode, deactivatedSessionTemplate.reference)
 
     // Then
     viewSessionTemplatePage.sessionTemplateStatusLabel().should('include.text', 'deactivated')
@@ -65,50 +47,44 @@ context('Change active/inactive session template', () => {
 
   it('when inactive session template is activated details should change accordingly', () => {
     // Given
-    const viewSessionTemplatesPage = Page.verifyOnPage(ViewSessionTemplatesPage)
-    const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
-    const link = viewSessionTemplatesPage.selectTemplatePrison(prisonCode, deactivatedSessionTemplate.reference)
-    link.click()
+    const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
+    viewSessionTemplatePage.goTo(prisonCode, deactivatedSessionTemplate.reference)
 
     // When
     viewSessionTemplatePage.getStatusSwitchButton().click()
 
     // Then
-    const lable = viewSessionTemplatePage.sessionTemplateStatusLabel()
-    lable.should('include.text', 'activated')
-    lable.should('not.include.text', 'deactivated')
+    const label = viewSessionTemplatePage.sessionTemplateStatusLabel()
+    label.should('include.text', 'activated')
+    label.should('not.include.text', 'deactivated')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Deactivate')
   })
 
   it('session template should be activated and button should deactivate', () => {
     // Given
-    const viewSessionTemplatesPage = Page.verifyOnPage(ViewSessionTemplatesPage)
-    const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
-    const link = viewSessionTemplatesPage.selectTemplatePrison(prisonCode, activeSessionTemplate.reference)
+    const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
 
     // When
-    link.click()
+    viewSessionTemplatePage.goTo(prisonCode, activeSessionTemplate.reference)
 
     // Then
-    const lable = viewSessionTemplatePage.sessionTemplateStatusLabel()
-    lable.should('include.text', 'activated')
-    lable.should('not.include.text', 'deactivated')
+    const label = viewSessionTemplatePage.sessionTemplateStatusLabel()
+    label.should('include.text', 'activated')
+    label.should('not.include.text', 'deactivated')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Deactivate')
   })
 
   it('when active session template is deactivate details should change accordingly', () => {
     // Given
-    const viewSessionTemplatesPage = Page.verifyOnPage(ViewSessionTemplatesPage)
-    const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatePage)
-    const link = viewSessionTemplatesPage.selectTemplatePrison(prisonCode, activeSessionTemplate.reference)
-    link.click()
+    const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
+    viewSessionTemplatePage.goTo(prisonCode, activeSessionTemplate.reference)
 
     // When
     viewSessionTemplatePage.getStatusSwitchButton().click()
 
     // Then
-    const lable = viewSessionTemplatePage.sessionTemplateStatusLabel()
-    lable.should('include.text', 'deactivated')
+    const label = viewSessionTemplatePage.sessionTemplateStatusLabel()
+    label.should('include.text', 'deactivated')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Activate')
   })
 })

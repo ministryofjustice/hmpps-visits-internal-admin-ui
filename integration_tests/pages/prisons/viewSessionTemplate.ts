@@ -5,6 +5,8 @@ export default class ViewSessionTemplatePage extends Page {
     super('Hewell (HMP)')
   }
 
+  goTo = (prisonCode: string, reference: string) => cy.visit(`/prisons/${prisonCode}/session-templates/${reference}`)
+
   sessionTemplateStatusLabel = (): PageElement => cy.get('.test-template-status-value')
 
   // switch status Activate <-> Deactivate
