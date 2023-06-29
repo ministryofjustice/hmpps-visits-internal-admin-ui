@@ -110,11 +110,23 @@ export default class AddSessionTemplateController {
         .optional()
         .isIn(['yes'])
         .custom((_value, { req }) => {
-          const theDate = `${req.body.validFromDateYear}-${req.body.validFromDateMonth}-${req.body.validFromDateDay}`
+          const endDate = `${req.body.validToDateYear}-${req.body.validToDateMonth}-${req.body.validToDateDay}`
 
-          const validDate = isValid(parse(theDate, 'yyyy-MM-dd', new Date()))
+          const validDate = isValid(parse(endDate, 'yyyy-MM-dd', new Date()))
           if (!validDate) {
             throw new Error('Enter a valid date for template end date')
+          }
+          return true
+        })
+        .custom((_value, { req }) => {
+          const startDate = `${req.body.validToDateYear}-${req.body.validToDateMonth}-${req.body.validToDateDay}`
+          const endDate = `${req.body.validFromDateYear}-${req.body.validFromDateMonth}-${req.body.validFromDateDay}`
+
+          const startDateObject = parse(startDate, 'yyyy-MM-dd', new Date())
+          const endDateObject = parse(endDate, 'yyyy-MM-dd', new Date())
+
+          if (endDateObject > startDateObject) {
+            throw new Error('Enter an end date after the start date')
           }
           return true
         }),
