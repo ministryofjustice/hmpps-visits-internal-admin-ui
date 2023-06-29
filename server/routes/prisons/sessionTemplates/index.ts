@@ -19,6 +19,10 @@ export default function routes(services: Services): Router {
   const addSessionTemplate = new AddSessionTemplateController(services.prisonService, services.sessionTemplateService)
 
   get('/prisons/:prisonId([A-Z]{3})/session-templates', sessionTemplates.view())
+  get('/prisons/:prisonId([A-Z]{3})/session-templates/add', addSessionTemplate.add())
+  get('/prisons/:prisonId([A-Z]{3})/session-templates/:reference', singleSessionTemplate.view())
+  post('/prisons/:prisonId([A-Z]{3})/session-templates/:reference/activate', singleSessionTemplate.activate())
+  post('/prisons/:prisonId([A-Z]{3})/session-templates/:reference/deactivate', singleSessionTemplate.deactivate())
   get('/prisons/:prisonId/session-templates/add', addSessionTemplate.add())
   post('/prisons/:prisonId/session-templates/add', addSessionTemplate.create())
   get('/prisons/:prisonId/session-templates/:reference', singleSessionTemplate.view())

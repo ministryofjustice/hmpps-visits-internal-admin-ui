@@ -6,4 +6,7 @@ export default class ViewSessionTemplatesPage extends Page {
   }
 
   statusTab = (): PageElement => cy.get('[data-test=tab-status]')
+
+  selectTemplatePrison = (prisonId: string, reference: string): PageElement =>
+    cy.get(`a[href="/prisons/${prisonId}/session-templates/${reference}"]`)
 }
