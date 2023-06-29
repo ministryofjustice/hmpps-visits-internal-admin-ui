@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { isDate, isValid, parse } from 'date-fns'
+import { getTime, isDate, isValid, parse, parseISO } from 'date-fns'
 import { PrisonService, SessionTemplateService } from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
@@ -30,7 +30,6 @@ export default class AddSessionTemplateController {
 
   public submit(): RequestHandler {
     return async (req, res) => {
-      console.log(req.body)
       const { prisonId } = req.params
 
       const originalUrl = `/prisons/${prisonId}/session-templates/add`
@@ -84,6 +83,14 @@ export default class AddSessionTemplateController {
       body('dayOfWeek').isIn(daysOfWeek).withMessage('Select a day of the week'),
       body('startTime').trim().isTime({ hourFormat: 'hour24' }).withMessage('Enter a valid time'),
       body('endTime').trim().isTime({ hourFormat: 'hour24' }).withMessage('Enter a valid time'),
+      body('endTime').custom((_value, { req }) => {
+        const startTime = getTime(parseISO(`2000-01-01T${req.body.startTime}`))
+        const endTime = getTime(parseISO(`2000-01-01T${req.body.endTime}`))
+        if (startTime >= endTime) {
+          throw new Error('Enter an end time after the start time')
+        }
+        return true
+      }),
       body('weeklyFrequency')
         .trim()
         .isInt({ min: 1, max: 12 })
@@ -101,7 +108,7 @@ export default class AddSessionTemplateController {
         }
         return true
       }),
-      body(['validToDateDay', 'validToDateMonth', 'validToDateYear'])
+      body('hasEndDate')
         .optional()
         .trim()
         .isInt({ min: 1 })
@@ -131,6 +138,15 @@ export default class AddSessionTemplateController {
           return true
         }),
       body('openCapacity').trim().isInt().withMessage('Enter a number'),
+      body(['openCapacity', 'closedCapacity'])
+        .trim()
+        .custom((_value, { req }) => {
+          const { openCapacity, closedCapacity } = req.body
+          if (openCapacity === '0' && closedCapacity === '0') {
+            throw new Error('Enter a capacity for either open or closed')
+          }
+          return true
+        }),
       body('closedCapacity').trim().isInt().withMessage('Enter a number'),
       body('visitRoom').trim().isLength({ min: 3 }).withMessage('Enter a name over 3 characters long'),
     ]
