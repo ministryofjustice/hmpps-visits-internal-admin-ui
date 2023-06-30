@@ -19,6 +19,7 @@ export default class SingleSessionTemplateController {
 
       return res.render('pages/prisons/viewSingleSessionTemplate', {
         errors: req.flash('errors'),
+        message: req.flash('message'),
         prison,
         prisonName,
         sessionTemplate,

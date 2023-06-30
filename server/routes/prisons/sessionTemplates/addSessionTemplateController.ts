@@ -19,7 +19,6 @@ export default class AddSessionTemplateController {
 
       res.render('pages/prisons/addSessionTemplate', {
         errors: req.flash('errors'),
-        message: req.flash('message'),
         prisonId,
         prisonName,
         daysOfWeek,
@@ -65,15 +64,17 @@ export default class AddSessionTemplateController {
       }
 
       try {
-        await this.sessionTemplateService.createSessionTemplate(res.locals.user.username, createSessionTemplateDto)
-        // req.flash('message', sessionTemplate)
+        const { reference } = await this.sessionTemplateService.createSessionTemplate(
+          res.locals.user.username,
+          createSessionTemplateDto,
+        )
+        req.flash('message', `Session template '${reference}' has been created`)
+        return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
       } catch (error) {
         req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
         req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }
-
-      return res.redirect(`/prisons/${prisonId}/session-templates`)
     }
   }
 
@@ -108,11 +109,11 @@ export default class AddSessionTemplateController {
         }
         return true
       }),
-      body('hasEndDate')
-        .optional()
-        .trim()
-        .isInt({ min: 1 })
-        .withMessage('Enter the date in number format for template end date'),
+      // body(['validToDateDay', 'validToDateMonth', 'validToDateYear'])
+      //   .optional({ values: 'null' })
+      //   .trim()
+      //   .isInt({ min: 1 })
+      //   .withMessage('Enter the date in number format for template end date'),
       body('hasEndDate')
         .optional()
         .isIn(['yes'])
