@@ -10,6 +10,7 @@ export default function routes(services: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+  const post = (path: string | string[], handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
   const postWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
     router.post(path, ...validationChain, asyncMiddleware(handler))
 
@@ -20,13 +21,18 @@ export default function routes(services: Services): Router {
   )
   const addSessionTemplate = new AddSessionTemplateController(services.prisonService, services.sessionTemplateService)
 
-  get('/prisons/:prisonId([A-Z]{3})/session-templates', sessionTemplates.view())
   get('/prisons/:prisonId/session-templates/add', addSessionTemplate.view())
   postWithValidation(
     '/prisons/:prisonId/session-templates/add',
     addSessionTemplate.validate(),
     addSessionTemplate.submit(),
   )
+
+  get('/prisons/:prisonId([A-Z]{3})/session-templates', sessionTemplates.view())
+
+  get('/prisons/:prisonId([A-Z]{3})/session-templates/:reference', singleSessionTemplate.view())
+  post('/prisons/:prisonId([A-Z]{3})/session-templates/:reference/activate', singleSessionTemplate.activate())
+  post('/prisons/:prisonId([A-Z]{3})/session-templates/:reference/deactivate', singleSessionTemplate.deactivate())
   get('/prisons/:prisonId/session-templates/:reference', singleSessionTemplate.view())
 
   return router

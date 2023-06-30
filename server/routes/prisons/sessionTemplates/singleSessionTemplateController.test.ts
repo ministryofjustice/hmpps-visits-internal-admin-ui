@@ -91,4 +91,106 @@ describe('Single session template page', () => {
         })
     })
   })
+
+  describe('POST /prisons/{:prisonId}/session-templates/{:reference}/activate', () => {
+    let deactivatedSessionTemplate: SessionTemplate
+    let activeSessionTemplate: SessionTemplate
+
+    beforeEach(() => {
+      deactivatedSessionTemplate = TestData.sessionTemplate({ active: false })
+      activeSessionTemplate = TestData.sessionTemplate({ active: true })
+    })
+
+    it('should change session template status and set flash message', () => {
+      // Given
+      sessionTemplateService.activeSessionTemplate.mockResolvedValue(activeSessionTemplate)
+
+      // When
+      const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f/activate')
+
+      // Then
+      result
+        .expect(302)
+        .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('message', 'activated')
+          expect(sessionTemplateService.activeSessionTemplate).toHaveBeenCalledTimes(1)
+          expect(sessionTemplateService.activeSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
+        })
+
+      return result
+    })
+
+    it('should set error in flash if session template status not changed', () => {
+      // Given
+      sessionTemplateService.activeSessionTemplate.mockResolvedValue(deactivatedSessionTemplate)
+      const error = { msg: 'Failed to change  session template status' }
+
+      // When
+      const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f/activate')
+
+      // Then
+      result
+        .expect(302)
+        .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('errors', [error])
+          expect(sessionTemplateService.activeSessionTemplate).toHaveBeenCalledTimes(1)
+          expect(sessionTemplateService.activeSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
+        })
+
+      return result
+    })
+  })
+
+  describe('POST /prisons/{:prisonId}/session-templates/{:reference}/deactivate', () => {
+    let deactivatedSessionTemplate: SessionTemplate
+    let activeSessionTemplate: SessionTemplate
+
+    beforeEach(() => {
+      deactivatedSessionTemplate = TestData.sessionTemplate({ active: false })
+      activeSessionTemplate = TestData.sessionTemplate({ active: true })
+    })
+
+    it('should change session template status and set flash message', () => {
+      // Given
+      sessionTemplateService.deactivateSessionTemplate.mockResolvedValue(deactivatedSessionTemplate)
+
+      // When
+      const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f/deactivate')
+
+      // Then
+      result
+        .expect(302)
+        .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('message', 'deactivated')
+          expect(sessionTemplateService.deactivateSessionTemplate).toHaveBeenCalledTimes(1)
+          expect(sessionTemplateService.deactivateSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
+        })
+
+      return result
+    })
+
+    it('should set error in flash if session template status not changed', () => {
+      // Given
+      sessionTemplateService.deactivateSessionTemplate.mockResolvedValue(activeSessionTemplate)
+      const error = { msg: 'Failed to change session template status' }
+
+      // When
+      const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f/deactivate')
+
+      // Then
+      result
+        .expect(302)
+        .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('errors', [error])
+          expect(sessionTemplateService.deactivateSessionTemplate).toHaveBeenCalledTimes(1)
+          expect(sessionTemplateService.deactivateSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
+        })
+
+      return result
+    })
+  })
 })

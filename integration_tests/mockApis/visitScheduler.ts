@@ -2,7 +2,7 @@ import { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
 import TestData from '../../server/routes/testutils/testData'
 import { components } from '../../server/@types/visit-scheduler-api'
-import { SessionTemplatesRangeType } from '../../server/data/visitSchedulerApiTypes'
+import { SessionTemplatesRangeType, SessionTemplate } from '../../server/data/visitSchedulerApiTypes'
 
 type Prison = components['schemas']['PrisonDto']
 
@@ -84,9 +84,11 @@ export default {
   stubGetSessionTemplates: ({
     prisonCode,
     rangeType,
+    sessionTemplates = [TestData.sessionTemplate()],
   }: {
     prisonCode: string
     rangeType: SessionTemplatesRangeType
+    sessionTemplates: Array<SessionTemplate>
   }): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -96,7 +98,63 @@ export default {
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: [TestData.sessionTemplate()],
+        jsonBody: sessionTemplates,
+      },
+    })
+  },
+  stubGetSessionTemplate: ({
+    sessionTemplate = TestData.sessionTemplate(),
+  }: {
+    sessionTemplate: SessionTemplate
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/visitScheduler/admin/session-templates/template/${sessionTemplate.reference}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: sessionTemplate,
+      },
+    })
+  },
+
+  stubActivateSessionTemplate: ({
+    sessionTemplate = TestData.sessionTemplate(),
+    activeSessionTemplate = TestData.sessionTemplate({ active: true, reference: '-act.dcc.0f' }),
+  }: {
+    sessionTemplate: SessionTemplate
+    activeSessionTemplate: SessionTemplate
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/visitScheduler/admin/session-templates/template/${sessionTemplate.reference}/activate`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: activeSessionTemplate,
+      },
+    })
+  },
+  stubDeactivateSessionTemplate: ({
+    sessionTemplate = TestData.sessionTemplate(),
+    deactivatedSessionTemplate = TestData.sessionTemplate({ active: false, reference: '-ina.dcc.0f' }),
+  }: {
+    sessionTemplate: SessionTemplate
+    deactivatedSessionTemplate: SessionTemplate
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/visitScheduler/admin/session-templates/template/${sessionTemplate.reference}/deactivate`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: deactivatedSessionTemplate,
       },
     })
   },
