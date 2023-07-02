@@ -103,6 +103,36 @@ describe('visitSchedulerApiClient', () => {
     })
   })
 
+  describe('addExcludedDate', () => {
+    it('should return prison including the excluded date', async () => {
+      const prison = TestData.prison({ excludeDates: ['2023-12-25', '2023-12-26'] })
+
+      fakeVisitSchedulerApi
+        .put(`/admin/prisons/prison/${prison.code}/exclude-date/add`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200)
+
+      const output = await visitSchedulerApiClient.addExcludeDate(prison.code, '2023-12-26')
+
+      expect(output).toEqual({})
+    })
+  })
+
+  describe('removeExcludedDate', () => {
+    it('should return prison without the date excluded', async () => {
+      const prison = TestData.prison({ excludeDates: ['2023-12-25', '2023-12-26'] })
+
+      fakeVisitSchedulerApi
+        .put(`/admin/prisons/prison/${prison.code}/exclude-date/remove`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200)
+
+      const output = await visitSchedulerApiClient.removeExcludeDate(prison.code, '2023-12-27')
+
+      expect(output).toEqual({})
+    })
+  })
+
   describe('getSessionTemplates', () => {
     it('should return all session templates for a prison', async () => {
       const sessionTemplates = [TestData.sessionTemplate()]

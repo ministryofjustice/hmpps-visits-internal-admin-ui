@@ -1,4 +1,6 @@
 {% extends "../../partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
 {% from "govuk/components/input/macro.njk" import govukInput %}
@@ -6,7 +8,7 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
-{% set pageHeaderTitle = 'Add / Remove exclusion dates' %}
+{% set pageHeaderTitle = 'Exclusion dates' %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
 {% set primaryNavItems = [
   {
@@ -20,8 +22,60 @@
   }
   ] %}
 {% set backLinkHref = "/prisons/" + prisonId + "/session-templates" %}
-{% set endDateTextHtml %}
-{{ govukDateInput({
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {# {% include "partials/errorSummary.njk" %}
+
+      {% if message | length %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {{ mojBanner({
+              type: "success",
+              text: prisonNames[message] | default("UNKNOWN") + " has been successfully added.",
+              iconFallbackText: "Success"
+            }) }}
+          </div>
+        </div>
+      {% endif %} #}
+
+      <h1 class="govuk-heading-l">
+        <span>{{ pageHeaderTitle }}</span>
+      </h1>
+
+      {#  "<form action=ref=/prisons/${prisonId}/exclude-dates/remove/ method="put"><input type="hidden" name="_csrf" value="{{ csrfToken }}"><input type="hidden" name="date" value=${excludeDate}></form>" #}
+
+      {# Build rows for exclude dates #}
+      {% set excludeDateRows = [] %}
+      {% for excludeDate in excludeDates -%}
+        {% set excludeDateRows = (excludeDateRows.push([
+          {
+            text: excludeDate,
+            attributes: { "data-test": "excludeDate" }
+          },
+            html: <span>Remove</span>
+          }
+          ]), excludeDateRows) %}
+      {%- endfor %}
+
+      {{ govukTable({
+        classes: "govuk-!-width-two-quarters",
+        head: [
+          {
+            text: "Excluded date"
+          },
+          {
+            text: "Action"
+          }
+        ],
+        rows: excludeDateRows
+      }) }}
+    </div>
+  </div>
+
+{# {{ govukDateInput({
     id: "validToDate",
     namePrefix: "validToDate",
     fieldset: {
@@ -33,24 +87,24 @@
     hint: {
       text: "For example, 27 3 2023"
     }
-  }) }}
-{% endset -%}
-{% block content %}
-  <div class="govuk-grid-row">
+  }) }} #}
+{# {% endset -%} #}
+
+  {# <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">
         <span class="govuk-caption-l">{{ prisonName }}</span>
         {{ pageHeaderTitle }}
-      </h1>
+      </h1> #}
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
 
-          <form action="/prisons/{{prisonId}}/exclusion-dates/add" method="POST" novalidate>
+          <form action="/prisons/{{prisonId}}/exclusion-dates/add" method="PUT" novalidate>
             <input type="hidden" name="_csrf" value="{{ csrfToken }}">
               {{ govukDateInput({
                   id: "excludeDate",
-                  namePrefix: "excludeDate",
+                  namePrefix: "exclude-date",
                   fieldset: {
                     legend: {
                       text: "Exclusion date",
@@ -60,6 +114,29 @@
                   hint: {
                     text: "For example, 27 3 2023"
                   },
+                  items: [
+                    {
+                      label: "Day",
+                      name: "day",
+                      classes: "govuk-input--width-2",
+                      autocomplete: "off",
+                      value: formValues.validExcludeDateDay
+                    },
+                    {
+                      label: "Month",
+                      name: "month",
+                      classes: "govuk-input--width-2",
+                      autocomplete: "off",
+                      value: formValues.validExcludeDateMonth
+                    },
+                    {
+                      label: "Year",
+                      name: "year",
+                      classes: "govuk-input--width-4",
+                      autocomplete: "off",
+                      value: formValues.validExcludeDateYear
+                    }
+                  ],
                   errorMessage: errors | findError('templateName')
                 }) 
               }}
