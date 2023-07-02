@@ -1,6 +1,8 @@
 {% extends "../../partials/layout.njk" %}
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
 {%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "moj/components/banner/macro.njk" import mojBanner -%}
 
 {% set pageHeaderTitle = sessionTemplate.name %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
@@ -18,11 +20,22 @@
   ] %}
 
 {% set backLinkHref = "/prisons/" + sessionTemplate.prisonId + "/session-templates" %}
-
+{% set changeStatusActionText = "activated" if sessionTemplate.active else "deactivated" %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+      {% if message | length %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {{ mojBanner({
+              type: "success",
+              text: message,
+              iconFallbackText: "Success"
+            }) }}
+          </div>
+        </div>
+      {% endif %}
 
       <h1 class="govuk-heading-l">
         <span class="govuk-caption-l">{{ prisonName }}</span>
@@ -68,6 +81,16 @@
 
       {{ govukSummaryList({
         rows: [
+          {
+          key: {
+            text: "Status"
+          },
+          value: {
+            text: changeStatusActionText,
+            classes: "test-template-status-value"
+          },
+            classes: "test-template-status"
+          },
           {
             key: {
               text: "Reference"
@@ -189,6 +212,21 @@
           }
         ]
       }) }}
+
+      {% set changeStatusAction = "deactivate" if sessionTemplate.active else "activate" %}
+
+      <h2 class="govuk-heading-m">Change SessionTemplate status</h2>
+      <form action="/prisons/{{ sessionTemplate.prisonId }}/session-templates/{{ sessionTemplate.reference }}/{{ changeStatusAction }}" data-test="template-change-status-form" method="POST" novalidate>
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukButton({
+        text: changeStatusAction | capitalize,
+        classes: "govuk-button--warning" if sessionTemplate.active,
+        preventDoubleClick: true,
+        attributes: { "data-test": "session-template-change-status-button" }
+        })}}
+      </form>
 
     </div>
   </div>

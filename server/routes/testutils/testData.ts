@@ -52,6 +52,7 @@ export default class TestData {
     visitRoom = 'Visits Main Room',
     visitType = 'SOCIAL',
     weeklyFrequency = 1,
+    active = true,
   }: Partial<SessionTemplate> = {}): SessionTemplate =>
     ({
       dayOfWeek,
@@ -67,5 +68,6 @@ export default class TestData {
       visitRoom,
       visitType,
       weeklyFrequency,
+      active,
     } as SessionTemplate)
 }
