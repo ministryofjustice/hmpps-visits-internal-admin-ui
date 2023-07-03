@@ -34,7 +34,7 @@
           <div class="govuk-grid-column-two-thirds">
             {{ mojBanner({
               type: "success",
-              text: prisonNames[message] | default("UNKNOWN") + " has been successfully added.",
+              text: "",
               iconFallbackText: "Success"
             }) }}
           </div>
@@ -44,8 +44,6 @@
       <h1 class="govuk-heading-l">
         <span>{{ pageHeaderTitle }}</span>
       </h1>
-
-      {#  "<form action=ref=/prisons/${prisonId}/exclude-dates/remove/ method="put"><input type="hidden" name="_csrf" value="{{ csrfToken }}"><input type="hidden" name="date" value=${excludeDate}></form>" #}
 
       {# Build rows for exclude dates #}
       {% set excludeDateRows = [] %}
