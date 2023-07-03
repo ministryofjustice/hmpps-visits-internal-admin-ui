@@ -31,12 +31,12 @@ export default class SingleSessionTemplateController {
     return async (req, res) => {
       const { reference } = req.params
 
-      const sessionTemplate = await this.sessionTemplateService.activeSessionTemplate(
+      const sessionTemplate = await this.sessionTemplateService.activateSessionTemplate(
         res.locals.user.username,
         reference,
       )
       if (sessionTemplate.active) {
-        req.flash('message', 'activated')
+        req.flash('message', 'Template activated')
       } else {
         req.flash('errors', [{ msg: 'Failed to change  session template status' }])
       }
@@ -54,7 +54,7 @@ export default class SingleSessionTemplateController {
         reference,
       )
       if (!sessionTemplate.active) {
-        req.flash('message', 'deactivated')
+        req.flash('message', 'Template deactivated')
       } else {
         req.flash('errors', [{ msg: 'Failed to change session template status' }])
       }
