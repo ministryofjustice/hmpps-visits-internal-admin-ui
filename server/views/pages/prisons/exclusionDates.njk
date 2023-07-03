@@ -1,6 +1,5 @@
 {% extends "../../partials/layout.njk" %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
-
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
 {% from "govuk/components/input/macro.njk" import govukInput %}
@@ -22,36 +21,31 @@
   }
   ] %}
 {% set backLinkHref = "/prisons/" + prisonId + "/session-templates" %}
-
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-
       {# {% include "partials/errorSummary.njk" %}
-
-      {% if message | length %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-two-thirds">
-            {{ mojBanner({
-              type: "success",
-              text: "",
-              iconFallbackText: "Success"
-            }) }}
-          </div>
-        </div>
-      {% endif %} #}
-
+      
+            {% if message | length %}
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                  {{ mojBanner({
+                    type: "success",
+                    text: "",
+                    iconFallbackText: "Success"
+                  }) }}
+                </div>
+              </div>
+            {% endif %} #}
       <h1 class="govuk-heading-l">
         <span>{{ pageHeaderTitle }}</span>
       </h1>
-
       {# Show message if excludeDates empty #}
-
       {# Build rows for exclude dates #}
       {% if excludeDates | length %}
         {% set excludeDateRows = [] %}
         {% for excludeDate in excludeDates -%}
-            {% set excludeDateRows = (excludeDateRows.push([
+          {% set excludeDateRows = (excludeDateRows.push([
           {
             text: excludeDate,
             attributes: { "data-test": "excluded-date" }
@@ -65,11 +59,10 @@
             attributes: { "data-test": "exclude-date-row" }
           }
           ]), excludeDateRows) %}
-      {%- endfor %}
-
-        <form action="/prisons/{{prisonId}}/exclude-date/remove" method="POST" novalidate>
+        {%- endfor %}
+        <form action="/prisons/{{ prisonId }}/exclude-date/remove" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-          {{ govukTable({
+            {{ govukTable({
             classes: "govuk-!-width-three-quarters",
             head: [
               {
@@ -81,43 +74,15 @@
             ],
             rows: excludeDateRows
           }) }}
-        </form>
+          </form>
         {% else %}
-          <p  class="govuk-body">
+          <p class="govuk-body">
             No existing dates to exclude
           </p>
-      {% endif %}
-    </div>
-  </div>
-
-{# {{ govukDateInput({
-    id: "validToDate",
-    namePrefix: "validToDate",
-    fieldset: {
-      legend: {
-        text: "Template end date",
-        classes: "govuk-fieldset__legend--m"
-      }
-    },
-    hint: {
-      text: "For example, 27 3 2023"
-    }
-  }) }} #}
-{# {% endset -%} #}
-
-  {# <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">
-        <span class="govuk-caption-l">{{ prisonName }}</span>
-        {{ pageHeaderTitle }}
-      </h1> #}
-
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-
-          <form action="/prisons/{{prisonId}}/exclude-date/add" method="POST" novalidate>
-            <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-              {{ govukDateInput({
+        {% endif %}
+        <form action="/prisons/{{ prisonId }}/exclude-date/add" method="POST" novalidate>
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+            {{ govukDateInput({
                   id: "excludeDate",
                   namePrefix: "exclude-date",
                   fieldset: {
@@ -153,19 +118,15 @@
                     }
                   ],
                   errorMessage: errors | findError('templateName')
-                }) 
-              }}
-              {{ govukButton({
+                }) }}
+            {{ govukButton({
                 text: "Add",
                 preventDoubleClick: true,
                 attributes: { "data-test": "submit" }
-                }) 
-              }}
+                }) }}
           </form>
-
-          </div>
         </div>
-
       </div>
     </div>
-  {% endblock %}
+  </div>
+{% endblock %}

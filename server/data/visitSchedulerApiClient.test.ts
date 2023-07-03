@@ -110,11 +110,11 @@ describe('visitSchedulerApiClient', () => {
       fakeVisitSchedulerApi
         .put(`/admin/prisons/prison/${prison.code}/exclude-date/add`)
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200)
+        .reply(200, prison)
 
       const output = await visitSchedulerApiClient.addExcludeDate(prison.code, '2023-12-26')
 
-      expect(output).toEqual({})
+      expect(output).toEqual(prison)
     })
   })
 
@@ -125,11 +125,11 @@ describe('visitSchedulerApiClient', () => {
       fakeVisitSchedulerApi
         .put(`/admin/prisons/prison/${prison.code}/exclude-date/remove`)
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200)
+        .reply(200, prison)
 
       const output = await visitSchedulerApiClient.removeExcludeDate(prison.code, '2023-12-27')
 
-      expect(output).toEqual({})
+      expect(output).toEqual(prison)
     })
   })
 
