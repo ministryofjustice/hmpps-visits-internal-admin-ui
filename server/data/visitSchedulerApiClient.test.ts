@@ -2,7 +2,7 @@ import nock from 'nock'
 import config from '../config'
 import VisitSchedulerApiClient from './visitSchedulerApiClient'
 import TestData from '../routes/testutils/testData'
-import { Prison } from './visitSchedulerApiTypes'
+import { CreateSessionTemplateDto, Prison } from './visitSchedulerApiTypes'
 
 describe('visitSchedulerApiClient', () => {
   let fakeVisitSchedulerApi: nock.Scope
@@ -134,6 +134,33 @@ describe('visitSchedulerApiClient', () => {
       const output = await visitSchedulerApiClient.getSingleSessionTemplate(singleSessionTemplate.reference)
 
       expect(output).toEqual(singleSessionTemplate)
+    })
+  })
+
+  describe('createSessionTemplate', () => {
+    it('should add a new session template', async () => {
+      const createSessionTemplateDto = TestData.createSessionTemplateDto()
+
+      fakeVisitSchedulerApi
+        .post('/admin/session-templates/template', <CreateSessionTemplateDto>{
+          name: createSessionTemplateDto.name,
+          weeklyFrequency: createSessionTemplateDto.weeklyFrequency,
+          dayOfWeek: createSessionTemplateDto.dayOfWeek,
+          prisonId: createSessionTemplateDto.prisonId,
+          sessionCapacity: createSessionTemplateDto.sessionCapacity,
+          sessionDateRange: createSessionTemplateDto.sessionDateRange,
+          sessionTimeSlot: createSessionTemplateDto.sessionTimeSlot,
+          visitRoom: createSessionTemplateDto.visitRoom,
+          categoryGroupReferences: [],
+          incentiveLevelGroupReferences: [],
+          locationGroupReferences: [],
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, createSessionTemplateDto)
+
+      const output = await visitSchedulerApiClient.createSessionTemplate(createSessionTemplateDto)
+
+      expect(output).toEqual(createSessionTemplateDto)
     })
   })
 })
