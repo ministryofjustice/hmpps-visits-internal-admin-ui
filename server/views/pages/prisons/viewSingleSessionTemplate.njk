@@ -25,6 +25,8 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
+    {% include "partials/errorSummary.njk" %}
+
       <h1 class="govuk-heading-l">
         <span class="govuk-caption-l">{{ prisonName }}</span>
         {{ pageHeaderTitle }}
@@ -213,6 +215,19 @@
         classes: "govuk-button--warning" if sessionTemplate.active,
         preventDoubleClick: true,
         attributes: { "data-test": "session-template-change-status-button" }
+        })}}
+      </form>
+
+      <h2 class="govuk-heading-m">Delete session template</h2>
+      <form action="/prisons/{{ sessionTemplate.prisonId }}/session-templates/{{ sessionTemplate.reference }}" data-test="template-delete-form" method="POST" novalidate>
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukButton({
+          text: "Delete" | capitalize,
+          classes: "govuk-button--warning",
+          preventDoubleClick: true,
+          attributes: { "data-test": "session-template-delete-button" }
         })}}
       </form>
 

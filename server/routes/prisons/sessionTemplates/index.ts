@@ -26,6 +26,7 @@ export default function routes(services: Services): Router {
   get('/prisons/:prisonId/session-templates/add', addSessionTemplate.add())
   post('/prisons/:prisonId/session-templates/add', addSessionTemplate.create())
   get('/prisons/:prisonId/session-templates/:reference', singleSessionTemplate.view())
+  post('/prisons/:prisonId/session-templates/:reference', singleSessionTemplate.delete())
 
   return router
 }

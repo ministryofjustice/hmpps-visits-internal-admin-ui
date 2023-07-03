@@ -1,6 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
+import { BadRequest } from 'http-errors'
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockSessionTemplateService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
@@ -188,6 +189,55 @@ describe('Single session template page', () => {
           expect(flashProvider).toHaveBeenCalledWith('errors', [error])
           expect(sessionTemplateService.deactivateSessionTemplate).toHaveBeenCalledTimes(1)
           expect(sessionTemplateService.deactivateSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
+        })
+
+      return result
+    })
+  })
+
+  describe('POST /prisons/{:prisonId}/session-templates/{:reference}', () => {
+    let sessionTemplate: SessionTemplate
+
+    beforeEach(() => {
+      sessionTemplate = TestData.sessionTemplate()
+    })
+
+    it('should delete session template status and set flash message', () => {
+      // Given
+      sessionTemplateService.deleteSessionTemplate.mockResolvedValue()
+
+      // When
+      const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f')
+
+      // Then
+      result
+        .expect(302)
+        .expect('location', `/prisons/HEI/session-templates`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('message', '-afe.dcc.0f')
+          expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledTimes(1)
+          expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
+        })
+
+      return result
+    })
+
+    it('should set error in flash if session template status not deleted', () => {
+      // Given
+      const error = { msg: 'Failed to delete session template with reference - -afe.dcc.0f' }
+      sessionTemplateService.deleteSessionTemplate.mockRejectedValue(new BadRequest())
+
+      // When
+      const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f')
+
+      // Then
+      result
+        .expect(302)
+        .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('errors', [error])
+          expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledTimes(1)
+          expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })
 
       return result

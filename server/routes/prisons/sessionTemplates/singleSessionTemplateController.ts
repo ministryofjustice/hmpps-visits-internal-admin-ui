@@ -61,4 +61,21 @@ export default class SingleSessionTemplateController {
       return res.redirect(`/prisons/${sessionTemplate.prisonId}/session-templates/${sessionTemplate.reference}`)
     }
   }
+
+  public delete(): RequestHandler {
+    return async (req, res) => {
+      const { reference, prisonId } = req.params
+
+      try {
+        await this.sessionTemplateService.deleteSessionTemplate(res.locals.user.username, reference)
+        req.flash('message', reference)
+      } catch (error) {
+        req.flash('formValues', req.body)
+        req.flash('errors', [{ msg: `Failed to delete session template with reference - ${reference}` }])
+        return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
+      }
+
+      return res.redirect(`/prisons/${prisonId}/session-templates`)
+    }
+  }
 }
