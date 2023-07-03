@@ -25,6 +25,7 @@
   {% endif %}
 {% endmacro %}
 
+
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -106,15 +107,23 @@
       {% for day, sessionTemplates in sessionTemplatesByDay -%}
 
         {% if sessionTemplates | length %}
+
+          
+
           {%- set rows = (rows.push([
             {
               html: '<h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-3">' + day | capitalize + "</h3>",
-              colspan: 8
+              colspan: 9
             }
             ]), rows) %}
 
             {%- for sessionTemplate in sessionTemplates -%}
-
+              {% set sessionActiveHtml %}
+                {{ govukTag({
+                  text: "active" if sessionTemplate.active else "inactive",
+                  classes: "govuk-tag--blue" if sessionTemplate.active else "govuk-tag--grey"
+                }) }}
+              {% endset %}
               {%- set groupsListWithCount = [
                 groupCountIfNotEmpty(sessionTemplate.prisonerCategoryGroups, 'Category') | trim,
                 groupCountIfNotEmpty(sessionTemplate.prisonerIncentiveLevelGroups, 'Incentive') | trim,
@@ -126,6 +135,10 @@
                   html: '<a href="/prisons/' + prison.code + '/session-templates/' + sessionTemplate.reference + '">'
                     + sessionTemplate.name + "</a>",
                   attributes: { "data-test": "template-name" }
+                },
+                {
+                  html: sessionActiveHtml,
+                  attributes: { "data-test": "template-status"}
                 },
                 {
                   text: sessionTemplate.sessionTimeSlot.startTime + " to " + sessionTemplate.sessionTimeSlot.endTime,
@@ -171,6 +184,9 @@
           head: [
             {
               text: "Name"
+            },
+            {
+              text: "Status"
             },
             {
               text: "Time"

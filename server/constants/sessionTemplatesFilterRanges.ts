@@ -1,7 +1,7 @@
 import { SessionTemplatesRangeType } from '../data/visitSchedulerApiTypes'
 
 const sessionTemplatesFilterRanges: Readonly<Record<SessionTemplatesRangeType, string>> = {
-  CURRENT_OR_FUTURE: 'active and future',
+  CURRENT_OR_FUTURE: 'current and future',
   HISTORIC: 'expired',
   ALL: 'all',
 }
