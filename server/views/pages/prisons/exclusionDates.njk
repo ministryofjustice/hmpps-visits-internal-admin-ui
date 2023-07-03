@@ -50,18 +50,20 @@
       {# Build rows for exclude dates #}
       {% set excludeDateRows = [] %}
       {% for excludeDate in excludeDates -%}
-        {% set excludeDateRows = (excludeDateRows.push([
-          {
-            text: excludeDate,
-            attributes: { "data-test": "excludeDate" }
-          },
-            html: <span>Remove</span>
-          }
-          ]), excludeDateRows) %}
-      {%- endfor %}
+          {% set excludeDateRows = (excludeDateRows.push([
+        {
+          text: excludeDate,
+          attributes: { "data-test": "excluded-date" }
+        },
+        {
+          html: '<a href="/prisons/' + prison.code + '/exclude-date/remove">Remove</a>',
+          attributes: { "data-test": "prison-name" }
+        }
+        ]), excludeDateRows) %}
+    {%- endfor %}
 
       {{ govukTable({
-        classes: "govuk-!-width-two-quarters",
+        classes: "govuk-!-width-three-quarters",
         head: [
           {
             text: "Excluded date"
