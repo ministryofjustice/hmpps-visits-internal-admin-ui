@@ -45,33 +45,41 @@
         <span>{{ pageHeaderTitle }}</span>
       </h1>
 
-      {# Build rows for exclude dates #}
-      {% set excludeDateRows = [] %}
-      {% for excludeDate in excludeDates -%}
-          {% set excludeDateRows = (excludeDateRows.push([
-        {
-          text: excludeDate,
-          attributes: { "data-test": "excluded-date" }
-        },
-        {
-          html: '<a href="/prisons/' + prison.code + '/exclude-date/remove">Remove</a>',
-          attributes: { "data-test": "prison-name" }
-        }
-        ]), excludeDateRows) %}
-    {%- endfor %}
+      {# Show message if excludeDates empty #}
 
-      {{ govukTable({
-        classes: "govuk-!-width-three-quarters",
-        head: [
+      {# Build rows for exclude dates #}
+      {% if excludeDates | length %}
+        {% set excludeDateRows = [] %}
+        {% for excludeDate in excludeDates -%}
+            {% set excludeDateRows = (excludeDateRows.push([
           {
-            text: "Excluded date"
+            text: excludeDate,
+            attributes: { "data-test": "excluded-date" }
           },
           {
-            text: "Action"
+            html: '<a href="/prisons/' + prison.code + '/exclude-date/remove">Remove</a>',
+            attributes: { "data-test": "prison-name" }
           }
-        ],
-        rows: excludeDateRows
-      }) }}
+          ]), excludeDateRows) %}
+      {%- endfor %}
+
+        {{ govukTable({
+          classes: "govuk-!-width-three-quarters",
+          head: [
+            {
+              text: "Excluded date"
+            },
+            {
+              text: "Action"
+            }
+          ],
+          rows: excludeDateRows
+        }) }}
+        {% else %}
+          <p  class="govuk-body">
+            No existing dates to exclude
+          </p>
+      {% endif %}
     </div>
   </div>
 
@@ -107,7 +115,7 @@
                   namePrefix: "exclude-date",
                   fieldset: {
                     legend: {
-                      text: "Exclusion date",
+                      text: "Add exclusion date",
                       classes: "govuk-fieldset__legend--m"
                     }
                   },
