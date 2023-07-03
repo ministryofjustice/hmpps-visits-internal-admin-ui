@@ -104,7 +104,7 @@ describe('Single session template page', () => {
 
     it('should change session template status and set flash message', () => {
       // Given
-      sessionTemplateService.activeSessionTemplate.mockResolvedValue(activeSessionTemplate)
+      sessionTemplateService.activateSessionTemplate.mockResolvedValue(activeSessionTemplate)
 
       // When
       const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f/activate')
@@ -114,9 +114,9 @@ describe('Single session template page', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'activated')
-          expect(sessionTemplateService.activeSessionTemplate).toHaveBeenCalledTimes(1)
-          expect(sessionTemplateService.activeSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Template activated')
+          expect(sessionTemplateService.activateSessionTemplate).toHaveBeenCalledTimes(1)
+          expect(sessionTemplateService.activateSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })
 
       return result
@@ -124,7 +124,7 @@ describe('Single session template page', () => {
 
     it('should set error in flash if session template status not changed', () => {
       // Given
-      sessionTemplateService.activeSessionTemplate.mockResolvedValue(deactivatedSessionTemplate)
+      sessionTemplateService.activateSessionTemplate.mockResolvedValue(deactivatedSessionTemplate)
       const error = { msg: 'Failed to change  session template status' }
 
       // When
@@ -136,8 +136,8 @@ describe('Single session template page', () => {
         .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledWith('errors', [error])
-          expect(sessionTemplateService.activeSessionTemplate).toHaveBeenCalledTimes(1)
-          expect(sessionTemplateService.activeSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
+          expect(sessionTemplateService.activateSessionTemplate).toHaveBeenCalledTimes(1)
+          expect(sessionTemplateService.activateSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })
 
       return result
@@ -165,7 +165,7 @@ describe('Single session template page', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'deactivated')
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Template deactivated')
           expect(sessionTemplateService.deactivateSessionTemplate).toHaveBeenCalledTimes(1)
           expect(sessionTemplateService.deactivateSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })

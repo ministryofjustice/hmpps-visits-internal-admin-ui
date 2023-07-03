@@ -2,6 +2,8 @@
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
 {%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "moj/components/banner/macro.njk" import mojBanner -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% set pageHeaderTitle = sessionTemplate.name %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
@@ -25,7 +27,19 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-    {% include "partials/errorSummary.njk" %}
+      {% include "partials/errorSummary.njk" %}
+
+      {% if message | length %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {{ mojBanner({
+              type: "success",
+              text: message,
+              iconFallbackText: "Success"
+            }) }}
+          </div>
+        </div>
+      {% endif %}
 
       <h1 class="govuk-heading-l">
         <span class="govuk-caption-l">{{ prisonName }}</span>
@@ -76,7 +90,10 @@
             text: "Status"
           },
           value: {
-            text: changeStatusActionText,
+            html: govukTag({
+              text: "Activated" if sessionTemplate.active == true else "Deactivated",
+              classes: "govuk-tag--blue" if sessionTemplate.active else "govuk-tag--grey"
+            }),
             classes: "test-template-status-value"
           },
             classes: "test-template-status"
@@ -205,7 +222,7 @@
 
       {% set changeStatusAction = "deactivate" if sessionTemplate.active else "activate" %}
 
-      <h2 class="govuk-heading-m">Change SessionTemplate status</h2>
+      <h2 class="govuk-heading-m">Change session template status</h2>
       <form action="/prisons/{{ sessionTemplate.prisonId }}/session-templates/{{ sessionTemplate.reference }}/{{ changeStatusAction }}" data-test="template-change-status-form" method="POST" novalidate>
 
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">

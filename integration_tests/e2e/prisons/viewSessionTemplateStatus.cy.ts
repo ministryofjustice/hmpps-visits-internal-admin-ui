@@ -19,6 +19,8 @@ context('Change active/inactive session template', () => {
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
     cy.task('stubGetPrison', activePrison)
+    cy.task('stubPrisons')
+    cy.task('stubGetAllPrisons')
     cy.task('stubGetSessionTemplate', { sessionTemplate: deactivatedSessionTemplate })
     cy.task('stubGetSessionTemplate', { sessionTemplate: activeSessionTemplate })
     cy.task('stubActivateSessionTemplate', {
@@ -41,7 +43,7 @@ context('Change active/inactive session template', () => {
     viewSessionTemplatePage.goTo(prisonCode, deactivatedSessionTemplate.reference)
 
     // Then
-    viewSessionTemplatePage.sessionTemplateStatusLabel().should('include.text', 'deactivated')
+    viewSessionTemplatePage.sessionTemplateStatusLabel().should('include.text', 'Deactivated')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Activate')
   })
 
@@ -55,8 +57,8 @@ context('Change active/inactive session template', () => {
 
     // Then
     const label = viewSessionTemplatePage.sessionTemplateStatusLabel()
-    label.should('include.text', 'activated')
-    label.should('not.include.text', 'deactivated')
+    label.should('include.text', 'Activated')
+    label.should('not.include.text', 'Deactivated')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Deactivate')
   })
 
@@ -69,8 +71,8 @@ context('Change active/inactive session template', () => {
 
     // Then
     const label = viewSessionTemplatePage.sessionTemplateStatusLabel()
-    label.should('include.text', 'activated')
-    label.should('not.include.text', 'deactivated')
+    label.should('include.text', 'Activated')
+    label.should('not.include.text', 'Deactivated')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Deactivate')
   })
 
@@ -84,7 +86,7 @@ context('Change active/inactive session template', () => {
 
     // Then
     const label = viewSessionTemplatePage.sessionTemplateStatusLabel()
-    label.should('include.text', 'deactivated')
+    label.should('include.text', 'Deactivated')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Activate')
   })
 })
