@@ -132,14 +132,14 @@ export interface paths {
      */
     put: operations['deActivatePrison']
   }
-  '/admin/prisons/prison/{prisonCode}/exclude-dates/add/{excludeDate}': {
+  '/admin/prisons/prison/{prisonCode}/exclude-date/add': {
     /**
      * Add exclude date to a prison.
      * @description Add exclude date to a prison.
      */
     put: operations['addPrisonExcludeDate']
   }
-  '/admin/prisons/prison/{prisonCode}/exclude-dates/remove/{excludeDate}': {
+  '/admin/prisons/prison/{prisonCode}/exclude-date/remove': {
     /**
      * Remove exclude date from a prison.
      * @description Remove exclude date from a prison.
@@ -656,6 +656,14 @@ export interface components {
       /** @description exclude dates */
       excludeDates: string[]
     }
+    /** @description Prison exclude date */
+    PrisonExcludeDateDto: {
+      /**
+       * Format: date
+       * @description exclude date
+       */
+      excludeDate: string
+    }
     PurgeQueueResult: {
       /** Format: int32 */
       messagesFoundCount: number
@@ -1168,11 +1176,11 @@ export interface components {
 export type external = Record<string, never>
 
 export interface operations {
+  /**
+   * Create category group
+   * @description Create category group
+   */
   createCategoryGroup: {
-    /**
-     * Create category group
-     * @description Create category group
-     */
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateCategoryGroupDto']
@@ -1199,17 +1207,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get category group
+   * @description Get category group by reference
+   */
   getCategoryGroup: {
-    /**
-     * Get category group
-     * @description Get category group by reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example afe~dcb~fc
-       */
       path: {
+        /**
+         * @description reference
+         * @example afe~dcb~fc
+         */
         reference: string
       }
     }
@@ -1240,17 +1248,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Update category group
+   * @description Update existing category group by reference
+   */
   updateCategoryGroup: {
-    /**
-     * Update category group
-     * @description Update existing category group by reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -1286,17 +1294,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Delete category group
+   * @description Delete category group by reference
+   */
   deleteSessionCategoryGroup: {
-    /**
-     * Delete category group
-     * @description Delete category group by reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -1327,17 +1335,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get category groups
+   * @description Get all category groups for given prison
+   */
   getCategoryGroups: {
-    /**
-     * Get category groups
-     * @description Get all category groups for given prison
-     */
     parameters: {
-      /**
-       * @description prisonCode
-       * @example MDI
-       */
       path: {
+        /**
+         * @description prisonCode
+         * @example MDI
+         */
         prisonCode: string
       }
     }
@@ -1362,11 +1370,11 @@ export interface operations {
       }
     }
   }
+  /**
+   * Create incentive group
+   * @description Create incentive group
+   */
   createIncentiveGroup: {
-    /**
-     * Create incentive group
-     * @description Create incentive group
-     */
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateIncentiveGroupDto']
@@ -1393,17 +1401,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get incentive group
+   * @description Get incentive group by reference
+   */
   getIncentiveGroup: {
-    /**
-     * Get incentive group
-     * @description Get incentive group by reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example afe~dcb~fc
-       */
       path: {
+        /**
+         * @description reference
+         * @example afe~dcb~fc
+         */
         reference: string
       }
     }
@@ -1434,17 +1442,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Update incentive group
+   * @description Update existing incentive group by reference
+   */
   updateIncentiveGroup: {
-    /**
-     * Update incentive group
-     * @description Update existing incentive group by reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -1480,17 +1488,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Delete incentive group
+   * @description Delete incentive group by reference
+   */
   deleteSessionIncentiveGroup: {
-    /**
-     * Delete incentive group
-     * @description Delete incentive group by reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -1521,17 +1529,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get incentive groups
+   * @description Get all incentive groups for given prison
+   */
   getIncentiveGroups: {
-    /**
-     * Get incentive groups
-     * @description Get all incentive groups for given prison
-     */
     parameters: {
-      /**
-       * @description prisonCode
-       * @example MDI
-       */
       path: {
+        /**
+         * @description prisonCode
+         * @example MDI
+         */
         prisonCode: string
       }
     }
@@ -1556,11 +1564,11 @@ export interface operations {
       }
     }
   }
+  /**
+   * Create location group
+   * @description Create location group
+   */
   createLocationGroup: {
-    /**
-     * Create location group
-     * @description Create location group
-     */
     requestBody: {
       content: {
         'application/json': components['schemas']['SessionLocationGroupDto']
@@ -1587,17 +1595,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get location group
+   * @description Get location group by reference
+   */
   getLocationGroup: {
-    /**
-     * Get location group
-     * @description Get location group by reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example afe~dcb~fc
-       */
       path: {
+        /**
+         * @description reference
+         * @example afe~dcb~fc
+         */
         reference: string
       }
     }
@@ -1628,17 +1636,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Update location group
+   * @description Update existing location group by reference
+   */
   updateLocationGroup: {
-    /**
-     * Update location group
-     * @description Update existing location group by reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -1674,17 +1682,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Delete location group
+   * @description Delete location group by reference
+   */
   deleteSessionLocationGroup: {
-    /**
-     * Delete location group
-     * @description Delete location group by reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -1715,17 +1723,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get location groups
+   * @description Get all location groups for given prison
+   */
   getLocationGroups: {
-    /**
-     * Get location groups
-     * @description Get all location groups for given prison
-     */
     parameters: {
-      /**
-       * @description prisonCode
-       * @example MDI
-       */
       path: {
+        /**
+         * @description prisonCode
+         * @example MDI
+         */
         prisonCode: string
       }
     }
@@ -1750,11 +1758,11 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get all prisons
+   * @description Get all prisons
+   */
   getPrisons: {
-    /**
-     * Get all prisons
-     * @description Get all prisons
-     */
     responses: {
       /** @description prison returned */
       200: {
@@ -1776,11 +1784,11 @@ export interface operations {
       }
     }
   }
+  /**
+   * Create a prison
+   * @description Create a prison
+   */
   createPrison: {
-    /**
-     * Create a prison
-     * @description Create a prison
-     */
     requestBody: {
       content: {
         'application/json': components['schemas']['PrisonDto']
@@ -1807,17 +1815,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Gets prison by given prison id/code
+   * @description Gets prison by given prison id/code
+   */
   getPrison: {
-    /**
-     * Gets prison by given prison id/code
-     * @description Gets prison by given prison id/code
-     */
     parameters: {
-      /**
-       * @description prison id
-       * @example BHI
-       */
       path: {
+        /**
+         * @description prison id
+         * @example BHI
+         */
         prisonCode: string
       }
     }
@@ -1842,17 +1850,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Activate prison using given prison id/code
+   * @description Activate prison using given prison id/code
+   */
   activatePrison: {
-    /**
-     * Activate prison using given prison id/code
-     * @description Activate prison using given prison id/code
-     */
     parameters: {
-      /**
-       * @description prison id
-       * @example BHI
-       */
       path: {
+        /**
+         * @description prison id
+         * @example BHI
+         */
         prisonCode: string
       }
     }
@@ -1883,17 +1891,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Deactivate prison using given prison id/code
+   * @description Deactivate prison using given prison id/code
+   */
   deActivatePrison: {
-    /**
-     * Deactivate prison using given prison id/code
-     * @description Deactivate prison using given prison id/code
-     */
     parameters: {
-      /**
-       * @description prison id
-       * @example BHI
-       */
       path: {
+        /**
+         * @description prison id
+         * @example BHI
+         */
         prisonCode: string
       }
     }
@@ -1924,24 +1932,32 @@ export interface operations {
       }
     }
   }
+  /**
+   * Add exclude date to a prison.
+   * @description Add exclude date to a prison.
+   */
   addPrisonExcludeDate: {
-    /**
-     * Add exclude date to a prison.
-     * @description Add exclude date to a prison.
-     */
     parameters: {
-      /**
-       * @description prison id
-       * @example BHI
-       */
       path: {
+        /**
+         * @description prison id
+         * @example BHI
+         */
         prisonCode: string
-        excludeDate: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonExcludeDateDto']
       }
     }
     responses: {
       /** @description successfully added exclude date to a prison */
-      200: never
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonDto']
+        }
+      }
       /** @description exclude date  provided already exists for prison or prison can't be found */
       400: {
         content: {
@@ -1962,19 +1978,23 @@ export interface operations {
       }
     }
   }
+  /**
+   * Remove exclude date from a prison.
+   * @description Remove exclude date from a prison.
+   */
   removePrisonExcludeDate: {
-    /**
-     * Remove exclude date from a prison.
-     * @description Remove exclude date from a prison.
-     */
     parameters: {
-      /**
-       * @description prison id
-       * @example BHI
-       */
       path: {
+        /**
+         * @description prison id
+         * @example BHI
+         */
         prisonCode: string
-        excludeDate: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonExcludeDateDto']
       }
     }
     responses: {
@@ -2000,22 +2020,22 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get session templates
+   * @description Get session templates by given parameters
+   */
   getSessionTemplates: {
-    /**
-     * Get session templates
-     * @description Get session templates by given parameters
-     */
     parameters: {
-      /**
-       * @description Filter results by prison id/code
-       * @example MDI
-       */
-      /**
-       * @description Filters session templates depending on their from and to Date
-       * @example CURRENT_OR_FUTURE
-       */
       query: {
+        /**
+         * @description Filter results by prison id/code
+         * @example MDI
+         */
         prisonCode: string
+        /**
+         * @description Filters session templates depending on their from and to Date
+         * @example CURRENT_OR_FUTURE
+         */
         rangeType: 'CURRENT_OR_FUTURE' | 'HISTORIC' | 'ALL'
       }
     }
@@ -2040,11 +2060,11 @@ export interface operations {
       }
     }
   }
+  /**
+   * Create a session template
+   * @description Create a session templates
+   */
   createSessionTemplate: {
-    /**
-     * Create a session template
-     * @description Create a session templates
-     */
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateSessionTemplateDto']
@@ -2071,17 +2091,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get session template
+   * @description Get session template by reference
+   */
   getSessionTemplate: {
-    /**
-     * Get session template
-     * @description Get session template by reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -2112,17 +2132,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Update a session template
+   * @description Update a session templates
+   */
   updateSessionTemplate: {
-    /**
-     * Update a session template
-     * @description Update a session templates
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -2158,17 +2178,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Delete session template by reference
+   * @description Delete session template by reference
+   */
   deleteSessionTemplate: {
-    /**
-     * Delete session template by reference
-     * @description Delete session template by reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -2199,17 +2219,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Activate session template using given session template reference
+   * @description Activate session template using given session template reference
+   */
   activateSessionTemplate: {
-    /**
-     * Activate session template using given session template reference
-     * @description Activate session template using given session template reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -2240,17 +2260,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Deactivate session template using given session template reference
+   * @description Deactivate session template using given session template reference
+   */
   deActivateSessionTemplate: {
-    /**
-     * Deactivate session template using given session template reference
-     * @description Deactivate session template using given session template reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -2281,11 +2301,11 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get supported prisons
+   * @description Get all supported prisons id's
+   */
   getSupportedPrisons: {
-    /**
-     * Get supported prisons
-     * @description Get all supported prisons id's
-     */
     responses: {
       /** @description Supported prisons returned */
       200: {
@@ -2307,8 +2327,8 @@ export interface operations {
       }
     }
   }
+  /** Migrate a visit */
   migrateVisit: {
-    /** Migrate a visit */
     requestBody: {
       content: {
         'application/json': components['schemas']['MigrateVisitRequestDto']
@@ -2341,14 +2361,14 @@ export interface operations {
       }
     }
   }
+  /** Migrate a canceled booked visit */
   cancelVisit_1: {
-    /** Migrate a canceled booked visit */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -2448,32 +2468,32 @@ export interface operations {
       }
     }
   }
+  /**
+   * Returns all visit sessions which are within the reservable time period - whether or not they are full
+   * @description Retrieve all visits for a specified prisoner
+   */
   getVisitSessions: {
-    /**
-     * Returns all visit sessions which are within the reservable time period - whether or not they are full
-     * @description Retrieve all visits for a specified prisoner
-     */
     parameters: {
-      /**
-       * @description Query by NOMIS Prison Identifier
-       * @example MDI
-       */
-      /**
-       * @description Filter results by prisoner id
-       * @example A12345DC
-       */
-      /**
-       * @description Override the default minimum number of days notice from the current date
-       * @example 2
-       */
-      /**
-       * @description Override the default maximum number of days to book-ahead from the current date
-       * @example 28
-       */
       query: {
+        /**
+         * @description Query by NOMIS Prison Identifier
+         * @example MDI
+         */
         prisonId: string
+        /**
+         * @description Filter results by prisoner id
+         * @example A12345DC
+         */
         prisonerId?: string
+        /**
+         * @description Override the default minimum number of days notice from the current date
+         * @example 2
+         */
         min?: number
+        /**
+         * @description Override the default maximum number of days to book-ahead from the current date
+         * @example 28
+         */
         max?: number
       }
     }
@@ -2498,32 +2518,32 @@ export interface operations {
       }
     }
   }
+  /**
+   * Returns the session capacity for the given sessions
+   * @description Returns the session capacity for the given sessions
+   */
   getSessionCapacity: {
-    /**
-     * Returns the session capacity for the given sessions
-     * @description Returns the session capacity for the given sessions
-     */
     parameters: {
-      /**
-       * @description Query by NOMIS Prison Identifier
-       * @example CLI
-       */
-      /**
-       * @description Session date
-       * @example 2020-11-01
-       */
-      /**
-       * @description Session start time
-       * @example 13:30:00
-       */
-      /**
-       * @description Session end time
-       * @example 14:30:00
-       */
       query: {
+        /**
+         * @description Query by NOMIS Prison Identifier
+         * @example CLI
+         */
         prisonId: string
+        /**
+         * @description Session date
+         * @example 2020-11-01
+         */
         sessionDate: string
+        /**
+         * @description Session start time
+         * @example 13:30:00
+         */
         sessionStartTime: string
+        /**
+         * @description Session end time
+         * @example 14:30:00
+         */
         sessionEndTime: string
       }
     }
@@ -2554,22 +2574,22 @@ export interface operations {
       }
     }
   }
+  /**
+   * Returns session scheduled for given prison and date
+   * @description Returns session scheduled for given prison and date
+   */
   getSessionSchedule: {
-    /**
-     * Returns session scheduled for given prison and date
-     * @description Returns session scheduled for given prison and date
-     */
     parameters: {
-      /**
-       * @description Query by NOMIS Prison Identifier
-       * @example MDI
-       */
-      /**
-       * @description Query by session scheduled date
-       * @example 2020-11-01
-       */
       query: {
+        /**
+         * @description Query by NOMIS Prison Identifier
+         * @example MDI
+         */
         prisonId: string
+        /**
+         * @description Query by session scheduled date
+         * @example 2020-11-01
+         */
         date: string
       }
     }
@@ -2594,11 +2614,11 @@ export interface operations {
       }
     }
   }
+  /**
+   * Available Support
+   * @description Retrieve all available support types
+   */
   getSupportTypes: {
-    /**
-     * Available Support
-     * @description Retrieve all available support types
-     */
     responses: {
       /** @description Available Support information returned */
       200: {
@@ -2620,52 +2640,52 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get visits
+   * @description Retrieve visits with optional filters, sorted by start timestamp descending
+   */
   getVisitsByFilterPageable: {
-    /**
-     * Get visits
-     * @description Retrieve visits with optional filters, sorted by start timestamp descending
-     */
     parameters: {
-      /**
-       * @description Filter results by prisoner id
-       * @example A12345DC
-       */
-      /**
-       * @description Filter results by prison id/code
-       * @example MDI
-       */
-      /**
-       * @description Filter results by visits that start on or after the given timestamp
-       * @example 2021-11-03T09:00:00
-       */
-      /**
-       * @description Filter results by visits that start on or before the given timestamp
-       * @example 2021-11-03T09:00:00
-       */
-      /**
-       * @description Filter results by visitor (contact id)
-       * @example 12322
-       */
-      /**
-       * @description Filter results by visit status
-       * @example BOOKED
-       */
-      /**
-       * @description Pagination page number, starting at zero
-       * @example 0
-       */
-      /**
-       * @description Pagination size per page
-       * @example 50
-       */
       query: {
+        /**
+         * @description Filter results by prisoner id
+         * @example A12345DC
+         */
         prisonerId?: string
+        /**
+         * @description Filter results by prison id/code
+         * @example MDI
+         */
         prisonId?: string
+        /**
+         * @description Filter results by visits that start on or after the given timestamp
+         * @example 2021-11-03T09:00:00
+         */
         startDateTime?: string
+        /**
+         * @description Filter results by visits that start on or before the given timestamp
+         * @example 2021-11-03T09:00:00
+         */
         endDateTime?: string
+        /**
+         * @description Filter results by visitor (contact id)
+         * @example 12322
+         */
         visitorId?: number
+        /**
+         * @description Filter results by visit status
+         * @example BOOKED
+         */
         visitStatus: ('RESERVED' | 'CHANGING' | 'BOOKED' | 'CANCELLED')[]
+        /**
+         * @description Pagination page number, starting at zero
+         * @example 0
+         */
         page: number
+        /**
+         * @description Pagination size per page
+         * @example 50
+         */
         size: number
       }
     }
@@ -2696,8 +2716,8 @@ export interface operations {
       }
     }
   }
+  /** Reserve a slot (date/time slot) for a visit (a starting point) */
   reserveVisitSlot: {
-    /** Reserve a slot (date/time slot) for a visit (a starting point) */
     requestBody: {
       content: {
         'application/json': components['schemas']['ReserveVisitSlotDto']
@@ -2730,14 +2750,14 @@ export interface operations {
       }
     }
   }
+  /** Book a visit (end of flow) */
   bookVisit: {
-    /** Book a visit (end of flow) */
     parameters: {
-      /**
-       * @description applicationReference
-       * @example dfs-wjs-eqr
-       */
       path: {
+        /**
+         * @description applicationReference
+         * @example dfs-wjs-eqr
+         */
         applicationReference: string
       }
     }
@@ -2774,14 +2794,14 @@ export interface operations {
       }
     }
   }
+  /** Change a reserved slot and associated details for a visit (before booking) */
   changeReservedVisitSlot: {
-    /** Change a reserved slot and associated details for a visit (before booking) */
     parameters: {
-      /**
-       * @description applicationReference
-       * @example dfs-wjs-eqr
-       */
       path: {
+        /**
+         * @description applicationReference
+         * @example dfs-wjs-eqr
+         */
         applicationReference: string
       }
     }
@@ -2823,17 +2843,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get a visit
+   * @description Retrieve visit by visit reference (excludes Reserved and CHANGING)
+   */
   getVisitByReference: {
-    /**
-     * Get a visit
-     * @description Retrieve visit by visit reference (excludes Reserved and CHANGING)
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -2870,14 +2890,14 @@ export interface operations {
       }
     }
   }
+  /** Cancel an existing booked visit */
   cancelVisit: {
-    /** Cancel an existing booked visit */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -2919,14 +2939,14 @@ export interface operations {
       }
     }
   }
+  /** Change a booked visit, (a starting point) */
   changeBookedVisit: {
-    /** Change a booked visit, (a starting point) */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
@@ -2962,17 +2982,17 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get visit history
+   * @description Retrieve visit history by visit reference
+   */
   getVisitHistoryByReference: {
-    /**
-     * Get visit history
-     * @description Retrieve visit history by visit reference
-     */
     parameters: {
-      /**
-       * @description reference
-       * @example v9-d7-ed-7u
-       */
       path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
         reference: string
       }
     }
