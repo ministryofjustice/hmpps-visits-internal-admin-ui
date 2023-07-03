@@ -31,25 +31,25 @@ export default class ExclusionDatesController {
       try {
         await this.prisonService.addExcludeDate(res.locals.user.username, prisonId, date)
       } catch (error) {
-        throw new Error(`Prison '${prisonId}' is not in the prison register`)
+        throw new Error(`Date '${date}' didn't be added`)
       }
 
-      return res.redirect(`/prisons/${prisonId}/exclude-date`)
+      return res.redirect(`/prisons/${prisonId}/exclusion-dates`)
     }
   }
 
   public removeDate(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
-      const date = `${req.body['exclude-date-year']}-${req.body['exclude-date-month']}-${req.body['exclude-date-day']}`
+      const date = req.body.excludeDate
 
       try {
         await this.prisonService.removeExcludeDate(res.locals.user.username, prisonId, date)
       } catch (error) {
-        throw new Error(`Prison '${prisonId}' is not in the prison register`)
+        throw new Error(`Date '${date}' didn't be removed`)
       }
 
-      return res.redirect(`/prisons/${prisonId}/exclude-date`)
+      return res.redirect(`/prisons/${prisonId}/exclusion-dates`)
     }
   }
 }

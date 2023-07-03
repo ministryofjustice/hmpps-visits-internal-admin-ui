@@ -69,7 +69,7 @@ export default class PrisonService {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
-    logger.info(`Activating prison ${prisonCode}`)
+    logger.info(`Adding ${excludeDate} from excluded dates`)
     return visitSchedulerApiClient.addExcludeDate(prisonCode, excludeDate)
   }
 
@@ -77,7 +77,7 @@ export default class PrisonService {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
-    logger.info(`Deactivating prison ${prisonCode}`)
+    logger.info(`Removing ${excludeDate} from excluded dates`)
     return visitSchedulerApiClient.removeExcludeDate(prisonCode, excludeDate)
   }
 

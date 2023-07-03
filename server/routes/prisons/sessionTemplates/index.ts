@@ -5,7 +5,6 @@ import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import SessionTemplatesController from './sessionTemplatesController'
 import SingleSessionTemplateController from './singleSessionTemplateController'
 import AddSessionTemplateController from './addSessionTemplateController'
-import ExclusionDatesController from '../exclusionDates/exclusionDatesController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -21,7 +20,6 @@ export default function routes(services: Services): Router {
     services.sessionTemplateService,
   )
   const addSessionTemplate = new AddSessionTemplateController(services.prisonService, services.sessionTemplateService)
-  const exclusionDates = new ExclusionDatesController(services.prisonService)
 
   get('/prisons/:prisonId/session-templates/add', addSessionTemplate.view())
   postWithValidation(
@@ -31,7 +29,6 @@ export default function routes(services: Services): Router {
   )
 
   get('/prisons/:prisonId([A-Z]{3})/session-templates', sessionTemplates.view())
-  get('/prisons/:prisonId/exclusion-dates', exclusionDates.view())
 
   get('/prisons/:prisonId([A-Z]{3})/session-templates/:reference', singleSessionTemplate.view())
   post('/prisons/:prisonId([A-Z]{3})/session-templates/:reference/activate', singleSessionTemplate.activate())

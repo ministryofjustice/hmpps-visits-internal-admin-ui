@@ -57,24 +57,31 @@
             attributes: { "data-test": "excluded-date" }
           },
           {
-            html: '<a href="/prisons/' + prison.code + '/exclude-date/remove">Remove</a>',
-            attributes: { "data-test": "prison-name" }
+            html: govukButton({
+              text: 'Remove',
+              value: excludeDate,
+              name: 'excludeDate'
+            }),
+            attributes: { "data-test": "exclude-date-row" }
           }
           ]), excludeDateRows) %}
       {%- endfor %}
 
-        {{ govukTable({
-          classes: "govuk-!-width-three-quarters",
-          head: [
-            {
-              text: "Excluded date"
-            },
-            {
-              text: "Action"
-            }
-          ],
-          rows: excludeDateRows
-        }) }}
+        <form action="/prisons/{{prisonId}}/exclude-date/remove" method="POST" novalidate>
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          {{ govukTable({
+            classes: "govuk-!-width-three-quarters",
+            head: [
+              {
+                text: "Excluded date"
+              },
+              {
+                text: "Action"
+              }
+            ],
+            rows: excludeDateRows
+          }) }}
+        </form>
         {% else %}
           <p  class="govuk-body">
             No existing dates to exclude
@@ -108,7 +115,7 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
 
-          <form action="/prisons/{{prisonId}}/exclusion-dates/add" method="PUT" novalidate>
+          <form action="/prisons/{{prisonId}}/exclude-date/add" method="POST" novalidate>
             <input type="hidden" name="_csrf" value="{{ csrfToken }}">
               {{ govukDateInput({
                   id: "excludeDate",
