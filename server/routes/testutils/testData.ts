@@ -1,5 +1,5 @@
 import { PrisonRegisterPrison } from '../../data/prisonRegisterApiTypes'
-import { Prison, SessionTemplate } from '../../data/visitSchedulerApiTypes'
+import { Prison, SessionTemplate, CreateSessionTemplateDto } from '../../data/visitSchedulerApiTypes'
 
 export default class TestData {
   // PrisonDto from Visit Scheduler
@@ -70,4 +70,31 @@ export default class TestData {
       weeklyFrequency,
       active,
     } as SessionTemplate)
+
+  static createSessionTemplateDto = ({
+    name = 'session template name',
+    weeklyFrequency = 2,
+    dayOfWeek = 'MONDAY',
+    prisonId = 'HEI',
+    sessionCapacity = { open: 10, closed: 5 },
+    sessionDateRange = { validFromDate: '01-01-2023', validToDate: '31-12-2024' },
+    sessionTimeSlot = { startTime: '13:00', endTime: '14:00' },
+    visitRoom = 'visit room name',
+    categoryGroupReferences = [],
+    incentiveLevelGroupReferences = [],
+    locationGroupReferences = [],
+  }: Partial<CreateSessionTemplateDto> = {}): CreateSessionTemplateDto =>
+    ({
+      name,
+      weeklyFrequency,
+      dayOfWeek,
+      prisonId,
+      sessionCapacity,
+      sessionDateRange,
+      sessionTimeSlot,
+      visitRoom,
+      categoryGroupReferences,
+      incentiveLevelGroupReferences,
+      locationGroupReferences,
+    } as CreateSessionTemplateDto)
 }
