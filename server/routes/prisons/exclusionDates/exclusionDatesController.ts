@@ -1,6 +1,27 @@
 import { RequestHandler } from 'express'
 import { PrisonService } from '../../../services'
 
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+] as const
+
+const transformDate = (date: string): string => {
+  const splitedDate = date.split('-').map(d => Number(d))
+
+  return `${splitedDate[2]} ${MONTHS[splitedDate[1] - 1]} ${splitedDate[0]}`
+}
+
 export default class ExclusionDatesController {
   public constructor(private readonly prisonService: PrisonService) {}
 
@@ -8,7 +29,7 @@ export default class ExclusionDatesController {
     return async (req, res) => {
       const { prisonId } = req.params
       const { prisonName, prison } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
-      const { excludeDates } = prison
+      const excludeDates = prison.excludeDates.map(d => [transformDate(d), d])
       const formValues = req.flash('formValues')?.[0] || {}
 
       const message = req.flash('message')

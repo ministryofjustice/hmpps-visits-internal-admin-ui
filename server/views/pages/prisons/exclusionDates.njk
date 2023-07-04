@@ -47,13 +47,13 @@
         {% for excludeDate in excludeDates -%}
           {% set excludeDateRows = (excludeDateRows.push([
           {
-            text: excludeDate,
+            text: excludeDate[0],
             attributes: { "data-test": "excluded-date" }
           },
           {
             html: govukButton({
               text: 'Remove',
-              value: excludeDate,
+              value: excludeDate[1],
               name: 'excludeDate'
             }),
             attributes: { "data-test": "exclude-date-row" }
@@ -92,7 +92,7 @@
                     }
                   },
                   hint: {
-                    text: "For example, 27 3 2023"
+                    text: "For example, 27 03 2023"
                   },
                   items: [
                     {
