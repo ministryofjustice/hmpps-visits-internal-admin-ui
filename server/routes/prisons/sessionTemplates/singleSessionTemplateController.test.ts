@@ -196,12 +196,6 @@ describe('Single session template page', () => {
   })
 
   describe('POST /prisons/{:prisonId}/session-templates/{:reference}', () => {
-    let sessionTemplate: SessionTemplate
-
-    beforeEach(() => {
-      sessionTemplate = TestData.sessionTemplate()
-    })
-
     it('should delete session template status and set flash message', () => {
       // Given
       sessionTemplateService.deleteSessionTemplate.mockResolvedValue()
