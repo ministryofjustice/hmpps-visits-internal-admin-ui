@@ -76,19 +76,7 @@ export default class VisitSchedulerApiClient {
   async createSessionTemplate(createSessionTemplateDto: CreateSessionTemplateDto): Promise<SessionTemplate> {
     return this.restClient.post({
       path: `/admin/session-templates/template`,
-      data: <CreateSessionTemplateDto>{
-        name: createSessionTemplateDto.name,
-        weeklyFrequency: createSessionTemplateDto.weeklyFrequency,
-        dayOfWeek: createSessionTemplateDto.dayOfWeek,
-        prisonId: createSessionTemplateDto.prisonId,
-        sessionCapacity: createSessionTemplateDto.sessionCapacity,
-        sessionDateRange: createSessionTemplateDto.sessionDateRange,
-        sessionTimeSlot: createSessionTemplateDto.sessionTimeSlot,
-        visitRoom: createSessionTemplateDto.visitRoom,
-        categoryGroupReferences: [],
-        incentiveLevelGroupReferences: [],
-        locationGroupReferences: [],
-      },
+      data: createSessionTemplateDto,
     })
   }
 }
