@@ -104,10 +104,26 @@ export default class AddSessionTemplateController {
         .trim()
         .isInt({ min: 1 })
         .withMessage('Enter the date in number format for template start date'),
+      body(['validFromDateDay', 'validFromDateMonth'])
+        .trim()
+        .isInt()
+        .isLength({ min: 2, max: 2 })
+        .withMessage('Enter the day/month for start date in the format DD / MM'),
+      body(['validToDateDay', 'validToDateMonth'])
+        .optional({ checkFalsy: true })
+        .trim()
+        .isInt()
+        .isLength({ min: 2, max: 2 })
+        .withMessage('Enter the day/month for end date in the format DD / MM'),
       body('validFromDateYear')
         .trim()
         .isInt({ min: 1000, max: 9999 })
         .withMessage('Enter the year for template start date as 4 digits, e.g. 2023'),
+      body('validToDateYear')
+        .optional({ checkFalsy: true })
+        .trim()
+        .isInt({ min: 1000, max: 9999 })
+        .withMessage('Enter the year for template end date as 4 digits, e.g. 2023'),
       body('validFromDate').custom((_value, { req }) => {
         const theDate = `${req.body.validFromDateYear}-${req.body.validFromDateMonth}-${req.body.validFromDateDay}`
 
@@ -117,11 +133,6 @@ export default class AddSessionTemplateController {
         }
         return true
       }),
-      // body(['validToDateDay', 'validToDateMonth', 'validToDateYear'])
-      //   .optional({ values: 'null' })
-      //   .trim()
-      //   .isInt({ min: 1 })
-      //   .withMessage('Enter the date in number format for template end date'),
       body('hasEndDate')
         .optional()
         .isIn(['yes'])
