@@ -1,7 +1,6 @@
 import TestData from '../../../server/routes/testutils/testData'
 import Page from '../../pages/page'
 import ViewSessionTemplatePage from '../../pages/prisons/viewSessionTemplate'
-import ViewSessionTemplatesPage from '../../pages/prisons/viewSessionTemplates'
 import { SessionTemplatesRangeType } from '../../../server/data/visitSchedulerApiTypes'
 
 context('Delete a session template failure', () => {
