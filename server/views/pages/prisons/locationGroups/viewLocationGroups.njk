@@ -77,16 +77,27 @@
         }]
       }) }}
 
-      <pre>{{ locationGroups | dump(2) }}</pre>
-
       {# Build rows of location groups #}
       {% set rows = [] %}
+      {% for locationGroup in locationGroups %}
+        {% set rows = (rows.push([
+        {
+          html: '<a href="/prisons/' + prison.code + '/location-groups/' + locationGroup.reference + '">' + locationGroup.name + "</a>"
+        },
+        {
+          text: locationGroup.locations | length
+        }
+        ]), rows) %}
+      {% endfor %}
 
       {% if rows | length %}
         {{ govukTable({
           head: [
             {
               text: "Name"
+            },
+            {
+              text: "Number of locations"
             }
           ],
           rows: rows
