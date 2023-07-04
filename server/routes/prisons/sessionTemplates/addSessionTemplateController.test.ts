@@ -131,6 +131,38 @@ describe('Add a session template', () => {
   })
 
   describe('POST /prisons/{:prisonId}/session-templates/add', () => {
+    it('should send valid data to create session template and redirect to view template', () => {
+      const createSessionTemplateDto = TestData.createSessionTemplateDto()
+      const sessionTemplate = TestData.sessionTemplate({ ...createSessionTemplateDto })
+      sessionTemplateService.createSessionTemplate.mockResolvedValue(sessionTemplate)
+
+      return request(app)
+        .post(url)
+        .send('name=session template name')
+        .send('dayOfWeek=MONDAY')
+        .send('startTime=13:00')
+        .send('endTime=14:00')
+        .send('weeklyFrequency=2')
+        .send('validFromDateDay=01')
+        .send('validFromDateMonth=02')
+        .send('validFromDateYear=2023')
+        .send('hasEndDate=yes')
+        .send('validToDateDay=31')
+        .send('validToDateMonth=12')
+        .send('validToDateYear=2024')
+        .send('openCapacity=10')
+        .send('closedCapacity=5')
+        .send('visitRoom=visit room name')
+        .expect(302)
+        .expect('location', `/prisons/${prison.code}/session-templates/${sessionTemplate.reference}`)
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalledWith('errors')
+          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+
+          expect(sessionTemplateService.createSessionTemplate).toHaveBeenCalledWith('user1', createSessionTemplateDto)
+        })
+    })
+
     it('should set validation errors for invalid form data and set data in formValues - basic', () => {
       const expectedValidationErrors = [
         expect.objectContaining({ path: 'name', msg: 'Enter a name between 3 and 100 characters long' }),
@@ -161,7 +193,7 @@ describe('Add a session template', () => {
         dayOfWeek: 'XXX',
         startTime: '123',
         endTime: '456',
-        weeklyFrequency: '0',
+        weeklyFrequency: 0,
         validFromDateDay: 'a',
         validFromDateMonth: 'b',
         validFromDateYear: 'c',
@@ -169,8 +201,8 @@ describe('Add a session template', () => {
         validToDateDay: '31',
         validToDateMonth: '02',
         validToDateYear: '2000',
-        openCapacity: '0',
-        closedCapacity: '0',
+        openCapacity: 0,
+        closedCapacity: 0,
         visitRoom: 'z',
       }
 

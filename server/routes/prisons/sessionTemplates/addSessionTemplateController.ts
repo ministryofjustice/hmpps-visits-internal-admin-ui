@@ -61,6 +61,9 @@ export default class AddSessionTemplateController {
           endTime: req.body.endTime,
         },
         visitRoom: req.body.visitRoom,
+        categoryGroupReferences: [],
+        incentiveLevelGroupReferences: [],
+        locationGroupReferences: [],
       }
 
       try {
@@ -94,6 +97,7 @@ export default class AddSessionTemplateController {
       }),
       body('weeklyFrequency')
         .trim()
+        .toInt()
         .isInt({ min: 1, max: 12 })
         .withMessage('Enter a weekly frequency value between 1 and 12'),
       body(['validFromDateDay', 'validFromDateMonth', 'validFromDateYear'])
@@ -142,17 +146,14 @@ export default class AddSessionTemplateController {
           }
           return true
         }),
-      body('openCapacity').trim().isInt().withMessage('Enter a number'),
-      body(['openCapacity', 'closedCapacity'])
-        .trim()
-        .custom((_value, { req }) => {
-          const { openCapacity, closedCapacity } = req.body
-          if (openCapacity === '0' && closedCapacity === '0') {
-            throw new Error('Enter a capacity for either open or closed')
-          }
-          return true
-        }),
-      body('closedCapacity').trim().isInt().withMessage('Enter a number'),
+      body(['openCapacity', 'closedCapacity']).trim().toInt().isInt().withMessage('Enter a number'),
+      body(['openCapacity', 'closedCapacity']).custom((_value, { req }) => {
+        const { openCapacity, closedCapacity } = req.body
+        if (openCapacity === 0 && closedCapacity === 0) {
+          throw new Error('Enter a capacity for either open or closed')
+        }
+        return true
+      }),
       body('visitRoom').trim().isLength({ min: 3 }).withMessage('Enter a name over 3 characters long'),
     ]
   }
