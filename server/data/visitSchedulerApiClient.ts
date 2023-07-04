@@ -79,7 +79,7 @@ export default class VisitSchedulerApiClient {
     })
   }
 
-  async activeSessionTemplate(reference: string): Promise<SessionTemplate> {
+  async activateSessionTemplate(reference: string): Promise<SessionTemplate> {
     return this.restClient.put({
       path: `/admin/session-templates/template/${reference}/activate`,
     })

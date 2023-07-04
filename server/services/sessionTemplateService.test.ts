@@ -14,6 +14,7 @@ describe('Session template service', () => {
 
   const sessionTemplates = [TestData.sessionTemplate()]
   const singleSessionTemplate = TestData.sessionTemplate()
+  const createSessionTemplateDto = TestData.createSessionTemplateDto()
 
   beforeEach(() => {
     VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
@@ -38,10 +39,20 @@ describe('Session template service', () => {
   })
 
   describe('getSingleSessionTemplate', () => {
-    it('should return an array of all session templates for a prison', async () => {
+    it('should return a single session template', async () => {
       visitSchedulerApiClient.getSingleSessionTemplate.mockResolvedValue(singleSessionTemplate)
 
       const results = await sessionTemplateService.getSingleSessionTemplate('user', 'HEI')
+
+      expect(results).toEqual(singleSessionTemplate)
+    })
+  })
+
+  describe('createSessionTemplate', () => {
+    it('should create a session template', async () => {
+      visitSchedulerApiClient.createSessionTemplate.mockResolvedValue(singleSessionTemplate)
+
+      const results = await sessionTemplateService.createSessionTemplate('user', createSessionTemplateDto)
 
       expect(results).toEqual(singleSessionTemplate)
     })

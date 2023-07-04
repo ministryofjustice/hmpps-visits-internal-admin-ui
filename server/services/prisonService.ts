@@ -23,7 +23,7 @@ export default class PrisonService {
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     const prison = await visitSchedulerApiClient.getPrison(prisonId)
-    const prisonName = this.allPrisonRegisterPrisons[prisonId]
+    const prisonName = this.allPrisonRegisterPrisons[prisonId] || 'UNKNOWN'
 
     return { prison, prisonName }
   }

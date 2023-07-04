@@ -14,18 +14,24 @@ The easiest way to run the app is to use docker compose to create the service an
 ### Dependencies
 The app requires: 
 * hmpps-auth - for authentication
-* redis-vsip-admi (redis) - session store and token caching
+* redis - session store and token caching
+* prison-register - look up names of prisons from Prison codes
+* visit-scheduler - all VSiP admin operations
 
 ### Running the app for development
 
 It is simplest to use HMPPS Auth dev, in which case just Redis is needed:
 
-`docker-compose up redis-vsip-admin`
+```bash
+docker-compose up redis-vsip-admin -d
+# or, to have prison register running locally too:
+docker-compose up redis-vsip-admin prison-register -d 
+```
 
 
 Or, to start the main services excluding the typescript app: 
 
-`docker-compose up --scale=app=0`
+`docker-compose up --scale=app=0 -d`
 
 Install dependencies using `npm install`, ensuring you are using `node v18.x` and `npm v9.x`
 
@@ -46,6 +52,9 @@ SYSTEM_CLIENT_ID=clientid
 SYSTEM_CLIENT_SECRET=clientsecret
 
 PRISON_REGISTER_API_URL="https://prison-register-dev.hmpps.service.justice.gov.uk"
+# If running prison register locally:
+# PRISON_REGISTER_API_URL: "http://localhost:8082"
+
 VISIT_SCHEDULER_API_URL="https://visit-scheduler-dev.prison.service.justice.gov.uk"
 ```
 
