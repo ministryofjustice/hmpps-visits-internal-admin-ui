@@ -8,7 +8,7 @@ export default function routes(services: Services): Router {
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  const locationGroups = new LocationGroupsController(services.prisonService, services.locationGroupsService)
+  const locationGroups = new LocationGroupsController(services.prisonService, services.locationGroupService)
 
   get('/prisons/:prisonId([A-Z]{3})/location-groups', locationGroups.view())
 

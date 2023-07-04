@@ -2,13 +2,13 @@ import { dataAccess } from '../data'
 import UserService from './userService'
 import PrisonService from './prisonService'
 import SessionTemplateService from './sessionTemplateService'
-import LocationGroupsService from './locationGroupsService'
+import LocationGroupService from './locationGroupService'
 
 export const services = () => {
   const { hmppsAuthClient, applicationInfo, prisonRegisterApiClientBuilder, visitSchedulerApiClientBuilder } =
     dataAccess()
 
-  const locationGroupsService = new LocationGroupsService(visitSchedulerApiClientBuilder, hmppsAuthClient)
+  const locationGroupService = new LocationGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
 
   const prisonService = new PrisonService(
     visitSchedulerApiClientBuilder,
@@ -22,7 +22,7 @@ export const services = () => {
 
   return {
     applicationInfo,
-    locationGroupsService,
+    locationGroupService,
     prisonService,
     sessionTemplateService,
     userService,
@@ -31,4 +31,4 @@ export const services = () => {
 
 export type Services = ReturnType<typeof services>
 
-export { LocationGroupsService, PrisonService, SessionTemplateService, UserService }
+export { LocationGroupService, PrisonService, SessionTemplateService, UserService }

@@ -1,7 +1,7 @@
 import { RestClientBuilder, VisitSchedulerApiClient, HmppsAuthClient } from '../data'
 import { LocationGroup } from '../data/visitSchedulerApiTypes'
 
-export default class LocationGroupsService {
+export default class LocationGroupService {
   constructor(
     private readonly visitSchedulerApiClientFactory: RestClientBuilder<VisitSchedulerApiClient>,
     private readonly hmppsAuthClient: HmppsAuthClient,
