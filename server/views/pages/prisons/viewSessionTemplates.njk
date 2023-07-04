@@ -3,6 +3,7 @@
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
+{%- from "moj/components/banner/macro.njk" import mojBanner -%}
 
 {% set pageHeaderTitle = prisonName %}
 {% set pageTitle = applicationName + " - Session templates - " + pageHeaderTitle %}
@@ -29,6 +30,18 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
+
+      {% if message | length %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {{ mojBanner({
+              type: "success",
+              text: message,
+              iconFallbackText: "Success"
+            }) }}
+          </div>
+        </div>
+      {% endif %}
 
       <h1 class="govuk-heading-l">
         <span>{{ pageHeaderTitle }}</span>

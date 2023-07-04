@@ -16,6 +16,8 @@ context('Delete a session template failure', () => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    cy.task('stubPrisons')
+    cy.task('stubGetAllPrisons')
     cy.task('stubGetPrison', activePrison)
     cy.task('stubGetSessionTemplate', { sessionTemplate })
 
@@ -36,6 +38,9 @@ context('Delete a session template failure', () => {
     viewSessionTemplatePage.getDeleteSessionTemplateButton().click()
 
     // Then
-    Page.verifyOnPage(ViewSessionTemplatesPage)
+    const viewSessionTemplatePageFailure = Page.verifyOnPage(ViewSessionTemplatePage)
+    viewSessionTemplatePageFailure
+      .errorSummary()
+      .contains(`Failed to delete session template with reference - ${sessionTemplate.reference}`)
   })
 })

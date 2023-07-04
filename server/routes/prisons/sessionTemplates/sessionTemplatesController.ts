@@ -41,6 +41,7 @@ export default class SessionTemplatesController {
         sessionTemplatesByDay,
         selectedRange,
         sessionTemplatesFilterRanges,
+        message: req.flash('message'),
       })
     }
   }

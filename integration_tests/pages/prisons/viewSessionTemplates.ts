@@ -9,4 +9,6 @@ export default class ViewSessionTemplatesPage extends Page {
 
   selectTemplatePrison = (prisonId: string, reference: string): PageElement =>
     cy.get(`a[href="/prisons/${prisonId}/session-templates/${reference}"]`)
+
+  successMessage = (): PageElement => cy.get('.moj-banner__message')
 }

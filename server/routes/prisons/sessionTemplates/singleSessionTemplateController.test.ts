@@ -208,7 +208,7 @@ describe('Single session template page', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/session-templates`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', '-afe.dcc.0f')
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Session template with reference -afe.dcc.0f deleted.')
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledTimes(1)
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })

@@ -17,5 +17,7 @@ export default class ViewSessionTemplatePage extends Page {
 
   successMessage = (): PageElement => cy.get('.moj-banner__message')
 
+  errorSummary = (): PageElement => cy.get('.govuk-error-summary')
+
   statusTab = (): PageElement => cy.get('.moj-sub-navigation__item').last()
 }

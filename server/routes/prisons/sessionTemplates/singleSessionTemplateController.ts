@@ -69,7 +69,7 @@ export default class SingleSessionTemplateController {
 
       try {
         await this.sessionTemplateService.deleteSessionTemplate(res.locals.user.username, reference)
-        req.flash('message', reference)
+        req.flash('message', `Session template with reference ${reference} deleted.`)
       } catch (error) {
         req.flash('formValues', req.body)
         req.flash('errors', [{ msg: `Failed to delete session template with reference - ${reference}` }])
