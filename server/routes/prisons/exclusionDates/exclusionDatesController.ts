@@ -30,7 +30,6 @@ export default class ExclusionDatesController {
       const { prisonId } = req.params
       const { prisonName, prison } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
       const excludeDates = prison.excludeDates.map(d => [transformDate(d), d])
-      const formValues = req.flash('formValues')?.[0] || {}
 
       const message = req.flash('message')
       res.render('pages/prisons/exclusionDates', {
@@ -39,7 +38,6 @@ export default class ExclusionDatesController {
         prisonName,
         excludeDates,
         message,
-        formValues,
       })
     }
   }
@@ -51,8 +49,9 @@ export default class ExclusionDatesController {
 
       try {
         await this.prisonService.addExcludeDate(res.locals.user.username, prisonId, date)
+        req.flash('message', `${date} has been successfully added.`)
       } catch (error) {
-        throw new Error(`Date '${date}' didn't be added`)
+        req.flash('errors', [{ msg: `Failed to add date ${date}` }])
       }
 
       return res.redirect(`/prisons/${prisonId}/exclusion-dates`)
@@ -66,8 +65,9 @@ export default class ExclusionDatesController {
 
       try {
         await this.prisonService.removeExcludeDate(res.locals.user.username, prisonId, date)
+        req.flash('message', `${date} has been successfully removed.`)
       } catch (error) {
-        throw new Error(`Date '${date}' didn't be removed`)
+        req.flash('errors', [{ msg: `Failed to remove date ${date}` }])
       }
 
       return res.redirect(`/prisons/${prisonId}/exclusion-dates`)
