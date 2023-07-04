@@ -5,7 +5,7 @@
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 
 {% set pageHeaderTitle = prisonName %}
-{% set pageTitle = applicationName + " - Location groups - " + pageHeaderTitle %}
+{% set pageTitle = applicationName + " - Category groups - " + pageHeaderTitle %}
 
 {% set primaryNavItems = [
   {
@@ -51,14 +51,14 @@
           href: "/prisons/" + prison.code + "/exclusion-dates"
         }, {
           text: "Category groups",
-          href: "/prisons/" + prison.code + "/category-groups"
+          href: "/prisons/" + prison.code + "/category-groups",
+          active: true
         }, {
           text: "Incentive level groups",
           href: "/prisons/" + prison.code + "/incentive-groups"
         }, {
           text: "Location groups",
-          href: "/prisons/" + prison.code + "/location-groups",
-          active: true
+          href: "/prisons/" + prison.code + "/location-groups"
         }, {
           text: "Status",
           href: "/prisons/" + prison.code + "/status",
@@ -68,25 +68,25 @@
 
       {{ mojPageHeaderActions({
         heading: {
-          text: 'Location groups',
+          text: 'Category groups',
           level: 2,
           classes: 'govuk-heading-m'
         },
         items: [{
-          text: 'Add location group',
-          href: "/prisons/" + prison.code + "/location-groups/add"
+          text: 'Add category group',
+          href: "/prisons/" + prison.code + "/category-groups/add"
         }]
       }) }}
 
-      {# Build rows of location groups #}
+      {# Build rows of category groups #}
       {% set rows = [] %}
-      {% for locationGroup in locationGroups %}
+      {% for categoryGroup in categoryGroups %}
         {% set rows = (rows.push([
         {
-          html: '<a href="/prisons/' + prison.code + '/location-groups/' + locationGroup.reference + '">' + locationGroup.name + "</a>"
+          html: '<a href="/prisons/' + prison.code + '/category-groups/' + categoryGroup.reference + '">' + categoryGroup.name + "</a>"
         },
         {
-          text: locationGroup.locations | length
+          html: '<ul class="govuk-list govuk-list--bullet"><li>' + (categoryGroup.categories | join('</li><li>')) + '</li></ul>'
         }
         ]), rows) %}
       {% endfor %}
@@ -98,13 +98,13 @@
               text: "Name"
             },
             {
-              text: "Number of locations"
+              text: "Categories"
             }
           ],
           rows: rows
         }) }}
       {% else %}
-        <p>There are no location groups for this prison.</p>
+        <p>There are no category groups for this prison.</p>
       {% endif %}
         
     </div>
