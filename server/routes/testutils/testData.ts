@@ -1,5 +1,11 @@
 import { PrisonRegisterPrison } from '../../data/prisonRegisterApiTypes'
-import { Prison, SessionTemplate, CreateSessionTemplateDto } from '../../data/visitSchedulerApiTypes'
+import {
+  CategoryGroup,
+  Prison,
+  SessionTemplate,
+  CreateSessionTemplateDto,
+  LocationGroup,
+} from '../../data/visitSchedulerApiTypes'
 
 export default class TestData {
   // PrisonDto from Visit Scheduler
@@ -97,4 +103,23 @@ export default class TestData {
       incentiveLevelGroupReferences,
       locationGroupReferences,
     } as CreateSessionTemplateDto)
+
+  static locationGroup = ({
+    name = 'Wing A',
+    reference = '-afe~dcb~fb',
+    locations = [
+      {
+        levelOneCode: 'A',
+        levelTwoCode: undefined,
+        levelThreeCode: undefined,
+        levelFourCode: undefined,
+      },
+    ],
+  }: Partial<LocationGroup> = {}): LocationGroup => ({ name, reference, locations })
+
+  static categoryGroup = ({
+    name = 'Category A (High Risk) prisoners',
+    reference = '-afe~dcb~fb',
+    categories = ['A_HIGH'],
+  }: Partial<CategoryGroup> = {}): CategoryGroup => ({ name, reference, categories })
 }

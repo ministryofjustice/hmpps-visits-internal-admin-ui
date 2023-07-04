@@ -3,7 +3,8 @@ import config from '../config'
 import {
   CreateSessionTemplateDto,
   Prison,
-  SessionLocationGroup,
+  CategoryGroup,
+  LocationGroup,
   SessionTemplate,
   SessionTemplatesRangeType,
 } from './visitSchedulerApiTypes'
@@ -50,7 +51,7 @@ export default class VisitSchedulerApiClient {
     })
   }
 
-  // Session template controller
+  // Session template
   async getSessionTemplates(prisonCode: string, rangeType: SessionTemplatesRangeType): Promise<SessionTemplate[]> {
     return this.restClient.get({
       path: `/admin/session-templates`,
@@ -86,9 +87,17 @@ export default class VisitSchedulerApiClient {
     })
   }
 
-  async getLocationGroups(prisonCode: string): Promise<SessionLocationGroup> {
+  // Location groups
+  async getLocationGroups(prisonCode: string): Promise<LocationGroup[]> {
     return this.restClient.get({
       path: `/admin/location-groups/${prisonCode}`,
+    })
+  }
+
+  // Category groups
+  async getCategoryGroups(prisonCode: string): Promise<CategoryGroup[]> {
+    return this.restClient.get({
+      path: `/admin/category-groups/${prisonCode}`,
     })
   }
 }
