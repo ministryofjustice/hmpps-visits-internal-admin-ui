@@ -1,6 +1,12 @@
 import RestClient from './restClient'
 import config from '../config'
-import { CreateSessionTemplateDto, Prison, SessionTemplate, SessionTemplatesRangeType } from './visitSchedulerApiTypes'
+import {
+  CreateSessionTemplateDto,
+  Prison,
+  SessionLocationGroup,
+  SessionTemplate,
+  SessionTemplatesRangeType,
+} from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
   private restClient: RestClient
@@ -77,6 +83,12 @@ export default class VisitSchedulerApiClient {
     return this.restClient.post({
       path: `/admin/session-templates/template`,
       data: createSessionTemplateDto,
+    })
+  }
+
+  async getLocationGroups(prisonCode: string): Promise<SessionLocationGroup> {
+    return this.restClient.get({
+      path: `/admin/location-groups/${prisonCode}`,
     })
   }
 }

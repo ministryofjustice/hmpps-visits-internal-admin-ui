@@ -1,0 +1,100 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+
+{% set pageHeaderTitle = prisonName %}
+{% set pageTitle = applicationName + " - Location groups - " + pageHeaderTitle %}
+
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+] %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <h1 class="govuk-heading-l">
+        <span>{{ pageHeaderTitle }}</span>
+      </h1>
+
+      <p>This prison is currently
+        {{ govukTag({
+          text: "active" if prison.active else "inactive",
+          classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
+          attributes: { "data-test": "prison-status" }
+        }) }}
+      </p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {{ mojSubNavigation({
+        label: "Sub navigation",
+        classes: "govuk-!-margin-top-3",
+        items: [{
+          text: "Session templates",
+          href: "/prisons/" + prison.code + "/session-templates"
+        }, {
+          text: "Exclusion dates",
+          href: "/prisons/" + prison.code + "/exclusion-dates"
+        }, {
+          text: "Category groups",
+          href: "/prisons/" + prison.code + "/category-groups"
+        }, {
+          text: "Incentive level groups",
+          href: "/prisons/" + prison.code + "/incentive-groups"
+        }, {
+          text: "Location groups",
+          href: "/prisons/" + prison.code + "/location-groups",
+          active: true
+        }, {
+          text: "Status",
+          href: "/prisons/" + prison.code + "/status",
+          attributes: { "data-test": "tab-status" }
+        }]
+      }) }}
+
+      {{ mojPageHeaderActions({
+        heading: {
+          text: 'Location groups',
+          level: 2,
+          classes: 'govuk-heading-m'
+        },
+        items: [{
+          text: 'Add location group'
+        }]
+      }) }}
+
+      <pre>{{ locationGroups | dump(2) }}</pre>
+
+      {# Build rows of location groups #}
+      {% set rows = [] %}
+
+      {% if rows | length %}
+        {{ govukTable({
+          head: [
+            {
+              text: "Name"
+            }
+          ],
+          rows: rows
+        }) }}
+      {% else %}
+        <p>There are no location groups for this prison.</p>
+      {% endif %}
+        
+    </div>
+  </div>
+{% endblock %}

@@ -1,5 +1,7 @@
 import { components, operations } from '../@types/visit-scheduler-api'
 
+export type SessionLocationGroup = components['schemas']['SessionLocationGroupDto']
+
 export type Prison = components['schemas']['PrisonDto']
 
 export type SessionTemplate = components['schemas']['SessionTemplateDto']
