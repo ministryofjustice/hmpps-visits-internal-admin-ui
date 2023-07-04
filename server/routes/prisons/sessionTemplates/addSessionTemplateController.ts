@@ -40,6 +40,11 @@ export default class AddSessionTemplateController {
         return res.redirect(originalUrl)
       }
 
+      const validFromDateDay = req.body.validFromDateDay.padStart(2, '0')
+      const validFromDateMonth = req.body.validFromDateMonth.padStart(2, '0')
+      const validToDateDay = req.body.validToDateDay.padStart(2, '0')
+      const validToDateMonth = req.body.validToDateMonth.padStart(2, '0')
+
       const createSessionTemplateDto: CreateSessionTemplateDto = {
         name: req.body.name,
         weeklyFrequency: req.body.weeklyFrequency,
@@ -50,10 +55,10 @@ export default class AddSessionTemplateController {
           closed: req.body.closedCapacity,
         },
         sessionDateRange: {
-          validFromDate: `${req.body.validFromDateYear}-${req.body.validFromDateMonth}-${req.body.validFromDateDay}`,
+          validFromDate: `${req.body.validFromDateYear}-${validFromDateMonth}-${validFromDateDay}`,
           validToDate:
             req.body.hasEndDate === 'yes'
-              ? `${req.body.validToDateYear}-${req.body.validToDateMonth}-${req.body.validToDateDay}`
+              ? `${req.body.validToDateYear}-${validToDateMonth}-${validToDateDay}`
               : undefined,
         },
         sessionTimeSlot: {
@@ -100,29 +105,26 @@ export default class AddSessionTemplateController {
         .toInt()
         .isInt({ min: 1, max: 12 })
         .withMessage('Enter a weekly frequency value between 1 and 12'),
-      body(['validFromDateDay', 'validFromDateMonth', 'validFromDateYear'])
-        .trim()
-        .isInt({ min: 1 })
-        .withMessage('Enter the date in number format for template start date'),
-      body(['validFromDateDay', 'validFromDateMonth'])
-        .trim()
-        .isInt()
-        .isLength({ min: 2, max: 2 })
-        .withMessage('Enter the day/month for start date in the format DD / MM'),
-      body(['validToDateDay', 'validToDateMonth'])
-        .optional({ checkFalsy: true })
-        .trim()
-        .isInt()
-        .isLength({ min: 2, max: 2 })
-        .withMessage('Enter the day/month for end date in the format DD / MM'),
+      body('validFromDateDay').trim().isInt({ min: 1, max: 31 }).withMessage('Enter a valid day'),
+      body('validFromDateMonth').trim().isInt({ min: 1, max: 12 }).withMessage('Enter a valid month'),
       body('validFromDateYear')
         .trim()
-        .isInt({ min: 1000, max: 9999 })
+        .isLength({ min: 4, max: 4 })
         .withMessage('Enter the year for template start date as 4 digits, e.g. 2023'),
+      body('validToDateDay')
+        .optional({ checkFalsy: true })
+        .trim()
+        .isInt({ min: 1, max: 31 })
+        .withMessage('Enter a valid day'),
+      body('validToDateMonth')
+        .optional({ checkFalsy: true })
+        .trim()
+        .isInt({ min: 1, max: 12 })
+        .withMessage('Enter a valid month'),
       body('validToDateYear')
         .optional({ checkFalsy: true })
         .trim()
-        .isInt({ min: 1000, max: 9999 })
+        .isLength({ min: 4, max: 4 })
         .withMessage('Enter the year for template end date as 4 digits, e.g. 2023'),
       body('validFromDate').custom((_value, { req }) => {
         const theDate = `${req.body.validFromDateYear}-${req.body.validFromDateMonth}-${req.body.validFromDateDay}`

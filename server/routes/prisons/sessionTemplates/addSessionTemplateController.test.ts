@@ -172,15 +172,15 @@ describe('Add a session template', () => {
         expect.objectContaining({ path: 'weeklyFrequency', msg: 'Enter a weekly frequency value between 1 and 12' }),
         expect.objectContaining({
           path: 'validFromDateDay',
-          msg: 'Enter the date in number format for template start date',
+          msg: 'Enter a valid day',
         }),
         expect.objectContaining({
           path: 'validFromDateMonth',
-          msg: 'Enter the date in number format for template start date',
+          msg: 'Enter a valid month',
         }),
         expect.objectContaining({
           path: 'validFromDateYear',
-          msg: 'Enter the date in number format for template start date',
+          msg: 'Enter the year for template start date as 4 digits, e.g. 2023',
         }),
         expect.objectContaining({ path: 'hasEndDate', msg: 'Enter a valid date for template end date' }),
         expect.objectContaining({ path: 'openCapacity', msg: 'Enter a capacity for either open or closed' }),
