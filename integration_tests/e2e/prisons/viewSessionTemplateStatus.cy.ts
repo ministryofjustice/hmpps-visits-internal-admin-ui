@@ -76,7 +76,7 @@ context('Change active/inactive session template', () => {
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Deactivate')
   })
 
-  it('when active session template is inactive details should change accordingly', () => {
+  it('when active session template is deactivated details should change accordingly', () => {
     // Given
     const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
     viewSessionTemplatePage.goTo(prisonCode, activeSessionTemplate.reference)
