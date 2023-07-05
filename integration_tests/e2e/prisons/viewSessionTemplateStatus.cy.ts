@@ -45,6 +45,7 @@ context('Change active/inactive session template', () => {
     // Then
     viewSessionTemplatePage.sessionTemplateStatusLabel().should('include.text', 'Deactivated')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Activate')
+    viewSessionTemplatePage.getDeleteSessionTemplateButton().should('be.enabled')
   })
 
   it('when inactive session template is activated details should change accordingly', () => {
@@ -60,6 +61,7 @@ context('Change active/inactive session template', () => {
     label.should('include.text', 'Activated')
     label.should('not.include.text', 'Deactivated')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Deactivate')
+    viewSessionTemplatePage.getDeleteSessionTemplateButton().should('be.disabled')
   })
 
   it('session template should be activated and button should deactivate', () => {
@@ -74,6 +76,7 @@ context('Change active/inactive session template', () => {
     label.should('include.text', 'Activated')
     label.should('not.include.text', 'Deactivated')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Deactivate')
+    viewSessionTemplatePage.getDeleteSessionTemplateButton().should('be.disabled')
   })
 
   it('when active session template is deactivated details should change accordingly', () => {
@@ -88,5 +91,6 @@ context('Change active/inactive session template', () => {
     const label = viewSessionTemplatePage.sessionTemplateStatusLabel()
     label.should('include.text', 'Deactivated')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Activate')
+    viewSessionTemplatePage.getDeleteSessionTemplateButton().should('be.enabled')
   })
 })
