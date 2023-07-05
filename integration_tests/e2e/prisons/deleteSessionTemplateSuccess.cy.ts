@@ -10,7 +10,7 @@ context('Delete a session template success', () => {
 
   beforeEach(() => {
     const activePrison = TestData.prison({ active: true })
-    sessionTemplate = TestData.sessionTemplate({ active: true, prisonId: prisonCode, reference: '-act.dcc.0f' })
+    sessionTemplate = TestData.sessionTemplate({ active: false, prisonId: prisonCode, reference: '-act.dcc.0f' })
     const rangeType: SessionTemplatesRangeType = 'CURRENT_OR_FUTURE'
 
     cy.task('reset')
