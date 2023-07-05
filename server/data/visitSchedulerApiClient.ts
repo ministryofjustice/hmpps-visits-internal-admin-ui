@@ -1,6 +1,12 @@
 import RestClient from './restClient'
 import config from '../config'
-import { CreateSessionTemplateDto, Prison, SessionTemplate, SessionTemplatesRangeType } from './visitSchedulerApiTypes'
+import {
+  CreateSessionTemplateDto,
+  Prison,
+  SessionLocationGroup,
+  SessionTemplate,
+  SessionTemplatesRangeType,
+} from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
   private restClient: RestClient
@@ -94,19 +100,13 @@ export default class VisitSchedulerApiClient {
   async createSessionTemplate(createSessionTemplateDto: CreateSessionTemplateDto): Promise<SessionTemplate> {
     return this.restClient.post({
       path: `/admin/session-templates/template`,
-      data: <CreateSessionTemplateDto>{
-        name: createSessionTemplateDto.name,
-        weeklyFrequency: createSessionTemplateDto.weeklyFrequency,
-        dayOfWeek: createSessionTemplateDto.dayOfWeek,
-        prisonId: createSessionTemplateDto.prisonId,
-        sessionCapacity: createSessionTemplateDto.sessionCapacity,
-        sessionDateRange: createSessionTemplateDto.sessionDateRange,
-        sessionTimeSlot: createSessionTemplateDto.sessionTimeSlot,
-        visitRoom: createSessionTemplateDto.visitRoom,
-        categoryGroupReferences: [],
-        incentiveLevelGroupReferences: [],
-        locationGroupReferences: [],
-      },
+      data: createSessionTemplateDto,
+    })
+  }
+
+  async getLocationGroups(prisonCode: string): Promise<SessionLocationGroup> {
+    return this.restClient.get({
+      path: `/admin/location-groups/${prisonCode}`,
     })
   }
 }

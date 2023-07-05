@@ -77,7 +77,7 @@ export default class TestData {
     dayOfWeek = 'MONDAY',
     prisonId = 'HEI',
     sessionCapacity = { open: 10, closed: 5 },
-    sessionDateRange = { validFromDate: '01-01-2023', validToDate: '31-12-2024' },
+    sessionDateRange = { validFromDate: '2023-02-01', validToDate: '2024-12-31' },
     sessionTimeSlot = { startTime: '13:00', endTime: '14:00' },
     visitRoom = 'visit room name',
     categoryGroupReferences = [],
