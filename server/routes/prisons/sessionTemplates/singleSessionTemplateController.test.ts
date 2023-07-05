@@ -195,13 +195,13 @@ describe('Single session template page', () => {
     })
   })
 
-  describe('POST /prisons/{:prisonId}/session-templates/{:reference}', () => {
+  describe('POST /prisons/{:prisonId}/session-templates/{:reference}/delete', () => {
     it('should delete session template status and set flash message', () => {
       // Given
       sessionTemplateService.deleteSessionTemplate.mockResolvedValue()
 
       // When
-      const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f')
+      const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f/delete')
 
       // Then
       result
@@ -222,7 +222,7 @@ describe('Single session template page', () => {
       sessionTemplateService.deleteSessionTemplate.mockRejectedValue(new BadRequest())
 
       // When
-      const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f')
+      const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f/delete')
 
       // Then
       result
