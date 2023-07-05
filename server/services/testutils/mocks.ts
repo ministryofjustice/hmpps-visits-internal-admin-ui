@@ -1,9 +1,19 @@
-import { CategoryGroupService, LocationGroupService, PrisonService, SessionTemplateService, UserService } from '..'
+import {
+  CategoryGroupService,
+  IncentiveLevelGroupService,
+  LocationGroupService,
+  PrisonService,
+  SessionTemplateService,
+  UserService,
+} from '..'
 
 jest.mock('..')
 
 export const createMockCategoryGroupService = () =>
   new CategoryGroupService(null, null) as jest.Mocked<CategoryGroupService>
+
+export const createMockIncentiveLevelGroupService = () =>
+  new IncentiveLevelGroupService(null, null) as jest.Mocked<IncentiveLevelGroupService>
 
 export const createMockLocationGroupService = () =>
   new LocationGroupService(null, null) as jest.Mocked<LocationGroupService>
