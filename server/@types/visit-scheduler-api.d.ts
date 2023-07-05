@@ -132,14 +132,14 @@ export interface paths {
      */
     put: operations['deActivatePrison']
   }
-  '/admin/prisons/prison/{prisonCode}/exclude-dates/add/{excludeDate}': {
+  '/admin/prisons/prison/{prisonCode}/exclude-date/add': {
     /**
      * Add exclude date to a prison.
      * @description Add exclude date to a prison.
      */
     put: operations['addPrisonExcludeDate']
   }
-  '/admin/prisons/prison/{prisonCode}/exclude-dates/remove/{excludeDate}': {
+  '/admin/prisons/prison/{prisonCode}/exclude-date/remove': {
     /**
      * Remove exclude date from a prison.
      * @description Remove exclude date from a prison.
@@ -655,6 +655,14 @@ export interface components {
       code: string
       /** @description exclude dates */
       excludeDates: string[]
+    }
+    /** @description Prison exclude date */
+    PrisonExcludeDateDto: {
+      /**
+       * Format: date
+       * @description exclude date
+       */
+      excludeDate: string
     }
     PurgeQueueResult: {
       /** Format: int32 */
@@ -1936,12 +1944,20 @@ export interface operations {
        */
       path: {
         prisonCode: string
-        excludeDate: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonExcludeDateDto']
       }
     }
     responses: {
       /** @description successfully added exclude date to a prison */
-      200: never
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonDto']
+        }
+      }
       /** @description exclude date  provided already exists for prison or prison can't be found */
       400: {
         content: {
@@ -1974,7 +1990,11 @@ export interface operations {
        */
       path: {
         prisonCode: string
-        excludeDate: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonExcludeDateDto']
       }
     }
     responses: {
