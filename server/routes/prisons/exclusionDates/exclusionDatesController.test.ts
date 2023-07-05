@@ -4,7 +4,7 @@ import * as cheerio from 'cheerio'
 import { FieldValidationError } from 'express-validator'
 
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
-import { createMockPrisonService, createMockSessionTemplateService } from '../../../services/testutils/mocks'
+import { createMockPrisonService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import { FlashErrorMessage } from '../../../@types/visits-admin'
 
