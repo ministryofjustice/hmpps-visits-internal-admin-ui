@@ -33,6 +33,13 @@ export default class SessionTemplateService {
     return visitSchedulerApiClient.deactivateSessionTemplate(reference)
   }
 
+  async deleteSessionTemplate(username: string, reference: string): Promise<void> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    return visitSchedulerApiClient.deleteSessionTemplate(reference)
+  }
+
   async getSingleSessionTemplate(username: string, reference: string): Promise<SessionTemplate> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)

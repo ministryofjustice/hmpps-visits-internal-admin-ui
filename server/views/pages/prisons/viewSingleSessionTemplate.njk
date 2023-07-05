@@ -235,6 +235,19 @@
         })}}
       </form>
 
+      <h2 class="govuk-heading-m">Delete session template</h2>
+      <form action="/prisons/{{ sessionTemplate.prisonId }}/session-templates/{{ sessionTemplate.reference }}/delete" data-test="template-delete-form" method="POST" novalidate>
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukButton({
+          text: "Delete" | capitalize,
+          classes: "govuk-button--warning",
+          preventDoubleClick: true,
+          attributes: { "data-test": "session-template-delete-button" }
+        })}}
+      </form>
+
     </div>
   </div>
 {% endblock %}
