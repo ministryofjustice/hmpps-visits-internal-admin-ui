@@ -6,6 +6,8 @@ import exclusionDatesRoutes from './exclusionDates'
 import prisonStatusRoutes from './prisonStatus'
 import sessionTemplatesRoutes from './sessionTemplates'
 import locationGroupsRoutes from './locationGroups'
+import categoryGroupsRoutes from './categoryGroups'
+import incentiveLevelGroupsRoutes from './incentiveLevelGroups'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -18,9 +20,11 @@ export default function routes(services: Services): Router {
   get('/prisons', supportedPrisons.view())
   post('/prisons', supportedPrisons.addPrison())
   router.use(exclusionDatesRoutes(services))
+  router.use(categoryGroupsRoutes(services))
   router.use(locationGroupsRoutes(services))
   router.use(prisonStatusRoutes(services))
   router.use(sessionTemplatesRoutes(services))
+  router.use(incentiveLevelGroupsRoutes(services))
 
   return router
 }

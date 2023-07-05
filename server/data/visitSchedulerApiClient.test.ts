@@ -195,4 +195,52 @@ describe('visitSchedulerApiClient', () => {
       expect(output).toEqual(createSessionTemplateDto)
     })
   })
+
+  describe('getLocationGroups', () => {
+    it('should return all location groups for a prison', async () => {
+      const prisonCode = 'HEI'
+      const locationGroups = [TestData.locationGroup()]
+
+      fakeVisitSchedulerApi
+        .get(`/admin/location-groups/${prisonCode}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, locationGroups)
+
+      const output = await visitSchedulerApiClient.getLocationGroups('HEI')
+
+      expect(output).toEqual(locationGroups)
+    })
+  })
+
+  describe('getCategoryGroups', () => {
+    it('should return all category groups for a prison', async () => {
+      const prisonCode = 'HEI'
+      const categoryGroups = [TestData.categoryGroup()]
+
+      fakeVisitSchedulerApi
+        .get(`/admin/category-groups/${prisonCode}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, categoryGroups)
+
+      const output = await visitSchedulerApiClient.getCategoryGroups('HEI')
+
+      expect(output).toEqual(categoryGroups)
+    })
+  })
+
+  describe('getIncentiveLevelGroups', () => {
+    it('should return all incentive level groups for a prison', async () => {
+      const prisonCode = 'HEI'
+      const incentiveGroups = [TestData.incentiveLevelGroup()]
+
+      fakeVisitSchedulerApi
+        .get(`/admin/incentive-groups/${prisonCode}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, incentiveGroups)
+
+      const output = await visitSchedulerApiClient.getIncentiveLevelGroups('HEI')
+
+      expect(output).toEqual(incentiveGroups)
+    })
+  })
 })

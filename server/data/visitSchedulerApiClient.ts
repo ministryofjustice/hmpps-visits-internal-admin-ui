@@ -3,9 +3,11 @@ import config from '../config'
 import {
   CreateSessionTemplateDto,
   Prison,
-  SessionLocationGroup,
+  CategoryGroup,
+  LocationGroup,
   SessionTemplate,
   SessionTemplatesRangeType,
+  IncentiveLevelGroup,
 } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
@@ -68,7 +70,7 @@ export default class VisitSchedulerApiClient {
     })
   }
 
-  // Session template controller`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+  // Session template
   async getSessionTemplates(prisonCode: string, rangeType: SessionTemplatesRangeType): Promise<SessionTemplate[]> {
     return this.restClient.get({
       path: `/admin/session-templates`,
@@ -97,6 +99,12 @@ export default class VisitSchedulerApiClient {
     })
   }
 
+  async deleteSessionTemplate(reference: string): Promise<void> {
+    return this.restClient.delete({
+      path: `/admin/session-templates/template/${reference}`,
+    })
+  }
+
   async createSessionTemplate(createSessionTemplateDto: CreateSessionTemplateDto): Promise<SessionTemplate> {
     return this.restClient.post({
       path: `/admin/session-templates/template`,
@@ -104,9 +112,24 @@ export default class VisitSchedulerApiClient {
     })
   }
 
-  async getLocationGroups(prisonCode: string): Promise<SessionLocationGroup> {
+  // Location groups
+  async getLocationGroups(prisonCode: string): Promise<LocationGroup[]> {
     return this.restClient.get({
       path: `/admin/location-groups/${prisonCode}`,
+    })
+  }
+
+  // Category groups
+  async getCategoryGroups(prisonCode: string): Promise<CategoryGroup[]> {
+    return this.restClient.get({
+      path: `/admin/category-groups/${prisonCode}`,
+    })
+  }
+
+  // Incentive level groups
+  async getIncentiveLevelGroups(prisonCode: string): Promise<IncentiveLevelGroup[]> {
+    return this.restClient.get({
+      path: `/admin/incentive-groups/${prisonCode}`,
     })
   }
 }
