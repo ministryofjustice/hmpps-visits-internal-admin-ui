@@ -158,4 +158,31 @@ export default {
       },
     })
   },
+
+  stubDeleteSessionTemplate: ({ sessionTemplate }: { sessionTemplate: SessionTemplate }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'DELETE',
+        url: `/visitScheduler/admin/session-templates/template/${sessionTemplate.reference}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: 'session template deleted',
+      },
+    })
+  },
+
+  stubDeleteSessionTemplateFailure: ({ sessionTemplate }: { sessionTemplate: SessionTemplate }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'DELETE',
+        url: `/visitScheduler/admin/session-templates/template/${sessionTemplate.reference}`,
+      },
+      response: {
+        status: 400,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    })
+  },
 }

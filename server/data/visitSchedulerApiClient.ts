@@ -79,6 +79,12 @@ export default class VisitSchedulerApiClient {
     })
   }
 
+  async deleteSessionTemplate(reference: string): Promise<void> {
+    return this.restClient.delete({
+      path: `/admin/session-templates/template/${reference}`,
+    })
+  }
+
   async createSessionTemplate(createSessionTemplateDto: CreateSessionTemplateDto): Promise<SessionTemplate> {
     return this.restClient.post({
       path: `/admin/session-templates/template`,
