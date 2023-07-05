@@ -244,8 +244,13 @@
           text: "Delete" | capitalize,
           classes: "govuk-button--warning",
           preventDoubleClick: true,
+          disabled: (sessionTemplate.active),
           attributes: { "data-test": "session-template-delete-button" }
         })}}
+
+        {% if sessionTemplate.active %}
+          <p>You cannot delete an active template.</p>
+        {% endif %}
       </form>
 
     </div>
