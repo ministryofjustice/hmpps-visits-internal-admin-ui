@@ -1,16 +1,16 @@
 import { RestClientBuilder, VisitSchedulerApiClient, HmppsAuthClient } from '../data'
-import { SessionLocationGroup } from '../data/visitSchedulerApiTypes'
+import { CategoryGroup } from '../data/visitSchedulerApiTypes'
 
-export default class LocationGroupsService {
+export default class CategoryGroupService {
   constructor(
     private readonly visitSchedulerApiClientFactory: RestClientBuilder<VisitSchedulerApiClient>,
     private readonly hmppsAuthClient: HmppsAuthClient,
   ) {}
 
-  async getLocationGroups(username: string, prisonCode: string): Promise<SessionLocationGroup> {
+  async getCategoryGroups(username: string, prisonCode: string): Promise<CategoryGroup[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
-    return visitSchedulerApiClient.getLocationGroups(prisonCode)
+    return visitSchedulerApiClient.getCategoryGroups(prisonCode)
   }
 }
