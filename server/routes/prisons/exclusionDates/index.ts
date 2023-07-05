@@ -1,5 +1,5 @@
 import { RequestHandler, Router } from 'express'
-import { Services, SessionTemplateService } from '../../../services'
+import { Services } from '../../../services'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import ExclusionDatesController from './exclusionDatesController'
 

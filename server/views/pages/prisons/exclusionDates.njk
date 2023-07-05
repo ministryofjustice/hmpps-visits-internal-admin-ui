@@ -55,7 +55,8 @@
             html: govukButton({
               text: 'Remove',
               value: excludeDate[1],
-              name: 'excludeDate'
+              name: 'excludeDate',
+              attributes: { "data-test": "remove-date-button" }
             }),
             attributes: { "data-test": "exclude-date-row" }
           }

@@ -106,9 +106,10 @@ describe('visitSchedulerApiClient', () => {
   describe('addExcludedDate', () => {
     it('should return prison including the excluded date', async () => {
       const prison = TestData.prison({ excludeDates: ['2023-12-25', '2023-12-26'] })
+      const excludeDate = '2023-12-26'
 
       fakeVisitSchedulerApi
-        .put(`/admin/prisons/prison/${prison.code}/exclude-date/add`)
+        .put(`/admin/prisons/prison/${prison.code}/exclude-date/add`, { excludeDate })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, prison)
 
@@ -121,15 +122,16 @@ describe('visitSchedulerApiClient', () => {
   describe('removeExcludedDate', () => {
     it('should return prison without the date excluded', async () => {
       const prison = TestData.prison({ excludeDates: ['2023-12-25', '2023-12-26'] })
+      const excludeDate = '2023-12-26'
 
       fakeVisitSchedulerApi
-        .put(`/admin/prisons/prison/${prison.code}/exclude-date/remove`)
+        .put(`/admin/prisons/prison/${prison.code}/exclude-date/remove`, { excludeDate })
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, prison)
+        .reply(200, { ...prison, excludeDates: ['2023-12-25'] })
 
-      const output = await visitSchedulerApiClient.removeExcludeDate(prison.code, '2023-12-27')
+      const output = await visitSchedulerApiClient.removeExcludeDate(prison.code, '2023-12-26')
 
-      expect(output).toEqual(prison)
+      expect(output).toMatchObject({ excludeDates: ['2023-12-25'] })
     })
   })
 

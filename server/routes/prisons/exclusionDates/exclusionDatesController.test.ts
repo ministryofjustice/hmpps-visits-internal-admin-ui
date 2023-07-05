@@ -12,7 +12,6 @@ let app: Express
 let flashData: Record<string, string | FlashErrorMessage>
 
 const prisonService = createMockPrisonService()
-const sessionTemplateService = createMockSessionTemplateService()
 
 const prisonNames = TestData.prisonNames()
 const excludeDates = ['2023-12-25', '2024-12-25']
@@ -23,10 +22,10 @@ const prisonName = prisonNames[prison.code]
 beforeEach(() => {
   flashData = {}
   flashProvider.mockImplementation(key => flashData[key])
-
   prisonService.getPrison.mockResolvedValue({ prison, prisonName })
-
-  app = appWithAllRoutes({ services: { prisonService, sessionTemplateService } })
+  prisonService.addExcludeDate.mockResolvedValue(prisonWithExcludeDates)
+  prisonService.removeExcludeDate.mockResolvedValue(prisonWithExcludeDates)
+  app = appWithAllRoutes({ services: { prisonService } })
 })
 
 afterEach(() => {
@@ -34,7 +33,7 @@ afterEach(() => {
 })
 
 describe('Show excluded dates', () => {
-  it('GET /prisons/{:prisonId}/exclusion-dates', () => {
+  it('GET /prisons/{:prisonId}/exclusion-dates when prison dont have exclued dates', () => {
     return request(app)
       .get(`/prisons/${prison.code}/exclusion-dates`)
       .expect('Content-Type', /html/)
@@ -44,9 +43,31 @@ describe('Show excluded dates', () => {
         expect($('h1').text().trim()).toBe('Exclusion dates')
         expect($('.moj-banner__message').length).toBe(0)
         expect($('.govuk-error-summary').length).toBe(0)
+        expect($('[data-test="remove-date-button"]').length).toBe(0)
+        expect($('.govuk-body').text()).toContain('No existing dates to exclude')
       })
   })
 
+  it('GET /prisons/{:prisonId}/exclusion-dates when prison has excluded dates', () => {
+    prisonService.getPrison.mockResolvedValue({ prison: prisonWithExcludeDates, prisonName })
+
+    return request(app)
+      .get(`/prisons/${prison.code}/exclusion-dates`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('.moj-primary-navigation__item').length).toBe(2)
+        expect($('h1').text().trim()).toBe('Exclusion dates')
+        expect($('.moj-banner__message').length).toBe(0)
+        expect($('.govuk-error-summary').length).toBe(0)
+
+        expect($('[data-test="excluded-date"]').eq(0).text()).toBe('25 December 2023')
+        expect($('[data-test="remove-date-button"]').eq(0).text()).toContain('Remove')
+      })
+  })
+})
+
+describe('Add / Remove excluded date', () => {
   it('should render date added status message set in flash', () => {
     flashData = {
       message: `2024-12-25 has been successfully added.`,
@@ -82,13 +103,7 @@ describe('Show excluded dates', () => {
         expect($('.govuk-error-summary').text()).toContain(error.msg)
       })
   })
-})
 
-describe('Add / Remove excluded date', () => {
-  beforeEach(() => {
-    prisonService.addExcludeDate.mockResolvedValue(prisonWithExcludeDates)
-    prisonService.removeExcludeDate.mockResolvedValue(prisonWithExcludeDates)
-  })
   describe('Add date to excluded dates', () => {
     it('POST /prisons/{:prisonId}/exclusion-dates', () => {
       const date = '2023-12-26'
