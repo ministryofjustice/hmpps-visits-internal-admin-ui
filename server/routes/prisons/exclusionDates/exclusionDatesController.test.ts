@@ -1,4 +1,8 @@
 import type { Express } from 'express'
+import request from 'supertest'
+import * as cheerio from 'cheerio'
+import { FieldValidationError } from 'express-validator'
+
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockSessionTemplateService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
@@ -11,7 +15,9 @@ const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
 
 const prisonNames = TestData.prisonNames()
+const excludeDates = ['2023-12-25', '2024-12-25']
 const prison = TestData.prison()
+const prisonWithExcludeDates = TestData.prison({ excludeDates })
 const prisonName = prisonNames[prison.code]
 
 beforeEach(() => {
@@ -27,26 +33,94 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
+describe('Show excluded dates', () => {
+  it('GET /prisons/{:prisonId}/exclusion-dates', () => {
+    return request(app)
+      .get(`/prisons/${prison.code}/exclusion-dates`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('.moj-primary-navigation__item').length).toBe(2)
+        expect($('h1').text().trim()).toBe('Exclusion dates')
+        expect($('.moj-banner__message').length).toBe(0)
+        expect($('.govuk-error-summary').length).toBe(0)
+      })
+  })
+
+  it('should render date added status message set in flash', () => {
+    flashData = {
+      message: `2024-12-25 has been successfully added.`,
+    }
+
+    return request(app)
+      .get(`/prisons/${prison.code}/exclusion-dates`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('h1').text().trim()).toBe('Exclusion dates')
+        expect($('.moj-banner__message').text()).toBe(`2024-12-25 has been successfully added.`)
+      })
+  })
+
+  it('should render any error messages set in flash', () => {
+    const wrongDate = '2025-13-34'
+    const error: FieldValidationError = {
+      type: 'field',
+      location: 'body',
+      path: 'prisonId',
+      value: 'X',
+      msg: `Failed to add date ${wrongDate}`,
+    }
+    flashData = { errors: [error] }
+
+    return request(app)
+      .get(`/prisons/${prison.code}/exclusion-dates`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('h1').text().trim()).toBe('Exclusion dates')
+        expect($('.govuk-error-summary').text()).toContain(error.msg)
+      })
+  })
+})
+
 describe('Add / Remove excluded date', () => {
-  describe('Show excluded dates', () => {
-    it('should render the list of excluded dates', () => {
-      expect({}).toEqual({})
-    })
+  beforeEach(() => {
+    prisonService.addExcludeDate.mockResolvedValue(prisonWithExcludeDates)
+    prisonService.removeExcludeDate.mockResolvedValue(prisonWithExcludeDates)
+  })
+  describe('Add date to excluded dates', () => {
+    it('POST /prisons/{:prisonId}/exclusion-dates', () => {
+      const date = '2023-12-26'
+      const body = { 'exclude-date-year': '2023', 'exclude-date-month': '12', 'exclude-date-day': '26' }
 
-    it('should render date added status message set in flash', () => {
-      expect({}).toEqual({})
-    })
-
-    it('should render any error messages set in flash', () => {
-      expect({}).toEqual({})
+      return request(app)
+        .post(`/prisons/${prison.code}/exclude-date/add`)
+        .send(body)
+        .expect(302)
+        .expect('location', `/prisons/${prison.code}/exclusion-dates`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('message', `${date} has been successfully added.`)
+          expect(prisonService.addExcludeDate).toHaveBeenCalledTimes(1)
+          expect(prisonService.addExcludeDate).toHaveBeenCalledWith('user1', prison.code, date)
+        })
     })
   })
 
-  describe('Add an excluded date', () => {
-    expect({}).toEqual({})
-  })
+  describe('Remove date from excluded dates', () => {
+    it('POST /prisons/{:prisonId}/exclusion-dates/remove', () => {
+      const date = '2023-12-26'
 
-  describe('Remove an excluded date', () => {
-    expect({}).toEqual({})
+      return request(app)
+        .post(`/prisons/${prison.code}/exclude-date/remove`)
+        .send({ excludeDate: date })
+        .expect(302)
+        .expect('location', `/prisons/${prison.code}/exclusion-dates`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('message', `${date} has been successfully removed.`)
+          expect(prisonService.removeExcludeDate).toHaveBeenCalledTimes(1)
+          expect(prisonService.removeExcludeDate).toHaveBeenCalledWith('user1', prison.code, date)
+        })
+    })
   })
 })
