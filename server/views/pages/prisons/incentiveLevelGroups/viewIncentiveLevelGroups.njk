@@ -1,0 +1,112 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+
+{% set pageHeaderTitle = prisonName %}
+{% set pageTitle = applicationName + " - Incentive level groups - " + pageHeaderTitle %}
+
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+] %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <h1 class="govuk-heading-l">
+        <span>{{ pageHeaderTitle }}</span>
+      </h1>
+
+      <p>This prison is currently
+        {{ govukTag({
+          text: "active" if prison.active else "inactive",
+          classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
+          attributes: { "data-test": "prison-status" }
+        }) }}
+      </p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {{ mojSubNavigation({
+        label: "Sub navigation",
+        classes: "govuk-!-margin-top-3",
+        items: [{
+          text: "Session templates",
+          href: "/prisons/" + prison.code + "/session-templates"
+        }, {
+          text: "Exclusion dates",
+          href: "/prisons/" + prison.code + "/exclusion-dates"
+        }, {
+          text: "Category groups",
+          href: "/prisons/" + prison.code + "/category-groups"
+        }, {
+          text: "Incentive level groups",
+          href: "/prisons/" + prison.code + "/incentive-groups",
+          active: true
+        }, {
+          text: "Location groups",
+          href: "/prisons/" + prison.code + "/location-groups"
+        }, {
+          text: "Status",
+          href: "/prisons/" + prison.code + "/status",
+          attributes: { "data-test": "tab-status" }
+        }]
+      }) }}
+
+      {{ mojPageHeaderActions({
+        heading: {
+          text: 'Incentive level groups',
+          level: 2,
+          classes: 'govuk-heading-m'
+        },
+        items: [{
+          text: 'Add incentive level group',
+          href: "/prisons/" + prison.code + "/incentive-groups/add"
+        }]
+      }) }}
+
+      {# Build rows of incentive level groups #}
+      {% set rows = [] %}
+      {% for incentiveLevelGroup in incentiveLevelGroups %}
+        {% set rows = (rows.push([
+        {
+          html: '<a href="/prisons/' + prison.code + '/incentive-groups/' + incentiveLevelGroup.reference + '">' + incentiveLevelGroup.name + "</a>"
+        },
+        {
+          html: '<ul class="govuk-list govuk-list--bullet"><li>' + (incentiveLevelGroup.incentiveLevels | join('</li><li>')) + '</li></ul>'
+        }
+        ]), rows) %}
+      {% endfor %}
+
+      {% if rows | length %}
+        {{ govukTable({
+          head: [
+            {
+              text: "Name"
+            },
+            {
+              text: "Categories"
+            }
+          ],
+          rows: rows
+        }) }}
+      {% else %}
+        <p>There are no incentive level groups for this prison.</p>
+      {% endif %}
+        
+    </div>
+  </div>
+{% endblock %}

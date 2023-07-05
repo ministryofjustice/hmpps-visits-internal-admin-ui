@@ -195,4 +195,20 @@ describe('visitSchedulerApiClient', () => {
       expect(output).toEqual(categoryGroups)
     })
   })
+
+  describe('getIncentiveLevelGroups', () => {
+    it('should return all incentive level groups for a prison', async () => {
+      const prisonCode = 'HEI'
+      const incentiveGroups = [TestData.incentiveLevelGroup()]
+
+      fakeVisitSchedulerApi
+        .get(`/admin/incentive-groups/${prisonCode}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, incentiveGroups)
+
+      const output = await visitSchedulerApiClient.getIncentiveLevelGroups('HEI')
+
+      expect(output).toEqual(incentiveGroups)
+    })
+  })
 })

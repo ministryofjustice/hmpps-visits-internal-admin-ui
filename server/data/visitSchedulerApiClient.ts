@@ -7,6 +7,7 @@ import {
   LocationGroup,
   SessionTemplate,
   SessionTemplatesRangeType,
+  IncentiveLevelGroup,
 } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
@@ -104,6 +105,13 @@ export default class VisitSchedulerApiClient {
   async getCategoryGroups(prisonCode: string): Promise<CategoryGroup[]> {
     return this.restClient.get({
       path: `/admin/category-groups/${prisonCode}`,
+    })
+  }
+
+  // Incentive level groups
+  async getIncentiveLevelGroups(prisonCode: string): Promise<IncentiveLevelGroup[]> {
+    return this.restClient.get({
+      path: `/admin/incentive-groups/${prisonCode}`,
     })
   }
 }
