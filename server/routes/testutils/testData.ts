@@ -5,6 +5,7 @@ import {
   SessionTemplate,
   CreateSessionTemplateDto,
   LocationGroup,
+  IncentiveLevelGroup,
 } from '../../data/visitSchedulerApiTypes'
 
 export default class TestData {
@@ -122,4 +123,10 @@ export default class TestData {
     reference = '-afe~dcb~fb',
     categories = ['A_HIGH'],
   }: Partial<CategoryGroup> = {}): CategoryGroup => ({ name, reference, categories })
+
+  static incentiveLevelGroup = ({
+    name = 'Enhanced prisoners',
+    reference = '-afe~dcb~fc',
+    incentiveLevels = ['ENHANCED'],
+  }: Partial<IncentiveLevelGroup> = {}): IncentiveLevelGroup => ({ name, reference, incentiveLevels })
 }

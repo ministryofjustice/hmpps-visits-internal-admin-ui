@@ -3,6 +3,9 @@ import { components, operations } from '../@types/visit-scheduler-api'
 // Category groups
 export type CategoryGroup = components['schemas']['SessionCategoryGroupDto']
 
+// Incentive groups
+export type IncentiveLevelGroup = components['schemas']['SessionIncentiveLevelGroupDto']
+
 // Location groups
 export type LocationGroup = components['schemas']['SessionLocationGroupDto']
 
