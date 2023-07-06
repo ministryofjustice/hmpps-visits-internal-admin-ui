@@ -107,7 +107,7 @@ describe('Add / Remove excluded date', () => {
   describe('Add date to excluded dates', () => {
     it('POST /prisons/{:prisonId}/exclusion-dates', () => {
       const date = '2023-12-26'
-      const body = { 'exclude-date-year': '2023', 'exclude-date-month': '12', 'exclude-date-day': '26' }
+      const body = { validExcludeDate: { year: '2023', month: '12', day: '26' } }
 
       return request(app)
         .post(`/prisons/${prison.code}/exclude-date/add`)

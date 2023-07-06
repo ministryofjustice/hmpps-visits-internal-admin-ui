@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express'
+import { ValidationChain, body, validationResult } from 'express-validator'
 import { format } from 'date-fns'
 import { PrisonService } from '../../../services'
 
@@ -25,16 +26,24 @@ export default class ExclusionDatesController {
   public addDate(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
-      const date = `${req.body['exclude-date-year']}-${req.body['exclude-date-month']}-${req.body['exclude-date-day']}`
+      const originalUrl = `/prisons/${prisonId}/exclusion-dates`
+      const errors = validationResult(req)
 
-      try {
-        await this.prisonService.addExcludeDate(res.locals.user.username, prisonId, date)
-        req.flash('message', `${date} has been successfully added.`)
-      } catch (error) {
-        req.flash('errors', [{ msg: `Failed to add date ${date}` }])
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array())
+        return res.redirect(originalUrl)
       }
 
-      return res.redirect(`/prisons/${prisonId}/exclusion-dates`)
+      const { validExcludeDate } = req.body
+
+      try {
+        await this.prisonService.addExcludeDate(res.locals.user.username, prisonId, validExcludeDate)
+        req.flash('message', `${validExcludeDate} has been successfully added.`)
+      } catch (error) {
+        req.flash('errors', [{ msg: `Failed to add date ${validExcludeDate}` }])
+      }
+
+      return res.redirect(originalUrl)
     }
   }
 
@@ -52,5 +61,16 @@ export default class ExclusionDatesController {
 
       return res.redirect(`/prisons/${prisonId}/exclusion-dates`)
     }
+  }
+
+  public validate(): ValidationChain[] {
+    return [
+      body('validExcludeDate.*').trim().toInt(),
+      body('validExcludeDate')
+        .customSanitizer(date => {
+          return `${date.year}-${date.month.toString().padStart(2, '0')}-${date.day.toString().padStart(2, '0')}`
+        })
+        .isDate({ format: 'YYYY-MM-DD', strictMode: true }),
+    ]
   }
 }

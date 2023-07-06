@@ -86,7 +86,6 @@
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             {{ govukDateInput({
                   id: "excludeDate",
-                  namePrefix: "exclude-date",
                   fieldset: {
                     legend: {
                       text: "Add exclusion date",
@@ -99,19 +98,19 @@
                   items: [
                     {
                       label: "Day",
-                      name: "day",
+                      name: "validExcludeDate[day]",
                       classes: "govuk-input--width-2",
                       autocomplete: "off"
                     },
                     {
                       label: "Month",
-                      name: "month",
+                      name: "validExcludeDate[month]",
                       classes: "govuk-input--width-2",
                       autocomplete: "off"
                     },
                     {
                       label: "Year",
-                      name: "year",
+                      name: "validExcludeDate[year]",
                       classes: "govuk-input--width-4",
                       autocomplete: "off"
                     }
