@@ -24,7 +24,7 @@ beforeEach(() => {
   flashProvider.mockImplementation(key => flashData[key])
   prisonService.getPrison.mockResolvedValue({ prison, prisonName })
   prisonService.addExcludeDate.mockResolvedValue(prisonWithExcludeDates)
-  prisonService.removeExcludeDate.mockResolvedValue(prisonWithExcludeDates)
+  prisonService.removeExcludeDate.mockResolvedValue()
   app = appWithAllRoutes({ services: { prisonService } })
 })
 

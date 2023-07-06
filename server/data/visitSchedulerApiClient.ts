@@ -61,8 +61,8 @@ export default class VisitSchedulerApiClient {
     })
   }
 
-  async removeExcludeDate(prisonCode: string, excludeDate: string): Promise<Prison> {
-    return this.restClient.put({
+  async removeExcludeDate(prisonCode: string, excludeDate: string): Promise<void> {
+    await this.restClient.put({
       path: `/admin/prisons/prison/${prisonCode}/exclude-date/remove`,
       data: {
         excludeDate,
