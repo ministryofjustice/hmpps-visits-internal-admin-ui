@@ -1,4 +1,4 @@
-{% extends "../../partials/layout.njk" %}
+{% extends "partials/layout.njk" %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
@@ -53,8 +53,8 @@
           text: "Session templates",
           href: "/prisons/" + prison.code + "/session-templates"
         }, {
-          text: "Exclusion dates",
-          href: "/prisons/" + prison.code + "/exclusion-dates",
+          text: "Excluded dates",
+          href: "/prisons/" + prison.code + "/excluded-dates",
           active: true
         }, {
           text: "Category groups",
@@ -88,7 +88,7 @@
 
       {{ mojPageHeaderActions({
         heading: {
-          text: 'Exclusion dates',
+          text: 'Excluded dates',
           level: 2,
           classes: 'govuk-heading-m'
         },
@@ -116,7 +116,7 @@
           }
           ]), excludeDateRows) %}
         {%- endfor %}
-        <form action="/prisons/{{ prisonId }}/exclude-date/remove" method="POST" novalidate>
+        <form action="/prisons/{{ prisonId }}/excluded-dates/remove" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             {{ govukTable({
             classes: "govuk-!-width-three-quarters",
@@ -136,13 +136,13 @@
             No existing dates to exclude
           </p>
         {% endif %}
-        <form action="/prisons/{{ prisonId }}/exclude-date/add" method="POST" novalidate>
+        <form action="/prisons/{{ prisonId }}/excluded-dates/add" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             {{ govukDateInput({
                   id: "excludeDate",
                   fieldset: {
                     legend: {
-                      text: "Add exclusion date",
+                      text: "Add an exclude date",
                       classes: "govuk-fieldset__legend--m"
                     }
                   },

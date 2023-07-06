@@ -3,7 +3,7 @@ import { ValidationChain, body, validationResult } from 'express-validator'
 import { format } from 'date-fns'
 import { PrisonService } from '../../../services'
 
-export default class ExclusionDatesController {
+export default class ExcludedDatesController {
   public constructor(private readonly prisonService: PrisonService) {}
 
   public view(): RequestHandler {
@@ -13,7 +13,7 @@ export default class ExclusionDatesController {
       const excludeDates = prison.excludeDates.map(d => [format(new Date(d), 'd MMMM yyyy'), d])
 
       const message = req.flash('message')
-      res.render('pages/prisons/exclusionDates', {
+      res.render('pages/prisons/excludedDates/viewExcludedDates', {
         errors: req.flash('errors'),
         prisonId,
         prisonName,
@@ -27,7 +27,7 @@ export default class ExclusionDatesController {
   public addDate(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
-      const originalUrl = `/prisons/${prisonId}/exclusion-dates`
+      const originalUrl = `/prisons/${prisonId}/excluded-dates`
       const errors = validationResult(req)
 
       if (!errors.isEmpty()) {
@@ -60,7 +60,7 @@ export default class ExclusionDatesController {
         req.flash('errors', [{ msg: `Failed to remove date ${date}` }])
       }
 
-      return res.redirect(`/prisons/${prisonId}/exclusion-dates`)
+      return res.redirect(`/prisons/${prisonId}/excluded-dates`)
     }
   }
 
