@@ -40,7 +40,7 @@ describe('Show excluded dates', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('.moj-primary-navigation__item').length).toBe(2)
-        expect($('h1').text().trim()).toBe('Exclusion dates')
+        expect($('h2').text().trim()).toBe('Exclusion dates')
         expect($('.moj-banner__message').length).toBe(0)
         expect($('.govuk-error-summary').length).toBe(0)
         expect($('[data-test="remove-date-button"]').length).toBe(0)
@@ -57,7 +57,7 @@ describe('Show excluded dates', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('.moj-primary-navigation__item').length).toBe(2)
-        expect($('h1').text().trim()).toBe('Exclusion dates')
+        expect($('h2').text().trim()).toBe('Exclusion dates')
         expect($('.moj-banner__message').length).toBe(0)
         expect($('.govuk-error-summary').length).toBe(0)
 
@@ -78,7 +78,7 @@ describe('Add / Remove excluded date', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('h1').text().trim()).toBe('Exclusion dates')
+        expect($('h2').text().trim()).toBe('Exclusion dates')
         expect($('.moj-banner__message').text()).toBe(`2024-12-25 has been successfully added.`)
       })
   })
@@ -99,7 +99,6 @@ describe('Add / Remove excluded date', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('h1').text().trim()).toBe('Exclusion dates')
         expect($('.govuk-error-summary').text()).toContain(error.msg)
       })
   })

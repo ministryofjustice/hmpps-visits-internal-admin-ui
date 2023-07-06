@@ -17,6 +17,7 @@ export default class ExclusionDatesController {
         errors: req.flash('errors'),
         prisonId,
         prisonName,
+        prison,
         excludeDates,
         message,
       })
