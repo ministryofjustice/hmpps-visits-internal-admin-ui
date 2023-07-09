@@ -1,4 +1,4 @@
-import { convertToTitleCase, initialiseName } from './utils'
+import { convertToTitleCase, formatDate, initialiseName } from './utils'
 
 describe('convert to title case', () => {
   it.each([
@@ -26,5 +26,17 @@ describe('initialise name', () => {
     ['Double barrelled', 'Robert-John Smith-Jones-Wilson', 'R. Smith-Jones-Wilson'],
   ])('%s initialiseName(%s, %s)', (_: string, a: string, expected: string) => {
     expect(initialiseName(a)).toEqual(expected)
+  })
+})
+
+describe('format a date', () => {
+  it.each([
+    ['Default format (date/time input)', '2022-02-14T10:00:00', undefined, '14 February 2022'],
+    ['Default format (short date input)', '2022-02-14', undefined, '14 February 2022'],
+    ['Custom format', '2022-02-14T10:00:00', 'yy MMM d', '22 Feb 14'],
+    ['Invalid date', 'not a date', undefined, null],
+    ['Invalid format', '2022-02-14T10:00:00', '', null],
+  ])('%s formatDate(%s, %s) = %s', (_: string, date: string, format: string, expected: string) => {
+    expect(formatDate(date, format)).toEqual(expected)
   })
 })
