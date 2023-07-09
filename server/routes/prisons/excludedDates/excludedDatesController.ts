@@ -1,6 +1,5 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { format } from 'date-fns'
 import { PrisonService } from '../../../services'
 
 export default class ExcludedDatesController {
@@ -10,16 +9,13 @@ export default class ExcludedDatesController {
     return async (req, res) => {
       const { prisonId } = req.params
       const { prisonName, prison } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
-      const excludeDates = prison.excludeDates.map(d => [format(new Date(d), 'd MMMM yyyy'), d])
 
-      const message = req.flash('message')
       res.render('pages/prisons/excludedDates/viewExcludedDates', {
         errors: req.flash('errors'),
         prisonId,
         prisonName,
         prison,
-        excludeDates,
-        message,
+        message: req.flash('message'),
       })
     }
   }
@@ -35,13 +31,13 @@ export default class ExcludedDatesController {
         return res.redirect(originalUrl)
       }
 
-      const { validExcludeDate } = req.body
+      const { excludeDate } = req.body
 
       try {
-        await this.prisonService.addExcludeDate(res.locals.user.username, prisonId, validExcludeDate)
-        req.flash('message', `${validExcludeDate} has been successfully added.`)
+        await this.prisonService.addExcludeDate(res.locals.user.username, prisonId, excludeDate)
+        req.flash('message', `${excludeDate} has been successfully added.`)
       } catch (error) {
-        req.flash('errors', [{ msg: `Failed to add date ${validExcludeDate}` }])
+        req.flash('errors', [{ msg: `Failed to add date ${excludeDate}` }])
       }
 
       return res.redirect(originalUrl)
@@ -66,8 +62,8 @@ export default class ExcludedDatesController {
 
   public validate(): ValidationChain[] {
     return [
-      body('validExcludeDate.*').trim().toInt(),
-      body('validExcludeDate')
+      body('excludeDate.*').trim().toInt(),
+      body('excludeDate', 'Enter a valid date')
         .customSanitizer(date => {
           return `${date.year}-${date.month.toString().padStart(2, '0')}-${date.day.toString().padStart(2, '0')}`
         })
