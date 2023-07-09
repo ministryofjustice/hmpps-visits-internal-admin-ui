@@ -33,7 +33,7 @@ afterEach(() => {
 })
 
 describe('Show excluded dates', () => {
-  it('GET /prisons/{:prisonId}/excluded-dates when prison dont have exclued dates', () => {
+  it('GET /prisons/{:prisonId}/excluded-dates - when no exclude dates present', () => {
     return request(app)
       .get(`/prisons/${prison.code}/excluded-dates`)
       .expect('Content-Type', /html/)
@@ -44,11 +44,11 @@ describe('Show excluded dates', () => {
         expect($('.moj-banner__message').length).toBe(0)
         expect($('.govuk-error-summary').length).toBe(0)
         expect($('[data-test="remove-date-button"]').length).toBe(0)
-        expect($('.govuk-body').text()).toContain('No existing dates to exclude')
+        expect($('.govuk-body').text()).toContain('There are no excluded dates for this prison.')
       })
   })
 
-  it('GET /prisons/{:prisonId}/excluded-dates when prison has excluded dates', () => {
+  it('GET /prisons/{:prisonId}/excluded-dates - when prison has excluded dates', () => {
     prisonService.getPrison.mockResolvedValue({ prison: prisonWithExcludeDates, prisonName })
 
     return request(app)
@@ -85,11 +85,8 @@ describe('Add / Remove excluded date', () => {
 
   it('should render any error messages set in flash', () => {
     const wrongDate = '2025-13-34'
-    const error: FieldValidationError = {
-      type: 'field',
-      location: 'body',
+    const error = <FieldValidationError>{
       path: 'prisonId',
-      value: 'X',
       msg: `Failed to add date ${wrongDate}`,
     }
     flashData = { errors: [error] }
@@ -115,7 +112,7 @@ describe('Add / Remove excluded date', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/excluded-dates`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', `${date} has been successfully added.`)
+          expect(flashProvider).toHaveBeenCalledWith('message', `26 December 2023 has been successfully added`)
           expect(prisonService.addExcludeDate).toHaveBeenCalledTimes(1)
           expect(prisonService.addExcludeDate).toHaveBeenCalledWith('user1', prison.code, date)
         })
@@ -132,7 +129,7 @@ describe('Add / Remove excluded date', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/excluded-dates`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', `${date} has been successfully removed.`)
+          expect(flashProvider).toHaveBeenCalledWith('message', `26 December 2023 has been successfully removed`)
           expect(prisonService.removeExcludeDate).toHaveBeenCalledTimes(1)
           expect(prisonService.removeExcludeDate).toHaveBeenCalledWith('user1', prison.code, date)
         })

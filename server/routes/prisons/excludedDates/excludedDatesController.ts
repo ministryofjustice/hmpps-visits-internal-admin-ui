@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService } from '../../../services'
+import { formatDate } from '../../../utils/utils'
 
 export default class ExcludedDatesController {
   public constructor(private readonly prisonService: PrisonService) {}
@@ -32,12 +33,13 @@ export default class ExcludedDatesController {
       }
 
       const { excludeDate } = req.body
+      const excludeDateFormatted = formatDate(excludeDate)
 
       try {
         await this.prisonService.addExcludeDate(res.locals.user.username, prisonId, excludeDate)
-        req.flash('message', `${excludeDate} has been successfully added.`)
+        req.flash('message', `${excludeDateFormatted} has been successfully added`)
       } catch (error) {
-        req.flash('errors', [{ msg: `Failed to add date ${excludeDate}` }])
+        req.flash('errors', [{ msg: `Failed to add date ${excludeDateFormatted}` }])
       }
 
       return res.redirect(originalUrl)
@@ -47,13 +49,15 @@ export default class ExcludedDatesController {
   public removeDate(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
-      const date = req.body.excludeDate
+      const { excludeDate } = req.body
+
+      const excludeDateFormatted = formatDate(excludeDate)
 
       try {
-        await this.prisonService.removeExcludeDate(res.locals.user.username, prisonId, date)
-        req.flash('message', `${date} has been successfully removed.`)
+        await this.prisonService.removeExcludeDate(res.locals.user.username, prisonId, excludeDate)
+        req.flash('message', `${excludeDateFormatted} has been successfully removed`)
       } catch (error) {
-        req.flash('errors', [{ msg: `Failed to remove date ${date}` }])
+        req.flash('errors', [{ msg: `Failed to remove date ${excludeDateFormatted}` }])
       }
 
       return res.redirect(`/prisons/${prisonId}/excluded-dates`)
