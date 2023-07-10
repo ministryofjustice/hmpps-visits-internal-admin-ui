@@ -52,6 +52,24 @@ export default class VisitSchedulerApiClient {
     })
   }
 
+  async addExcludeDate(prisonCode: string, excludeDate: string): Promise<Prison> {
+    return this.restClient.put({
+      path: `/admin/prisons/prison/${prisonCode}/exclude-date/add`,
+      data: {
+        excludeDate,
+      },
+    })
+  }
+
+  async removeExcludeDate(prisonCode: string, excludeDate: string): Promise<void> {
+    await this.restClient.put({
+      path: `/admin/prisons/prison/${prisonCode}/exclude-date/remove`,
+      data: {
+        excludeDate,
+      },
+    })
+  }
+
   // Session template
   async getSessionTemplates(prisonCode: string, rangeType: SessionTemplatesRangeType): Promise<SessionTemplate[]> {
     return this.restClient.get({

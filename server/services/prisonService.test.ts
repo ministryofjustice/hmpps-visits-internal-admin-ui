@@ -115,6 +115,22 @@ describe('Prisons service', () => {
     })
   })
 
+  describe('addExcludeDate', () => {
+    it('should add an exclude date to a prison', async () => {
+      const excludeDate = '2023-07-06'
+      await prisonsService.addExcludeDate('user', prison.code, excludeDate)
+      expect(visitSchedulerApiClient.addExcludeDate).toHaveBeenCalledWith('HEI', excludeDate)
+    })
+  })
+
+  describe('removeExcludeDate', () => {
+    it('should remove an exclude date to a prison', async () => {
+      const excludeDate = '2023-07-06'
+      await prisonsService.removeExcludeDate('user', prison.code, excludeDate)
+      expect(visitSchedulerApiClient.removeExcludeDate).toHaveBeenCalledWith('HEI', excludeDate)
+    })
+  })
+
   describe('API response caching', () => {
     it('should call Prison register API to get all prison names and then use internal cache for subsequent calls', async () => {
       const results = []

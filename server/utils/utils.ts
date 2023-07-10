@@ -1,3 +1,5 @@
+import { format, parseISO } from 'date-fns'
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
 
@@ -20,4 +22,13 @@ export const initialiseName = (fullName?: string): string | null => {
 
   const array = fullName.split(' ')
   return `${array[0][0]}. ${array.reverse()[0]}`
+}
+
+export const formatDate = (dateToFormat: string, dateFormat = 'd MMMM yyyy'): string | null => {
+  if (typeof dateFormat !== 'string') return null
+  try {
+    return dateToFormat ? format(parseISO(dateToFormat), dateFormat) : null
+  } catch (error) {
+    return null
+  }
 }

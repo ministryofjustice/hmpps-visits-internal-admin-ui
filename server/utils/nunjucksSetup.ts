@@ -3,8 +3,7 @@ import nunjucks, { Environment } from 'nunjucks'
 import express from 'express'
 import path from 'path'
 import { FieldValidationError } from 'express-validator'
-import { format, parseISO } from 'date-fns'
-import { initialiseName } from './utils'
+import { formatDate, initialiseName } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 
 const production = process.env.NODE_ENV === 'production'
@@ -69,10 +68,7 @@ export function registerNunjucks(app: express.Express): Environment {
     }
   })
 
-  njkEnv.addFilter('formatDate', (dateToFormat: string, dateFormat = 'd MMMM yyyy') => {
-    if (typeof dateFormat !== 'string') return null
-    return dateToFormat ? format(parseISO(dateToFormat), dateFormat) : null
-  })
+  njkEnv.addFilter('formatDate', formatDate)
 
   njkEnv.addFilter('pluralise', (word, count, plural = `${word}s`) => (count === 1 ? word : plural))
 

@@ -1,0 +1,179 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+{%- from "moj/components/banner/macro.njk" import mojBanner -%}
+
+{% set pageHeaderTitle = prisonName %}
+{% set pageTitle = applicationName + " - Excluded dates - " + pageHeaderTitle %}
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+  ] %}
+{% block content %}
+    <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {% include "partials/errorSummary.njk" %}
+
+      {% if message | length %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {{ mojBanner({
+              type: "success",
+              text: message,
+              iconFallbackText: "Success"
+            }) }}
+          </div>
+        </div>
+      {% endif %}
+
+      <h1 class="govuk-heading-l">
+        <span>{{ pageHeaderTitle }}</span>
+      </h1>
+
+      <p>This prison is currently
+        {{ govukTag({
+          text: "active" if prison.active else "inactive",
+          classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
+          attributes: { "data-test": "prison-status" }
+        }) }}
+      </p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {{ mojSubNavigation({
+        label: "Sub navigation",
+        classes: "govuk-!-margin-top-3",
+        items: [{
+          text: "Session templates",
+          href: "/prisons/" + prison.code + "/session-templates"
+        }, {
+          text: "Excluded dates",
+          href: "/prisons/" + prison.code + "/excluded-dates",
+          active: true
+        }, {
+          text: "Category groups",
+          href: "/prisons/" + prison.code + "/category-groups"
+        }, {
+          text: "Incentive level groups",
+          href: "/prisons/" + prison.code + "/incentive-groups"
+        }, {
+          text: "Location groups",
+          href: "/prisons/" + prison.code + "/location-groups"
+        }, {
+          text: "Status",
+          href: "/prisons/" + prison.code + "/status",
+          attributes: { "data-test": "tab-status" }
+        }]
+      }) }}
+
+      <h2 class="govuk-heading-m">Excluded dates</h2>
+
+      {# Build rows for excluded dates #}
+      {% if prison.excludeDates | length %}
+        {% set excludeDateRows = [] %}
+        {% for excludeDate in prison.excludeDates -%}
+          {% set excludeDateRows = (excludeDateRows.push([
+            {
+              text: excludeDate | formatDate,
+              attributes: { "data-test": "excluded-date" }
+            },
+            {
+              html: govukButton({
+                text: 'Remove',
+                value: excludeDate,
+                name: 'excludeDate',
+                classes: "govuk-button--secondary govuk-!-margin-bottom-0",
+                attributes: { "data-test": "remove-date-button" }
+              }),
+              attributes: { "data-test": "exclude-date-row" }
+            }
+            ]), excludeDateRows) %}
+        {%- endfor %}
+
+        <form action="/prisons/{{ prisonId }}/excluded-dates/remove" method="POST" novalidate>
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+            {{ govukTable({
+              classes: "govuk-!-width-one-half",
+              head: [
+                {
+                  text: "Date"
+                },
+                {
+                  text: "Action",
+                  classes: "govuk-!-width-one-quarter"
+                }
+              ],
+              rows: excludeDateRows
+            }) }}
+        </form>
+
+        {% else %}
+          <p class="govuk-body">
+            There are no excluded dates for this prison.
+          </p>
+        {% endif %}
+
+
+
+        <form action="/prisons/{{ prisonId }}/excluded-dates/add" method="POST" novalidate>
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+            {{ govukDateInput({
+              id: "excludeDate",
+              fieldset: {
+                legend: {
+                  text: "Add an exclude date",
+                  classes: "govuk-fieldset__legend--m"
+                }
+              },
+              hint: {
+                text: "For example, 27 03 2023"
+              },
+              items: [
+                {
+                  label: "Day",
+                  name: "excludeDate[day]",
+                  classes: "govuk-input--width-2",
+                  autocomplete: "off"
+                },
+                {
+                  label: "Month",
+                  name: "excludeDate[month]",
+                  classes: "govuk-input--width-2",
+                  autocomplete: "off"
+                },
+                {
+                  label: "Year",
+                  name: "excludeDate[year]",
+                  classes: "govuk-input--width-4",
+                  autocomplete: "off"
+                }
+              ],
+              errorMessage: errors | findError('excludeDate')
+            }) }}
+
+            {{ govukButton({
+              text: "Add exclude date",
+              preventDoubleClick: true,
+              attributes: { "data-test": "submit" }
+              }) }}
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

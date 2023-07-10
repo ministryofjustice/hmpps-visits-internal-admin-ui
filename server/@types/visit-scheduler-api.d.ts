@@ -408,6 +408,20 @@ export interface components {
        */
       leadVisitorId: number
     }
+    CreateLocationGroupDto: {
+      /** @description list of locations for group */
+      locations: components['schemas']['PermittedSessionLocationDto'][]
+      /**
+       * @description Group name
+       * @example Main group
+       */
+      name: string
+      /**
+       * @description prisonId
+       * @example MDI
+       */
+      prisonId: string
+    }
     CreateSessionTemplateDto: {
       /** @description list of group references for allowed prisoner category groups */
       categoryGroupReferences?: string[]
@@ -723,6 +737,7 @@ export interface components {
        */
       open: number
     }
+    /** @description list of permitted prisoner category groups */
     SessionCategoryGroupDto: {
       /** @description list of allowed prisoner categories for group */
       categories: (
@@ -784,6 +799,7 @@ export interface components {
        */
       reference: string
     }
+    /** @description list of permitted session location groups */
     SessionLocationGroupDto: {
       /** @description list of locations for group */
       locations: components['schemas']['PermittedSessionLocationDto'][]
@@ -915,9 +931,44 @@ export interface components {
        */
       type: string
     }
+    UpdateCategoryGroupDto: {
+      /** @description list of category for group */
+      categories: (
+        | 'A_EXCEPTIONAL'
+        | 'A_HIGH'
+        | 'A_PROVISIONAL'
+        | 'A_STANDARD'
+        | 'B'
+        | 'C'
+        | 'D'
+        | 'YOI_CLOSED'
+        | 'YOI_OPEN'
+        | 'YOI_RESTRICTED'
+        | 'UNSENTENCED'
+        | 'UNCATEGORISED_SENTENCED_MALE'
+        | 'FEMALE_RESTRICTED'
+        | 'FEMALE_CLOSED'
+        | 'FEMALE_SEMI'
+        | 'FEMALE_OPEN'
+      )[]
+      /**
+       * @description Group name
+       * @example Main group
+       */
+      name: string
+    }
     UpdateIncentiveGroupDto: {
       /** @description list of allowed incentive levels for group */
       incentiveLevels: ('ENHANCED' | 'ENHANCED_2' | 'ENHANCED_3' | 'BASIC' | 'STANDARD')[]
+      /**
+       * @description Group name
+       * @example Main group
+       */
+      name: string
+    }
+    UpdateLocationGroupDto: {
+      /** @description list of locations for group */
+      locations: components['schemas']['PermittedSessionLocationDto'][]
       /**
        * @description Group name
        * @example Main group
@@ -1264,7 +1315,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['SessionCategoryGroupDto']
+        'application/json': components['schemas']['UpdateCategoryGroupDto']
       }
     }
     responses: {
@@ -1571,7 +1622,7 @@ export interface operations {
      */
     requestBody: {
       content: {
-        'application/json': components['schemas']['SessionLocationGroupDto']
+        'application/json': components['schemas']['CreateLocationGroupDto']
       }
     }
     responses: {
@@ -1652,7 +1703,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['SessionLocationGroupDto']
+        'application/json': components['schemas']['UpdateLocationGroupDto']
       }
     }
     responses: {

@@ -1,4 +1,4 @@
-{% extends "../../partials/layout.njk" %}
+{% extends "partials/layout.njk" %}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {%- from "moj/components/banner/macro.njk" import mojBanner -%}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
@@ -63,8 +63,8 @@
           text: "Session templates",
           href: "/prisons/" + prison.code + "/session-templates"
         }, {
-          text: "Exclusion dates",
-          href: "/prisons/" + prison.code + "/exclusion-dates"
+          text: "Excluded dates",
+          href: "/prisons/" + prison.code + "/excluded-dates"
         }, {
           text: "Category groups",
           href: "/prisons/" + prison.code + "/category-groups"
