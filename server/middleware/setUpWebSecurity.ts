@@ -27,7 +27,7 @@ export default function setUpWebSecurity(): Router {
           scriptSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
           styleSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
           fontSrc: ["'self'"],
-          formaction: [`'self' ${config.apis.hmppsAuth.externalUrl}`],
+          formAction: [`'self' ${config.apis.hmppsAuth.externalUrl}`],
           upgradeInsecureRequests: process.env.NODE_ENV === 'development' ? null : [],
         },
       },
