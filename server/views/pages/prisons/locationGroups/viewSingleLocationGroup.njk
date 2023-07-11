@@ -35,16 +35,20 @@
       {% for location in locationGroup.locations %}
         {% set locationRows = (locationRows.push([
           {
-            text: location.levelOneCode
+            text: location.levelOneCode,
+            classes: 'govuk-!-text-align-centre'
           },
           {
-            text: location.levelTwoCode
+            text: location.levelTwoCode,
+            classes: 'govuk-!-text-align-centre'
           },
           {
-            text: location.levelThreeCode
+            text: location.levelThreeCode,
+            classes: 'govuk-!-text-align-centre'
           },
           {
-            text: location.levelFourCode
+            text: location.levelFourCode,
+            classes: 'govuk-!-text-align-centre'
           }
         ]), locationRows) %}
       {% endfor %}

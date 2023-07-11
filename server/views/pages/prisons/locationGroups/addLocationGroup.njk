@@ -149,3 +149,9 @@
   </div>
 
 {% endblock %}
+
+{% block pageScripts %}
+  <script nonce="{{ cspNonce }}">
+    window.MOJFrontend.initAll()
+  </script>
+{% endblock %}
