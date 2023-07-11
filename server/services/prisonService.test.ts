@@ -19,9 +19,8 @@ describe('Prisons service', () => {
   const PrisonRegisterApiClientFactory = jest.fn()
   const VisitSchedulerApiClientFactory = jest.fn()
 
-  const allPrisons = TestData.prisonDtos()
-  const prison = TestData.prisonDto()
-  const prisonNames = TestData.prisonNames()
+  const prisonDto = TestData.prisonDto()
+  const prison = TestData.prison()
   const prisonRegisterPrisons = TestData.prisonRegisterPrisons()
 
   beforeEach(() => {
@@ -38,35 +37,43 @@ describe('Prisons service', () => {
   })
 
   describe('getPrison', () => {
-    it('should return Prison and PrisonName', async () => {
-      visitSchedulerApiClient.getPrison.mockResolvedValue(prison)
-      const results = await prisonsService.getPrison('user', prison.code)
+    it('should return a Prison', async () => {
+      visitSchedulerApiClient.getPrison.mockResolvedValue(prisonDto)
+      const results = await prisonsService.getPrison('user', prisonDto.code)
 
-      expect(results).toEqual({
-        prison,
-        prisonName: prisonNames[prison.code],
-      })
+      expect(results).toStrictEqual(prison)
     })
 
-    it('should return Prison and UNKNOWN PrisonName if not in prison register', async () => {
-      const prisonNotInRegister = TestData.prisonDto({ code: 'XYZ' })
-      visitSchedulerApiClient.getPrison.mockResolvedValue(prisonNotInRegister)
-      const results = await prisonsService.getPrison('user', prisonNotInRegister.code)
+    it('should return Prison with UNKNOWN name if not in prison register', async () => {
+      const prisonDtoNotInRegister = TestData.prisonDto({ code: 'XYZ' })
+      const prisonNotInRegister = TestData.prison({ ...prisonDtoNotInRegister, name: 'UNKNOWN' })
 
-      expect(results).toEqual({
-        prison: prisonNotInRegister,
-        prisonName: 'UNKNOWN',
-      })
+      visitSchedulerApiClient.getPrison.mockResolvedValue(prisonDtoNotInRegister)
+      const results = await prisonsService.getPrison('user', prisonDtoNotInRegister.code)
+
+      expect(results).toStrictEqual(prisonNotInRegister)
     })
   })
 
   describe('getAllPrisons', () => {
+    const allPrisonDtos = TestData.prisonDtos()
+    const allPrisons = TestData.prisons()
+
     it('should return an array of all supported Prisons', async () => {
-      visitSchedulerApiClient.getAllPrisons.mockResolvedValue(allPrisons)
+      visitSchedulerApiClient.getAllPrisons.mockResolvedValue(allPrisonDtos)
 
       const results = await prisonsService.getAllPrisons('user')
 
-      expect(results).toEqual(allPrisons)
+      expect(results).toStrictEqual(allPrisons)
+    })
+
+    it('should return an array of all supported Prisons sorted by prison name', async () => {
+      const unsortedPrisonDtos = [allPrisonDtos[2], allPrisonDtos[0], allPrisonDtos[1]]
+      visitSchedulerApiClient.getAllPrisons.mockResolvedValue(unsortedPrisonDtos)
+
+      const results = await prisonsService.getAllPrisons('user')
+
+      expect(results).toStrictEqual(allPrisons)
     })
   })
 
@@ -74,7 +81,7 @@ describe('Prisons service', () => {
     it('should add prison to supported prisons', async () => {
       const newPrison = TestData.prisonDto({ active: false })
 
-      await prisonsService.createPrison('user', prison.code)
+      await prisonsService.createPrison('user', prisonDto.code)
       expect(visitSchedulerApiClient.createPrison).toHaveBeenCalledWith(newPrison)
     })
   })
@@ -103,14 +110,14 @@ describe('Prisons service', () => {
 
   describe('activatePrison', () => {
     it('should change prison to active', async () => {
-      await prisonsService.activatePrison('user', prison.code)
+      await prisonsService.activatePrison('user', prisonDto.code)
       expect(visitSchedulerApiClient.activatePrison).toHaveBeenCalledWith('HEI')
     })
   })
 
   describe('deactivatePrison', () => {
     it('should change prison to inactive', async () => {
-      await prisonsService.deactivatePrison('user', prison.code)
+      await prisonsService.deactivatePrison('user', prisonDto.code)
       expect(visitSchedulerApiClient.deactivatePrison).toHaveBeenCalledWith('HEI')
     })
   })
@@ -118,7 +125,7 @@ describe('Prisons service', () => {
   describe('addExcludeDate', () => {
     it('should add an exclude date to a prison', async () => {
       const excludeDate = '2023-07-06'
-      await prisonsService.addExcludeDate('user', prison.code, excludeDate)
+      await prisonsService.addExcludeDate('user', prisonDto.code, excludeDate)
       expect(visitSchedulerApiClient.addExcludeDate).toHaveBeenCalledWith('HEI', excludeDate)
     })
   })
@@ -126,7 +133,7 @@ describe('Prisons service', () => {
   describe('removeExcludeDate', () => {
     it('should remove an exclude date to a prison', async () => {
       const excludeDate = '2023-07-06'
-      await prisonsService.removeExcludeDate('user', prison.code, excludeDate)
+      await prisonsService.removeExcludeDate('user', prisonDto.code, excludeDate)
       expect(visitSchedulerApiClient.removeExcludeDate).toHaveBeenCalledWith('HEI', excludeDate)
     })
   })

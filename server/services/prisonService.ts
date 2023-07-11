@@ -2,6 +2,7 @@ import { NotFound } from 'http-errors'
 import { HmppsAuthClient, PrisonRegisterApiClient, RestClientBuilder, VisitSchedulerApiClient } from '../data'
 import { PrisonDto } from '../data/visitSchedulerApiTypes'
 import logger from '../../logger'
+import { Prison } from '../@types/visits-admin'
 
 const A_DAY_IN_MS = 24 * 60 * 60 * 1000
 
@@ -17,22 +18,31 @@ export default class PrisonService {
 
   private lastUpdated = 0
 
-  async getPrison(username: string, prisonId: string): Promise<{ prison: PrisonDto; prisonName: string }> {
+  async getPrison(username: string, prisonId: string): Promise<Prison> {
     await this.refreshAllPrisons(username)
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
-    const prison = await visitSchedulerApiClient.getPrison(prisonId)
-    const prisonName = this.allPrisonRegisterPrisons[prisonId] || 'UNKNOWN'
+    const prisonDto = await visitSchedulerApiClient.getPrison(prisonId)
+    const name = this.allPrisonRegisterPrisons[prisonId] || 'UNKNOWN'
 
-    return { prison, prisonName }
+    return { ...prisonDto, name }
   }
 
-  async getAllPrisons(username: string): Promise<PrisonDto[]> {
+  async getAllPrisons(username: string): Promise<Prison[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
-    return visitSchedulerApiClient.getAllPrisons()
+    const prisons = await visitSchedulerApiClient.getAllPrisons()
+    const prisonNames = await this.getPrisonNames(username)
+
+    const allPrisonsWithNames: Prison[] = prisons.map(prison => {
+      return { ...prison, name: prisonNames[prison.code] }
+    })
+
+    allPrisonsWithNames.sort((a, b) => a.name.localeCompare(b.name))
+
+    return allPrisonsWithNames
   }
 
   async createPrison(username: string, prisonCode: string): Promise<void> {
