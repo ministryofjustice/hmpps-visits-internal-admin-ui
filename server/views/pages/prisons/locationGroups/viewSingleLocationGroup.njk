@@ -31,6 +31,9 @@
         <span class="govuk-caption-l">{{ prisonName }}</span>
         {{ pageHeaderTitle }}
       </h1>
+
+      <h2 class="govuk-heading-m">{{ locationGroup.reference }}</h2>
+  
       {% set locationRows = [] %}
       {% for location in locationGroup.locations %}
         {% set locationRows = (locationRows.push([
@@ -39,36 +42,40 @@
             classes: 'govuk-!-text-align-centre'
           },
           {
-            text: location.levelTwoCode,
+            text: location.levelTwoCode if location.levelTwoCode.length else '-',
             classes: 'govuk-!-text-align-centre'
           },
           {
-            text: location.levelThreeCode,
+            text: location.levelThreeCode if location.levelThreeCode.length else '-',
             classes: 'govuk-!-text-align-centre'
           },
           {
-            text: location.levelFourCode,
+            text: location.levelFourCode if location.levelFourCode.length else '-',
             classes: 'govuk-!-text-align-centre'
           }
         ]), locationRows) %}
       {% endfor %}
 
       {{ govukTable({
-        caption: locationGroup.reference,
+        caption: 'Location level codes',
         captionClasses: "govuk-table__caption--m",
         firstCellIsHeader: true,
         head: [
           { 
-           text: "Level one code"
-          },
-         { 
-           text: "Level two code"
+            text: "Level one",
+            classes: 'govuk-!-text-align-centre'
           },
           { 
-           text: "Level three code"
+            text: "Level two",
+            classes: 'govuk-!-text-align-centre'
           },
           { 
-           text: "Level four code"
+            text: "Level three",
+            classes: 'govuk-!-text-align-centre'
+          },
+          { 
+            text: "Level four",
+            classes: 'govuk-!-text-align-centre'
           }
         ],
         rows: locationRows
