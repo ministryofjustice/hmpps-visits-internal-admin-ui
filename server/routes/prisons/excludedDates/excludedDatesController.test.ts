@@ -15,8 +15,8 @@ const prisonService = createMockPrisonService()
 
 const prisonNames = TestData.prisonNames()
 const excludeDates = ['2023-12-25', '2024-12-25']
-const prison = TestData.prison()
-const prisonWithExcludeDates = TestData.prison({ excludeDates })
+const prison = TestData.prisonDto()
+const prisonWithExcludeDates = TestData.prisonDto({ excludeDates })
 const prisonName = prisonNames[prison.code]
 
 beforeEach(() => {

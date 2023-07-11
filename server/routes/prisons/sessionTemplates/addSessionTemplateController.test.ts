@@ -13,7 +13,7 @@ const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
 
 const prisonNames = TestData.prisonNames()
-const prison = TestData.prison()
+const prison = TestData.prisonDto()
 const prisonName = prisonNames[prison.code]
 
 beforeEach(() => {

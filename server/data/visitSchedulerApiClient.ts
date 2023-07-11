@@ -2,7 +2,7 @@ import RestClient from './restClient'
 import config from '../config'
 import {
   CreateSessionTemplateDto,
-  Prison,
+  PrisonDto,
   CategoryGroup,
   LocationGroup,
   SessionTemplate,
@@ -18,22 +18,22 @@ export default class VisitSchedulerApiClient {
     this.restClient = new RestClient('visitSchedulerApiClient', config.apis.visitScheduler, token)
   }
 
-  async getAllPrisons(): Promise<Prison[]> {
+  async getAllPrisons(): Promise<PrisonDto[]> {
     return this.restClient.get({
       path: '/admin/prisons',
     })
   }
 
-  async getPrison(prisonId: string): Promise<Prison> {
+  async getPrison(prisonId: string): Promise<PrisonDto> {
     return this.restClient.get({
       path: `/admin/prisons/prison/${prisonId}`,
     })
   }
 
-  async createPrison(prison: Prison): Promise<Prison> {
+  async createPrison(prison: PrisonDto): Promise<PrisonDto> {
     return this.restClient.post({
       path: '/admin/prisons/prison',
-      data: <Prison>{
+      data: <PrisonDto>{
         active: prison.active,
         code: prison.code,
         excludeDates: prison.excludeDates,
@@ -41,19 +41,19 @@ export default class VisitSchedulerApiClient {
     })
   }
 
-  async activatePrison(prisonCode: string): Promise<Prison> {
+  async activatePrison(prisonCode: string): Promise<PrisonDto> {
     return this.restClient.put({
       path: `/admin/prisons/prison/${prisonCode}/activate`,
     })
   }
 
-  async deactivatePrison(prisonCode: string): Promise<Prison> {
+  async deactivatePrison(prisonCode: string): Promise<PrisonDto> {
     return this.restClient.put({
       path: `/admin/prisons/prison/${prisonCode}/deactivate`,
     })
   }
 
-  async addExcludeDate(prisonCode: string, excludeDate: string): Promise<Prison> {
+  async addExcludeDate(prisonCode: string, excludeDate: string): Promise<PrisonDto> {
     return this.restClient.put({
       path: `/admin/prisons/prison/${prisonCode}/exclude-date/add`,
       data: {

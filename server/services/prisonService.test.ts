@@ -19,8 +19,8 @@ describe('Prisons service', () => {
   const PrisonRegisterApiClientFactory = jest.fn()
   const VisitSchedulerApiClientFactory = jest.fn()
 
-  const allPrisons = TestData.prisons()
-  const prison = TestData.prison()
+  const allPrisons = TestData.prisonDtos()
+  const prison = TestData.prisonDto()
   const prisonNames = TestData.prisonNames()
   const prisonRegisterPrisons = TestData.prisonRegisterPrisons()
 
@@ -49,7 +49,7 @@ describe('Prisons service', () => {
     })
 
     it('should return Prison and UNKNOWN PrisonName if not in prison register', async () => {
-      const prisonNotInRegister = TestData.prison({ code: 'XYZ' })
+      const prisonNotInRegister = TestData.prisonDto({ code: 'XYZ' })
       visitSchedulerApiClient.getPrison.mockResolvedValue(prisonNotInRegister)
       const results = await prisonsService.getPrison('user', prisonNotInRegister.code)
 
@@ -72,7 +72,7 @@ describe('Prisons service', () => {
 
   describe('createPrison', () => {
     it('should add prison to supported prisons', async () => {
-      const newPrison = TestData.prison({ active: false })
+      const newPrison = TestData.prisonDto({ active: false })
 
       await prisonsService.createPrison('user', prison.code)
       expect(visitSchedulerApiClient.createPrison).toHaveBeenCalledWith(newPrison)

@@ -12,10 +12,10 @@ let flashData: Record<string, string | FlashErrorMessage>
 const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
 
-const allPrisons = TestData.prisons()
+const allPrisons = TestData.prisonDtos()
 const prisonNames = TestData.prisonNames()
-const activePrison = TestData.prison()
-const inactivePrison = TestData.prison({ active: false })
+const activePrison = TestData.prisonDto()
+const inactivePrison = TestData.prisonDto({ active: false })
 const prisonName = prisonNames[activePrison.code]
 
 beforeEach(() => {

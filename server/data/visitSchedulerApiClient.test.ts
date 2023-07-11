@@ -2,7 +2,7 @@ import nock from 'nock'
 import config from '../config'
 import VisitSchedulerApiClient from './visitSchedulerApiClient'
 import TestData from '../routes/testutils/testData'
-import { CreateLocationGroupDto, CreateSessionTemplateDto, Prison } from './visitSchedulerApiTypes'
+import { CreateLocationGroupDto, CreateSessionTemplateDto, PrisonDto } from './visitSchedulerApiTypes'
 
 describe('visitSchedulerApiClient', () => {
   let fakeVisitSchedulerApi: nock.Scope
@@ -25,7 +25,7 @@ describe('visitSchedulerApiClient', () => {
 
   describe('getAllPrisons', () => {
     it('should return an array of all supported Prisons', async () => {
-      const results = TestData.prisons()
+      const results = TestData.prisonDtos()
 
       fakeVisitSchedulerApi.get('/admin/prisons').matchHeader('authorization', `Bearer ${token}`).reply(200, results)
 
@@ -37,7 +37,7 @@ describe('visitSchedulerApiClient', () => {
 
   describe('getPrison', () => {
     it('should return details of specified prison', async () => {
-      const prison = TestData.prison()
+      const prison = TestData.prisonDto()
 
       fakeVisitSchedulerApi
         .get(`/admin/prisons/prison/${prison.code}`)
@@ -52,14 +52,14 @@ describe('visitSchedulerApiClient', () => {
 
   describe('createPrison', () => {
     it('should add prison to list of supported prisons', async () => {
-      const prison: Prison = {
+      const prison: PrisonDto = {
         active: false,
         code: 'BHI',
         excludeDates: [],
       }
 
       fakeVisitSchedulerApi
-        .post('/admin/prisons/prison', <Prison>{
+        .post('/admin/prisons/prison', <PrisonDto>{
           active: prison.active,
           code: prison.code,
           excludeDates: prison.excludeDates,
@@ -75,7 +75,7 @@ describe('visitSchedulerApiClient', () => {
 
   describe('activatePrison', () => {
     it('should return activated prison', async () => {
-      const prison = TestData.prison()
+      const prison = TestData.prisonDto()
 
       fakeVisitSchedulerApi
         .put(`/admin/prisons/prison/${prison.code}/activate`)
@@ -90,7 +90,7 @@ describe('visitSchedulerApiClient', () => {
 
   describe('deactivatePrison', () => {
     it('should return deactivated prison', async () => {
-      const prison = TestData.prison()
+      const prison = TestData.prisonDto()
 
       fakeVisitSchedulerApi
         .put(`/admin/prisons/prison/${prison.code}/deactivate`)
@@ -106,8 +106,8 @@ describe('visitSchedulerApiClient', () => {
   describe('addExcludedDate', () => {
     it('should make call to add exclude date to a prison and return the PrisonDto', async () => {
       const excludeDate = '2023-12-26'
-      const prison = TestData.prison()
-      const prisonWithExcludeDates = TestData.prison({ excludeDates: [excludeDate] })
+      const prison = TestData.prisonDto()
+      const prisonWithExcludeDates = TestData.prisonDto({ excludeDates: [excludeDate] })
 
       fakeVisitSchedulerApi
         .put(`/admin/prisons/prison/${prison.code}/exclude-date/add`, { excludeDate })
@@ -123,7 +123,7 @@ describe('visitSchedulerApiClient', () => {
   describe('removeExcludedDate', () => {
     it('should make call to remove exclude date from a prison', async () => {
       const excludeDate = '2023-12-26'
-      const prison = TestData.prison({ excludeDates: [excludeDate] })
+      const prison = TestData.prisonDto({ excludeDates: [excludeDate] })
 
       fakeVisitSchedulerApi
         .put(`/admin/prisons/prison/${prison.code}/exclude-date/remove`, { excludeDate })

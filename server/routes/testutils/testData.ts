@@ -1,7 +1,7 @@
 import { PrisonRegisterPrison } from '../../data/prisonRegisterApiTypes'
 import {
   CategoryGroup,
-  Prison,
+  PrisonDto,
   SessionTemplate,
   CreateSessionTemplateDto,
   LocationGroup,
@@ -11,13 +11,17 @@ import {
 
 export default class TestData {
   // PrisonDto from Visit Scheduler
-  static prison = ({ active = true, code = 'HEI', excludeDates = [] }: Partial<Prison> = {}): Prison =>
-    ({ active, code, excludeDates } as Prison)
+  static prisonDto = ({ active = true, code = 'HEI', excludeDates = [] }: Partial<PrisonDto> = {}): PrisonDto =>
+    ({ active, code, excludeDates } as PrisonDto)
 
   // Array of Visit scheduler PrisonDto
-  static prisons = ({
-    prisons = [this.prison(), this.prison({ code: 'PNI' }), this.prison({ active: false, code: 'WWI' })] as Prison[],
-  } = {}): Prison[] => prisons
+  static prisonDtos = ({
+    prisons = [
+      this.prisonDto(),
+      this.prisonDto({ code: 'PNI' }),
+      this.prisonDto({ active: false, code: 'WWI' }),
+    ] as PrisonDto[],
+  } = {}): PrisonDto[] => prisons
 
   // prisonId / prisonName from Prison register as key / value object - returned by PrisonService
   static prisonNames = ({

@@ -16,7 +16,7 @@ export default {
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: TestData.prisons(),
+        jsonBody: TestData.prisonDtos(),
       },
     })
   },
@@ -64,7 +64,7 @@ export default {
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: TestData.prison({ active: true }),
+        jsonBody: TestData.prisonDto({ active: true }),
       },
     })
   },
@@ -77,7 +77,7 @@ export default {
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: TestData.prison({ active: false }),
+        jsonBody: TestData.prisonDto({ active: false }),
       },
     })
   },

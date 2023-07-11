@@ -8,7 +8,7 @@ context('Change active/inactive session template', () => {
   let activeSessionTemplate = null
 
   beforeEach(() => {
-    const activePrison = TestData.prison({ active: true })
+    const activePrison = TestData.prisonDto({ active: true })
     deactivatedSessionTemplate = TestData.sessionTemplate({
       active: false,
       prisonId: prisonCode,

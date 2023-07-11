@@ -9,7 +9,7 @@ context('Delete a session template success', () => {
   let sessionTemplate = null
 
   beforeEach(() => {
-    const activePrison = TestData.prison({ active: true })
+    const activePrison = TestData.prisonDto({ active: true })
     sessionTemplate = TestData.sessionTemplate({ active: false, prisonId: prisonCode, reference: '-act.dcc.0f' })
     const rangeType: SessionTemplatesRangeType = 'CURRENT_OR_FUTURE'
 

@@ -29,7 +29,7 @@ context('Supported prisons', () => {
     homePage.supportedPrisonsCard().click()
 
     const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
-    const newPrison = TestData.prison({ active: false })
+    const newPrison = TestData.prisonDto({ active: false })
     cy.task('stubCreatePrison', newPrison)
     supportedPrisonsPage.enterPrisonCode('HEI')
     supportedPrisonsPage.createPrison().click()
