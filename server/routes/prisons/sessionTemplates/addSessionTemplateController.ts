@@ -17,7 +17,7 @@ export default class AddSessionTemplateController {
       const { prisonName } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
       const formValues = req.flash('formValues')?.[0] || {}
 
-      res.render('pages/prisons/addSessionTemplate', {
+      res.render('pages/prisons/sessionTemplates/addSessionTemplate', {
         errors: req.flash('errors'),
         prisonId,
         prisonName,

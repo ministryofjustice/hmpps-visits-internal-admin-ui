@@ -35,7 +35,7 @@ export default class SessionTemplatesController {
       }
       sessionTemplates.forEach(template => sessionTemplatesByDay[template.dayOfWeek].push(template))
 
-      return res.render('pages/prisons/viewSessionTemplates', {
+      return res.render('pages/prisons/sessionTemplates/viewSessionTemplates', {
         prison,
         prisonName,
         sessionTemplatesByDay,
