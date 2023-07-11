@@ -4,7 +4,7 @@
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
-{% set pageHeaderTitle = prisonName %}
+{% set pageHeaderTitle = prison.name %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
 
 {% set primaryNavItems = [
@@ -32,7 +32,7 @@
           <div class="govuk-grid-column-two-thirds">
             {{ mojBanner({
               type: "success",
-              text: prisonName + " has been " + message + ".",
+              text: prison.name + " has been " + message + ".",
               iconFallbackText: "Success"
             }) }}
           </div>

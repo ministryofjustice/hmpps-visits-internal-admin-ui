@@ -14,18 +14,15 @@ let flashData: Record<string, string | FlashErrorMessage>
 const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
 
-const allPrisons = TestData.prisonDtos()
-const prisonNames = TestData.prisonNames()
-const activePrison = TestData.prisonDto()
-const prisonName = prisonNames[activePrison.code]
+const allPrisons = TestData.prisons()
+const prison = TestData.prison()
 
 beforeEach(() => {
   flashData = {}
   flashProvider.mockImplementation(key => flashData[key])
 
   prisonService.getAllPrisons.mockResolvedValue(allPrisons)
-  prisonService.getPrisonNames.mockResolvedValue(prisonNames)
-  prisonService.getPrison.mockResolvedValue({ prison: activePrison, prisonName })
+  prisonService.getPrison.mockResolvedValue(prison)
 
   app = appWithAllRoutes({ services: { prisonService, sessionTemplateService } })
 })

@@ -5,7 +5,7 @@
 {%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
 {%- from "moj/components/banner/macro.njk" import mojBanner -%}
 
-{% set pageHeaderTitle = prisonName %}
+{% set pageHeaderTitle = prison.name %}
 {% set pageTitle = applicationName + " - Session templates - " + pageHeaderTitle %}
 
 {% set primaryNavItems = [

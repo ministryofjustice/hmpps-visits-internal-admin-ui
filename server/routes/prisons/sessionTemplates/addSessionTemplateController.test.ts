@@ -12,16 +12,13 @@ let flashData: Record<string, string | FlashErrorMessage | Record<string, string
 const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
 
-const prisonNames = TestData.prisonNames()
-const prison = TestData.prisonDto()
-const prisonName = prisonNames[prison.code]
+const prison = TestData.prison()
 
 beforeEach(() => {
   flashData = {}
   flashProvider.mockImplementation(key => flashData[key])
 
-  prisonService.getPrisonNames.mockResolvedValue(prisonNames)
-  prisonService.getPrison.mockResolvedValue({ prison, prisonName })
+  prisonService.getPrison.mockResolvedValue(prison)
 
   app = appWithAllRoutes({ services: { prisonService, sessionTemplateService } })
 })
@@ -75,7 +72,7 @@ describe('Add a session template', () => {
           expect($('.moj-primary-navigation__item').length).toBe(2)
           expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/prisons')
 
-          expect($('h1 span').text().trim()).toBe(prisonName)
+          expect($('h1 span').text().trim()).toBe(prison.name)
           expect($('h1').text().trim()).toContain('Add session template')
 
           expect($(`form[action=${url}][method="POST"]`).length).toBe(1)

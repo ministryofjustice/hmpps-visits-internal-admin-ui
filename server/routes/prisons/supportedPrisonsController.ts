@@ -8,12 +8,10 @@ export default class SupportedPrisonsController {
   public view(): RequestHandler {
     return async (req, res) => {
       const prisons = await this.prisonService.getAllPrisons(res.locals.user.username)
-      const prisonNames = await this.prisonService.getPrisonNames(res.locals.user.username)
 
       return res.render('pages/prisons/prisons', {
         errors: req.flash('errors'),
         prisons,
-        prisonNames,
         message: req.flash('message'),
       })
     }
@@ -21,6 +19,8 @@ export default class SupportedPrisonsController {
 
   public addPrison(): RequestHandler {
     return async (req, res) => {
+      let newPrisonName: string
+
       await body('prisonId')
         .trim()
         .toUpperCase()
@@ -29,7 +29,7 @@ export default class SupportedPrisonsController {
         .bail()
         .custom(async prisonId => {
           try {
-            await this.prisonService.getPrisonName(res.locals.user.username, prisonId)
+            newPrisonName = await this.prisonService.getPrisonName(res.locals.user.username, prisonId)
           } catch (error) {
             throw new Error(`Prison '${prisonId}' is not in the prison register`)
           }
@@ -47,7 +47,7 @@ export default class SupportedPrisonsController {
 
       try {
         await this.prisonService.createPrison(res.locals.user.username, prisonId)
-        req.flash('message', prisonId)
+        req.flash('message', `${newPrisonName} has been successfully added.`)
       } catch (error) {
         req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
       }

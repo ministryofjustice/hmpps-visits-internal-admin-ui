@@ -10,7 +10,7 @@ export default class SingleSessionTemplateController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { reference, prisonId } = req.params
-      const { prison, prisonName } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
       const sessionTemplate = await this.sessionTemplateService.getSingleSessionTemplate(
         res.locals.user.username,
@@ -21,7 +21,6 @@ export default class SingleSessionTemplateController {
         errors: req.flash('errors'),
         message: req.flash('message'),
         prison,
-        prisonName,
         sessionTemplate,
       })
     }

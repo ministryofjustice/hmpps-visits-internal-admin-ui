@@ -1,7 +1,7 @@
 import { RequestHandler, Router } from 'express'
 import { Services } from '../../../services'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
-import IncentiveLevelGroupsController from './incentiveLvelGroupsController'
+import IncentiveLevelGroupsController from './incentiveLevelGroupsController'
 
 export default function routes(services: Services): Router {
   const router = Router()

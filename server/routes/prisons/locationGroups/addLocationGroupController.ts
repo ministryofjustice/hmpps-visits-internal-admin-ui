@@ -12,13 +12,13 @@ export default class AddLocationGroupController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
-      const { prisonName } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
       const formValues = req.flash('formValues')?.[0] || {}
 
       res.render('pages/prisons/locationGroups/addLocationGroup', {
         errors: req.flash('errors'),
         prisonId,
-        prisonName,
+        prison,
         formValues,
       })
     }

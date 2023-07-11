@@ -9,12 +9,11 @@ export default class ExcludedDatesController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
-      const { prisonName, prison } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
       res.render('pages/prisons/excludedDates/viewExcludedDates', {
         errors: req.flash('errors'),
         prisonId,
-        prisonName,
         prison,
         message: req.flash('message'),
       })

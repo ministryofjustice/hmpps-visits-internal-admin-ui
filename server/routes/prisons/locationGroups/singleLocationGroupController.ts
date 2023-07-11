@@ -10,15 +10,11 @@ export default class SingleLocationGroupController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { reference, prisonId } = req.params
-      const { prison, prisonName } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
       const locationGroup = await this.locationGroupService.getSingleLocationGroup(res.locals.user.username, reference)
 
-      return res.render('pages/prisons/locationGroups/viewSingleLocationGroup', {
-        prison,
-        prisonName,
-        locationGroup,
-      })
+      return res.render('pages/prisons/locationGroups/viewSingleLocationGroup', { prison, locationGroup })
     }
   }
 }

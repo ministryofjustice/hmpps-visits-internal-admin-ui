@@ -14,13 +14,13 @@ export default class AddSessionTemplateController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
-      const { prisonName } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
       const formValues = req.flash('formValues')?.[0] || {}
 
       res.render('pages/prisons/sessionTemplates/addSessionTemplate', {
         errors: req.flash('errors'),
         prisonId,
-        prisonName,
+        prison,
         daysOfWeek,
         formValues,
       })

@@ -12,19 +12,16 @@ let flashData: Record<string, string | FlashErrorMessage>
 const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
 
-const allPrisons = TestData.prisonDtos()
-const prisonNames = TestData.prisonNames()
-const activePrison = TestData.prisonDto()
-const inactivePrison = TestData.prisonDto({ active: false })
-const prisonName = prisonNames[activePrison.code]
+const allPrisons = TestData.prisons()
+const activePrison = TestData.prison()
+const inactivePrison = TestData.prison({ active: false })
 
 beforeEach(() => {
   flashData = {}
   flashProvider.mockImplementation(key => flashData[key])
 
   prisonService.getAllPrisons.mockResolvedValue(allPrisons)
-  prisonService.getPrisonNames.mockResolvedValue(prisonNames)
-  prisonService.getPrison.mockResolvedValue({ prison: activePrison, prisonName })
+  prisonService.getPrison.mockResolvedValue(activePrison)
 
   app = appWithAllRoutes({ services: { prisonService, sessionTemplateService } })
 })
@@ -46,7 +43,7 @@ describe('Prison status page', () => {
             expect($('.moj-primary-navigation__item').length).toBe(2)
             expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/prisons')
 
-            expect($('h1').text().trim()).toBe(prisonName)
+            expect($('h1').text().trim()).toBe(activePrison.name)
 
             expect($('.moj-banner__message').length).toBe(0)
             expect($('.govuk-error-summary').length).toBe(0)
@@ -65,14 +62,14 @@ describe('Prison status page', () => {
       })
 
       it('should display prison status information and offer correct action (inactive prison)', () => {
-        prisonService.getPrison.mockResolvedValue({ prison: inactivePrison, prisonName })
+        prisonService.getPrison.mockResolvedValue(inactivePrison)
 
         return request(app)
           .get('/prisons/HEI/status')
           .expect('Content-Type', /html/)
           .expect(res => {
             const $ = cheerio.load(res.text)
-            expect($('h1').text().trim()).toBe(prisonName)
+            expect($('h1').text().trim()).toBe(inactivePrison.name)
 
             expect($('[data-test="prison-status"]').text().trim()).toBe('inactive')
 
@@ -91,7 +88,7 @@ describe('Prison status page', () => {
           .expect('Content-Type', /html/)
           .expect(res => {
             const $ = cheerio.load(res.text)
-            expect($('h1').text().trim()).toBe(prisonName)
+            expect($('h1').text().trim()).toBe(activePrison.name)
             expect($('.moj-banner__message').text()).toBe('Hewell (HMP) has been activated.')
           })
       })
@@ -105,7 +102,7 @@ describe('Prison status page', () => {
           .expect('Content-Type', /html/)
           .expect(res => {
             const $ = cheerio.load(res.text)
-            expect($('h1').text().trim()).toBe(prisonName)
+            expect($('h1').text().trim()).toBe(activePrison.name)
             expect($('.govuk-error-summary').text()).toContain(error.msg)
           })
       })

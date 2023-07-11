@@ -13,16 +13,14 @@ let flashData: Record<string, string | FlashErrorMessage>
 
 const prisonService = createMockPrisonService()
 
-const prisonNames = TestData.prisonNames()
 const excludeDates = ['2023-12-25', '2024-12-25']
-const prison = TestData.prisonDto()
-const prisonWithExcludeDates = TestData.prisonDto({ excludeDates })
-const prisonName = prisonNames[prison.code]
+const prison = TestData.prison()
+const prisonWithExcludeDates = TestData.prison({ excludeDates })
 
 beforeEach(() => {
   flashData = {}
   flashProvider.mockImplementation(key => flashData[key])
-  prisonService.getPrison.mockResolvedValue({ prison, prisonName })
+  prisonService.getPrison.mockResolvedValue(prison)
   prisonService.addExcludeDate.mockResolvedValue(prisonWithExcludeDates)
   prisonService.removeExcludeDate.mockResolvedValue()
   app = appWithAllRoutes({ services: { prisonService } })
@@ -49,7 +47,7 @@ describe('Show excluded dates', () => {
   })
 
   it('GET /prisons/{:prisonId}/excluded-dates - when prison has excluded dates', () => {
-    prisonService.getPrison.mockResolvedValue({ prison: prisonWithExcludeDates, prisonName })
+    prisonService.getPrison.mockResolvedValue(prisonWithExcludeDates)
 
     return request(app)
       .get(`/prisons/${prison.code}/excluded-dates`)
