@@ -3,6 +3,10 @@
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/fieldset/macro.njk" import govukFieldset -%}
+{%- from "govuk/components/input/macro.njk" import govukInput -%}
+{%- from "govuk/components/textarea/macro.njk" import govukTextarea -%}
 
 {% set pageHeaderTitle = 'Add a location group' %}
 {% set pageTitle = applicationName + " - Location groups - " + pageHeaderTitle %}
@@ -34,11 +38,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
-      {%- from "govuk/components/button/macro.njk" import govukButton -%}
-      {%- from "govuk/components/date-input/macro.njk" import govukDateInput -%}
-      {%- from "govuk/components/fieldset/macro.njk" import govukFieldset -%}
-      {%- from "govuk/components/input/macro.njk" import govukInput -%}
-      {%- from "govuk/components/textarea/macro.njk" import govukTextarea -%}
+      {% include "partials/errorSummary.njk" %}
 
       <div data-module="moj-add-another">
 

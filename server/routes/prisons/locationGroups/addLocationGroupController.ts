@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express'
+import { ValidationChain, body } from 'express-validator'
 import { PrisonService, LocationGroupService } from '../../../services'
 import { CreateLocationGroupDto } from '../../../data/visitSchedulerApiTypes'
 
@@ -30,16 +31,9 @@ export default class AddLocationGroupController {
       const originalUrl = `/prisons/${prisonId}/session-templates/add`
 
       const createSessionTemplateDto: CreateLocationGroupDto = {
-        name: 'location name',
+        name: req.body.name,
         prisonId,
-        locations: [
-          {
-            levelOneCode: 'C',
-            levelTwoCode: '0',
-            levelThreeCode: '0',
-            levelFourCode: '1',
-          },
-        ],
+        locations: req.body.location,
       }
 
       try {
@@ -55,5 +49,30 @@ export default class AddLocationGroupController {
         return res.redirect(originalUrl)
       }
     }
+  }
+
+  public validate(): ValidationChain[] {
+    return [
+      body('name').trim().isLength({ min: 3, max: 100 }).withMessage('Enter a name between 3 and 100 characters long'),
+      body('location[*].levelOneCode')
+        .trim()
+        .isLength({ min: 1, max: 5 })
+        .withMessage('Enter a level one code with length 1 to 5 for each row, or remove the row'),
+      body('location[*].levelTwoCode')
+        .optional({ checkFalsy: true })
+        .trim()
+        .isLength({ min: 1, max: 5 })
+        .withMessage('Enter a value with length 1 to 5, for level two'),
+      body('location[*].levelThreeCode')
+        .optional({ checkFalsy: true })
+        .trim()
+        .isLength({ min: 1, max: 5 })
+        .withMessage('Enter a value with length 1 to 5, for level three'),
+      body('location[*].levelFourCode')
+        .optional({ checkFalsy: true })
+        .trim()
+        .isLength({ min: 1, max: 5 })
+        .withMessage('Enter a value with length 1 to 5, for level four'),
+    ]
   }
 }
