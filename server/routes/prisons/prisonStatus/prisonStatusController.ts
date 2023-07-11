@@ -9,7 +9,7 @@ export default class PrisonStatusController {
       const { prisonId } = req.params
       const { prison, prisonName } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
-      return res.render('pages/prisons/status', {
+      return res.render('pages/prisons/status/status', {
         errors: req.flash('errors'),
         prison,
         prisonName,
