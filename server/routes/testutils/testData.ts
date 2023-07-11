@@ -6,6 +6,7 @@ import {
   CreateSessionTemplateDto,
   LocationGroup,
   IncentiveLevelGroup,
+  CreateLocationGroupDto,
 } from '../../data/visitSchedulerApiTypes'
 
 export default class TestData {
@@ -117,6 +118,19 @@ export default class TestData {
       },
     ],
   }: Partial<LocationGroup> = {}): LocationGroup => ({ name, reference, locations })
+
+  static createLocationGroupDto = ({
+    name = 'Wing A',
+    prisonId = 'HEI',
+    locations = [
+      {
+        levelOneCode: 'A',
+        levelTwoCode: undefined,
+        levelThreeCode: undefined,
+        levelFourCode: undefined,
+      },
+    ],
+  }: Partial<CreateLocationGroupDto> = {}): CreateLocationGroupDto => ({ name, prisonId, locations })
 
   static categoryGroup = ({
     name = 'Category A (High Risk) prisoners',

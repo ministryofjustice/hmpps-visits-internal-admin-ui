@@ -2,7 +2,7 @@ import nock from 'nock'
 import config from '../config'
 import VisitSchedulerApiClient from './visitSchedulerApiClient'
 import TestData from '../routes/testutils/testData'
-import { CreateSessionTemplateDto, Prison } from './visitSchedulerApiTypes'
+import { CreateLocationGroupDto, CreateSessionTemplateDto, Prison } from './visitSchedulerApiTypes'
 
 describe('visitSchedulerApiClient', () => {
   let fakeVisitSchedulerApi: nock.Scope
@@ -209,6 +209,41 @@ describe('visitSchedulerApiClient', () => {
       const output = await visitSchedulerApiClient.getLocationGroups('HEI')
 
       expect(output).toEqual(locationGroups)
+    })
+  })
+
+  describe('getSingleLocationGroup', () => {
+    it('should return a single location groups', async () => {
+      const singleLocationGroup = TestData.locationGroup()
+
+      fakeVisitSchedulerApi
+        .get(`/admin/location-groups/group/${singleLocationGroup.reference}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, singleLocationGroup)
+
+      const output = await visitSchedulerApiClient.getSingleLocationGroup(singleLocationGroup.reference)
+
+      expect(output).toEqual(singleLocationGroup)
+    })
+  })
+
+  describe('createLocationGroup', () => {
+    it('should add a new location group', async () => {
+      const createLocationGroupDto = TestData.createLocationGroupDto()
+      const singleLocationGroup = TestData.locationGroup()
+
+      fakeVisitSchedulerApi
+        .post('/admin/location-groups/group', <CreateLocationGroupDto>{
+          name: createLocationGroupDto.name,
+          prisonId: createLocationGroupDto.prisonId,
+          locations: createLocationGroupDto.locations,
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, singleLocationGroup)
+
+      const output = await visitSchedulerApiClient.createLocationGroup(createLocationGroupDto)
+
+      expect(output).toEqual(singleLocationGroup)
     })
   })
 

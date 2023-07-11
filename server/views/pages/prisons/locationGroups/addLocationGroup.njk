@@ -1,0 +1,151 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+
+{% set pageHeaderTitle = prisonName %}
+{% set pageTitle = applicationName + " - Location groups - " + pageHeaderTitle %}
+
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+] %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <h1 class="govuk-heading-l">
+        <span>{{ pageHeaderTitle }}</span>
+      </h1>
+
+      <p>This prison is currently
+        {{ govukTag({
+          text: "active" if prison.active else "inactive",
+          classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
+          attributes: { "data-test": "prison-status" }
+        }) }}
+      </p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {%- from "govuk/components/button/macro.njk" import govukButton -%}
+      {%- from "govuk/components/date-input/macro.njk" import govukDateInput -%}
+      {%- from "govuk/components/fieldset/macro.njk" import govukFieldset -%}
+      {%- from "govuk/components/input/macro.njk" import govukInput -%}
+      {%- from "govuk/components/textarea/macro.njk" import govukTextarea -%}
+
+      <div data-module="moj-add-another">
+
+        <h2 class="govuk-heading-l moj-add-another__heading" tabindex="-1">Add a location group</h2>
+
+        <form action="/prisons/{{prisonId}}/location-groups/add" method="POST" novalidate>
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+          {{ govukInput({
+            label: {
+              html: 'Location group name',
+              classes: 'govuk-label--m'
+            },
+            id: 'name',
+            name: 'name',
+            classes: 'govuk-!-width-three-quarters',
+            value: formValues.name,
+            autocomplete: "off",
+            errorMessage: errors | findError('name')
+          }) }}
+
+          {% call govukFieldset({
+            classes: 'moj-add-another__item'
+          }) %}
+
+          {{ govukInput({
+            label: {
+              html: 'Level one code',
+              classes: 'govuk-label--m'
+            },
+            id: 'location[0][levelOneCode]',
+            name: 'person[0][levelOneCode]',
+            classes: "govuk-input--width-5",
+            attributes: {
+              'data-name': 'location[%index%][levelOneCode]',
+              'data-id': 'location[%index%][levelOneCode]'
+            }
+          }) }}
+
+          {{ govukInput({
+            label: {
+              html: 'Level two code',
+              classes: 'govuk-label--m'
+            },
+            id: 'location[0][levelTwoCode]',
+            name: 'person[0][levelTwoCode]',
+            classes: "govuk-input--width-5",
+            attributes: {
+              'data-name': 'location[%index%][levelTwoCode]',
+              'data-id': 'location[%index%][levelTwoCode]'
+            }
+          }) }}
+
+          {{ govukInput({
+            label: {
+              html: 'Level three code',
+              classes: 'govuk-label--m'
+            },
+            id: 'location[0][levelThreeCode]',
+            name: 'person[0][levelThreeCode]',
+            classes: "govuk-input--width-5",
+            attributes: {
+              'data-name': 'location[%index%][levelThreeCode]',
+              'data-id': 'location[%index%][levelThreeCode]'
+            }
+          }) }}
+
+          {{ govukInput({
+            label: {
+              html: 'Level four code',
+              classes: 'govuk-label--m'
+            },
+            id: 'location[0][levelFourCode]',
+            name: 'person[0][levelFourCode]',
+            classes: "govuk-input--width-5",
+            attributes: {
+              'data-name': 'location[%index%][levelFourCode]',
+              'data-id': 'location[%index%][levelFourCode]'
+            }
+          }) }}
+
+          {% endcall %}
+
+          <div class="moj-button-action">
+            {{ govukButton({
+              text: 'Add another location',
+              classes: 'govuk-button--secondary moj-add-another__add-button govuk-!-margin-bottom-4'
+            }) }}
+          </div>
+
+          <div class="moj-button-action">
+            {{ govukButton({
+              text: 'Submit'
+            }) }}
+          </div>
+
+        </form>
+
+      </div>
+        
+    </div>
+  </div>
+
+{% endblock %}

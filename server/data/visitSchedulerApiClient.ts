@@ -8,6 +8,7 @@ import {
   SessionTemplate,
   SessionTemplatesRangeType,
   IncentiveLevelGroup,
+  CreateLocationGroupDto,
 } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
@@ -113,9 +114,22 @@ export default class VisitSchedulerApiClient {
   }
 
   // Location groups
+  async getSingleLocationGroup(reference: string): Promise<LocationGroup> {
+    return this.restClient.get({
+      path: `/admin/location-groups/group/${reference}`,
+    })
+  }
+
   async getLocationGroups(prisonCode: string): Promise<LocationGroup[]> {
     return this.restClient.get({
       path: `/admin/location-groups/${prisonCode}`,
+    })
+  }
+
+  async createLocationGroup(createLocationGroupDto: CreateLocationGroupDto): Promise<LocationGroup> {
+    return this.restClient.post({
+      path: `/admin/location-groups/group`,
+      data: createLocationGroupDto,
     })
   }
 
