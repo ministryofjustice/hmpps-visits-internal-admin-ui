@@ -1,0 +1,101 @@
+{% extends "partials/layout.njk" %}
+{%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
+{%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "moj/components/banner/macro.njk" import mojBanner -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set pageHeaderTitle = locationGroup.name %}
+{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+  ] %}
+
+{% set backLinkHref = "/prisons/" + prison.code + "/session-templates" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prisonName }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+      <h2 class="govuk-heading-m">{{ locationGroup.reference }}</h2>
+  
+      {% set locationRows = [] %}
+      {% for location in locationGroup.locations %}
+        {% set locationRows = (locationRows.push([
+          {
+            text: location.levelOneCode,
+            classes: 'govuk-!-text-align-centre'
+          },
+          {
+            text: location.levelTwoCode if location.levelTwoCode.length else '-',
+            classes: 'govuk-!-text-align-centre'
+          },
+          {
+            text: location.levelThreeCode if location.levelThreeCode.length else '-',
+            classes: 'govuk-!-text-align-centre'
+          },
+          {
+            text: location.levelFourCode if location.levelFourCode.length else '-',
+            classes: 'govuk-!-text-align-centre'
+          }
+        ]), locationRows) %}
+      {% endfor %}
+
+      {{ govukTable({
+        caption: 'Location level codes',
+        captionClasses: "govuk-table__caption--m",
+        firstCellIsHeader: true,
+        head: [
+          { 
+            text: "Level one",
+            classes: 'govuk-!-text-align-centre'
+          },
+          { 
+            text: "Level two",
+            classes: 'govuk-!-text-align-centre'
+          },
+          { 
+            text: "Level three",
+            classes: 'govuk-!-text-align-centre'
+          },
+          { 
+            text: "Level four",
+            classes: 'govuk-!-text-align-centre'
+          }
+        ],
+        rows: locationRows
+      }) }}
+
+      <h2 class="govuk-heading-m">Delete location group</h2>
+      <form action="/prisons/{{ prison.code }}/location-groups/{{ locationGroup.reference }}/delete" data-test="location-delete-form" method="POST" novalidate>
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukButton({
+          text: "Delete" | capitalize,
+          classes: "govuk-button--warning",
+          preventDoubleClick: true,
+          disabled: (locationGroup.active),
+          attributes: { "data-test": "session-template-delete-button" }
+        })}}
+
+      </form>
+
+    </div>
+  </div>
+{% endblock %}
