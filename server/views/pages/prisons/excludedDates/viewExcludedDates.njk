@@ -105,7 +105,7 @@
             ]), excludeDateRows) %}
         {%- endfor %}
 
-        <form action="/prisons/{{ prisonId }}/excluded-dates/remove" method="POST" novalidate>
+        <form action="/prisons/{{ prison.code }}/excluded-dates/remove" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             {{ govukTable({
               classes: "govuk-!-width-one-half",
@@ -130,7 +130,7 @@
 
 
 
-        <form action="/prisons/{{ prisonId }}/excluded-dates/add" method="POST" novalidate>
+        <form action="/prisons/{{ prison.code }}/excluded-dates/add" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             {{ govukDateInput({
               id: "excludeDate",

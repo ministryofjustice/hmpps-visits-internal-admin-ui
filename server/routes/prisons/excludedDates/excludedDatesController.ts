@@ -13,7 +13,6 @@ export default class ExcludedDatesController {
 
       res.render('pages/prisons/excludedDates/viewExcludedDates', {
         errors: req.flash('errors'),
-        prisonId,
         prison,
         message: req.flash('message'),
       })

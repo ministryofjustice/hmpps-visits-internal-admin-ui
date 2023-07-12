@@ -19,7 +19,6 @@ export default class AddSessionTemplateController {
 
       res.render('pages/prisons/sessionTemplates/addSessionTemplate', {
         errors: req.flash('errors'),
-        prisonId,
         prison,
         daysOfWeek,
         formValues,

@@ -42,7 +42,7 @@
 
       <div data-module="moj-add-another">
 
-        <form action="/prisons/{{prisonId}}/location-groups/add" method="POST" novalidate>
+        <form action="/prisons/{{prison.code}}/location-groups/add" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
           {{ govukInput({

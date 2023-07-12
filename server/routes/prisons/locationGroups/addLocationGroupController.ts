@@ -17,7 +17,6 @@ export default class AddLocationGroupController {
 
       res.render('pages/prisons/locationGroups/addLocationGroup', {
         errors: req.flash('errors'),
-        prisonId,
         prison,
         formValues,
       })

@@ -22,7 +22,7 @@
     active: true
   }
   ] %}
-{% set backLinkHref = "/prisons/" + prisonId + "/session-templates" %}
+{% set backLinkHref = "/prisons/" + prison.code + "/session-templates" %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -35,7 +35,7 @@
         {{ pageHeaderTitle }}
       </h1>
 
-      <form action="/prisons/{{prisonId}}/session-templates/add" method="POST" novalidate>
+      <form action="/prisons/{{prison.code}}/session-templates/add" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukInput({
