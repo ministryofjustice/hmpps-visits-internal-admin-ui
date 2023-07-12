@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express'
-import { ValidationChain, body } from 'express-validator'
+import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService, LocationGroupService } from '../../../services'
 import { CreateLocationGroupDto } from '../../../data/visitSchedulerApiTypes'
 
@@ -28,9 +28,16 @@ export default class AddLocationGroupController {
     return async (req, res) => {
       const { prisonId } = req.params
 
-      const originalUrl = `/prisons/${prisonId}/session-templates/add`
+      const originalUrl = `/prisons/${prisonId}/location-groups/add`
 
-      const createSessionTemplateDto: CreateLocationGroupDto = {
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array())
+        req.flash('formValues', req.body)
+        return res.redirect(originalUrl)
+      }
+
+      const createLocationGroupDto: CreateLocationGroupDto = {
         name: req.body.name,
         prisonId,
         locations: req.body.location,
@@ -39,7 +46,7 @@ export default class AddLocationGroupController {
       try {
         const { reference } = await this.locationGroupService.createLocationGroup(
           res.locals.user.username,
-          createSessionTemplateDto,
+          createLocationGroupDto,
         )
         req.flash('message', `Location group '${reference}' has been created`)
         return res.redirect(`/prisons/${prisonId}/location-groups/${reference}`)
