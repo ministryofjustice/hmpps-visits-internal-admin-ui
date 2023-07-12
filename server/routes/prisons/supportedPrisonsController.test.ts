@@ -15,17 +15,12 @@ const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
 
 const allPrisons = TestData.prisons()
-const prisonNames = TestData.prisonNames()
-const activePrison = TestData.prison()
-const prisonName = prisonNames[activePrison.code]
 
 beforeEach(() => {
   flashData = {}
   flashProvider.mockImplementation(key => flashData[key])
 
   prisonService.getAllPrisons.mockResolvedValue(allPrisons)
-  prisonService.getPrisonNames.mockResolvedValue(prisonNames)
-  prisonService.getPrison.mockResolvedValue({ prison: activePrison, prisonName })
 
   app = appWithAllRoutes({ services: { prisonService, sessionTemplateService } })
 })
@@ -65,7 +60,7 @@ describe('Supported prisons', () => {
 
     it('should render prison added status message set in flash', () => {
       flashData = {
-        message: 'HEI',
+        message: 'Hewell (HMP) has been successfully added.',
       }
 
       return request(app)
@@ -102,13 +97,15 @@ describe('Supported prisons', () => {
 
   describe('POST /prisons', () => {
     it('should add prison to list of supported prisons and display message', () => {
+      prisonService.getPrisonName.mockResolvedValue('Berwyn (HMP & YOI)')
+
       return request(app)
         .post('/prisons')
         .send('prisonId=BWI')
         .expect(302)
         .expect('location', `/prisons`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'BWI')
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Berwyn (HMP & YOI) has been successfully added.')
           expect(prisonService.createPrison).toHaveBeenCalledTimes(1)
           expect(prisonService.createPrison).toHaveBeenCalledWith('user1', 'BWI')
         })

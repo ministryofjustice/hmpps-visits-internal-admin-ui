@@ -21,8 +21,8 @@ context('Supported prisons', () => {
 
   it('should activate a prison', () => {
     const homePage = Page.verifyOnPage(HomePage)
-    const inactivePrison = TestData.prison({ active: false })
-    const activePrison = TestData.prison({ active: true })
+    const inactivePrison = TestData.prisonDto({ active: false })
+    const activePrison = TestData.prisonDto({ active: true })
 
     homePage.supportedPrisonsCard().contains('Supported prisons')
     homePage.supportedPrisonsCard().click()
@@ -48,8 +48,8 @@ context('Supported prisons', () => {
 
   it('should deactivate a prison', () => {
     const homePage = Page.verifyOnPage(HomePage)
-    const inactivePrison = TestData.prison({ active: false })
-    const activePrison = TestData.prison({ active: true })
+    const inactivePrison = TestData.prisonDto({ active: false })
+    const activePrison = TestData.prisonDto({ active: true })
 
     homePage.supportedPrisonsCard().contains('Supported prisons')
     homePage.supportedPrisonsCard().click()

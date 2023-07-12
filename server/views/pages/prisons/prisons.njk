@@ -32,7 +32,7 @@
         <div class="govuk-grid-column-two-thirds">
           {{ mojBanner({
             type: "success",
-            text: prisonNames[message] | default("UNKNOWN") + " has been successfully added.",
+            text: message,
             iconFallbackText: "Success"
           }) }}
         </div>
@@ -52,7 +52,7 @@
           attributes: { "data-test": "prison-code" }
         },
         {
-          html: '<a href="/prisons/' + prison.code + '/session-templates">' + prisonNames[prison.code] | default('UNKNOWN') + "</a>",
+          html: '<a href="/prisons/' + prison.code + '/session-templates">' + prison.name + "</a>",
           attributes: { "data-test": "prison-name" }
         },
         {

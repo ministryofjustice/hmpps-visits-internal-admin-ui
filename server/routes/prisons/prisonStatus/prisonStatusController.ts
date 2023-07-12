@@ -7,12 +7,11 @@ export default class PrisonStatusController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
-      const { prison, prisonName } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
       return res.render('pages/prisons/status/status', {
         errors: req.flash('errors'),
         prison,
-        prisonName,
         message: req.flash('message'),
       })
     }

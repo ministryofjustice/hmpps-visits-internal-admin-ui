@@ -42,7 +42,7 @@
       {% endif %}
 
       <h1 class="govuk-heading-l">
-        <span class="govuk-caption-l">{{ prisonName }}</span>
+        <span class="govuk-caption-l">{{ prison.name }}</span>
         {{ pageHeaderTitle }}
       </h1>
 
@@ -91,7 +91,7 @@
           },
           value: {
             html: govukTag({
-              text: "Activated" if sessionTemplate.active == true else "Deactivated",
+              text: "Active" if sessionTemplate.active == true else "Inactive",
               classes: "govuk-tag--blue" if sessionTemplate.active else "govuk-tag--grey"
             }),
             classes: "test-template-status-value"

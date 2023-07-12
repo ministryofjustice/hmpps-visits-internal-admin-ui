@@ -11,7 +11,7 @@ export default class IncentiveLevelGroupsController {
     return async (req, res) => {
       const { prisonId } = req.params
 
-      const { prison, prisonName } = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
       const incentiveLevelGroups = await this.incentiveLevelGroupService.getIncentiveLevelGroups(
         res.locals.user.username,
         prisonId,
@@ -19,7 +19,6 @@ export default class IncentiveLevelGroupsController {
 
       return res.render('pages/prisons/incentiveLevelGroups/viewIncentiveLevelGroups', {
         prison,
-        prisonName,
         incentiveLevelGroups,
       })
     }
