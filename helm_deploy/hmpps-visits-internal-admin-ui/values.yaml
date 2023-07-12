@@ -61,6 +61,7 @@ generic-service:
     cloudplatform-live-1: "35.178.209.113/32"
     cloudplatform-live-2: "3.8.51.207/32"
     cloudplatform-live-3: "35.177.252.54/32"
+    moj-official-tgw-prod: "51.149.250.0/24"
 
 generic-prometheus-alerts:
   targetApplication: hmpps-visits-internal-admin-ui
