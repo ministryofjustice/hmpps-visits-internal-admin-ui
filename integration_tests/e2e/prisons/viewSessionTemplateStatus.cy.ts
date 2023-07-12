@@ -43,7 +43,7 @@ context('Change active/inactive session template', () => {
     viewSessionTemplatePage.goTo(prisonCode, deactivatedSessionTemplate.reference)
 
     // Then
-    viewSessionTemplatePage.sessionTemplateStatusLabel().should('include.text', 'Deactivated')
+    viewSessionTemplatePage.sessionTemplateStatusLabel().should('include.text', 'Inactive')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Activate')
     viewSessionTemplatePage.getDeleteSessionTemplateButton().should('be.enabled')
   })
@@ -58,8 +58,8 @@ context('Change active/inactive session template', () => {
 
     // Then
     const label = viewSessionTemplatePage.sessionTemplateStatusLabel()
-    label.should('include.text', 'Activated')
-    label.should('not.include.text', 'Deactivated')
+    label.should('include.text', 'Active')
+    label.should('not.include.text', 'Inactive')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Deactivate')
     viewSessionTemplatePage.getDeleteSessionTemplateButton().should('be.disabled')
   })
@@ -73,8 +73,8 @@ context('Change active/inactive session template', () => {
 
     // Then
     const label = viewSessionTemplatePage.sessionTemplateStatusLabel()
-    label.should('include.text', 'Activated')
-    label.should('not.include.text', 'Deactivated')
+    label.should('include.text', 'Active')
+    label.should('not.include.text', 'Inactive')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Deactivate')
     viewSessionTemplatePage.getDeleteSessionTemplateButton().should('be.disabled')
   })
@@ -89,7 +89,7 @@ context('Change active/inactive session template', () => {
 
     // Then
     const label = viewSessionTemplatePage.sessionTemplateStatusLabel()
-    label.should('include.text', 'Deactivated')
+    label.should('include.text', 'Inactive')
     viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Activate')
     viewSessionTemplatePage.getDeleteSessionTemplateButton().should('be.enabled')
   })
