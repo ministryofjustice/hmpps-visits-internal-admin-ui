@@ -12,11 +12,11 @@ export default class IncentiveGroupsController {
       const { prisonId } = req.params
 
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
-      const IncentiveGroups = await this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
+      const incentiveGroups = await this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
 
       return res.render('pages/prisons/incentiveGroups/viewIncentiveGroups', {
         prison,
-        IncentiveGroups,
+        incentiveGroups,
       })
     }
   }

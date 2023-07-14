@@ -37,12 +37,12 @@ describe('Incentive level group service', () => {
 
   describe('getIncentiveGroups', () => {
     it('should return an array of all incentive level groups for a prison', async () => {
-      const IncentiveGroups = [TestData.incentiveLevelGroup()]
-      visitSchedulerApiClient.getIncentiveGroups.mockResolvedValue(IncentiveGroups)
+      const incentiveGroups = [TestData.incentiveLevelGroup()]
+      visitSchedulerApiClient.getIncentiveGroups.mockResolvedValue(incentiveGroups)
 
       const results = await incentiveGroupService.getIncentiveGroups('user', 'HEI')
 
-      expect(results).toEqual(IncentiveGroups)
+      expect(results).toEqual(incentiveGroups)
       expect(visitSchedulerApiClient.getIncentiveGroups).toHaveBeenCalledWith('HEI')
     })
   })
