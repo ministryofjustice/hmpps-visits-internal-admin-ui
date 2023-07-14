@@ -25,8 +25,9 @@ export default function routes(services: Services): Router {
   postWithValidation(
     '/prisons/:prisonId/session-templates/add',
     addSessionTemplate.validate(),
-    addSessionTemplate.submit(),
+    addSessionTemplate.add(),
   )
+  post('/prisons/:prisonId/session-templates/:reference/copy', addSessionTemplate.populateNewFromExisting())
 
   get('/prisons/:prisonId([A-Z]{3})/session-templates', sessionTemplates.view())
 
