@@ -33,11 +33,11 @@ afterEach(() => {
 
 describe('Single session template page', () => {
   describe('GET /prisons/{:prisonId}/session-templates/{:reference}', () => {
-    let singleSessionTemplate: SessionTemplate
+    let sessionTemplate: SessionTemplate
 
     beforeEach(() => {
-      singleSessionTemplate = TestData.sessionTemplate()
-      sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(singleSessionTemplate)
+      sessionTemplate = TestData.sessionTemplate()
+      sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplate)
     })
 
     it('should display all session template information', () => {
@@ -47,35 +47,43 @@ describe('Single session template page', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('h1').text()).toContain('Hewell (HMP)')
-          expect($('h1').text()).toContain(singleSessionTemplate.name)
+          expect($('h1').text()).toContain(sessionTemplate.name)
 
-          expect($('.test-template-reference').text()).toContain(singleSessionTemplate.reference)
+          expect($('.test-template-reference').text()).toContain(sessionTemplate.reference)
           expect($('.test-template-dayOfWeek').text()).toContain('Wednesday')
-          expect($('.test-template-startTime').text()).toContain(singleSessionTemplate.sessionTimeSlot.startTime)
-          expect($('.test-template-endTime').text()).toContain(singleSessionTemplate.sessionTimeSlot.endTime)
-          expect($('.test-template-openCapacity').text()).toContain(
-            singleSessionTemplate.sessionCapacity.open.toString(),
-          )
-          expect($('.test-template-closedCapacity').text()).toContain(
-            singleSessionTemplate.sessionCapacity.closed.toString(),
-          )
+          expect($('.test-template-startTime').text()).toContain(sessionTemplate.sessionTimeSlot.startTime)
+          expect($('.test-template-endTime').text()).toContain(sessionTemplate.sessionTimeSlot.endTime)
+          expect($('.test-template-openCapacity').text()).toContain(sessionTemplate.sessionCapacity.open.toString())
+          expect($('.test-template-closedCapacity').text()).toContain(sessionTemplate.sessionCapacity.closed.toString())
           expect($('.test-template-validFromDate').text()).toContain('21 March 2023')
           expect($('.test-template-validToDate').text()).toContain('No end date')
-          expect($('.test-template-visitRoom').text()).toContain(singleSessionTemplate.visitRoom)
+          expect($('.test-template-visitRoom').text()).toContain(sessionTemplate.visitRoom)
           expect($('.test-template-weeklyFrequency').text()).toContain('1')
           expect($('.test-template-locationGroups').text()).toContain('None')
           expect($('.test-template-categoryGroups').text()).toContain('None')
           expect($('.test-template-incentiveGroups').text()).toContain('None')
+
+          // actions
+          expect($('[data-test="template-change-status-form"]').attr('action')).toBe(
+            `/prisons/${prison.code}/session-templates/${sessionTemplate.reference}/deactivate`,
+          )
+          expect($('[data-test="session-template-change-status-button"]').length).toBe(1)
+          expect($('[data-test="template-copy-form"]').attr('action')).toBe(
+            `/prisons/${prison.code}/session-templates/${sessionTemplate.reference}/copy`,
+          )
+          expect($('[data-test="session-template-copy-button"]').length).toBe(1)
+          expect($('[data-test="template-delete-form"]').attr('action')).toBe(
+            `/prisons/${prison.code}/session-templates/${sessionTemplate.reference}/delete`,
+          )
+          expect($('[data-test="session-template-delete-button"]').length).toBe(1)
         })
     })
 
     it('should display all session template information - end date and groups', () => {
-      singleSessionTemplate.sessionDateRange.validToDate = '2023-04-21'
-      singleSessionTemplate.prisonerCategoryGroups = [{ categories: [], name: 'Category group 1', reference: '' }]
-      singleSessionTemplate.prisonerIncentiveLevelGroups = [
-        { incentiveLevels: [], name: 'Incentive group 1', reference: '' },
-      ]
-      singleSessionTemplate.permittedLocationGroups = [{ locations: [], name: 'Location group 1', reference: '' }]
+      sessionTemplate.sessionDateRange.validToDate = '2023-04-21'
+      sessionTemplate.prisonerCategoryGroups = [{ categories: [], name: 'Category group 1', reference: '' }]
+      sessionTemplate.prisonerIncentiveLevelGroups = [{ incentiveLevels: [], name: 'Incentive group 1', reference: '' }]
+      sessionTemplate.permittedLocationGroups = [{ locations: [], name: 'Location group 1', reference: '' }]
 
       return request(app)
         .get('/prisons/HEI/session-templates/-afe.dcc.0f')

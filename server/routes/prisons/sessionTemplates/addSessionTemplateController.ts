@@ -26,7 +26,49 @@ export default class AddSessionTemplateController {
     }
   }
 
-  public submit(): RequestHandler {
+  public populateNewFromExisting(): RequestHandler {
+    return async (req, res) => {
+      const { prisonId, reference } = req.params
+
+      const sessionTemplate = await this.sessionTemplateService.getSingleSessionTemplate(
+        res.locals.user.username,
+        reference,
+      )
+
+      const validFromDateSplit = sessionTemplate.sessionDateRange.validFromDate.split('-')
+      const validFromDateYear = validFromDateSplit[0]
+      const validFromDateMonth = validFromDateSplit[1]
+      const validFromDateDay = validFromDateSplit[2]
+
+      const validToDateSplit = (sessionTemplate.sessionDateRange?.validToDate ?? '---').split('-')
+      const validToDateYear = validToDateSplit[0] || undefined
+      const validToDateMonth = validToDateSplit[1] || undefined
+      const validToDateDay = validToDateSplit[2] || undefined
+
+      const formValues = {
+        name: `COPY - ${sessionTemplate.name}`,
+        dayOfWeek: sessionTemplate.dayOfWeek,
+        startTime: sessionTemplate.sessionTimeSlot.startTime,
+        endTime: sessionTemplate.sessionTimeSlot.endTime,
+        weeklyFrequency: sessionTemplate.weeklyFrequency.toString(),
+        validFromDateDay,
+        validFromDateMonth,
+        validFromDateYear,
+        hasEndDate: sessionTemplate.sessionDateRange.validToDate ? 'yes' : undefined,
+        validToDateDay,
+        validToDateMonth,
+        validToDateYear,
+        openCapacity: sessionTemplate.sessionCapacity.open.toString(),
+        closedCapacity: sessionTemplate.sessionCapacity.closed.toString(),
+        visitRoom: sessionTemplate.visitRoom,
+      }
+
+      req.flash('formValues', formValues)
+      return res.redirect(`/prisons/${prisonId}/session-templates/add`)
+    }
+  }
+
+  public add(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
 

@@ -230,3 +230,62 @@ describe('Add a session template', () => {
     })
   })
 })
+
+describe('Copy a session template', () => {
+  const expectedFormValues: Record<string, string> = {
+    name: 'COPY - WEDNESDAY, 2023-03-21, 13:45',
+    dayOfWeek: 'WEDNESDAY',
+    startTime: '13:45',
+    endTime: '14:45',
+    weeklyFrequency: '1',
+    validFromDateDay: '21',
+    validFromDateMonth: '03',
+    validFromDateYear: '2023',
+    openCapacity: '35',
+    closedCapacity: '2',
+    visitRoom: 'Visits Main Room',
+  }
+
+  describe('POST /prisons/{:prisonId}/session-templates/copy', () => {
+    it('should pre-populate formValues in flash and redirect to add template form - no end date', () => {
+      const sessionTemplateToCopy = TestData.sessionTemplate()
+      sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplateToCopy)
+
+      return request(app)
+        .post(`/prisons/${prison.code}/session-templates/${sessionTemplateToCopy.reference}/copy`)
+        .expect(302)
+        .expect('location', `/prisons/${prison.code}/session-templates/add`)
+        .expect(() => {
+          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(
+            'user1',
+            sessionTemplateToCopy.reference,
+          )
+          expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFormValues)
+        })
+    })
+
+    it('should pre-populate formValues in flash and redirect to add template form - with end date', () => {
+      const sessionTemplateToCopy = TestData.sessionTemplate()
+      sessionTemplateToCopy.sessionDateRange.validToDate = '2023-12-31'
+      sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplateToCopy)
+
+      const endDateValues = {
+        hasEndDate: 'yes',
+        validToDateDay: '31',
+        validToDateMonth: '12',
+        validToDateYear: '2023',
+      }
+      return request(app)
+        .post(`/prisons/${prison.code}/session-templates/${sessionTemplateToCopy.reference}/copy`)
+        .expect(302)
+        .expect('location', `/prisons/${prison.code}/session-templates/add`)
+        .expect(() => {
+          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(
+            'user1',
+            sessionTemplateToCopy.reference,
+          )
+          expect(flashProvider).toHaveBeenCalledWith('formValues', { ...expectedFormValues, ...endDateValues })
+        })
+    })
+  })
+})

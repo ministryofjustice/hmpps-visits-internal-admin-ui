@@ -224,20 +224,30 @@
 
       <h2 class="govuk-heading-m">Change session template status</h2>
       <form action="/prisons/{{ sessionTemplate.prisonId }}/session-templates/{{ sessionTemplate.reference }}/{{ changeStatusAction }}" data-test="template-change-status-form" method="POST" novalidate>
-
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukButton({
-        text: changeStatusAction | capitalize,
-        classes: "govuk-button--warning" if sessionTemplate.active,
-        preventDoubleClick: true,
-        attributes: { "data-test": "session-template-change-status-button" }
-        })}}
+          text: changeStatusAction | capitalize,
+          classes: "govuk-button--warning" if sessionTemplate.active,
+          preventDoubleClick: true,
+          attributes: { "data-test": "session-template-change-status-button" }
+        }) }}
+      </form>
+
+      <h2 class="govuk-heading-m">Copy this template</h2>
+      <p>Start adding a new session template based on this one.</p>
+      <form action="/prisons/{{ sessionTemplate.prisonId }}/session-templates/{{ sessionTemplate.reference }}/copy" data-test="template-copy-form" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukButton({
+          text: "Copy",
+          classes: "govuk-button--secondary",
+          preventDoubleClick: true,
+          attributes: { "data-test": "session-template-copy-button" }
+          }) }}
       </form>
 
       <h2 class="govuk-heading-m">Delete session template</h2>
       <form action="/prisons/{{ sessionTemplate.prisonId }}/session-templates/{{ sessionTemplate.reference }}/delete" data-test="template-delete-form" method="POST" novalidate>
-
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukButton({
@@ -246,7 +256,7 @@
           preventDoubleClick: true,
           disabled: (sessionTemplate.active),
           attributes: { "data-test": "session-template-delete-button" }
-        })}}
+        }) }}
 
         {% if sessionTemplate.active %}
           <p>You cannot delete an active template.</p>
