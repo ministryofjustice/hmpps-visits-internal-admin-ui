@@ -161,7 +161,7 @@ export default class VisitSchedulerApiClient {
 
   async deleteIncentiveGroup(reference: string): Promise<void> {
     return this.restClient.delete({
-      path: `/admin/incentive-groups/group/group/${reference}`,
+      path: `/admin/incentive-groups/group/${reference}`,
     })
   }
 }

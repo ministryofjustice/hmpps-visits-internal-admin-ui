@@ -8,6 +8,7 @@ export default function routes(services: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+  const post = (path: string | string[], handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   const incentiveGroups = new IncentiveGroupsController(services.prisonService, services.incentiveGroupService)
   const singleIncentiveGroup = new SingleIncentiveGroupController(
@@ -17,6 +18,7 @@ export default function routes(services: Services): Router {
 
   get('/prisons/:prisonId([A-Z]{3})/incentive-groups', incentiveGroups.view())
   get('/prisons/:prisonId([A-Z]{3})/incentive-groups/:reference', singleIncentiveGroup.view())
+  post('/prisons/:prisonId([A-Z]{3})/incentive-groups/:reference/delete', singleIncentiveGroup.delete())
 
   return router
 }

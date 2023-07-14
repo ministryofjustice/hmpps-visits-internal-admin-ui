@@ -21,19 +21,19 @@ export default class SingleIncentiveGroupController {
     }
   }
 
-  // public delete(): RequestHandler {
-  //   return async (req, res) => {
-  //     const { reference, prisonId } = req.params
+  public delete(): RequestHandler {
+    return async (req, res) => {
+      const { reference, prisonId } = req.params
 
-  //     try {
-  //       await this.incentiveGroupService.deleteLocationGroup(res.locals.user.username, reference)
-  //       req.flash('message', `Location group with reference ${reference} deleted.`)
-  //     } catch (error) {
-  //       req.flash('errors', [{ msg: `Failed to delete location group with reference - ${reference}` }])
-  //       return res.redirect(`/prisons/${prisonId}/location-groups/${reference}`)
-  //     }
+      try {
+        await this.incentiveGroupService.deleteIncentiveGroup(res.locals.user.username, reference)
+        req.flash('message', `Incentive group with reference ${reference} deleted.`)
+      } catch (error) {
+        req.flash('errors', [{ msg: `Failed to delete incentive group with reference - ${reference}` }])
+        return res.redirect(`/prisons/${prisonId}/incentive-groups/${reference}`)
+      }
 
-  //     return res.redirect(`/prisons/${prisonId}/location-groups`)
-  //   }
-  // }
+      return res.redirect(`/prisons/${prisonId}/incentive-groups`)
+    }
+  }
 }
