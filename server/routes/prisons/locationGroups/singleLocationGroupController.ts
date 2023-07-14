@@ -17,4 +17,20 @@ export default class SingleLocationGroupController {
       return res.render('pages/prisons/locationGroups/viewSingleLocationGroup', { prison, locationGroup })
     }
   }
+
+  public delete(): RequestHandler {
+    return async (req, res) => {
+      const { reference, prisonId } = req.params
+
+      try {
+        await this.locationGroupService.deleteLocationGroup(res.locals.user.username, reference)
+        req.flash('message', `Location group with reference ${reference} deleted.`)
+      } catch (error) {
+        req.flash('errors', [{ msg: `Failed to delete location group with reference - ${reference}` }])
+        return res.redirect(`/prisons/${prisonId}/location-groups/${reference}`)
+      }
+
+      return res.redirect(`/prisons/${prisonId}/location-groups`)
+    }
+  }
 }

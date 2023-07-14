@@ -196,6 +196,21 @@ describe('visitSchedulerApiClient', () => {
     })
   })
 
+  describe('getSingleLocationGroup', () => {
+    it('should return a single location groups', async () => {
+      const singleLocationGroup = TestData.locationGroup()
+
+      fakeVisitSchedulerApi
+        .get(`/admin/location-groups/group/${singleLocationGroup.reference}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, singleLocationGroup)
+
+      const output = await visitSchedulerApiClient.getSingleLocationGroup(singleLocationGroup.reference)
+
+      expect(output).toEqual(singleLocationGroup)
+    })
+  })
+
   describe('getLocationGroups', () => {
     it('should return all location groups for a prison', async () => {
       const prisonCode = 'HEI'
@@ -209,21 +224,6 @@ describe('visitSchedulerApiClient', () => {
       const output = await visitSchedulerApiClient.getLocationGroups('HEI')
 
       expect(output).toEqual(locationGroups)
-    })
-  })
-
-  describe('getSingleLocationGroup', () => {
-    it('should return a single location groups', async () => {
-      const singleLocationGroup = TestData.locationGroup()
-
-      fakeVisitSchedulerApi
-        .get(`/admin/location-groups/group/${singleLocationGroup.reference}`)
-        .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, singleLocationGroup)
-
-      const output = await visitSchedulerApiClient.getSingleLocationGroup(singleLocationGroup.reference)
-
-      expect(output).toEqual(singleLocationGroup)
     })
   })
 
