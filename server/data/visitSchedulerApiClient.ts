@@ -147,9 +147,21 @@ export default class VisitSchedulerApiClient {
   }
 
   // Incentive level groups
-  async getIncentiveLevelGroups(prisonCode: string): Promise<IncentiveLevelGroup[]> {
+  async getSingleIncentiveGroup(reference: string): Promise<IncentiveLevelGroup> {
+    return this.restClient.get({
+      path: `/admin/incentive-groups/group/${reference}`,
+    })
+  }
+
+  async getIncentiveGroups(prisonCode: string): Promise<IncentiveLevelGroup[]> {
     return this.restClient.get({
       path: `/admin/incentive-groups/${prisonCode}`,
+    })
+  }
+
+  async deleteIncentiveGroup(reference: string): Promise<void> {
+    return this.restClient.delete({
+      path: `/admin/incentive-groups/group/group/${reference}`,
     })
   }
 }

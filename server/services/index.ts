@@ -4,7 +4,7 @@ import PrisonService from './prisonService'
 import SessionTemplateService from './sessionTemplateService'
 import LocationGroupService from './locationGroupService'
 import CategoryGroupService from './categoryGroupService'
-import IncentiveLevelGroupService from './incentiveLevelGroupService'
+import IncentiveGroupService from './incentiveGroupService'
 
 export const services = () => {
   const { hmppsAuthClient, applicationInfo, prisonRegisterApiClientBuilder, visitSchedulerApiClientBuilder } =
@@ -12,7 +12,7 @@ export const services = () => {
 
   const categoryGroupService = new CategoryGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
 
-  const incentiveLevelGroupService = new IncentiveLevelGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
+  const incentiveGroupService = new IncentiveGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
 
   const locationGroupService = new LocationGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
 
@@ -29,7 +29,7 @@ export const services = () => {
   return {
     applicationInfo,
     categoryGroupService,
-    incentiveLevelGroupService,
+    incentiveGroupService,
     locationGroupService,
     prisonService,
     sessionTemplateService,
@@ -41,7 +41,7 @@ export type Services = ReturnType<typeof services>
 
 export {
   CategoryGroupService,
-  IncentiveLevelGroupService,
+  IncentiveGroupService,
   LocationGroupService,
   PrisonService,
   SessionTemplateService,

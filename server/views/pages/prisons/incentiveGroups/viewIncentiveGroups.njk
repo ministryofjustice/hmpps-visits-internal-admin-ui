@@ -80,7 +80,7 @@
 
       {# Build rows of incentive level groups #}
       {% set rows = [] %}
-      {% for incentiveLevelGroup in incentiveLevelGroups %}
+      {% for incentiveLevelGroup in IncentiveGroups %}
         {% set rows = (rows.push([
         {
           html: '<a href="/prisons/' + prison.code + '/incentive-groups/' + incentiveLevelGroup.reference + '">' + incentiveLevelGroup.name + "</a>"
