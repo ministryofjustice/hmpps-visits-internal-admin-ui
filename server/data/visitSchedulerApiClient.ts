@@ -133,6 +133,12 @@ export default class VisitSchedulerApiClient {
     })
   }
 
+  async deleteLocationGroup(reference: string): Promise<void> {
+    return this.restClient.delete({
+      path: `/admin/location-groups/group/${reference}`,
+    })
+  }
+
   // Category groups
   async getCategoryGroups(prisonCode: string): Promise<CategoryGroup[]> {
     return this.restClient.get({
