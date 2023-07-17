@@ -17,7 +17,11 @@ export default class SingleIncentiveGroupController {
         reference,
       )
 
-      return res.render('pages/prisons/incentiveGroups/viewSingleIncentiveGroup', { prison, incentiveGroup })
+      return res.render('pages/prisons/incentiveGroups/viewSingleIncentiveGroup', {
+        errors: req.flash('errors'),
+        prison,
+        incentiveGroup,
+      })
     }
   }
 

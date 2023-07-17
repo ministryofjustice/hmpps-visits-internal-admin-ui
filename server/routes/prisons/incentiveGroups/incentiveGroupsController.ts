@@ -17,6 +17,7 @@ export default class IncentiveGroupsController {
       return res.render('pages/prisons/incentiveGroups/viewIncentiveGroups', {
         prison,
         incentiveGroups,
+        message: req.flash('message'),
       })
     }
   }

@@ -23,6 +23,20 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
+      {% include "partials/errorSummary.njk" %}
+
+      {% if message | length %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {{ mojBanner({
+              type: "success",
+              text: message,
+              iconFallbackText: "Success"
+            }) }}
+          </div>
+        </div>
+      {% endif %}
+
       <h1 class="govuk-heading-l">
         <span>{{ pageHeaderTitle }}</span>
       </h1>
