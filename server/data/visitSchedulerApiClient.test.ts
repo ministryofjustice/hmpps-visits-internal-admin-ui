@@ -263,7 +263,22 @@ describe('visitSchedulerApiClient', () => {
     })
   })
 
-  describe('getIncentiveLevelGroups', () => {
+  describe('getSingleIncentiveGroup', () => {
+    it('should return an incentive level group', async () => {
+      const getSingleIncentiveGroup = TestData.incentiveLevelGroup()
+
+      fakeVisitSchedulerApi
+        .get(`/admin/incentive-groups/group/${getSingleIncentiveGroup.reference}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, getSingleIncentiveGroup)
+
+      const output = await visitSchedulerApiClient.getSingleIncentiveGroup(getSingleIncentiveGroup.reference)
+
+      expect(output).toEqual(getSingleIncentiveGroup)
+    })
+  })
+
+  describe('getIncentiveGroups', () => {
     it('should return all incentive level groups for a prison', async () => {
       const prisonCode = 'HEI'
       const incentiveGroups = [TestData.incentiveLevelGroup()]
@@ -273,7 +288,7 @@ describe('visitSchedulerApiClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, incentiveGroups)
 
-      const output = await visitSchedulerApiClient.getIncentiveLevelGroups('HEI')
+      const output = await visitSchedulerApiClient.getIncentiveGroups('HEI')
 
       expect(output).toEqual(incentiveGroups)
     })

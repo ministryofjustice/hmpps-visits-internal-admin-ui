@@ -1,0 +1,88 @@
+{% extends "partials/layout.njk" %}
+{%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
+{%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "moj/components/banner/macro.njk" import mojBanner -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set pageHeaderTitle = incentiveGroup.name %}
+{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+  ] %}
+
+{% set backLinkHref = "/prisons/" + prison.code + "/incentive-groups" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prison.name }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+  
+      {%- set incentiveLevels -%}
+        {%- if incentiveGroup.incentiveLevels.length -%}
+          <ul class="govuk-list govuk-list--bullet">
+            {%- for incentive in incentiveGroup.incentiveLevels -%} 
+              <li>{{ incentive }}</li>
+            {%- endfor -%}
+          </ul>
+        {%- else -%}
+          None
+        {%- endif -%}
+      {%- endset -%}
+
+       {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "Reference"
+            },
+            value: {
+              text: incentiveGroup.reference
+            },
+            classes: "test-template-reference"
+          },
+          { 
+            key: {
+              text: "Incentive levels"
+            },
+            value: {
+              html: incentiveLevels
+            },
+            classes: "test-template-incentiveLevels"
+          }
+        ]
+      }) }}
+
+      <h2 class="govuk-heading-m">Delete incentive group</h2>
+      <form action="/prisons/{{ prison.code }}/incentive-groups/{{ incentiveGroup.reference }}/delete" data-test="incentive-delete-form" method="POST" novalidate>
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukButton({
+          text: "Delete" | capitalize,
+          classes: "govuk-button--warning",
+          preventDoubleClick: true,
+          attributes: { "data-test": "incentive-group-delete-button" }
+        })}}
+
+      </form>
+
+    </div>
+  </div>
+{% endblock %}
