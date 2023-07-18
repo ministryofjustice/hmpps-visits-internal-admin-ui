@@ -1,12 +1,8 @@
 {% extends "partials/layout.njk" %}
-{% from "govuk/components/table/macro.njk" import govukTable %}
-{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
-{%- from "govuk/components/tag/macro.njk" import govukTag -%}
-{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "govuk/components/fieldset/macro.njk" import govukFieldset -%}
 {%- from "govuk/components/input/macro.njk" import govukInput -%}
-{%- from "govuk/components/textarea/macro.njk" import govukTextarea -%}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
 
 {% set pageHeaderTitle = 'Add a location group' %}
 {% set pageTitle = applicationName + " - Location groups - " + pageHeaderTitle %}
@@ -67,6 +63,24 @@
             }) %}
 
             <div class="govuk-form-group{{ ' govuk-form-group--error' if levelOneError or levelTwoError or levelThreeError or levelFourError }}">
+
+              {{ govukErrorMessage({
+                id: "location[" + locationRow + "].levelOneCode-error",
+                text: levelOneError.text
+              }) if levelOneError }}
+              {{ govukErrorMessage({
+                id: "location[" + locationRow + "].levelTwoCode-error",
+                text: levelTwoError.text
+              }) if levelTwoError }}
+              {{ govukErrorMessage({
+                id: "location[" + locationRow + "].levelThreeCode-error",
+                text: levelThreeError.text
+              }) if levelThreeError }}
+              {{ govukErrorMessage({
+                id: "location[" + locationRow + "].levelFourCode-error",
+                text: levelFourError.text
+              }) if levelFourError }}
+
               {{ govukInput({
                 label: {
                   text: "One"

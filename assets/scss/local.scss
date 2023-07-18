@@ -37,6 +37,10 @@
     top: unset;
   }
 
+  .govuk-error-message {
+    margin-bottom: govuk-spacing(1);
+  }
+
   .govuk-button {
     margin-top: govuk-spacing(3)
   }
