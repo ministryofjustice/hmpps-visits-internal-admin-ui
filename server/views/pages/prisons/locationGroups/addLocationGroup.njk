@@ -146,7 +146,7 @@
               {{ govukButton({
                 text: "Remove",
                 classes: "govuk-button govuk-button--secondary moj-add-another__remove-button"
-              }) if not loop.first }}
+              }) if loop.length > 1 }}
             </div>
 
             {% endcall %}
