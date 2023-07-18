@@ -26,7 +26,7 @@
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-three-quarters">
 
       {% include "partials/errorSummary.njk" %}
 
@@ -35,7 +35,7 @@
         {{ pageHeaderTitle }}
       </h1>
 
-      <div data-module="moj-add-another">
+      <div class="vsip-add-location-group" data-module="moj-add-another">
 
         <form action="/prisons/{{prison.code}}/location-groups/add" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -47,7 +47,7 @@
             },
             id: "name",
             name: "name",
-            classes: "govuk-!-width-three-quarters govuk-!-margin-bottom-4",
+            classes: "govuk-!-width-two-thirds govuk-!-margin-bottom-4",
             value: formValues.name,
             autocomplete: "off",
             errorMessage: errors | findError("name")
@@ -66,19 +66,15 @@
               classes: "moj-add-another__item"
             }) %}
 
-            <div class="govuk-form-group govuk-!-margin-bottom-0{{ ' govuk-form-group--error' if levelOneError or levelTwoError or levelThreeError or levelFourError }}">
+            <div class="govuk-form-group{{ ' govuk-form-group--error' if levelOneError or levelTwoError or levelThreeError or levelFourError }}">
               {{ govukInput({
-                formGroup: {
-                  classes: "govuk-!-display-inline-block govuk-!-margin-bottom-0"
-                },
                 label: {
-                  html: "One",
-                  classes: "govuk-label--s"
+                  text: "One"
                 },
                 id: "location[" + locationRow + "][levelOneCode]",
                 name: "location[" + locationRow + "][levelOneCode]",
                 value: formValues.location[locationRow].levelOneCode,
-                classes: "govuk-input--width-5" + (" govuk-input--error" if levelOneError),
+                classes: "govuk-input--error" if levelOneError,
                 autocomplete: "off",
                 attributes: {
                   "data-name": "location[%index%][levelOneCode]",
@@ -87,17 +83,13 @@
               }) }}
 
               {{ govukInput({
-                formGroup: {
-                  classes: "govuk-!-display-inline-block"
-                },
                 label: {
-                  html: "Two",
-                  classes: "govuk-label--s govuk-!-margin-left-3 govuk-!-margin-bottom-0"
+                  text: "Two"
                 },
                 id: "location[" + locationRow + "][levelTwoCode]",
                 name: "location[" + locationRow + "][levelTwoCode]",
                 value: formValues.location[locationRow].levelTwoCode,
-                classes: "govuk-input--width-5 govuk-!-margin-left-3" + (" govuk-input--error" if levelTwoError),
+                classes: "govuk-input--error" if levelTwoError,
                 autocomplete: "off",
                 attributes: {
                   "data-name": "location[%index%][levelTwoCode]",
@@ -106,17 +98,13 @@
               }) }}
 
               {{ govukInput({
-                formGroup: {
-                  classes: "govuk-!-display-inline-block"
-                },
                 label: {
-                  html: "Three",
-                  classes: "govuk-label--s govuk-!-margin-left-3 govuk-!-margin-bottom-0"
+                  text: "Three"
                 },
                 id: "location[" + locationRow + "][levelThreeCode]",
                 name: "location[" + locationRow + "][levelThreeCode]",
                 value: formValues.location[locationRow].levelThreeCode,
-                classes: "govuk-input--width-5 govuk-!-margin-left-3" + (" govuk-input--error" if levelThreeError),
+                classes: "govuk-input--error" if levelThreeError,
                 autocomplete: "off",
                 attributes: {
                   "data-name": "location[%index%][levelThreeCode]",
@@ -125,17 +113,13 @@
               }) }}
 
               {{ govukInput({
-                formGroup: {
-                  classes: "govuk-!-display-inline-block"
-                },
                 label: {
-                  html: "Four",
-                  classes: "govuk-label--s govuk-!-margin-left-3 govuk-!-margin-bottom-0"
+                  text: "Four"
                 },
                 id: "location[" + locationRow + "][levelFourCode]",
                 name: "location[" + locationRow + "][levelFourCode]",
                 value: formValues.location[locationRow].levelFourCode,
-                classes: "govuk-input--width-5 govuk-!-margin-left-3" + (" govuk-input--error" if levelFourError),
+                classes: "govuk-input--error" if levelFourError,
                 autocomplete: "off",
                 attributes: {
                   "data-name": "location[%index%][levelFourCode]",
@@ -152,22 +136,16 @@
             {% endcall %}
           {% endfor %}
 
-          <div class="moj-button-action">
-            {{ govukButton({
-              text: "Add another location",
-              classes: "govuk-button--secondary moj-add-another__add-button govuk-!-margin-top-3 govuk-!-margin-bottom-8"
-            }) }}
-          </div>
+          {{ govukButton({
+            text: "Add another location",
+            classes: "govuk-button--secondary moj-add-another__add-button"
+          }) }}
 
-          <div class="moj-button-action">
-            {{ govukButton({
-              text: "Submit",
-              preventDoubleClick: true
-            }) }}
-          </div>
-
+          {{ govukButton({
+            text: "Submit",
+            preventDoubleClick: true
+          }) }}
         </form>
-
       </div>
 
     </div>
