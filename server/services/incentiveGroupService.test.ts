@@ -12,6 +12,10 @@ describe('Incentive level group service', () => {
 
   const VisitSchedulerApiClientFactory = jest.fn()
 
+  const singleIncentiveGroup = TestData.incentiveLevelGroup()
+  const incentiveGroups = [TestData.incentiveLevelGroup()]
+  const createIncentiveGroupDto = TestData.createIncentiveGroupDto()
+
   beforeEach(() => {
     VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
     incentiveGroupService = new IncentiveGroupService(VisitSchedulerApiClientFactory, hmppsAuthClient)
@@ -25,7 +29,6 @@ describe('Incentive level group service', () => {
 
   describe('getSingleIncentiveGroup', () => {
     it('should return an incentive group', async () => {
-      const singleIncentiveGroup = TestData.incentiveLevelGroup()
       visitSchedulerApiClient.getSingleIncentiveGroup.mockResolvedValue(singleIncentiveGroup)
 
       const results = await incentiveGroupService.getSingleIncentiveGroup('user', singleIncentiveGroup.reference)
@@ -37,13 +40,22 @@ describe('Incentive level group service', () => {
 
   describe('getIncentiveGroups', () => {
     it('should return an array of all incentive level groups for a prison', async () => {
-      const incentiveGroups = [TestData.incentiveLevelGroup()]
       visitSchedulerApiClient.getIncentiveGroups.mockResolvedValue(incentiveGroups)
 
       const results = await incentiveGroupService.getIncentiveGroups('user', 'HEI')
 
       expect(results).toEqual(incentiveGroups)
       expect(visitSchedulerApiClient.getIncentiveGroups).toHaveBeenCalledWith('HEI')
+    })
+  })
+
+  describe('createIncentiveGroup', () => {
+    it('should create a session template', async () => {
+      visitSchedulerApiClient.createIncentiveGroup.mockResolvedValue(singleIncentiveGroup)
+
+      const results = await incentiveGroupService.createIncentiveGroup('user', createIncentiveGroupDto)
+
+      expect(results).toEqual(singleIncentiveGroup)
     })
   })
 })

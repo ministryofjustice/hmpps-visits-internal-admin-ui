@@ -5,6 +5,8 @@ export type CategoryGroup = components['schemas']['SessionCategoryGroupDto']
 
 // Incentive groups
 export type IncentiveLevelGroup = components['schemas']['SessionIncentiveLevelGroupDto']
+export type CreateIncentiveGroupDto = components['schemas']['CreateIncentiveGroupDto']
+export type IncentiveLevels = IncentiveLevelGroup['incentiveLevels'][number]
 
 // Location groups
 export type LocationGroup = components['schemas']['SessionLocationGroupDto']

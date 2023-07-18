@@ -1,5 +1,6 @@
+import logger from '../../logger'
 import { RestClientBuilder, VisitSchedulerApiClient, HmppsAuthClient } from '../data'
-import { IncentiveLevelGroup } from '../data/visitSchedulerApiTypes'
+import { CreateIncentiveGroupDto, IncentiveLevelGroup } from '../data/visitSchedulerApiTypes'
 
 export default class IncentiveGroupService {
   constructor(
@@ -19,6 +20,20 @@ export default class IncentiveGroupService {
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     return visitSchedulerApiClient.getIncentiveGroups(prisonCode)
+  }
+
+  async createIncentiveGroup(
+    username: string,
+    createIncentiveGrupDto: CreateIncentiveGroupDto,
+  ): Promise<IncentiveLevelGroup> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    const incentiveGroup = await visitSchedulerApiClient.createIncentiveGroup(createIncentiveGrupDto)
+    logger.info(
+      `New incentive group '${incentiveGroup.reference}' created for prison '${createIncentiveGrupDto.prisonId}'`,
+    )
+    return incentiveGroup
   }
 
   async deleteIncentiveGroup(username: string, reference: string): Promise<void> {

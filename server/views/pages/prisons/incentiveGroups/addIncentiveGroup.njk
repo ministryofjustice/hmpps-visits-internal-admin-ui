@@ -1,0 +1,93 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/input/macro.njk" import govukInput -%}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% set pageHeaderTitle = 'Add a incentive group' %}
+{% set pageTitle = applicationName + " - Incentive groups - " + pageHeaderTitle %}
+
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+] %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prison.name }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {% include "partials/errorSummary.njk" %}
+      {# Build button items for session template range filter #}
+
+      {% set incentiveLevelItems = [] %}
+      {% for rangeKey, description in incentiveLevels %}
+        {% set incentiveLevelItems = (incentiveLevelItems.push({
+          value: rangeKey,
+          text: description
+        }), incentiveLevelItems)%}
+      {% endfor %}
+
+      <form action="/prisons/{{prison.code}}/incentive-groups/add" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukInput({
+          label: {
+            html: 'Incentive group name',
+            classes: 'govuk-label--m'
+          },
+          id: 'name',
+          name: 'name',
+          classes: 'govuk-!-width-three-quarters govuk-!-margin-bottom-4',
+          value: formValues.name,
+          autocomplete: "off",
+          errorMessage: errors | findError('name')
+        }) }}
+
+        {{ govukCheckboxes({
+          name: "incentiveLevels",
+          fieldset: {
+            legend: {
+              text: "Which incentive levels is this group for?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          hint: {
+            text: "Select all that apply."
+          },
+          items: incentiveLevelItems
+        }) }}
+
+
+        <div class="moj-button-action">
+          {{ govukButton({
+            text: 'Submit'
+          }) }}
+        </div>
+
+      </form>
+        
+    </div>
+  </div>
+
+{% endblock %}
