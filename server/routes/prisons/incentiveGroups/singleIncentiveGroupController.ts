@@ -21,6 +21,7 @@ export default class SingleIncentiveGroupController {
         errors: req.flash('errors'),
         prison,
         incentiveGroup,
+        message: req.flash('message'),
       })
     }
   }

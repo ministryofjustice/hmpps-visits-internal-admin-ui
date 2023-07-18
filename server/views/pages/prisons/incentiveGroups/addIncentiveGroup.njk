@@ -37,12 +37,12 @@
     <div class="govuk-grid-column-full">
 
       {% include "partials/errorSummary.njk" %}
-      {# Build incentive items array for checkboxes #}
 
+      {# Build incentive items array for checkboxes #}
       {% set incentiveLevelItems = [] %}
-      {% for rangeKey, description in incentiveLevels %}
+      {% for incentive, description in incentiveLevels %}
         {% set incentiveLevelItems = (incentiveLevelItems.push({
-          value: rangeKey,
+          value: incentive,
           text: description
         }), incentiveLevelItems)%}
       {% endfor %}

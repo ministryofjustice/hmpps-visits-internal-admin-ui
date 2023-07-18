@@ -48,7 +48,7 @@ export default class AddIncentiveGroupController {
           res.locals.user.username,
           createIncentiveGroupDto,
         )
-        req.flash('message', `Location group '${reference}' has been created`)
+        req.flash('message', `Incentive level group '${reference}' has been created`)
         return res.redirect(`/prisons/${prisonId}/incentive-groups/${reference}`)
       } catch (error) {
         req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
@@ -62,7 +62,7 @@ export default class AddIncentiveGroupController {
     return [
       body('name').trim().isLength({ min: 3, max: 100 }).withMessage('Enter a name between 3 and 100 characters long'),
       body('incentiveLevels')
-        .isLength({ min: 1 })
+        .notEmpty()
         .withMessage('Select at least one option')
         .bail()
         .isIn(Object.keys(incentiveLevels))

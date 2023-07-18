@@ -159,7 +159,7 @@ export default class TestData {
   }: Partial<IncentiveLevelGroup> = {}): IncentiveLevelGroup => ({ name, reference, incentiveLevels })
 
   static createIncentiveGroupDto = ({
-    name = 'Wing A',
+    name = 'Enhanced prisoners',
     prisonId = 'HEI',
     incentiveLevels = ['ENHANCED'],
   }: Partial<CreateIncentiveGroupDto> = {}): CreateIncentiveGroupDto => ({ name, prisonId, incentiveLevels })
