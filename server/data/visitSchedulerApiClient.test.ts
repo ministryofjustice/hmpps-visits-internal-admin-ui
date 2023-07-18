@@ -2,7 +2,12 @@ import nock from 'nock'
 import config from '../config'
 import VisitSchedulerApiClient from './visitSchedulerApiClient'
 import TestData from '../routes/testutils/testData'
-import { CreateLocationGroupDto, CreateSessionTemplateDto, PrisonDto } from './visitSchedulerApiTypes'
+import {
+  CreateIncentiveGroupDto,
+  CreateLocationGroupDto,
+  CreateSessionTemplateDto,
+  PrisonDto,
+} from './visitSchedulerApiTypes'
 
 describe('visitSchedulerApiClient', () => {
   let fakeVisitSchedulerApi: nock.Scope
@@ -291,6 +296,26 @@ describe('visitSchedulerApiClient', () => {
       const output = await visitSchedulerApiClient.getIncentiveGroups('HEI')
 
       expect(output).toEqual(incentiveGroups)
+    })
+  })
+
+  describe('createIncentiveGroup', () => {
+    it('should add a new incentive group', async () => {
+      const createIncentiveGroupDto = TestData.createIncentiveGroupDto()
+      const singleIncentiveGroup = TestData.incentiveLevelGroup()
+
+      fakeVisitSchedulerApi
+        .post('/admin/incentive-groups/group', <CreateIncentiveGroupDto>{
+          name: createIncentiveGroupDto.name,
+          prisonId: createIncentiveGroupDto.prisonId,
+          incentiveLevels: createIncentiveGroupDto.incentiveLevels,
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, singleIncentiveGroup)
+
+      const output = await visitSchedulerApiClient.createIncentiveGroup(createIncentiveGroupDto)
+
+      expect(output).toEqual(singleIncentiveGroup)
     })
   })
 })
