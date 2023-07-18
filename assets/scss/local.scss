@@ -14,3 +14,8 @@
 .nowrap {
   white-space: nowrap;
 }
+
+.moj-add-another__remove-button,
+.moj-add-another__remove-button:active {
+  top: govuk-spacing(6);
+}

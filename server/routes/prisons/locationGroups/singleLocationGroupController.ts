@@ -14,7 +14,11 @@ export default class SingleLocationGroupController {
 
       const locationGroup = await this.locationGroupService.getSingleLocationGroup(res.locals.user.username, reference)
 
-      return res.render('pages/prisons/locationGroups/viewSingleLocationGroup', { prison, locationGroup })
+      return res.render('pages/prisons/locationGroups/viewSingleLocationGroup', {
+        prison,
+        locationGroup,
+        message: req.flash('message'),
+      })
     }
   }
 
