@@ -6,7 +6,7 @@
 {%- from "govuk/components/input/macro.njk" import govukInput -%}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
-{% set pageHeaderTitle = 'Add a incentive group' %}
+{% set pageHeaderTitle = 'Add an incentive level group' %}
 {% set pageTitle = applicationName + " - Incentive groups - " + pageHeaderTitle %}
 
 {% set primaryNavItems = [
@@ -37,7 +37,7 @@
     <div class="govuk-grid-column-full">
 
       {% include "partials/errorSummary.njk" %}
-      {# Build button items for session template range filter #}
+      {# Build incentive items array for checkboxes #}
 
       {% set incentiveLevelItems = [] %}
       {% for rangeKey, description in incentiveLevels %}
@@ -75,7 +75,9 @@
           hint: {
             text: "Select all that apply."
           },
-          items: incentiveLevelItems
+          items: incentiveLevelItems,
+          values: formValues.incentiveLevels,
+          errorMessage: errors | findError('incentiveLevels')
         }) }}
 
 

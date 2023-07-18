@@ -43,7 +43,6 @@ export default class AddIncentiveGroupController {
         prisonId,
         incentiveLevels: req.body.incentiveLevels,
       }
-
       try {
         const { reference } = await this.incentiveGroupService.createIncentiveGroup(
           res.locals.user.username,
@@ -62,6 +61,12 @@ export default class AddIncentiveGroupController {
   public validate(): ValidationChain[] {
     return [
       body('name').trim().isLength({ min: 3, max: 100 }).withMessage('Enter a name between 3 and 100 characters long'),
+      body('incentiveLevels')
+        .isLength({ min: 1 })
+        .withMessage('Select at least one option')
+        .bail()
+        .isIn(Object.keys(incentiveLevels))
+        .withMessage('Invalid value entered'),
     ]
   }
 }
