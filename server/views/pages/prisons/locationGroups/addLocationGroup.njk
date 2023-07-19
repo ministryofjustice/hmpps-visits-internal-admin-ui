@@ -140,11 +140,6 @@
                   "data-id": "location[%index%][levelFourCode]"
                 }
               }) }}
-
-              {{ govukButton({
-                text: "Remove",
-                classes: "govuk-button govuk-button--secondary moj-add-another__remove-button"
-              }) if loop.length > 1 }}
             </div>
 
             {% endcall %}
@@ -172,5 +167,16 @@
 {% block pageScripts %}
   <script nonce="{{ cspNonce }}">
     window.MOJFrontend.initAll()
+
+    const addAnotherItems = document.querySelectorAll('.moj-add-another__item')
+
+    if (addAnotherItems.length > 1) {
+      addAnotherItems.forEach(item => {
+        item.insertAdjacentHTML(
+          'beforeend',
+          '<button type="button" class="govuk-button govuk-button--secondary moj-add-another__remove-button">Remove</button>'
+          )
+      })
+    }
   </script>
 {% endblock %}
