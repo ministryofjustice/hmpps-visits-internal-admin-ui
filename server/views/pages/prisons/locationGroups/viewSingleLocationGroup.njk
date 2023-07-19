@@ -21,9 +21,23 @@
   }
   ] %}
 
-{% set backLinkHref = "/prisons/" + prison.code + "/session-templates" %}
+{% set backLinkHref = "/prisons/" + prison.code + "/location-groups" %}
 
 {% block content %}
+  {% include "partials/errorSummary.njk" %}
+
+  {% if message | length %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        {{ mojBanner({
+          type: "success",
+          text: message,
+          iconFallbackText: "Success"
+        }) }}
+      </div>
+    </div>
+  {% endif %}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
 
@@ -59,7 +73,6 @@
       {{ govukTable({
         caption: 'Location level codes',
         captionClasses: "govuk-table__caption--m",
-        firstCellIsHeader: true,
         head: [
           { 
             text: "Level one",
