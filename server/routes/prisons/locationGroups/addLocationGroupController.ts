@@ -60,6 +60,8 @@ export default class AddLocationGroupController {
   public validate(): ValidationChain[] {
     return [
       body('name').trim().isLength({ min: 3, max: 100 }).withMessage('Enter a name between 3 and 100 characters long'),
+      // ensure locations array exists and at least one item
+      body('location', 'At least one location level is required').isArray({ min: 1 }),
       // max char limit for all levels
       body('location[*].*', 'Max 5 characters for level code').trim().isLength({ max: 5 }),
       // must have level one
