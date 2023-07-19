@@ -62,7 +62,8 @@ export default class AddIncentiveGroupController {
     return [
       body('name').trim().isLength({ min: 3, max: 100 }).withMessage('Enter a name between 3 and 100 characters long'),
       body('incentiveLevels')
-        .notEmpty()
+        .toArray()
+        .isArray({ min: 1 })
         .withMessage('Select at least one option')
         .bail()
         .isIn(Object.keys(incentiveLevels))
