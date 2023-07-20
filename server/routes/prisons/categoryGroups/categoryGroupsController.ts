@@ -14,7 +14,11 @@ export default class CategoryGroupsController {
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
       const categoryGroups = await this.categoryGroupService.getCategoryGroups(res.locals.user.username, prisonId)
 
-      return res.render('pages/prisons/categoryGroups/viewCategoryGroups', { prison, categoryGroups })
+      return res.render('pages/prisons/categoryGroups/viewCategoryGroups', {
+        prison,
+        categoryGroups,
+        message: req.flash('message'),
+      })
     }
   }
 }
