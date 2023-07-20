@@ -31,7 +31,7 @@ export default class IncentiveGroupService {
 
     const incentiveGroup = await visitSchedulerApiClient.createIncentiveGroup(createIncentiveGrupDto)
     logger.info(
-      `New incentive group '${incentiveGroup.reference}' created for prison '${createIncentiveGrupDto.prisonId}'`,
+      `Incentive level group '${incentiveGroup.reference}' created for prison '${createIncentiveGrupDto.prisonId}' by ${username}`,
     )
     return incentiveGroup
   }
@@ -40,6 +40,7 @@ export default class IncentiveGroupService {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
+    logger.info(`Incentive level group '${reference}' deleted by ${username}`)
     return visitSchedulerApiClient.deleteIncentiveGroup(reference)
   }
 }

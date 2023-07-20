@@ -14,3 +14,34 @@
 .nowrap {
   white-space: nowrap;
 }
+
+.vsip-add-location-group {
+  .moj-add-another__item .govuk-form-group {
+    display: inline-block;
+    max-width: 80%;
+    margin-bottom: govuk-spacing(3);
+
+    .govuk-label {
+      font-weight: bold;
+    }
+  }
+
+  .moj-add-another__item .govuk-input {
+    @extend .govuk-input--width-5;
+    margin-right: govuk-spacing(3);
+  }
+
+  .moj-add-another__remove-button,
+  .moj-add-another__remove-button:active {
+    bottom: 0;
+    top: unset;
+  }
+
+  .govuk-error-message {
+    margin-bottom: govuk-spacing(1);
+  }
+
+  .govuk-button {
+    margin-top: govuk-spacing(3)
+  }
+}

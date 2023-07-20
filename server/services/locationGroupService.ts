@@ -28,7 +28,7 @@ export default class LocationGroupService {
 
     const locationGroup = await visitSchedulerApiClient.createLocationGroup(createLocationGroupDto)
     logger.info(
-      `New location group '${locationGroup.reference}' created for prison '${createLocationGroupDto.prisonId}'`,
+      `Location group '${locationGroup.reference}' created for prison '${createLocationGroupDto.prisonId}' by ${username}`,
     )
     return locationGroup
   }
@@ -37,6 +37,7 @@ export default class LocationGroupService {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
+    logger.info(`Location group '${reference}' deleted by ${username}`)
     return visitSchedulerApiClient.deleteLocationGroup(reference)
   }
 }

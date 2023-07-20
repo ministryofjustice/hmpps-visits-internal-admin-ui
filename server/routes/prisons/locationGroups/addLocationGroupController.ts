@@ -23,7 +23,7 @@ export default class AddLocationGroupController {
     }
   }
 
-  public submit(): RequestHandler {
+  public add(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
 
@@ -60,25 +60,29 @@ export default class AddLocationGroupController {
   public validate(): ValidationChain[] {
     return [
       body('name').trim().isLength({ min: 3, max: 100 }).withMessage('Enter a name between 3 and 100 characters long'),
-      body('location[*].levelOneCode')
-        .trim()
-        .isLength({ min: 1, max: 5 })
-        .withMessage('Enter a level one code with length 1 to 5 for each row, or remove the row'),
-      body('location[*].levelTwoCode')
-        .optional({ checkFalsy: true })
-        .trim()
-        .isLength({ min: 1, max: 5 })
-        .withMessage('Enter a value with length 1 to 5, for level two'),
-      body('location[*].levelThreeCode')
-        .optional({ checkFalsy: true })
-        .trim()
-        .isLength({ min: 1, max: 5 })
-        .withMessage('Enter a value with length 1 to 5, for level three'),
-      body('location[*].levelFourCode')
-        .optional({ checkFalsy: true })
-        .trim()
-        .isLength({ min: 1, max: 5 })
-        .withMessage('Enter a value with length 1 to 5, for level four'),
+      // ensure locations array exists and at least one item
+      body('location', 'At least one location level is required').isArray({ min: 1 }),
+      // max char limit for all levels
+      body('location[*].*', 'Max 5 characters for level code').trim().isLength({ max: 5 }),
+      // must have level one
+      body('location[*].levelOneCode', 'Level one code required').notEmpty(),
+      // level two required if level three/four set
+      body('location[*].levelTwoCode', 'Level two code required')
+        .if((_value, { path, req }) => {
+          const locationRowId = path.split(/(\d+)/)[1] // i.e. 'location[X].levelTwoCode' => 'X'
+          return (
+            req.body?.location[locationRowId]?.levelThreeCode !== '' ||
+            req.body?.location[locationRowId]?.levelFourCode !== ''
+          )
+        })
+        .notEmpty(),
+      // level three required if level four set
+      body('location[*].levelThreeCode', 'Level three code required')
+        .if((_value, { path, req }) => {
+          const locationRowId = path.split(/(\d+)/)[1]
+          return req.body?.location[locationRowId]?.levelFourCode !== ''
+        })
+        .notEmpty(),
     ]
   }
 }
