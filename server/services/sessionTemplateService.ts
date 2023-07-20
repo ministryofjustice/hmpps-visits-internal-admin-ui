@@ -23,6 +23,8 @@ export default class SessionTemplateService {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
+    logger.info(`Session template '${reference}' activated by ${username}`)
+
     return visitSchedulerApiClient.activateSessionTemplate(reference)
   }
 
@@ -30,12 +32,16 @@ export default class SessionTemplateService {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
+    logger.info(`Session template '${reference}' deactivated by ${username}`)
+
     return visitSchedulerApiClient.deactivateSessionTemplate(reference)
   }
 
   async deleteSessionTemplate(username: string, reference: string): Promise<void> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    logger.info(`Session template '${reference}' deleted by ${username}`)
 
     return visitSchedulerApiClient.deleteSessionTemplate(reference)
   }
@@ -55,7 +61,9 @@ export default class SessionTemplateService {
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     const sessionTemplate = await visitSchedulerApiClient.createSessionTemplate(createSessionTemplateDto)
-    logger.info(`New session template '${sessionTemplate.reference}' created for prison '${sessionTemplate.prisonId}'`)
+    logger.info(
+      `Session template '${sessionTemplate.reference}' created for prison '${sessionTemplate.prisonId}' by ${username}`,
+    )
     return sessionTemplate
   }
 }
