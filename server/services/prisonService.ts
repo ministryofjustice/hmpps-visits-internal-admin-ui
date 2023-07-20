@@ -55,7 +55,7 @@ export default class PrisonService {
       excludeDates: [],
     }
 
-    logger.info(`Adding prison ${prisonCode} to list of supported prisons`)
+    logger.info(`Prison ${prisonCode} created by ${username}`)
     await visitSchedulerApiClient.createPrison(prison)
   }
 
@@ -63,7 +63,7 @@ export default class PrisonService {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
-    logger.info(`Activating prison ${prisonCode}`)
+    logger.info(`Prison ${prisonCode} activated by ${username}`)
     return visitSchedulerApiClient.activatePrison(prisonCode)
   }
 
@@ -71,7 +71,7 @@ export default class PrisonService {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
-    logger.info(`Deactivating prison ${prisonCode}`)
+    logger.info(`Prison ${prisonCode} deactivated by ${username}`)
     return visitSchedulerApiClient.deactivatePrison(prisonCode)
   }
 
@@ -79,7 +79,7 @@ export default class PrisonService {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
-    logger.info(`Adding '${excludeDate}' to excluded dates for prison '${prisonCode}'`)
+    logger.info(`Exclude date ${excludeDate} added to prison ${prisonCode} by ${username}`)
     return visitSchedulerApiClient.addExcludeDate(prisonCode, excludeDate)
   }
 
@@ -87,7 +87,7 @@ export default class PrisonService {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
-    logger.info(`Removing '${excludeDate}' from excluded dates for prison '${prisonCode}'`)
+    logger.info(`Exclude date ${excludeDate} removed from prison ${prisonCode} by ${username}`)
     await visitSchedulerApiClient.removeExcludeDate(prisonCode, excludeDate)
   }
 
