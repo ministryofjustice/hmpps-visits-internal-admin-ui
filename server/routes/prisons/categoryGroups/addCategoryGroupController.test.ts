@@ -51,7 +51,9 @@ describe('Add a category group', () => {
           expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/prisons')
 
           expect($('h1 span').text().trim()).toBe(prison.name)
-          expect($('h1').text().trim()).toContain('Which prisoner categories is this group for?')
+          expect($('h1').text().trim()).toContain('Add a category group')
+          expect($('h1[class=govuk-fieldset__heading]').text().trim()).toBe('Which categories is this group for?')
+          expect($('div[id=prisonerCategories-hint]').text().trim()).toContain('Select all that apply.')
 
           expect($(`form[action=${url}][method="POST"]`).length).toBe(1)
 

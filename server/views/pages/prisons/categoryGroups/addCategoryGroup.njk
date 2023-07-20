@@ -6,8 +6,8 @@
 {%- from "govuk/components/input/macro.njk" import govukInput -%}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
-{% set pageHeaderTitle = 'Add a prisoner category group' %}
-{% set pageTitle = applicationName + " - Prisoner category groups - " + pageHeaderTitle %}
+{% set pageHeaderTitle = 'Add a category group' %}
+{% set pageTitle = applicationName + " - Category groups - " + pageHeaderTitle %}
 
 {% set primaryNavItems = [
   {
@@ -52,7 +52,7 @@
 
         {{ govukInput({
           label: {
-            html: 'Prisoner category group name',
+            text: 'Category group name',
             classes: 'govuk-label--m'
           },
           id: 'name',
@@ -67,7 +67,7 @@
           name: "prisonerCategories",
           fieldset: {
             legend: {
-              text: "Which prisoner categories is this group for?",
+              text: "Which categories is this group for?",
               isPageHeading: true,
               classes: "govuk-fieldset__legend--m"
             }
