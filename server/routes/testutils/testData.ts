@@ -148,7 +148,7 @@ export default class TestData {
   }: Partial<CreateLocationGroupDto> = {}): CreateLocationGroupDto => ({ name, prisonId, locations })
 
   static createCategoryGroupDto = ({
-    name = 'Wing A',
+    name = 'Category A (High Risk) prisoners',
     prisonId = 'HEI',
     categories = ['A_EXCEPTIONAL', 'A_HIGH', 'A_PROVISIONAL', 'A_STANDARD'],
   }: Partial<CreateCategoryGroupDto> = {}): CreateCategoryGroupDto => ({

@@ -28,7 +28,7 @@ export default class CategoryGroupService {
 
     const categoryGroup = await visitSchedulerApiClient.createCategoryGroup(createCategoryGrupDto)
     logger.info(
-      `New category group '${categoryGroup.reference}' created for prison '${createCategoryGrupDto.prisonId}'`,
+      `Category group '${categoryGroup.reference}' created for prison '${createCategoryGrupDto.prisonId}' by '${username}'`,
     )
     return categoryGroup
   }
@@ -36,6 +36,7 @@ export default class CategoryGroupService {
   async deleteCategoryGroup(username: string, reference: string): Promise<void> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+    logger.info(`Category group '${reference}' deleted by '${username}'`)
 
     return visitSchedulerApiClient.deleteCategoryGroup(reference)
   }
