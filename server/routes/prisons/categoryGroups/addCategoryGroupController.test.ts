@@ -5,7 +5,6 @@ import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockCategoryGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import { FlashErrorMessage } from '../../../@types/visits-admin'
-import prisonerCategories from '../../../constants/prisonerCategories'
 
 let app: Express
 let flashData: Record<string, string | FlashErrorMessage | Record<string, string | Record<string, string>[]>[]>
