@@ -1,0 +1,95 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/input/macro.njk" import govukInput -%}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% set pageHeaderTitle = 'Add a category group' %}
+{% set pageTitle = applicationName + " - Category groups - " + pageHeaderTitle %}
+
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+] %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prison.name }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {% include "partials/errorSummary.njk" %}
+
+      {# Build prisoner category array for checkboxes #}
+      {% set prisonerCategoryItems = [] %}
+      {% for prisonerCategory, description in prisonerCategories %}
+        {% set prisonerCategoryItems = (prisonerCategoryItems.push({
+          value: prisonerCategory,
+          text: description
+        }), prisonerCategoryItems)%}
+      {% endfor %}
+
+      <form action="/prisons/{{prison.code}}/category-groups/add" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukInput({
+          label: {
+            text: 'Category group name',
+            classes: 'govuk-label--m'
+          },
+          id: 'name',
+          name: 'name',
+          classes: 'govuk-!-width-three-quarters govuk-!-margin-bottom-4',
+          value: formValues.name,
+          autocomplete: "off",
+          errorMessage: errors | findError('name')
+        }) }}
+
+        {{ govukCheckboxes({
+          name: "prisonerCategories",
+          fieldset: {
+            legend: {
+              text: "Which categories is this group for?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          hint: {
+            text: "Select all that apply."
+          },
+          items: prisonerCategoryItems,
+          values: formValues.prisonerCategories,
+          errorMessage: errors | findError('prisonerCategories')
+        }) }}
+
+
+        {{ govukButton({
+          text: "Add",
+          attributes: { "data-test": "submit" },
+          preventDoubleClick: true
+        }) }}
+
+      </form>
+        
+    </div>
+  </div>
+
+{% endblock %}
