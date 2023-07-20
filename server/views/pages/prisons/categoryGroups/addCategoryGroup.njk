@@ -81,11 +81,11 @@
         }) }}
 
 
-        <div class="moj-button-action">
-          {{ govukButton({
-            text: 'Submit'
-          }) }}
-        </div>
+        {{ govukButton({
+          text: "Add",
+          attributes: { "data-test": "submit" },
+          preventDoubleClick: true
+        }) }}
 
       </form>
         

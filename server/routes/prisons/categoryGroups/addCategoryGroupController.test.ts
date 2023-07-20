@@ -64,7 +64,7 @@ describe('Add a category group', () => {
           expect($('input#name').val()).toBe('a')
           expect($('input#prisonerCategories').val()).toBe('A_EXCEPTIONAL')
           expect($('input#prisonerCategories-2').val()).toBe('A_HIGH')
-          // expect($('[data-test="submit"]').text().trim()).toBe('Add')
+          expect($('[data-test="submit"]').text().trim()).toBe('Add')
         })
     })
   })
