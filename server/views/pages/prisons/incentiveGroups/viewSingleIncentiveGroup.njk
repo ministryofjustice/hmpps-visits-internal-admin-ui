@@ -47,9 +47,9 @@
       </h1>
   
       {%- set incentiveLevels -%}
-        {%- if incentiveGroup.incentiveLevels.length -%}
+        {%- if incentiveLevelValues.length -%}
           <ul class="govuk-list govuk-list--bullet">
-            {%- for incentive in incentiveGroup.incentiveLevels -%} 
+            {%- for incentive in incentiveLevelValues -%}
               <li>{{ incentive }}</li>
             {%- endfor -%}
           </ul>

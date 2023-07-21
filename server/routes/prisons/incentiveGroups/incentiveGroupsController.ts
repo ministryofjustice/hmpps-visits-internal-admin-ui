@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { IncentiveGroupService, PrisonService } from '../../../services'
+import incentiveLevels from '../../../constants/incentiveLevels'
 
 export default class IncentiveGroupsController {
   public constructor(
@@ -12,7 +13,14 @@ export default class IncentiveGroupsController {
       const { prisonId } = req.params
 
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
-      const incentiveGroups = await this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
+      const rawIncentiveGroups = await this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
+
+      const incentiveGroups = rawIncentiveGroups.map(group => {
+        return {
+          ...group,
+          incentiveLevels: group.incentiveLevels.map(level => incentiveLevels[level]),
+        }
+      })
 
       return res.render('pages/prisons/incentiveGroups/viewIncentiveGroups', {
         prison,

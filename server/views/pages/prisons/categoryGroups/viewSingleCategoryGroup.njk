@@ -47,9 +47,9 @@
       </h1>
   
       {%- set categories -%}
-        {%- if categoryGroup.categories.length -%}
+        {%- if categoryGroupValues.length -%}
           <ul class="govuk-list govuk-list--bullet">
-            {%- for category in categoryGroup.categories -%}
+            {%- for category in categoryGroupValues -%}
               <li>{{ category }}</li>
             {%- endfor -%}
           </ul>
@@ -69,7 +69,7 @@
             },
             classes: "test-template-reference"
           },
-          { 
+          {
             key: {
               text: "Categories"
             },
