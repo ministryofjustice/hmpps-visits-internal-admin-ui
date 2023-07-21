@@ -29,37 +29,31 @@ export default class SingleSessionTemplateController {
 
   public activate(): RequestHandler {
     return async (req, res) => {
-      const { reference } = req.params
+      const { prisonId, reference } = req.params
 
-      const sessionTemplate = await this.sessionTemplateService.activateSessionTemplate(
-        res.locals.user.username,
-        reference,
-      )
-      if (sessionTemplate.active) {
+      try {
+        await this.sessionTemplateService.activateSessionTemplate(res.locals.user.username, reference)
         req.flash('message', 'Template activated')
-      } else {
-        req.flash('errors', [{ msg: 'Failed to change  session template status' }])
+      } catch (error) {
+        req.flash('errors', responseErrorToFlashMessage(error))
       }
 
-      return res.redirect(`/prisons/${sessionTemplate.prisonId}/session-templates/${sessionTemplate.reference}`)
+      return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
     }
   }
 
   public deactivate(): RequestHandler {
     return async (req, res) => {
-      const { reference } = req.params
+      const { prisonId, reference } = req.params
 
-      const sessionTemplate = await this.sessionTemplateService.deactivateSessionTemplate(
-        res.locals.user.username,
-        reference,
-      )
-      if (!sessionTemplate.active) {
+      try {
+        await this.sessionTemplateService.deactivateSessionTemplate(res.locals.user.username, reference)
         req.flash('message', 'Template deactivated')
-      } else {
-        req.flash('errors', [{ msg: 'Failed to change session template status' }])
+      } catch (error) {
+        req.flash('errors', responseErrorToFlashMessage(error))
       }
 
-      return res.redirect(`/prisons/${sessionTemplate.prisonId}/session-templates/${sessionTemplate.reference}`)
+      return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
     }
   }
 
