@@ -19,7 +19,11 @@ export default function routes(services: Services): Router {
     services.prisonService,
     services.sessionTemplateService,
   )
-  const addSessionTemplate = new AddSessionTemplateController(services.prisonService, services.sessionTemplateService)
+  const addSessionTemplate = new AddSessionTemplateController(
+    services.prisonService,
+    services.sessionTemplateService,
+    services.incentiveGroupService,
+  )
 
   get('/prisons/:prisonId/session-templates/add', addSessionTemplate.view())
   postWithValidation(

@@ -1,25 +1,30 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { getTime, isValid, parse, parseISO } from 'date-fns'
-import { PrisonService, SessionTemplateService } from '../../../services'
+import { PrisonService, SessionTemplateService, IncentiveGroupService } from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
+import logger from '../../../../logger'
 
 export default class AddSessionTemplateController {
   public constructor(
     private readonly prisonService: PrisonService,
     private readonly sessionTemplateService: SessionTemplateService,
+    private readonly incentiveGroupService: IncentiveGroupService,
   ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const incentiveGroups = await this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
+
       const formValues = req.flash('formValues')?.[0] || {}
 
       res.render('pages/prisons/sessionTemplates/addSessionTemplate', {
         errors: req.flash('errors'),
         prison,
+        incentiveGroups,
         daysOfWeek,
         formValues,
       })
@@ -45,6 +50,13 @@ export default class AddSessionTemplateController {
       const validToDateMonth = validToDateSplit[1] || undefined
       const validToDateDay = validToDateSplit[2] || undefined
 
+      let incentiveGroupReferences: string[] = []
+      const incentiveGroups = sessionTemplate.prisonerIncentiveLevelGroups
+      if (incentiveGroups !== undefined && incentiveGroups.length > 0) {
+        incentiveGroupReferences = incentiveGroups.map(incentiveGroup => incentiveGroup.reference)
+      }
+
+      logger.debug(` group refs : ${JSON.stringify(incentiveGroupReferences)} ${JSON.stringify(incentiveGroups)}`)
       const formValues = {
         name: `COPY - ${sessionTemplate.name}`,
         dayOfWeek: sessionTemplate.dayOfWeek,
@@ -61,6 +73,8 @@ export default class AddSessionTemplateController {
         openCapacity: sessionTemplate.sessionCapacity.open.toString(),
         closedCapacity: sessionTemplate.sessionCapacity.closed.toString(),
         visitRoom: sessionTemplate.visitRoom,
+        hasIncentiveGroups: incentiveGroupReferences.length > 0 ? 'yes' : undefined,
+        incentiveGroupReferences,
       }
 
       req.flash('formValues', formValues)
@@ -108,7 +122,7 @@ export default class AddSessionTemplateController {
         },
         visitRoom: req.body.visitRoom,
         categoryGroupReferences: [],
-        incentiveLevelGroupReferences: [],
+        incentiveLevelGroupReferences: req.body.hasIncentiveGroups === 'yes' ? req.body.incentiveGroupReferences : [],
         locationGroupReferences: [],
       }
 
@@ -209,6 +223,10 @@ export default class AddSessionTemplateController {
         return true
       }),
       body('visitRoom').trim().isLength({ min: 3 }).withMessage('Enter a name over 3 characters long'),
+      body('incentiveGroupReferences', 'You must select at least one incentive group')
+        .toArray()
+        .if(body('hasIncentiveGroups').equals('yes'))
+        .isArray({ min: 1 }),
     ]
   }
 }

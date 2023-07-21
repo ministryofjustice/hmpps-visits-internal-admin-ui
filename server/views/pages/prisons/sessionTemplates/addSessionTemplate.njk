@@ -21,7 +21,7 @@
     href: "/prisons",
     active: true
   }
-  ] %}
+] %}
 {% set backLinkHref = "/prisons/" + prison.code + "/session-templates" %}
 
 {% block content %}
@@ -35,13 +35,22 @@
         {{ pageHeaderTitle }}
       </h1>
 
-      <form action="/prisons/{{prison.code}}/session-templates/add" method="POST" novalidate>
+      {# Build incentive group array for checkboxes #}
+      {% set incentiveGroupsItems = [] %}
+      {% for incentiveGroup in incentiveGroups %}
+        {% set incentiveGroupsItems = (incentiveGroupsItems.push({
+          value: incentiveGroup.reference,
+          text: incentiveGroup.name
+        }), incentiveGroupsItems) %}
+      {% endfor %}
+
+      <form action="/prisons/{{ prison.code }}/session-templates/add" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukInput({
           label: {
-              text: "Template name",
-              classes: "govuk-label--m"
+            text: "Template name",
+            classes: "govuk-label--m"
           },
           classes: "govuk-!-width-three-quarters",
           id: "name",
@@ -72,11 +81,11 @@
 
         {{ govukInput({
           label: {
-              text: "Visit start time",
-              classes: "govuk-label--m"
+            text: "Visit start time",
+            classes: "govuk-label--m"
           },
           hint: {
-              text: "For example, 13:00"
+            text: "For example, 13:00"
           },
           classes: "govuk-!-width-one-third",
           id: "startTime",
@@ -88,11 +97,11 @@
 
         {{ govukInput({
           label: {
-              text: "Visit end time",
-              classes: "govuk-label--m"
+            text: "Visit end time",
+            classes: "govuk-label--m"
           },
           hint: {
-              text: "For example, 13:00"
+            text: "For example, 13:00"
           },
           classes: "govuk-!-width-one-third",
           id: "endTime",
@@ -101,14 +110,14 @@
           autocomplete: "off",
           errorMessage: errors | findError('endTime')
         }) }}
-        
+
         {{ govukInput({
           label: {
-              text: "Weekly frequency",
-              classes: "govuk-label--m"
+            text: "Weekly frequency",
+            classes: "govuk-label--m"
           },
           hint: {
-              text: "1 = weekly, 2 = fortnightly etc"
+            text: "1 = weekly, 2 = fortnightly etc"
           },
           classes: "govuk-!-width-one-third",
           id: "weeklyFrequency",
@@ -156,7 +165,7 @@
             }
           ]
         }) }}
-   
+
         {%- set endDateHtml %}
           {{ govukDateInput({
             id: "validToDate",
@@ -208,8 +217,8 @@
               text: "Yes",
               value: "yes",
               conditional: {
-                html: endDateHtml
-              },
+              html: endDateHtml
+            },
               checked: formValues.hasEndDate === "yes"
             }
           ]
@@ -217,11 +226,11 @@
 
         {{ govukInput({
           label: {
-              text: "Open capacity",
-              classes: "govuk-label--m"
+            text: "Open capacity",
+            classes: "govuk-label--m"
           },
           hint: {
-              text: "What is the open capacity?"
+            text: "What is the open capacity?"
           },
           classes: "govuk-!-width-one-third",
           id: "openCapacity",
@@ -234,11 +243,11 @@
 
         {{ govukInput({
           label: {
-              text: "Closed capacity",
-              classes: "govuk-label--m"
+            text: "Closed capacity",
+            classes: "govuk-label--m"
           },
           hint: {
-              text: "What is the closed capacity?"
+            text: "What is the closed capacity?"
           },
           classes: "govuk-!-width-one-third",
           id: "closedCapacity",
@@ -251,11 +260,11 @@
 
         {{ govukInput({
           label: {
-              text: "Visit room",
-              classes: "govuk-label--m"
+            text: "Visit room",
+            classes: "govuk-label--m"
           },
           hint: {
-              text: "What is the visit room name?"
+            text: "What is the visit room name?"
           },
           classes: "govuk-!-width-one-third",
           id: "visitRoom",
@@ -265,15 +274,56 @@
           errorMessage: errors | findError('visitRoom')
         }) }}
 
+        {% if incentiveGroupsItems | length %}
+          {%- set incentiveGroupsHtml %}
+            {{ govukCheckboxes({
+              name: "incentiveGroupReferences",
+              fieldset: {
+                legend: {
+                  text: "Which incentive group do you want to add?",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--m"
+                },
+                attributes: { "data-test": "incentive-groups" }
+              },
+              hint: {
+                text: "Select all that apply."
+              },
+              items: incentiveGroupsItems,
+              values: formValues.incentiveGroupReferences,
+              errorMessage: errors | findError('incentiveGroupReferences')
+            }) }}
+          {% endset -%}
+          {{ govukCheckboxes({
+            name: "hasIncentiveGroups",
+            fieldset: {
+              legend: {
+                text: "Does this session have incentive groups?",
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            errorMessage: errors | findError('hasIncentiveGroups'),
+            items: [
+              {
+                text: "Yes",
+                value: "yes",
+                conditional: {
+                html: incentiveGroupsHtml
+              },
+                checked: formValues.hasIncentiveGroups === "yes"
+              }
+            ]
+          }) }}
+        {% else %}
+          <p>There are no incentive groups setup for this prison.</p>
+        {% endif %}
+
         {{ govukButton({
           text: "Add",
           attributes: { "data-test": "submit" },
           preventDoubleClick: true
-        }) }} 
+        }) }}
       </form>
-
-    
-
     </div>
   </div>
 {% endblock %}

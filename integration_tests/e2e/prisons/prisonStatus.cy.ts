@@ -1,9 +1,9 @@
 import TestData from '../../../server/routes/testutils/testData'
 import HomePage from '../../pages/home'
 import Page from '../../pages/page'
-import SupportedPrisonsPage from '../../pages/prisons/prisons'
-import ViewSessionTemplatesPage from '../../pages/prisons/viewSessionTemplates'
-import PrisonStatusPage from '../../pages/prisons/prisonStatus'
+import SupportedPrisonsPage from '../../pages/prisons/prisonsPage'
+import ViewSessionTemplatesPage from '../../pages/prisons/viewSessionTemplatesPage'
+import PrisonStatusPage from '../../pages/prisons/prisonStatusPage'
 import { SessionTemplatesRangeType } from '../../../server/data/visitSchedulerApiTypes'
 
 context('Supported prisons', () => {

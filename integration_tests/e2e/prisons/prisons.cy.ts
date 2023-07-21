@@ -1,7 +1,7 @@
 import TestData from '../../../server/routes/testutils/testData'
 import HomePage from '../../pages/home'
 import Page from '../../pages/page'
-import SupportedPrisonsPage from '../../pages/prisons/prisons'
+import SupportedPrisonsPage from '../../pages/prisons/prisonsPage'
 
 context('Supported prisons', () => {
   beforeEach(() => {
