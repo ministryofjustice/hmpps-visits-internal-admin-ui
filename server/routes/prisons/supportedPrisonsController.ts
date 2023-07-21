@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { body, validationResult } from 'express-validator'
 import { PrisonService } from '../../services'
+import { responseErrorToFlashMessage } from '../../utils/utils'
 
 export default class SupportedPrisonsController {
   public constructor(private readonly prisonService: PrisonService) {}
@@ -49,7 +50,7 @@ export default class SupportedPrisonsController {
         await this.prisonService.createPrison(res.locals.user.username, prisonId)
         req.flash('message', `${newPrisonName} has been successfully added.`)
       } catch (error) {
-        req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
+        req.flash('errors', responseErrorToFlashMessage(error))
       }
 
       return res.redirect(`/prisons`)

@@ -3,6 +3,7 @@ import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService, CategoryGroupService } from '../../../services'
 import { CreateCategoryGroupDto } from '../../../data/visitSchedulerApiTypes'
 import prisonerCategories from '../../../constants/prisonerCategories'
+import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class AddCategoryGroupController {
   public constructor(
@@ -52,7 +53,7 @@ export default class AddCategoryGroupController {
         req.flash('message', `Category group '${reference}' has been created`)
         return res.redirect(`/prisons/${prisonId}/category-groups/${reference}`)
       } catch (error) {
-        req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
+        req.flash('errors', responseErrorToFlashMessage(error))
         req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }

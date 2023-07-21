@@ -134,7 +134,7 @@ describe('Supported prisons', () => {
     })
 
     it('should set a flash error if there is an API error response', () => {
-      const error = { msg: '400 Bad Request' }
+      const expectedError = { msg: '400 Bad Request' }
       prisonService.createPrison.mockRejectedValue(new BadRequest())
 
       return request(app)
@@ -143,7 +143,7 @@ describe('Supported prisons', () => {
         .expect(302)
         .expect('location', `/prisons`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('errors', [error])
+          expect(flashProvider).toHaveBeenCalledWith('errors', [expectedError])
           expect(prisonService.createPrison).toHaveBeenCalledTimes(1)
           expect(prisonService.createPrison).toHaveBeenCalledWith('user1', 'HEI')
         })

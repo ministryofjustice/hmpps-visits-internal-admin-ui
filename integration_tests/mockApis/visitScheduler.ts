@@ -144,13 +144,7 @@ export default {
     })
   },
 
-  stubActivateSessionTemplate: ({
-    sessionTemplate = TestData.sessionTemplate(),
-    activeSessionTemplate = TestData.sessionTemplate({ active: true, reference: '-act.dcc.0f' }),
-  }: {
-    sessionTemplate: SessionTemplate
-    activeSessionTemplate: SessionTemplate
-  }): SuperAgentRequest => {
+  stubActivateSessionTemplate: (sessionTemplate = TestData.sessionTemplate()): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'PUT',
@@ -159,17 +153,11 @@ export default {
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: activeSessionTemplate,
+        jsonBody: { ...sessionTemplate, active: true },
       },
     })
   },
-  stubDeactivateSessionTemplate: ({
-    sessionTemplate = TestData.sessionTemplate(),
-    deactivatedSessionTemplate = TestData.sessionTemplate({ active: false, reference: '-ina.dcc.0f' }),
-  }: {
-    sessionTemplate: SessionTemplate
-    deactivatedSessionTemplate: SessionTemplate
-  }): SuperAgentRequest => {
+  stubDeactivateSessionTemplate: (sessionTemplate = TestData.sessionTemplate()): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'PUT',
@@ -178,7 +166,7 @@ export default {
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: deactivatedSessionTemplate,
+        jsonBody: { ...sessionTemplate, active: false },
       },
     })
   },
@@ -206,6 +194,9 @@ export default {
       response: {
         status: 400,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          developerMessage: `Failed to delete session template with reference - ${sessionTemplate.reference}`,
+        },
       },
     })
   },

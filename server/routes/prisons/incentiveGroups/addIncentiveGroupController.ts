@@ -3,6 +3,7 @@ import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService, IncentiveGroupService } from '../../../services'
 import { CreateIncentiveGroupDto } from '../../../data/visitSchedulerApiTypes'
 import incentiveLevels from '../../../constants/incentiveLevels'
+import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class AddIncentiveGroupController {
   public constructor(
@@ -51,7 +52,7 @@ export default class AddIncentiveGroupController {
         req.flash('message', `Incentive level group '${reference}' has been created`)
         return res.redirect(`/prisons/${prisonId}/incentive-groups/${reference}`)
       } catch (error) {
-        req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
+        req.flash('errors', responseErrorToFlashMessage(error))
         req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }

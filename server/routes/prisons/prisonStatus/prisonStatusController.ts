@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { PrisonService } from '../../../services'
+import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class PrisonStatusController {
   public constructor(private readonly prisonService: PrisonService) {}
@@ -21,11 +22,11 @@ export default class PrisonStatusController {
     return async (req, res) => {
       const { prisonId } = req.params
 
-      const prison = await this.prisonService.activatePrison(res.locals.user.username, prisonId)
-      if (prison.active) {
+      try {
+        await this.prisonService.activatePrison(res.locals.user.username, prisonId)
         req.flash('message', 'activated')
-      } else {
-        req.flash('errors', [{ msg: 'Failed to change prison status' }])
+      } catch (error) {
+        req.flash('errors', responseErrorToFlashMessage(error))
       }
 
       return res.redirect(`/prisons/${prisonId}/status`)
@@ -36,11 +37,11 @@ export default class PrisonStatusController {
     return async (req, res) => {
       const { prisonId } = req.params
 
-      const prison = await this.prisonService.deactivatePrison(res.locals.user.username, prisonId)
-      if (!prison.active) {
+      try {
+        await this.prisonService.deactivatePrison(res.locals.user.username, prisonId)
         req.flash('message', 'deactivated')
-      } else {
-        req.flash('errors', [{ msg: 'Failed to change prison status' }])
+      } catch (error) {
+        req.flash('errors', responseErrorToFlashMessage(error))
       }
 
       return res.redirect(`/prisons/${prisonId}/status`)
