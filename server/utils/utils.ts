@@ -1,4 +1,6 @@
 import { format, parseISO } from 'date-fns'
+import { SanitisedError } from '../sanitisedError'
+import { FlashErrorMessage } from '../@types/visits-admin'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -31,4 +33,18 @@ export const formatDate = (dateToFormat: string, dateFormat = 'd MMMM yyyy'): st
   } catch (error) {
     return null
   }
+}
+
+export const responseErrorToFlashMessage = (error: SanitisedError): FlashErrorMessage => {
+  const flashError = [{ msg: `${error.status} ${error.message}` }]
+
+  if (
+    typeof error.data === 'object' &&
+    'developerMessage' in error.data &&
+    typeof error.data.developerMessage === 'string'
+  ) {
+    flashError.push({ msg: error.data.developerMessage })
+  }
+
+  return flashError
 }
