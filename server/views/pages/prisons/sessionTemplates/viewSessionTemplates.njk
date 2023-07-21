@@ -108,7 +108,8 @@
         menus: [{
           items: [{
             text: "Add a session template",
-            href: "/prisons/" + prison.code + "/session-templates/add"
+            href: "/prisons/" + prison.code + "/session-templates/add",
+            attributes: { "data-test": "add-session-template" }
           }]
         }, {
           items: filterMenuItems

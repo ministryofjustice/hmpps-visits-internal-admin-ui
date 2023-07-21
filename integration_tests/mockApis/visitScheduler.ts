@@ -2,11 +2,35 @@ import { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
 import TestData from '../../server/routes/testutils/testData'
 import { components } from '../../server/@types/visit-scheduler-api'
-import { SessionTemplatesRangeType, SessionTemplate } from '../../server/data/visitSchedulerApiTypes'
+import {
+  SessionTemplatesRangeType,
+  SessionTemplate,
+  IncentiveLevelGroup,
+  CreateSessionTemplateDto,
+} from '../../server/data/visitSchedulerApiTypes'
 
 type Prison = components['schemas']['PrisonDto']
 
 export default {
+  stubIncentiveGroups: ({
+    prisonCode,
+    body = [TestData.incentiveLevelGroup()],
+  }: {
+    prisonCode: string
+    body: Array<IncentiveLevelGroup>
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/visitScheduler/admin/incentive-groups/${prisonCode}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: body,
+      },
+    })
+  },
   stubGetAllPrisons: (): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -182,6 +206,43 @@ export default {
       response: {
         status: 400,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    })
+  },
+
+  stubCreateSessionTemplatePost: ({
+    createSessionTemplate,
+    sessionTemplate,
+  }: {
+    createSessionTemplate: CreateSessionTemplateDto
+    sessionTemplate: SessionTemplate
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'POST',
+        url: '/visitScheduler/admin/session-templates/template',
+        bodyPatterns: [
+          {
+            equalToJson: {
+              name: createSessionTemplate.name,
+              weeklyFrequency: createSessionTemplate.weeklyFrequency,
+              dayOfWeek: createSessionTemplate.dayOfWeek,
+              prisonId: createSessionTemplate.prisonId,
+              sessionCapacity: createSessionTemplate.sessionCapacity,
+              sessionDateRange: createSessionTemplate.sessionDateRange,
+              sessionTimeSlot: createSessionTemplate.sessionTimeSlot,
+              visitRoom: createSessionTemplate.visitRoom,
+              categoryGroupReferences: createSessionTemplate.categoryGroupReferences,
+              incentiveLevelGroupReferences: createSessionTemplate.incentiveLevelGroupReferences,
+              locationGroupReferences: createSessionTemplate.locationGroupReferences,
+            },
+          },
+        ],
+      },
+      response: {
+        status: 201,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: sessionTemplate,
       },
     })
   },

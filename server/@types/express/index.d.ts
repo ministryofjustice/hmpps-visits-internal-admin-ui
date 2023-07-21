@@ -22,7 +22,7 @@ export declare global {
       verified?: boolean
       id: string
       flash(type: 'errors', message: FlashErrorMessage): number
-      flash(type: 'formValues', message: Record<string, string>): number
+      flash(type: 'formValues', message: Record<string, string | string[]>): number
       logout(done: (err: unknown) => void): void
     }
   }

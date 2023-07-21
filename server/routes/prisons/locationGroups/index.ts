@@ -22,7 +22,6 @@ export default function routes(services: Services): Router {
   get('/prisons/:prisonId([A-Z]{3})/location-groups/add', addLocationGroup.view())
   get('/prisons/:prisonId([A-Z]{3})/location-groups/:reference', singleLocationGroup.view())
   post('/prisons/:prisonId([A-Z]{3})/location-groups/:reference/delete', singleLocationGroup.delete())
-
   postWithValidation('/prisons/:prisonId/location-groups/add', addLocationGroup.validate(), addLocationGroup.add())
 
   return router
