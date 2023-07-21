@@ -10,6 +10,7 @@ import {
   IncentiveLevelGroup,
   CreateLocationGroupDto,
   CreateIncentiveGroupDto,
+  CreateCategoryGroupDto,
 } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
@@ -141,9 +142,28 @@ export default class VisitSchedulerApiClient {
   }
 
   // Category groups
+  async getSingleCategoryGroup(reference: string): Promise<CategoryGroup> {
+    return this.restClient.get({
+      path: `/admin/category-groups/group/${reference}`,
+    })
+  }
+
   async getCategoryGroups(prisonCode: string): Promise<CategoryGroup[]> {
     return this.restClient.get({
       path: `/admin/category-groups/${prisonCode}`,
+    })
+  }
+
+  async createCategoryGroup(createCategoryGroupDto: CreateCategoryGroupDto): Promise<CategoryGroup> {
+    return this.restClient.post({
+      path: `/admin/category-groups/group`,
+      data: createCategoryGroupDto,
+    })
+  }
+
+  async deleteCategoryGroup(reference: string): Promise<void> {
+    return this.restClient.delete({
+      path: `/admin/category-groups/group/${reference}`,
     })
   }
 

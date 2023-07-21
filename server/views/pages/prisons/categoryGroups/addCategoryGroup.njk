@@ -6,8 +6,8 @@
 {%- from "govuk/components/input/macro.njk" import govukInput -%}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
-{% set pageHeaderTitle = 'Add an incentive level group' %}
-{% set pageTitle = applicationName + " - Incentive groups - " + pageHeaderTitle %}
+{% set pageHeaderTitle = 'Add a category group' %}
+{% set pageTitle = applicationName + " - Category groups - " + pageHeaderTitle %}
 
 {% set primaryNavItems = [
   {
@@ -38,21 +38,21 @@
 
       {% include "partials/errorSummary.njk" %}
 
-      {# Build incentive items array for checkboxes #}
-      {% set incentiveLevelItems = [] %}
-      {% for incentive, description in incentiveLevels %}
-        {% set incentiveLevelItems = (incentiveLevelItems.push({
-          value: incentive,
+      {# Build prisoner category array for checkboxes #}
+      {% set prisonerCategoryItems = [] %}
+      {% for prisonerCategory, description in prisonerCategories %}
+        {% set prisonerCategoryItems = (prisonerCategoryItems.push({
+          value: prisonerCategory,
           text: description
-        }), incentiveLevelItems)%}
+        }), prisonerCategoryItems)%}
       {% endfor %}
 
-      <form action="/prisons/{{prison.code}}/incentive-groups/add" method="POST" novalidate>
+      <form action="/prisons/{{prison.code}}/category-groups/add" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukInput({
           label: {
-            html: 'Incentive level group name',
+            text: 'Category group name',
             classes: 'govuk-label--m'
           },
           id: 'name',
@@ -64,10 +64,10 @@
         }) }}
 
         {{ govukCheckboxes({
-          name: "incentiveLevels",
+          name: "prisonerCategories",
           fieldset: {
             legend: {
-              text: "Which incentive levels is this group for?",
+              text: "Which categories is this group for?",
               isPageHeading: true,
               classes: "govuk-fieldset__legend--m"
             }
@@ -75,9 +75,9 @@
           hint: {
             text: "Select all that apply."
           },
-          items: incentiveLevelItems,
-          values: formValues.incentiveLevels,
-          errorMessage: errors | findError('incentiveLevels')
+          items: prisonerCategoryItems,
+          values: formValues.prisonerCategories,
+          errorMessage: errors | findError('prisonerCategories')
         }) }}
 
 

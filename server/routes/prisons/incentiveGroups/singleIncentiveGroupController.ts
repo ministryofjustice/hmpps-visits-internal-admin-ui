@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { PrisonService, IncentiveGroupService } from '../../../services'
+import incentiveLevels from '../../../constants/incentiveLevels'
 
 export default class SingleIncentiveGroupController {
   public constructor(
@@ -16,11 +17,13 @@ export default class SingleIncentiveGroupController {
         res.locals.user.username,
         reference,
       )
+      const incentiveLevelValues = incentiveGroup.incentiveLevels.map(level => incentiveLevels[level])
 
       return res.render('pages/prisons/incentiveGroups/viewSingleIncentiveGroup', {
         errors: req.flash('errors'),
         prison,
         incentiveGroup,
+        incentiveLevelValues,
         message: req.flash('message'),
       })
     }

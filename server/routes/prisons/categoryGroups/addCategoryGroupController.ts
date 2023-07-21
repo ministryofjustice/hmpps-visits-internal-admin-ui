@@ -1,13 +1,13 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { PrisonService, IncentiveGroupService } from '../../../services'
-import { CreateIncentiveGroupDto } from '../../../data/visitSchedulerApiTypes'
-import incentiveLevels from '../../../constants/incentiveLevels'
+import { PrisonService, CategoryGroupService } from '../../../services'
+import { CreateCategoryGroupDto } from '../../../data/visitSchedulerApiTypes'
+import prisonerCategories from '../../../constants/prisonerCategories'
 
-export default class AddIncentiveGroupController {
+export default class AddCategoryGroupController {
   public constructor(
     private readonly prisonService: PrisonService,
-    private readonly incentiveGroupService: IncentiveGroupService,
+    private readonly categoryGroupService: CategoryGroupService,
   ) {}
 
   public view(): RequestHandler {
@@ -16,11 +16,11 @@ export default class AddIncentiveGroupController {
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
       const formValues = req.flash('formValues')?.[0] || {}
 
-      res.render('pages/prisons/incentiveGroups/addIncentiveGroup', {
+      res.render('pages/prisons/categoryGroups/addCategoryGroup', {
         errors: req.flash('errors'),
         prison,
         formValues,
-        incentiveLevels,
+        prisonerCategories,
       })
     }
   }
@@ -29,7 +29,7 @@ export default class AddIncentiveGroupController {
     return async (req, res) => {
       const { prisonId } = req.params
 
-      const originalUrl = `/prisons/${prisonId}/incentive-groups/add`
+      const originalUrl = `/prisons/${prisonId}/category-groups/add`
 
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
@@ -38,18 +38,19 @@ export default class AddIncentiveGroupController {
         return res.redirect(originalUrl)
       }
 
-      const createIncentiveGroupDto: CreateIncentiveGroupDto = {
+      const createCategoryGroupDto: CreateCategoryGroupDto = {
+        categories: req.body.prisonerCategories,
         name: req.body.name,
         prisonId,
-        incentiveLevels: req.body.incentiveLevels,
       }
       try {
-        const { reference } = await this.incentiveGroupService.createIncentiveGroup(
+        const { reference } = await this.categoryGroupService.createCategoryGroup(
           res.locals.user.username,
-          createIncentiveGroupDto,
+          createCategoryGroupDto,
         )
-        req.flash('message', `Incentive level group '${reference}' has been created`)
-        return res.redirect(`/prisons/${prisonId}/incentive-groups/${reference}`)
+
+        req.flash('message', `Category group '${reference}' has been created`)
+        return res.redirect(`/prisons/${prisonId}/category-groups/${reference}`)
       } catch (error) {
         req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
         req.flash('formValues', req.body)
@@ -61,12 +62,12 @@ export default class AddIncentiveGroupController {
   public validate(): ValidationChain[] {
     return [
       body('name').trim().isLength({ min: 3, max: 100 }).withMessage('Enter a name between 3 and 100 characters long'),
-      body('incentiveLevels')
+      body('prisonerCategories')
         .toArray()
         .isArray({ min: 1 })
         .withMessage('Select at least one option')
         .bail()
-        .isIn(Object.keys(incentiveLevels))
+        .isIn(Object.keys(prisonerCategories))
         .withMessage('Invalid value entered'),
     ]
   }

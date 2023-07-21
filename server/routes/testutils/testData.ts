@@ -9,6 +9,7 @@ import {
   IncentiveLevelGroup,
   CreateLocationGroupDto,
   CreateIncentiveGroupDto,
+  CreateCategoryGroupDto,
 } from '../../data/visitSchedulerApiTypes'
 
 export default class TestData {
@@ -146,10 +147,20 @@ export default class TestData {
     ],
   }: Partial<CreateLocationGroupDto> = {}): CreateLocationGroupDto => ({ name, prisonId, locations })
 
+  static createCategoryGroupDto = ({
+    name = 'Category A (High Risk) prisoners',
+    prisonId = 'HEI',
+    categories = ['A_EXCEPTIONAL', 'A_HIGH', 'A_PROVISIONAL', 'A_STANDARD'],
+  }: Partial<CreateCategoryGroupDto> = {}): CreateCategoryGroupDto => ({
+    categories,
+    name,
+    prisonId,
+  })
+
   static categoryGroup = ({
     name = 'Category A (High Risk) prisoners',
     reference = '-afe~dcb~fb',
-    categories = ['A_HIGH'],
+    categories = ['A_EXCEPTIONAL', 'A_HIGH', 'A_PROVISIONAL', 'A_STANDARD'],
   }: Partial<CategoryGroup> = {}): CategoryGroup => ({ name, reference, categories })
 
   static incentiveLevelGroup = ({

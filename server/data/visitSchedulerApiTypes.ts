@@ -2,6 +2,8 @@ import { components, operations } from '../@types/visit-scheduler-api'
 
 // Category groups
 export type CategoryGroup = components['schemas']['SessionCategoryGroupDto']
+export type CreateCategoryGroupDto = components['schemas']['CreateCategoryGroupDto']
+export type PrisonerCategories = CategoryGroup['categories'][number]
 
 // Incentive groups
 export type IncentiveLevelGroup = components['schemas']['SessionIncentiveLevelGroupDto']

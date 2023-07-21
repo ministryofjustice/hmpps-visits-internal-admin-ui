@@ -3,6 +3,7 @@ import config from '../config'
 import VisitSchedulerApiClient from './visitSchedulerApiClient'
 import TestData from '../routes/testutils/testData'
 import {
+  CreateCategoryGroupDto,
   CreateIncentiveGroupDto,
   CreateLocationGroupDto,
   CreateSessionTemplateDto,
@@ -252,6 +253,21 @@ describe('visitSchedulerApiClient', () => {
     })
   })
 
+  describe('getSingleCategoryGroup', () => {
+    it('should return a single category group', async () => {
+      const getSingleCategoryGroup = TestData.categoryGroup()
+
+      fakeVisitSchedulerApi
+        .get(`/admin/category-groups/group/${getSingleCategoryGroup.reference}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, getSingleCategoryGroup)
+
+      const output = await visitSchedulerApiClient.getSingleCategoryGroup(getSingleCategoryGroup.reference)
+
+      expect(output).toEqual(getSingleCategoryGroup)
+    })
+  })
+
   describe('getCategoryGroups', () => {
     it('should return all category groups for a prison', async () => {
       const prisonCode = 'HEI'
@@ -265,6 +281,26 @@ describe('visitSchedulerApiClient', () => {
       const output = await visitSchedulerApiClient.getCategoryGroups('HEI')
 
       expect(output).toEqual(categoryGroups)
+    })
+  })
+
+  describe('createCategoryGroup', () => {
+    it('should add a new category group', async () => {
+      const createCategoryGroupDto = TestData.createCategoryGroupDto()
+      const singleCategoryGroup = TestData.categoryGroup()
+
+      fakeVisitSchedulerApi
+        .post('/admin/category-groups/group', <CreateCategoryGroupDto>{
+          categories: createCategoryGroupDto.categories,
+          name: createCategoryGroupDto.name,
+          prisonId: createCategoryGroupDto.prisonId,
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, singleCategoryGroup)
+
+      const output = await visitSchedulerApiClient.createCategoryGroup(createCategoryGroupDto)
+
+      expect(output).toEqual(singleCategoryGroup)
     })
   })
 
