@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService } from '../../../services'
-import { formatDate } from '../../../utils/utils'
+import { formatDate, responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class ExcludedDatesController {
   public constructor(private readonly prisonService: PrisonService) {}
@@ -37,7 +37,7 @@ export default class ExcludedDatesController {
         await this.prisonService.addExcludeDate(res.locals.user.username, prisonId, excludeDate)
         req.flash('message', `${excludeDateFormatted} has been successfully added`)
       } catch (error) {
-        req.flash('errors', [{ msg: `Failed to add date ${excludeDateFormatted}` }])
+        req.flash('errors', responseErrorToFlashMessage(error))
       }
 
       return res.redirect(originalUrl)
@@ -55,7 +55,7 @@ export default class ExcludedDatesController {
         await this.prisonService.removeExcludeDate(res.locals.user.username, prisonId, excludeDate)
         req.flash('message', `${excludeDateFormatted} has been successfully removed`)
       } catch (error) {
-        req.flash('errors', [{ msg: `Failed to remove date ${excludeDateFormatted}` }])
+        req.flash('errors', responseErrorToFlashMessage(error))
       }
 
       return res.redirect(`/prisons/${prisonId}/excluded-dates`)

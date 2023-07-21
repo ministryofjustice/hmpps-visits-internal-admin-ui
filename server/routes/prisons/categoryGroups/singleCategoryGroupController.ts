@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { PrisonService, CategoryGroupService } from '../../../services'
 import prisonerCategories from '../../../constants/prisonerCategories'
+import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class SingleCategoryGroupController {
   public constructor(
@@ -34,7 +35,7 @@ export default class SingleCategoryGroupController {
         await this.categoryGroupService.deleteCategoryGroup(res.locals.user.username, reference)
         req.flash('message', `Category group with reference ${reference} deleted.`)
       } catch (error) {
-        req.flash('errors', [{ msg: `Failed to delete category group with reference - ${reference}` }])
+        req.flash('errors', responseErrorToFlashMessage(error))
         return res.redirect(`/prisons/${prisonId}/category-groups/${reference}`)
       }
 

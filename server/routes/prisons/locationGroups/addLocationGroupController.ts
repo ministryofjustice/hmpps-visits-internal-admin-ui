@@ -2,6 +2,7 @@ import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService, LocationGroupService } from '../../../services'
 import { CreateLocationGroupDto } from '../../../data/visitSchedulerApiTypes'
+import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class AddLocationGroupController {
   public constructor(
@@ -50,7 +51,7 @@ export default class AddLocationGroupController {
         req.flash('message', `Location group '${reference}' has been created`)
         return res.redirect(`/prisons/${prisonId}/location-groups/${reference}`)
       } catch (error) {
-        req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
+        req.flash('errors', responseErrorToFlashMessage(error))
         req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }

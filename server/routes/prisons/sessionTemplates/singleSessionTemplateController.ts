@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { PrisonService, SessionTemplateService } from '../../../services'
+import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class SingleSessionTemplateController {
   public constructor(
@@ -70,7 +71,7 @@ export default class SingleSessionTemplateController {
         await this.sessionTemplateService.deleteSessionTemplate(res.locals.user.username, reference)
         req.flash('message', `Session template with reference ${reference} deleted.`)
       } catch (error) {
-        req.flash('errors', [{ msg: `Failed to delete session template with reference - ${reference}` }])
+        req.flash('errors', responseErrorToFlashMessage(error))
         return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
       }
 

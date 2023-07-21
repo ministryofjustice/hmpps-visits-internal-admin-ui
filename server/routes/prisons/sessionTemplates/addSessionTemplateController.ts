@@ -4,6 +4,7 @@ import { getTime, isValid, parse, parseISO } from 'date-fns'
 import { PrisonService, SessionTemplateService, IncentiveGroupService } from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
+import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class AddSessionTemplateController {
   public constructor(
@@ -132,7 +133,7 @@ export default class AddSessionTemplateController {
         req.flash('message', `Session template '${reference}' has been created`)
         return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
       } catch (error) {
-        req.flash('errors', [{ msg: `${error.status} ${error.message}` }])
+        req.flash('errors', responseErrorToFlashMessage(error))
         req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }

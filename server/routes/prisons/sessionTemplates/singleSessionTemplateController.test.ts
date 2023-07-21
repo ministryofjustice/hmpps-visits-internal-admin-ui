@@ -223,7 +223,7 @@ describe('Single session template page', () => {
 
     it('should set error in flash if session template status not deleted', () => {
       // Given
-      const error = { msg: 'Failed to delete session template with reference - -afe.dcc.0f' }
+      const errors: FlashErrorMessage = [{ msg: '400 Bad Request' }]
       sessionTemplateService.deleteSessionTemplate.mockRejectedValue(new BadRequest())
 
       // When
@@ -234,7 +234,7 @@ describe('Single session template page', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('errors', [error])
+          expect(flashProvider).toHaveBeenCalledWith('errors', errors)
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledTimes(1)
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })
