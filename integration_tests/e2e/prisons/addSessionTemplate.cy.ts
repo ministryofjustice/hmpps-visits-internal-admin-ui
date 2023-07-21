@@ -15,6 +15,13 @@ context('Add session template', () => {
     reference: '-bfe~dcb~fc',
   })
 
+  const categoryGroupOne = TestData.categoryGroup()
+  const categoryGroupTwo = TestData.categoryGroup({
+    name: 'Female Aware',
+    categories: ['FEMALE_RESTRICTED'],
+    reference: '-sfe~dcb~fc',
+  })
+
   beforeEach(() => {
     const activePrison = TestData.prisonDto({ active: true, code: prisonCode })
     sessionTemplate = TestData.sessionTemplate({ active: false, prisonId: prisonCode })
@@ -29,6 +36,7 @@ context('Add session template', () => {
     cy.task('stubPrisons')
     cy.task('stubGetSessionTemplates', { prisonCode, rangeType, sessionTemplates: [sessionTemplate] })
     cy.task('stubIncentiveGroups', { prisonCode, body: [incentiveLevelGroupOne, incentiveLevelGroupTwo] })
+    cy.task('stubCategoryGroups', { prisonCode, body: [categoryGroupOne, categoryGroupTwo] })
   })
 
   it('when on session template view clicking add session template should go to correct page', () => {
@@ -70,6 +78,31 @@ context('Add session template', () => {
       .check([incentiveLevelGroupOne.reference, incentiveLevelGroupTwo.reference])
   })
 
+  it('when on add session template page category groups are available', () => {
+    // Given
+    const addSessionTemplatePage = Page.createPage(AddSessionTemplatePage)
+
+    // When
+    addSessionTemplatePage.goTo(prisonCode)
+
+    // Then
+    addSessionTemplatePage
+      .getCategoryGroupCheckBoxes()
+      .should('have.value', categoryGroupOne.reference, categoryGroupTwo.reference)
+  })
+
+  it('when on add session template page can select category groups', () => {
+    // Given
+    const addSessionTemplatePage = Page.createPage(AddSessionTemplatePage)
+
+    // When
+    addSessionTemplatePage.goTo(prisonCode)
+
+    // Then
+    addSessionTemplatePage.getHasCategoryGroupsCheckBox().check()
+    addSessionTemplatePage.getCategoryGroupCheckBoxes().check([categoryGroupOne.reference, categoryGroupTwo.reference])
+  })
+
   it('when on add session template page data can be submitted', () => {
     // Given
     const startDate = new Date()
@@ -84,6 +117,7 @@ context('Add session template', () => {
         validFromDate: startDateString,
         validToDate: endDateString,
       },
+      categoryGroupReferences: [categoryGroupOne.reference, categoryGroupTwo.reference],
       incentiveLevelGroupReferences: [incentiveLevelGroupOne.reference, incentiveLevelGroupTwo.reference],
     })
     cy.task('stubCreateSessionTemplatePost', { createSessionTemplate, sessionTemplate })
@@ -112,6 +146,10 @@ context('Add session template', () => {
         createSessionTemplate.incentiveLevelGroupReferences[0],
         createSessionTemplate.incentiveLevelGroupReferences[1],
       ])
+    addSessionTemplatePage.getHasCategoryGroupsCheckBox().check()
+    addSessionTemplatePage
+      .getCategoryGroupCheckBoxes()
+      .check([createSessionTemplate.categoryGroupReferences[0], createSessionTemplate.categoryGroupReferences[1]])
 
     // When
     addSessionTemplatePage.clickSubmitButton()

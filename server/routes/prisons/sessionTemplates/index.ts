@@ -23,6 +23,7 @@ export default function routes(services: Services): Router {
     services.prisonService,
     services.sessionTemplateService,
     services.incentiveGroupService,
+    services.categoryGroupService,
   )
 
   get('/prisons/:prisonId/session-templates/add', addSessionTemplate.view())

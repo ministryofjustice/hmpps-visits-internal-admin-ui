@@ -46,4 +46,8 @@ export default class AddViewSessionTemplatePage extends Page {
   getHasIncentiveGroupsCheckBox = () => this.getById('hasIncentiveGroups')
 
   getIncentiveGroupCheckBoxes = () => this.getByName('incentiveGroupReferences')
+
+  getHasCategoryGroupsCheckBox = () => this.getById('hasCategoryGroups')
+
+  getCategoryGroupCheckBoxes = () => this.getByName('categoryGroupReferences')
 }

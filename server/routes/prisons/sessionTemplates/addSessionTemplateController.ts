@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { getTime, isValid, parse, parseISO } from 'date-fns'
-import { PrisonService, SessionTemplateService, IncentiveGroupService } from '../../../services'
+import { PrisonService, SessionTemplateService, IncentiveGroupService, CategoryGroupService } from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
@@ -11,6 +11,7 @@ export default class AddSessionTemplateController {
     private readonly prisonService: PrisonService,
     private readonly sessionTemplateService: SessionTemplateService,
     private readonly incentiveGroupService: IncentiveGroupService,
+    private readonly categoryGroupService: CategoryGroupService,
   ) {}
 
   public view(): RequestHandler {
@@ -18,6 +19,7 @@ export default class AddSessionTemplateController {
       const { prisonId } = req.params
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
       const incentiveGroups = await this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
+      const categoryGroups = await this.categoryGroupService.getCategoryGroups(res.locals.user.username, prisonId)
 
       const formValues = req.flash('formValues')?.[0] || {}
 
@@ -25,6 +27,7 @@ export default class AddSessionTemplateController {
         errors: req.flash('errors'),
         prison,
         incentiveGroups,
+        categoryGroups,
         daysOfWeek,
         formValues,
       })
@@ -50,6 +53,12 @@ export default class AddSessionTemplateController {
       const validToDateMonth = validToDateSplit[1] || undefined
       const validToDateDay = validToDateSplit[2] || undefined
 
+      let categoryGroupReferences: string[] = []
+      const categoryGroups = sessionTemplate.prisonerCategoryGroups
+      if (categoryGroups !== undefined && categoryGroups.length > 0) {
+        categoryGroupReferences = categoryGroups.map(categoryGroup => categoryGroup.reference)
+      }
+
       let incentiveGroupReferences: string[] = []
       const incentiveGroups = sessionTemplate.prisonerIncentiveLevelGroups
       if (incentiveGroups !== undefined && incentiveGroups.length > 0) {
@@ -74,6 +83,8 @@ export default class AddSessionTemplateController {
         visitRoom: sessionTemplate.visitRoom,
         hasIncentiveGroups: incentiveGroupReferences.length > 0 ? 'yes' : undefined,
         incentiveGroupReferences,
+        hasCategoryGroups: categoryGroupReferences.length > 0 ? 'yes' : undefined,
+        categoryGroupReferences,
       }
 
       req.flash('formValues', formValues)
@@ -120,7 +131,7 @@ export default class AddSessionTemplateController {
           endTime: req.body.endTime,
         },
         visitRoom: req.body.visitRoom,
-        categoryGroupReferences: [],
+        categoryGroupReferences: req.body.hasCategoryGroups === 'yes' ? req.body.categoryGroupReferences : [],
         incentiveLevelGroupReferences: req.body.hasIncentiveGroups === 'yes' ? req.body.incentiveGroupReferences : [],
         locationGroupReferences: [],
       }
@@ -225,6 +236,10 @@ export default class AddSessionTemplateController {
       body('incentiveGroupReferences', 'You must select at least one incentive group')
         .toArray()
         .if(body('hasIncentiveGroups').equals('yes'))
+        .isArray({ min: 1 }),
+      body('categoryGroupReferences', 'You must select at least one category group')
+        .toArray()
+        .if(body('hasCategoryGroups').equals('yes'))
         .isArray({ min: 1 }),
     ]
   }
