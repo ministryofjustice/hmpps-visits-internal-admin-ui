@@ -1,4 +1,5 @@
-import { convertToTitleCase, formatDate, initialiseName } from './utils'
+import { SanitisedError } from '../sanitisedError'
+import { convertToTitleCase, formatDate, initialiseName, responseErrorToFlashMessage } from './utils'
 
 describe('convert to title case', () => {
   it.each([
@@ -38,5 +39,35 @@ describe('format a date', () => {
     ['Invalid format', '2022-02-14T10:00:00', '', null],
   ])('%s formatDate(%s, %s) = %s', (_: string, date: string, format: string, expected: string) => {
     expect(formatDate(date, format)).toEqual(expected)
+  })
+})
+
+describe('format a sanitised response error as a flash error message', () => {
+  it('should render error code and message if no developerMessage present', () => {
+    const error = <SanitisedError>{
+      status: 400,
+      message: 'Bad Request',
+    }
+
+    const flashMessage = responseErrorToFlashMessage(error)
+
+    expect(flashMessage.length).toBe(1)
+    expect(flashMessage[0]).toStrictEqual({ msg: '400 Bad Request' })
+  })
+
+  it('should render error code and message plus developerMessage id present', () => {
+    const error = <SanitisedError>{
+      status: 400,
+      message: 'Bad Request',
+      data: {
+        developerMessage: 'API message',
+      },
+    }
+
+    const flashMessage = responseErrorToFlashMessage(error)
+
+    expect(flashMessage.length).toBe(2)
+    expect(flashMessage[0]).toStrictEqual({ msg: '400 Bad Request' })
+    expect(flashMessage[1]).toStrictEqual({ msg: 'API message' })
   })
 })

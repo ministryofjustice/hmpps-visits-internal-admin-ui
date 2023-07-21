@@ -27,10 +27,7 @@ export default defineConfig({
         ...auth,
         ...tokenVerification,
 
-        // Prison register API
-        stubPrisons: prisonRegister.stubPrisons,
-
-        // Visit scheduler
+        ...prisonRegister,
         ...visitScheduler,
       })
     },

@@ -99,11 +99,9 @@ describe('Single session template page', () => {
   })
 
   describe('POST /prisons/{:prisonId}/session-templates/{:reference}/activate', () => {
-    let deactivatedSessionTemplate: SessionTemplate
     let activeSessionTemplate: SessionTemplate
 
     beforeEach(() => {
-      deactivatedSessionTemplate = TestData.sessionTemplate({ active: false })
       activeSessionTemplate = TestData.sessionTemplate({ active: true })
     })
 
@@ -127,10 +125,10 @@ describe('Single session template page', () => {
       return result
     })
 
-    it('should set error in flash if session template status not changed', () => {
+    it('should set error in flash if API error when changing template status', () => {
       // Given
-      sessionTemplateService.activateSessionTemplate.mockResolvedValue(deactivatedSessionTemplate)
-      const error = { msg: 'Failed to change  session template status' }
+      sessionTemplateService.activateSessionTemplate.mockRejectedValue(new BadRequest())
+      const error = { msg: '400 Bad Request' }
 
       // When
       const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f/activate')
@@ -151,11 +149,9 @@ describe('Single session template page', () => {
 
   describe('POST /prisons/{:prisonId}/session-templates/{:reference}/deactivate', () => {
     let deactivatedSessionTemplate: SessionTemplate
-    let activeSessionTemplate: SessionTemplate
 
     beforeEach(() => {
       deactivatedSessionTemplate = TestData.sessionTemplate({ active: false })
-      activeSessionTemplate = TestData.sessionTemplate({ active: true })
     })
 
     it('should change session template status and set flash message', () => {
@@ -178,10 +174,10 @@ describe('Single session template page', () => {
       return result
     })
 
-    it('should set error in flash if session template status not changed', () => {
+    it('should set error in flash if API error when changing template status', () => {
       // Given
-      sessionTemplateService.deactivateSessionTemplate.mockResolvedValue(activeSessionTemplate)
-      const error = { msg: 'Failed to change session template status' }
+      sessionTemplateService.deactivateSessionTemplate.mockRejectedValue(new BadRequest())
+      const error = { msg: '400 Bad Request' }
 
       // When
       const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f/deactivate')
@@ -223,7 +219,7 @@ describe('Single session template page', () => {
 
     it('should set error in flash if session template status not deleted', () => {
       // Given
-      const error = { msg: 'Failed to delete session template with reference - -afe.dcc.0f' }
+      const errors: FlashErrorMessage = [{ msg: '400 Bad Request' }]
       sessionTemplateService.deleteSessionTemplate.mockRejectedValue(new BadRequest())
 
       // When
@@ -234,7 +230,7 @@ describe('Single session template page', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('errors', [error])
+          expect(flashProvider).toHaveBeenCalledWith('errors', errors)
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledTimes(1)
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })

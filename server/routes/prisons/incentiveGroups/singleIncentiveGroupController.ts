@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { PrisonService, IncentiveGroupService } from '../../../services'
 import incentiveLevels from '../../../constants/incentiveLevels'
+import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class SingleIncentiveGroupController {
   public constructor(
@@ -37,7 +38,7 @@ export default class SingleIncentiveGroupController {
         await this.incentiveGroupService.deleteIncentiveGroup(res.locals.user.username, reference)
         req.flash('message', `Incentive group with reference ${reference} deleted.`)
       } catch (error) {
-        req.flash('errors', [{ msg: `Failed to delete incentive group with reference - ${reference}` }])
+        req.flash('errors', responseErrorToFlashMessage(error))
         return res.redirect(`/prisons/${prisonId}/incentive-groups/${reference}`)
       }
 
