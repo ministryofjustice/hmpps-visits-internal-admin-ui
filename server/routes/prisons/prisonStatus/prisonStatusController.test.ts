@@ -1,3 +1,4 @@
+import { BadRequest } from 'http-errors'
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
@@ -124,9 +125,9 @@ describe('Prison status page', () => {
         })
     })
 
-    it('should set error in flash if prison status not changed', () => {
-      prisonService.activatePrison.mockResolvedValue(inactivePrison)
-      const error = { msg: 'Failed to change prison status' }
+    it('should set error in flash if API error when activating prison', () => {
+      prisonService.activatePrison.mockRejectedValue(new BadRequest())
+      const error = { msg: '400 Bad Request' }
 
       return request(app)
         .post('/prisons/HEI/activate')
@@ -155,9 +156,9 @@ describe('Prison status page', () => {
         })
     })
 
-    it('should set error in flash if prison status not changed', () => {
-      prisonService.deactivatePrison.mockResolvedValue(activePrison)
-      const error = { msg: 'Failed to change prison status' }
+    it('should set error in flash if API error when deactivatinig prison', () => {
+      prisonService.deactivatePrison.mockRejectedValue(new BadRequest())
+      const error = { msg: '400 Bad Request' }
 
       return request(app)
         .post('/prisons/HEI/deactivate')
