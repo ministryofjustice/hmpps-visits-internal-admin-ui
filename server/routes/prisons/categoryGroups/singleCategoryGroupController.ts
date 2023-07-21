@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { PrisonService, CategoryGroupService } from '../../../services'
+import prisonerCategories from '../../../constants/prisonerCategories'
 
 export default class SingleCategoryGroupController {
   public constructor(
@@ -13,11 +14,13 @@ export default class SingleCategoryGroupController {
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
       const categoryGroup = await this.categoryGroupService.getSingleCategoryGroup(res.locals.user.username, reference)
+      const categoryGroupValues = categoryGroup.categories.map(category => prisonerCategories[category])
 
       return res.render('pages/prisons/categoryGroups/viewSingleCategoryGroup', {
         errors: req.flash('errors'),
         prison,
         categoryGroup,
+        categoryGroupValues,
         message: req.flash('message'),
       })
     }
