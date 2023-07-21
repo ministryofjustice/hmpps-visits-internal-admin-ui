@@ -206,6 +206,9 @@ export default {
       response: {
         status: 400,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          developerMessage: `Failed to delete session template with reference - ${sessionTemplate.reference}`,
+        },
       },
     })
   },
