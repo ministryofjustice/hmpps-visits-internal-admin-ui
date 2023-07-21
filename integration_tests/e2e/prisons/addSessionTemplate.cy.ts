@@ -5,7 +5,7 @@ import ViewSessionTemplatesPage from '../../pages/prisons/viewSessionTemplatesPa
 import ViewSessionTemplatePage from '../../pages/prisons/viewSessionTemplatePage'
 import { SessionTemplatesRangeType } from '../../../server/data/visitSchedulerApiTypes'
 
-context('Change active/inactive session template', () => {
+context('Add session template', () => {
   const prisonCode = 'HEI'
   let sessionTemplate = null
   const incentiveLevelGroupOne = TestData.incentiveLevelGroup()

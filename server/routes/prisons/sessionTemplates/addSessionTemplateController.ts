@@ -4,7 +4,6 @@ import { getTime, isValid, parse, parseISO } from 'date-fns'
 import { PrisonService, SessionTemplateService, IncentiveGroupService } from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
-import logger from '../../../../logger'
 
 export default class AddSessionTemplateController {
   public constructor(
@@ -56,7 +55,6 @@ export default class AddSessionTemplateController {
         incentiveGroupReferences = incentiveGroups.map(incentiveGroup => incentiveGroup.reference)
       }
 
-      logger.debug(` group refs : ${JSON.stringify(incentiveGroupReferences)} ${JSON.stringify(incentiveGroups)}`)
       const formValues = {
         name: `COPY - ${sessionTemplate.name}`,
         dayOfWeek: sessionTemplate.dayOfWeek,

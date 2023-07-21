@@ -27,7 +27,7 @@ export default abstract class Page {
 
   manageDetails = (): PageElement => cy.get('[data-qa=manageDetails]')
 
-  getByClass = (clazz: string): PageElement => cy.get(`.${clazz}]`)
+  getByClass = (classValue: string): PageElement => cy.get(`.${classValue}]`)
 
   getById = (id: string): PageElement => cy.get(`#${id}`)
 
