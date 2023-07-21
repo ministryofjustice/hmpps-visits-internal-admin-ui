@@ -44,6 +44,16 @@
         }), incentiveGroupsItems) %}
       {% endfor %}
 
+      {# Build category group array for checkboxes #}
+      {% set categoryGroupsItems = [] %}
+      {% for categoryGroup in categoryGroups %}
+        {% set categoryGroupsItems = (categoryGroupsItems.push({
+          value: categoryGroup.reference,
+          text: categoryGroup.name
+        }), categoryGroupsItems) %}
+      {% endfor %}
+
+
       <form action="/prisons/{{ prison.code }}/session-templates/add" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
@@ -316,6 +326,50 @@
           }) }}
         {% else %}
           <p>There are no incentive groups setup for this prison.</p>
+        {% endif %}
+
+        {% if categoryGroupsItems | length %}
+          {%- set categoryGroupsHtml %}
+            {{ govukCheckboxes({
+              name: "categoryGroupReferences",
+              fieldset: {
+                legend: {
+                  text: "Which category group do you want to add?",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--m"
+                },
+                attributes: { "data-test": "category-groups" }
+              },
+              hint: {
+                text: "Select all that apply."
+              },
+              items: categoryGroupsItems,
+              values: formValues.categoryGroupReferences,
+              errorMessage: errors | findError('categoryGroupReferences')
+            }) }}
+          {% endset -%}
+          {{ govukCheckboxes({
+            name: "hasCategoryGroups",
+            fieldset: {
+              legend: {
+                text: "Does this session have category groups?",
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            errorMessage: errors | findError('hasCategoryGroups'),
+            items: [
+              {
+                text: "Yes",
+                value: "yes",
+                conditional: {
+                html: categoryGroupsHtml
+              },
+                checked: formValues.hasCategoryGroups === "yes"
+              }
+            ]
+          }) }}
+        {% else %}
+          <p>There are no category groups setup for this prison.</p>
         {% endif %}
 
         {{ govukButton({

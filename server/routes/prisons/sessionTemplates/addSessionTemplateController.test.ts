@@ -6,10 +6,11 @@ import {
   createMockPrisonService,
   createMockSessionTemplateService,
   createMockIncentiveGroupService,
+  createMockCategoryGroupService,
 } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import { FlashErrorMessage } from '../../../@types/visits-admin'
-import { IncentiveLevelGroup } from '../../../data/visitSchedulerApiTypes'
+import { IncentiveLevelGroup, CategoryGroup } from '../../../data/visitSchedulerApiTypes'
 
 let app: Express
 let flashData: Record<string, string | FlashErrorMessage | Record<string, string>[]>
@@ -17,6 +18,7 @@ let flashData: Record<string, string | FlashErrorMessage | Record<string, string
 const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
 const incentiveGroupService = createMockIncentiveGroupService()
+const categoryGroupService = createMockCategoryGroupService()
 
 const prison = TestData.prison()
 
@@ -26,7 +28,9 @@ beforeEach(() => {
 
   prisonService.getPrison.mockResolvedValue(prison)
 
-  app = appWithAllRoutes({ services: { prisonService, sessionTemplateService, incentiveGroupService } })
+  app = appWithAllRoutes({
+    services: { prisonService, sessionTemplateService, incentiveGroupService, categoryGroupService },
+  })
 })
 
 afterEach(() => {
@@ -55,6 +59,7 @@ describe('Add a session template', () => {
         closedCapacity: 'bb',
         visitRoom: 'ab',
         hasIncentiveGroups: 'yes',
+        hasCategoryGroups: 'yes',
       }
       const errors = [
         { path: 'name', msg: 'name error' },
@@ -137,18 +142,22 @@ describe('Add a session template', () => {
   describe('POST /prisons/{:prisonId}/session-templates/add', () => {
     it('should send valid data to create session template and redirect to view template', () => {
       const incentiveLevelGroupReferences = ['tRef1', 'tRef2']
+      const categoryGroupReferences = ['cRef1', 'cRef2']
+
       const createSessionTemplateDto = TestData.createSessionTemplateDto({
         incentiveLevelGroupReferences,
+        categoryGroupReferences,
       })
+
       const sessionTemplate = TestData.sessionTemplate()
       sessionTemplate.prisonerIncentiveLevelGroups = [
-        {
-          reference: incentiveLevelGroupReferences[0],
-        },
-        {
-          reference: incentiveLevelGroupReferences[1],
-        },
+        { reference: incentiveLevelGroupReferences[0] },
+        { reference: incentiveLevelGroupReferences[1] },
       ] as IncentiveLevelGroup[]
+      sessionTemplate.prisonerCategoryGroups = [
+        { reference: categoryGroupReferences[0] },
+        { reference: categoryGroupReferences[1] },
+      ] as CategoryGroup[]
 
       sessionTemplateService.createSessionTemplate.mockResolvedValue(sessionTemplate)
 
@@ -172,6 +181,9 @@ describe('Add a session template', () => {
         .send('hasIncentiveGroups=yes')
         .send(`incentiveGroupReferences=${incentiveLevelGroupReferences[0]}`)
         .send(`incentiveGroupReferences=${incentiveLevelGroupReferences[1]}`)
+        .send('hasCategoryGroups=yes')
+        .send(`categoryGroupReferences=${categoryGroupReferences[0]}`)
+        .send(`categoryGroupReferences=${categoryGroupReferences[1]}`)
         .expect(302)
         .expect('location', `/prisons/${prison.code}/session-templates/${sessionTemplate.reference}`)
         .expect(() => {
@@ -209,6 +221,10 @@ describe('Add a session template', () => {
           path: 'incentiveGroupReferences',
           msg: 'You must select at least one incentive group',
         }),
+        expect.objectContaining({
+          path: 'categoryGroupReferences',
+          msg: 'You must select at least one category group',
+        }),
       ]
 
       const expectedFormValues = {
@@ -229,6 +245,8 @@ describe('Add a session template', () => {
         visitRoom: 'z',
         hasIncentiveGroups: 'yes',
         incentiveGroupReferences: Array<string>(),
+        hasCategoryGroups: 'yes',
+        categoryGroupReferences: Array<string>(),
       }
 
       return request(app)
@@ -249,6 +267,7 @@ describe('Add a session template', () => {
         .send('closedCapacity=0')
         .send('visitRoom=z')
         .send('hasIncentiveGroups=yes')
+        .send('hasCategoryGroups=yes')
         .expect(302)
         .expect('location', url)
         .expect(() => {
@@ -275,6 +294,8 @@ describe('Copy a session template', () => {
     visitRoom: 'Visits Main Room',
     hasIncentiveGroups: undefined,
     incentiveGroupReferences: [],
+    hasCategoryGroups: undefined,
+    categoryGroupReferences: [],
   }
 
   describe('POST /prisons/{:prisonId}/session-templates/copy', () => {
