@@ -1,7 +1,13 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { getTime, isValid, parse, parseISO } from 'date-fns'
-import { PrisonService, SessionTemplateService, IncentiveGroupService, CategoryGroupService } from '../../../services'
+import {
+  PrisonService,
+  SessionTemplateService,
+  IncentiveGroupService,
+  CategoryGroupService,
+  LocationGroupService,
+} from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
@@ -12,14 +18,24 @@ export default class AddSessionTemplateController {
     private readonly sessionTemplateService: SessionTemplateService,
     private readonly incentiveGroupService: IncentiveGroupService,
     private readonly categoryGroupService: CategoryGroupService,
+    private readonly locationGroupService: LocationGroupService,
   ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
-      const incentiveGroups = await this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
-      const categoryGroups = await this.categoryGroupService.getCategoryGroups(res.locals.user.username, prisonId)
+
+      const prisonPromise = this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const incentivePromise = this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
+      const categoryPromise = this.categoryGroupService.getCategoryGroups(res.locals.user.username, prisonId)
+      const locationPromise = this.locationGroupService.getLocationGroups(res.locals.user.username, prisonId)
+
+      const [prison, incentiveGroups, categoryGroups, locationGroups] = await Promise.all([
+        prisonPromise,
+        incentivePromise,
+        categoryPromise,
+        locationPromise,
+      ])
 
       const formValues = req.flash('formValues')?.[0] || {}
 
@@ -28,6 +44,7 @@ export default class AddSessionTemplateController {
         prison,
         incentiveGroups,
         categoryGroups,
+        locationGroups,
         daysOfWeek,
         formValues,
       })
@@ -65,6 +82,12 @@ export default class AddSessionTemplateController {
         incentiveGroupReferences = incentiveGroups.map(incentiveGroup => incentiveGroup.reference)
       }
 
+      let locationGroupReferences: string[] = []
+      const locationGroups = sessionTemplate.permittedLocationGroups
+      if (locationGroups !== undefined && locationGroups.length > 0) {
+        locationGroupReferences = locationGroups.map(locationGroup => locationGroup.reference)
+      }
+
       const formValues = {
         name: `COPY - ${sessionTemplate.name}`,
         dayOfWeek: sessionTemplate.dayOfWeek,
@@ -85,6 +108,8 @@ export default class AddSessionTemplateController {
         incentiveGroupReferences,
         hasCategoryGroups: categoryGroupReferences.length > 0 ? 'yes' : undefined,
         categoryGroupReferences,
+        hasLocationGroups: locationGroupReferences.length > 0 ? 'yes' : undefined,
+        locationGroupReferences,
       }
 
       req.flash('formValues', formValues)
@@ -133,7 +158,7 @@ export default class AddSessionTemplateController {
         visitRoom: req.body.visitRoom,
         categoryGroupReferences: req.body.hasCategoryGroups === 'yes' ? req.body.categoryGroupReferences : [],
         incentiveLevelGroupReferences: req.body.hasIncentiveGroups === 'yes' ? req.body.incentiveGroupReferences : [],
-        locationGroupReferences: [],
+        locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
       }
 
       try {
@@ -240,6 +265,10 @@ export default class AddSessionTemplateController {
       body('categoryGroupReferences', 'You must select at least one category group')
         .toArray()
         .if(body('hasCategoryGroups').equals('yes'))
+        .isArray({ min: 1 }),
+      body('locationGroupReferences', 'You must select at least one location group')
+        .toArray()
+        .if(body('hasLocationGroups').equals('yes'))
         .isArray({ min: 1 }),
     ]
   }

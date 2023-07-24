@@ -24,6 +24,7 @@ export default function routes(services: Services): Router {
     services.sessionTemplateService,
     services.incentiveGroupService,
     services.categoryGroupService,
+    services.locationGroupService,
   )
 
   get('/prisons/:prisonId/session-templates/add', addSessionTemplate.view())
