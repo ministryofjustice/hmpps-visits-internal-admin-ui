@@ -22,6 +22,20 @@ context('Add session template', () => {
     reference: '-sfe~dcb~fc',
   })
 
+  const locationGroupOne = TestData.locationGroup()
+  const locationGroupTwo = TestData.locationGroup({
+    name: 'C Wing D2 cell',
+    locations: [
+      {
+        levelOneCode: 'C',
+        levelTwoCode: 'S',
+        levelThreeCode: 'L2',
+        levelFourCode: 'D2',
+      },
+    ],
+    reference: '-lfe~dcb~fc',
+  })
+
   beforeEach(() => {
     const activePrison = TestData.prisonDto({ active: true, code: prisonCode })
     sessionTemplate = TestData.sessionTemplate({ active: false, prisonId: prisonCode })
@@ -37,6 +51,7 @@ context('Add session template', () => {
     cy.task('stubGetSessionTemplates', { prisonCode, rangeType, sessionTemplates: [sessionTemplate] })
     cy.task('stubIncentiveGroups', { prisonCode, body: [incentiveLevelGroupOne, incentiveLevelGroupTwo] })
     cy.task('stubCategoryGroups', { prisonCode, body: [categoryGroupOne, categoryGroupTwo] })
+    cy.task('stubLocationGroups', { prisonCode, body: [locationGroupOne, locationGroupTwo] })
   })
 
   it('when on session template view clicking add session template should go to correct page', () => {
@@ -103,6 +118,31 @@ context('Add session template', () => {
     addSessionTemplatePage.getCategoryGroupCheckBoxes().check([categoryGroupOne.reference, categoryGroupTwo.reference])
   })
 
+  it('when on add session template page location groups are available', () => {
+    // Given
+    const addSessionTemplatePage = Page.createPage(AddSessionTemplatePage)
+
+    // When
+    addSessionTemplatePage.goTo(prisonCode)
+
+    // Then
+    addSessionTemplatePage
+      .getLocationGroupCheckBoxes()
+      .should('have.value', locationGroupOne.reference, locationGroupTwo.reference)
+  })
+
+  it('when on add session template page can select location groups', () => {
+    // Given
+    const addSessionTemplatePage = Page.createPage(AddSessionTemplatePage)
+
+    // When
+    addSessionTemplatePage.goTo(prisonCode)
+
+    // Then
+    addSessionTemplatePage.getHasLocationGroupsCheckBox().check()
+    addSessionTemplatePage.getLocationGroupCheckBoxes().check([locationGroupOne.reference, locationGroupTwo.reference])
+  })
+
   it('when on add session template page data can be submitted', () => {
     // Given
     const startDate = new Date()
@@ -119,6 +159,7 @@ context('Add session template', () => {
       },
       categoryGroupReferences: [categoryGroupOne.reference, categoryGroupTwo.reference],
       incentiveLevelGroupReferences: [incentiveLevelGroupOne.reference, incentiveLevelGroupTwo.reference],
+      locationGroupReferences: [locationGroupOne.reference, locationGroupTwo.reference],
     })
     cy.task('stubCreateSessionTemplatePost', { createSessionTemplate, sessionTemplate })
 
@@ -150,6 +191,10 @@ context('Add session template', () => {
     addSessionTemplatePage
       .getCategoryGroupCheckBoxes()
       .check([createSessionTemplate.categoryGroupReferences[0], createSessionTemplate.categoryGroupReferences[1]])
+    addSessionTemplatePage.getHasLocationGroupsCheckBox().check()
+    addSessionTemplatePage
+      .getLocationGroupCheckBoxes()
+      .check([createSessionTemplate.locationGroupReferences[0], createSessionTemplate.locationGroupReferences[1]])
 
     // When
     addSessionTemplatePage.clickSubmitButton()

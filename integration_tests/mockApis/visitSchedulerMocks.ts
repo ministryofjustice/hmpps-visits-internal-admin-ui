@@ -6,6 +6,7 @@ import {
   SessionTemplatesRangeType,
   SessionTemplate,
   IncentiveLevelGroup,
+  LocationGroup,
   CategoryGroup,
   CreateSessionTemplateDto,
 } from '../../server/data/visitSchedulerApiTypes'
@@ -13,6 +14,25 @@ import {
 type Prison = components['schemas']['PrisonDto']
 
 export default {
+  stubLocationGroups: ({
+    prisonCode,
+    body = [TestData.locationGroup()],
+  }: {
+    prisonCode: string
+    body: Array<LocationGroup>
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/visitScheduler/admin/location-groups/${prisonCode}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: body,
+      },
+    })
+  },
   stubIncentiveGroups: ({
     prisonCode,
     body = [TestData.incentiveLevelGroup()],

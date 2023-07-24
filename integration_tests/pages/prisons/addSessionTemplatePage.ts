@@ -50,4 +50,8 @@ export default class AddViewSessionTemplatePage extends Page {
   getHasCategoryGroupsCheckBox = () => this.getById('hasCategoryGroups')
 
   getCategoryGroupCheckBoxes = () => this.getByName('categoryGroupReferences')
+
+  getHasLocationGroupsCheckBox = () => this.getById('hasLocationGroups')
+
+  getLocationGroupCheckBoxes = () => this.getByName('locationGroupReferences')
 }

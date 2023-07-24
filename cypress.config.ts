@@ -1,9 +1,9 @@
 import { defineConfig } from 'cypress'
 import { resetStubs } from './integration_tests/mockApis/wiremock'
-import auth from './integration_tests/mockApis/auth'
-import tokenVerification from './integration_tests/mockApis/tokenVerification'
-import prisonRegister from './integration_tests/mockApis/prisonRegister'
-import visitScheduler from './integration_tests/mockApis/visitScheduler'
+import auth from './integration_tests/mockApis/authMocks'
+import tokenVerification from './integration_tests/mockApis/tokenVerificationMocks'
+import prisonRegister from './integration_tests/mockApis/prisonRegisterMocks'
+import visitScheduler from './integration_tests/mockApis/visitSchedulerMocks'
 
 export default defineConfig({
   chromeWebSecurity: false,
