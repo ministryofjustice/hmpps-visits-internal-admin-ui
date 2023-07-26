@@ -33,6 +33,6 @@ context('Supported prisons', () => {
     cy.task('stubCreatePrison', newPrison)
     supportedPrisonsPage.enterPrisonCode('HEI')
     supportedPrisonsPage.createPrison().click()
-    supportedPrisonsPage.succesMessage().contains('Hewell (HMP) has been successfully added.')
+    supportedPrisonsPage.succesMessage().contains('Hewell (HMP) has been successfully added')
   })
 })

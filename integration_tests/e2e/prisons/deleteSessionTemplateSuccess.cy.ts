@@ -39,8 +39,6 @@ context('Delete a session template success', () => {
 
     // Then
     const viewSessionTemplatesPage = Page.verifyOnPage(ViewSessionTemplatesPage)
-    viewSessionTemplatesPage
-      .successMessage()
-      .contains(`Session template with reference ${sessionTemplate.reference} deleted.`)
+    viewSessionTemplatesPage.successMessage().contains(`Session template '${sessionTemplate.name}' has been deleted`)
   })
 })

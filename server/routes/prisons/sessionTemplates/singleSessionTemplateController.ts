@@ -62,8 +62,9 @@ export default class SingleSessionTemplateController {
       const { reference, prisonId } = req.params
 
       try {
+        const { name } = await this.sessionTemplateService.getSingleSessionTemplate(res.locals.user.username, reference)
         await this.sessionTemplateService.deleteSessionTemplate(res.locals.user.username, reference)
-        req.flash('message', `Session template with reference ${reference} deleted.`)
+        req.flash('message', `Session template '${name}' has been deleted`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
         return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)

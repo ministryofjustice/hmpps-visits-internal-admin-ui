@@ -1,6 +1,5 @@
 {% extends "partials/layout.njk" %}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
-{%- from "moj/components/banner/macro.njk" import mojBanner -%}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
@@ -22,22 +21,10 @@
 {% set changeStatusAction = "deactivate" if prison.active else "activate" %}
 
 {% block content %}
+  {{ super() }}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-
-      {% include "partials/errorSummary.njk" %}
-
-      {% if message | length %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-two-thirds">
-            {{ mojBanner({
-              type: "success",
-              text: prison.name + " has been " + message + ".",
-              iconFallbackText: "Success"
-            }) }}
-          </div>
-        </div>
-      {% endif %}
 
       <h1 class="govuk-heading-l">
         <span>{{ pageHeaderTitle }}</span>

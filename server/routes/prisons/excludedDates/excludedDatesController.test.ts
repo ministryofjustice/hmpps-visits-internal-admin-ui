@@ -68,7 +68,7 @@ describe('Show excluded dates', () => {
 describe('Add / Remove excluded date', () => {
   it('should render date added status message set in flash', () => {
     flashData = {
-      message: `2024-12-25 has been successfully added.`,
+      message: `2024-12-25 has been successfully added`,
     }
 
     return request(app)
@@ -77,7 +77,7 @@ describe('Add / Remove excluded date', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('h2').text().trim()).toBe('Excluded dates')
-        expect($('.moj-banner__message').text()).toBe(`2024-12-25 has been successfully added.`)
+        expect($('.moj-banner__message').text()).toBe(`2024-12-25 has been successfully added`)
       })
   })
 

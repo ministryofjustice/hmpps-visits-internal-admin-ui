@@ -45,11 +45,11 @@ export default class AddIncentiveGroupController {
         incentiveLevels: req.body.incentiveLevels,
       }
       try {
-        const { reference } = await this.incentiveGroupService.createIncentiveGroup(
+        const { name, reference } = await this.incentiveGroupService.createIncentiveGroup(
           res.locals.user.username,
           createIncentiveGroupDto,
         )
-        req.flash('message', `Incentive level group '${reference}' has been created`)
+        req.flash('message', `Incentive level group '${name}' has been created`)
         return res.redirect(`/prisons/${prisonId}/incentive-groups/${reference}`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))

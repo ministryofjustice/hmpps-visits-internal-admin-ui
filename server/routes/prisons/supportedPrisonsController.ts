@@ -48,7 +48,7 @@ export default class SupportedPrisonsController {
 
       try {
         await this.prisonService.createPrison(res.locals.user.username, prisonId)
-        req.flash('message', `${newPrisonName} has been successfully added.`)
+        req.flash('message', `${newPrisonName} has been successfully added`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
       }

@@ -197,8 +197,11 @@ describe('Single session template page', () => {
   })
 
   describe('POST /prisons/{:prisonId}/session-templates/{:reference}/delete', () => {
+    const sessionTemplate = TestData.sessionTemplate()
+
     it('should delete session template status and set flash message', () => {
       // Given
+      sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplate)
       sessionTemplateService.deleteSessionTemplate.mockResolvedValue()
 
       // When
@@ -209,7 +212,15 @@ describe('Single session template page', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/session-templates`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'Session template with reference -afe.dcc.0f deleted.')
+          expect(flashProvider).toHaveBeenCalledWith(
+            'message',
+            `Session template '${sessionTemplate.name}' has been deleted`,
+          )
+          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledTimes(1)
+          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(
+            'user1',
+            sessionTemplate.reference,
+          )
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledTimes(1)
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })
@@ -220,6 +231,7 @@ describe('Single session template page', () => {
     it('should set error in flash if session template status not deleted', () => {
       // Given
       const errors: FlashErrorMessage = [{ msg: '400 Bad Request' }]
+      sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplate)
       sessionTemplateService.deleteSessionTemplate.mockRejectedValue(new BadRequest())
 
       // When
@@ -231,6 +243,11 @@ describe('Single session template page', () => {
         .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledWith('errors', errors)
+          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledTimes(1)
+          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(
+            'user1',
+            sessionTemplate.reference,
+          )
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledTimes(1)
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })

@@ -81,7 +81,7 @@ describe('Prison status page', () => {
 
       it('should render success message set in flash', () => {
         flashData = {
-          message: 'activated',
+          message: 'Hewell (HMP) has been activated',
         }
 
         return request(app)
@@ -90,7 +90,7 @@ describe('Prison status page', () => {
           .expect(res => {
             const $ = cheerio.load(res.text)
             expect($('h1').text().trim()).toBe(activePrison.name)
-            expect($('.moj-banner__message').text()).toBe('Hewell (HMP) has been activated.')
+            expect($('.moj-banner__message').text()).toBe('Hewell (HMP) has been activated')
           })
       })
 
@@ -113,13 +113,15 @@ describe('Prison status page', () => {
   describe('POST /prisons/{:prisonId}/activate', () => {
     it('should change prison status and set flash message', () => {
       prisonService.activatePrison.mockResolvedValue(activePrison)
+      prisonService.getPrisonName.mockResolvedValue(activePrison.name)
 
       return request(app)
         .post('/prisons/HEI/activate')
         .expect(302)
         .expect('location', `/prisons/HEI/status`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'activated')
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Hewell (HMP) has been activated')
+          expect(prisonService.getPrisonName).toHaveBeenCalledTimes(1)
           expect(prisonService.activatePrison).toHaveBeenCalledTimes(1)
           expect(prisonService.activatePrison).toHaveBeenCalledWith('user1', 'HEI')
         })
@@ -127,6 +129,8 @@ describe('Prison status page', () => {
 
     it('should set error in flash if API error when activating prison', () => {
       prisonService.activatePrison.mockRejectedValue(new BadRequest())
+      prisonService.getPrisonName.mockResolvedValue(activePrison.name)
+
       const error = { msg: '400 Bad Request' }
 
       return request(app)
@@ -144,13 +148,15 @@ describe('Prison status page', () => {
   describe('POST /prisons/{:prisonId}/deactivate', () => {
     it('should change prison status and set flash message', () => {
       prisonService.deactivatePrison.mockResolvedValue(inactivePrison)
+      prisonService.getPrisonName.mockResolvedValue(activePrison.name)
 
       return request(app)
         .post('/prisons/HEI/deactivate')
         .expect(302)
         .expect('location', `/prisons/HEI/status`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'deactivated')
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Hewell (HMP) has been deactivated')
+          expect(prisonService.getPrisonName).toHaveBeenCalledTimes(1)
           expect(prisonService.deactivatePrison).toHaveBeenCalledTimes(1)
           expect(prisonService.deactivatePrison).toHaveBeenCalledWith('user1', 'HEI')
         })
@@ -158,6 +164,8 @@ describe('Prison status page', () => {
 
     it('should set error in flash if API error when deactivatinig prison', () => {
       prisonService.deactivatePrison.mockRejectedValue(new BadRequest())
+      prisonService.getPrisonName.mockResolvedValue(activePrison.name)
+
       const error = { msg: '400 Bad Request' }
 
       return request(app)

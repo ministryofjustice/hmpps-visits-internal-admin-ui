@@ -201,8 +201,6 @@ context('Add session template', () => {
 
     // Then
     viewSessionTemplatePage.checkOnPage()
-    viewSessionTemplatePage
-      .successMessage()
-      .contains(`Session template '${sessionTemplate.reference}' has been created`)
+    viewSessionTemplatePage.successMessage().contains(`Session template '${sessionTemplate.name}' has been created`)
   })
 })

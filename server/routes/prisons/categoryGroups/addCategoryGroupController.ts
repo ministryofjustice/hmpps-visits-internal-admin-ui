@@ -45,12 +45,12 @@ export default class AddCategoryGroupController {
         prisonId,
       }
       try {
-        const { reference } = await this.categoryGroupService.createCategoryGroup(
+        const { name, reference } = await this.categoryGroupService.createCategoryGroup(
           res.locals.user.username,
           createCategoryGroupDto,
         )
 
-        req.flash('message', `Category group '${reference}' has been created`)
+        req.flash('message', `Category group '${name}' has been created`)
         return res.redirect(`/prisons/${prisonId}/category-groups/${reference}`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
