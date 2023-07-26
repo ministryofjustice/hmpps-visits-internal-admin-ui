@@ -81,7 +81,7 @@
         ]
       }) }}
 
-      <h2 class="govuk-heading-m">Delete Category group</h2>
+      <h2 class="govuk-heading-m">Delete category group</h2>
       <form action="/prisons/{{ prison.code }}/category-groups/{{ categoryGroup.reference }}/delete" data-test="category-delete-form" method="POST" novalidate>
 
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">

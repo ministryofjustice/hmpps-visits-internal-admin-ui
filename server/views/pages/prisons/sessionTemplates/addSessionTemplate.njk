@@ -136,7 +136,7 @@
             classes: "govuk-label--m"
           },
           hint: {
-            text: "1 = weekly, 2 = fortnightly etc"
+            text: "1 = weekly, 2 = fortnightly, etc"
           },
           classes: "govuk-!-width-one-third",
           id: "weeklyFrequency",
@@ -157,7 +157,7 @@
             }
           },
           hint: {
-            text: "For example, 27 03 2023"
+            text: "For example, 27 3 2023"
           },
           errorMessage: errors | findError('validFromDate'),
           items: [
@@ -293,57 +293,14 @@
           errorMessage: errors | findError('visitRoom')
         }) }}
 
-        {% if incentiveGroupsItems | length %}
-          {%- set incentiveGroupsHtml %}
-            {{ govukCheckboxes({
-              name: "incentiveGroupReferences",
-              fieldset: {
-                legend: {
-                  text: "Which incentive group do you want to add?",
-                  isPageHeading: true,
-                  classes: "govuk-fieldset__legend--m"
-                },
-                attributes: { "data-test": "incentive-groups" }
-              },
-              hint: {
-                text: "Select all that apply."
-              },
-              items: incentiveGroupsItems,
-              values: formValues.incentiveGroupReferences,
-              errorMessage: errors | findError('incentiveGroupReferences')
-            }) }}
-          {% endset -%}
-          {{ govukCheckboxes({
-            name: "hasIncentiveGroups",
-            fieldset: {
-              legend: {
-                text: "Does this session have incentive groups?",
-                classes: "govuk-fieldset__legend--m"
-              }
-            },
-            errorMessage: errors | findError('hasIncentiveGroups'),
-            items: [
-              {
-                text: "Yes",
-                value: "yes",
-                conditional: {
-                html: incentiveGroupsHtml
-              },
-                checked: formValues.hasIncentiveGroups === "yes"
-              }
-            ]
-          }) }}
-        {% else %}
-          <p>There are no incentive groups setup for this prison.</p>
-        {% endif %}
-
+        <h2 class="govuk-heading-m">Category groups</h2>
         {% if categoryGroupsItems | length %}
           {%- set categoryGroupsHtml %}
             {{ govukCheckboxes({
               name: "categoryGroupReferences",
               fieldset: {
                 legend: {
-                  text: "Which category group do you want to add?",
+                  text: "Which category groups?",
                   isPageHeading: true,
                   classes: "govuk-fieldset__legend--m"
                 },
@@ -359,16 +316,10 @@
           {% endset -%}
           {{ govukCheckboxes({
             name: "hasCategoryGroups",
-            fieldset: {
-              legend: {
-                text: "Does this session have category groups?",
-                classes: "govuk-fieldset__legend--m"
-              }
-            },
             errorMessage: errors | findError('hasCategoryGroups'),
             items: [
               {
-                text: "Yes",
+                text: "Add category groups to this session template?",
                 value: "yes",
                 conditional: {
                 html: categoryGroupsHtml
@@ -378,16 +329,56 @@
             ]
           }) }}
         {% else %}
-          <p>There are no category groups setup for this prison.</p>
+          <p>There are no category groups set up for this prison.</p>
         {% endif %}
 
+        <h2 class="govuk-heading-m">Incentive level groups</h2>
+        {% if incentiveGroupsItems | length %}
+          {%- set incentiveGroupsHtml %}
+            {{ govukCheckboxes({
+              name: "incentiveGroupReferences",
+              fieldset: {
+                legend: {
+                  text: "Which incentive level groups?",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--m"
+                },
+                attributes: { "data-test": "incentive-groups" }
+              },
+              hint: {
+                text: "Select all that apply."
+              },
+              items: incentiveGroupsItems,
+              values: formValues.incentiveGroupReferences,
+              errorMessage: errors | findError('incentiveGroupReferences')
+            }) }}
+          {% endset -%}
+          {{ govukCheckboxes({
+            name: "hasIncentiveGroups",
+            errorMessage: errors | findError('hasIncentiveGroups'),
+            items: [
+              {
+                text: "Add incentive level groups to this session template?",
+                value: "yes",
+                conditional: {
+                html: incentiveGroupsHtml
+              },
+                checked: formValues.hasIncentiveGroups === "yes"
+              }
+            ]
+          }) }}
+        {% else %}
+          <p>There are no incentive groups set up for this prison.</p>
+        {% endif %}
+
+        <h2 class="govuk-heading-m">Location groups</h2>
         {% if locationGroupsItems | length %}
           {%- set locationGroupsHtml %}
             {{ govukCheckboxes({
               name: "locationGroupReferences",
               fieldset: {
                 legend: {
-                  text: "Which location group do you want to add?",
+                  text: "Which location groups?",
                   isPageHeading: true,
                   classes: "govuk-fieldset__legend--m"
                 },
@@ -403,16 +394,10 @@
           {% endset -%}
           {{ govukCheckboxes({
             name: "hasLocationGroups",
-            fieldset: {
-              legend: {
-                text: "Does this session have location groups?",
-                classes: "govuk-fieldset__legend--m"
-              }
-            },
             errorMessage: errors | findError('hasLocationGroups'),
             items: [
               {
-                text: "Yes",
+                text: "Add location groups to this session template?",
                 value: "yes",
                 conditional: {
                 html: locationGroupsHtml
@@ -422,7 +407,7 @@
             ]
           }) }}
         {% else %}
-          <p>There are no location groups setup for this prison.</p>
+          <p>There are no location groups set up for this prison.</p>
         {% endif %}
 
 
