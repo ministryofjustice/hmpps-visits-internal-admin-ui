@@ -23,6 +23,8 @@
 {% set backLinkHref = "/prisons/" + prison.code + "/incentive-groups" %}
 
 {% block content %}
+  {{ super() }}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
@@ -36,8 +38,6 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-
-      {% include "partials/errorSummary.njk" %}
 
       {# Build incentive items array for checkboxes #}
       {% set incentiveLevelItems = [] %}

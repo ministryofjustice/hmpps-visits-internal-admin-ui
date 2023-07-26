@@ -23,6 +23,7 @@
 {% set backLinkHref = "/prisons/" + prison.code + "/category-groups" %}
 
 {% block content %}
+  {{ super() }}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
@@ -36,8 +37,6 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-
-      {% include "partials/errorSummary.njk" %}
 
       {# Build prisoner category array for checkboxes #}
       {% set prisonerCategoryItems = [] %}

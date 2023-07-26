@@ -21,10 +21,10 @@
 {% set backLinkHref = "/prisons/" + prison.code + "/location-groups" %}
 
 {% block content %}
+  {{ super() }}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
-
-      {% include "partials/errorSummary.njk" %}
 
       <h1 class="govuk-heading-l">
         <span class="govuk-caption-l">{{ prison.name }}</span>

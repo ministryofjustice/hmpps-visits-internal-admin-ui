@@ -2,7 +2,6 @@
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
 {%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
-{%- from "moj/components/banner/macro.njk" import mojBanner -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
@@ -24,22 +23,10 @@
 {% set backLinkHref = "/prisons/" + prison.code + "/category-groups" %}
 
 {% block content %}
+{{ super() }}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
-
-      {% include "partials/errorSummary.njk" %}
-
-      {% if message | length %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-two-thirds">
-            {{ mojBanner({
-              type: "success",
-              text: message,
-              iconFallbackText: "Success"
-            }) }}
-          </div>
-        </div>
-      {% endif %}
 
       <h1 class="govuk-heading-l">
         <span class="govuk-caption-l">{{ prison.name }}</span>

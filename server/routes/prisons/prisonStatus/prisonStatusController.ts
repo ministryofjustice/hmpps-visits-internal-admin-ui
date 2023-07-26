@@ -24,7 +24,8 @@ export default class PrisonStatusController {
 
       try {
         await this.prisonService.activatePrison(res.locals.user.username, prisonId)
-        req.flash('message', 'activated')
+        const prisonName = await this.prisonService.getPrisonName(res.locals.user.username, prisonId)
+        req.flash('message', `${prisonName} has been activated`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
       }
@@ -39,7 +40,8 @@ export default class PrisonStatusController {
 
       try {
         await this.prisonService.deactivatePrison(res.locals.user.username, prisonId)
-        req.flash('message', 'deactivated')
+        const prisonName = await this.prisonService.getPrisonName(res.locals.user.username, prisonId)
+        req.flash('message', `${prisonName} has been deactivated`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
       }
