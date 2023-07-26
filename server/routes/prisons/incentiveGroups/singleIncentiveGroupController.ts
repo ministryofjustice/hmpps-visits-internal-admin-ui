@@ -12,6 +12,8 @@ export default class SingleIncentiveGroupController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { reference, prisonId } = req.params
+      const { sessionTemplateRef } = req.query
+
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
       const incentiveGroup = await this.incentiveGroupService.getSingleIncentiveGroup(
@@ -25,6 +27,7 @@ export default class SingleIncentiveGroupController {
         prison,
         incentiveGroup,
         incentiveLevelValues,
+        sessionTemplateRef,
         message: req.flash('message'),
       })
     }

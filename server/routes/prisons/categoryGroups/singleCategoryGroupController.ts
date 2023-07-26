@@ -12,6 +12,8 @@ export default class SingleCategoryGroupController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { reference, prisonId } = req.params
+      const { sessionTemplateRef } = req.query
+
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
       const categoryGroup = await this.categoryGroupService.getSingleCategoryGroup(res.locals.user.username, reference)
@@ -22,6 +24,7 @@ export default class SingleCategoryGroupController {
         prison,
         categoryGroup,
         categoryGroupValues,
+        sessionTemplateRef,
         message: req.flash('message'),
       })
     }

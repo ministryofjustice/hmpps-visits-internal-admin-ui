@@ -20,7 +20,8 @@
   }
   ] %}
 
-{% set backLinkHref = "/prisons/" + prison.code + "/incentive-groups" %}
+{% set backLinkHref = "/prisons/" + prison.code +
+  ( "/session-templates/" + sessionTemplateRef if sessionTemplateRef else "/incentive-groups") %}
 
 {% block content %}
   {{ super() }}
