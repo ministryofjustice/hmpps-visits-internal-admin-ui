@@ -32,8 +32,9 @@ export default class SingleCategoryGroupController {
       const { reference, prisonId } = req.params
 
       try {
+        const { name } = await this.categoryGroupService.getSingleCategoryGroup(res.locals.user.username, reference)
         await this.categoryGroupService.deleteCategoryGroup(res.locals.user.username, reference)
-        req.flash('message', `Category group with reference ${reference} deleted.`)
+        req.flash('message', `Category group '${name}' has been deleted`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
         return res.redirect(`/prisons/${prisonId}/category-groups/${reference}`)

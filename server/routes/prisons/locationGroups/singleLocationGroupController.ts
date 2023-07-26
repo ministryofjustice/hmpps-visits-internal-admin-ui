@@ -28,8 +28,9 @@ export default class SingleLocationGroupController {
       const { reference, prisonId } = req.params
 
       try {
+        const { name } = await this.locationGroupService.getSingleLocationGroup(res.locals.user.username, reference)
         await this.locationGroupService.deleteLocationGroup(res.locals.user.username, reference)
-        req.flash('message', `Location group with reference ${reference} deleted.`)
+        req.flash('message', `Location group '${name}' has been deleted`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
         return res.redirect(`/prisons/${prisonId}/location-groups/${reference}`)

@@ -44,11 +44,11 @@ export default class AddLocationGroupController {
       }
 
       try {
-        const { reference } = await this.locationGroupService.createLocationGroup(
+        const { name, reference } = await this.locationGroupService.createLocationGroup(
           res.locals.user.username,
           createLocationGroupDto,
         )
-        req.flash('message', `Location group '${reference}' has been created`)
+        req.flash('message', `Location group '${name}' has been created`)
         return res.redirect(`/prisons/${prisonId}/location-groups/${reference}`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))

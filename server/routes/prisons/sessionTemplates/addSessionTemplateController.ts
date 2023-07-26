@@ -162,11 +162,11 @@ export default class AddSessionTemplateController {
       }
 
       try {
-        const { reference } = await this.sessionTemplateService.createSessionTemplate(
+        const { name, reference } = await this.sessionTemplateService.createSessionTemplate(
           res.locals.user.username,
           createSessionTemplateDto,
         )
-        req.flash('message', `Session template '${reference}' has been created`)
+        req.flash('message', `Session template '${name}' has been created`)
         return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))

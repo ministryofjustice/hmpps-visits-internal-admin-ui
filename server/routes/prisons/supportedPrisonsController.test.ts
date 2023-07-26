@@ -60,7 +60,7 @@ describe('Supported prisons', () => {
 
     it('should render prison added status message set in flash', () => {
       flashData = {
-        message: 'Hewell (HMP) has been successfully added.',
+        message: 'Hewell (HMP) has been successfully added',
       }
 
       return request(app)
@@ -69,7 +69,7 @@ describe('Supported prisons', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('h1').text().trim()).toBe('Supported prisons')
-          expect($('.moj-banner__message').text()).toBe('Hewell (HMP) has been successfully added.')
+          expect($('.moj-banner__message').text()).toBe('Hewell (HMP) has been successfully added')
         })
     })
 
@@ -105,7 +105,7 @@ describe('Supported prisons', () => {
         .expect(302)
         .expect('location', `/prisons`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'Berwyn (HMP & YOI) has been successfully added.')
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Berwyn (HMP & YOI) has been successfully added')
           expect(prisonService.createPrison).toHaveBeenCalledTimes(1)
           expect(prisonService.createPrison).toHaveBeenCalledWith('user1', 'BWI')
         })

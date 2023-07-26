@@ -35,8 +35,9 @@ export default class SingleIncentiveGroupController {
       const { reference, prisonId } = req.params
 
       try {
+        const { name } = await this.incentiveGroupService.getSingleIncentiveGroup(res.locals.user.username, reference)
         await this.incentiveGroupService.deleteIncentiveGroup(res.locals.user.username, reference)
-        req.flash('message', `Incentive group with reference ${reference} deleted.`)
+        req.flash('message', `Incentive group '${name}' has been deleted`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
         return res.redirect(`/prisons/${prisonId}/incentive-groups/${reference}`)
