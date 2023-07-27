@@ -81,9 +81,11 @@ describe('Single session template page', () => {
 
     it('should display all session template information - end date and groups', () => {
       sessionTemplate.sessionDateRange.validToDate = '2023-04-21'
-      sessionTemplate.prisonerCategoryGroups = [{ categories: [], name: 'Category group 1', reference: '' }]
-      sessionTemplate.prisonerIncentiveLevelGroups = [{ incentiveLevels: [], name: 'Incentive group 1', reference: '' }]
-      sessionTemplate.permittedLocationGroups = [{ locations: [], name: 'Location group 1', reference: '' }]
+      sessionTemplate.prisonerCategoryGroups = [{ categories: [], name: 'Category group 1', reference: 'cat-1-ref' }]
+      sessionTemplate.prisonerIncentiveLevelGroups = [
+        { incentiveLevels: [], name: 'Incentive group 1', reference: 'inc-1-ref' },
+      ]
+      sessionTemplate.permittedLocationGroups = [{ locations: [], name: 'Location group 1', reference: 'loc-1-ref' }]
 
       return request(app)
         .get('/prisons/HEI/session-templates/-afe.dcc.0f')
@@ -91,9 +93,21 @@ describe('Single session template page', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('.test-template-validToDate').text()).toContain('21 April 2023')
-          expect($('.test-template-locationGroups li').eq(0).text()).toBe('Location group 1')
-          expect($('.test-template-incentiveGroups li').eq(0).text()).toBe('Incentive group 1')
-          expect($('.test-template-categoryGroups li').eq(0).text()).toBe('Category group 1')
+
+          expect($('.test-template-categoryGroups li').eq(0).text().trim()).toBe('Category group 1')
+          expect($('.test-template-categoryGroups li a').eq(0).attr('href')).toBe(
+            '/prisons/HEI/category-groups/cat-1-ref?sessionTemplateRef=-afe.dcc.0f',
+          )
+
+          expect($('.test-template-incentiveGroups li').eq(0).text().trim()).toBe('Incentive group 1')
+          expect($('.test-template-incentiveGroups li a').eq(0).attr('href')).toBe(
+            '/prisons/HEI/incentive-groups/inc-1-ref?sessionTemplateRef=-afe.dcc.0f',
+          )
+
+          expect($('.test-template-locationGroups li').eq(0).text().trim()).toBe('Location group 1')
+          expect($('.test-template-locationGroups li a').eq(0).attr('href')).toBe(
+            '/prisons/HEI/location-groups/loc-1-ref?sessionTemplateRef=-afe.dcc.0f',
+          )
         })
     })
   })

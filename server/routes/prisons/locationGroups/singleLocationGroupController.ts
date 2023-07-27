@@ -11,6 +11,8 @@ export default class SingleLocationGroupController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { reference, prisonId } = req.params
+      const { sessionTemplateRef } = req.query
+
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
       const locationGroup = await this.locationGroupService.getSingleLocationGroup(res.locals.user.username, reference)
@@ -18,6 +20,7 @@ export default class SingleLocationGroupController {
       return res.render('pages/prisons/locationGroups/viewSingleLocationGroup', {
         prison,
         locationGroup,
+        sessionTemplateRef,
         message: req.flash('message'),
       })
     }
