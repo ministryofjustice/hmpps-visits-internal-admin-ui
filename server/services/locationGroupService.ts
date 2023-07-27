@@ -8,18 +8,18 @@ export default class LocationGroupService {
     private readonly hmppsAuthClient: HmppsAuthClient,
   ) {}
 
-  async getLocationGroups(username: string, prisonCode: string): Promise<LocationGroup[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    return visitSchedulerApiClient.getLocationGroups(prisonCode)
-  }
-
   async getSingleLocationGroup(username: string, reference: string): Promise<LocationGroup> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     return visitSchedulerApiClient.getSingleLocationGroup(reference)
+  }
+
+  async getLocationGroups(username: string, prisonCode: string): Promise<LocationGroup[]> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    return visitSchedulerApiClient.getLocationGroups(prisonCode)
   }
 
   async createLocationGroup(username: string, createLocationGroupDto: CreateLocationGroupDto): Promise<LocationGroup> {

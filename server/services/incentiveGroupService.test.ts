@@ -58,4 +58,11 @@ describe('Incentive level group service', () => {
       expect(results).toEqual(singleIncentiveGroup)
     })
   })
+
+  describe('deleteIncentiveGroup', () => {
+    it('should delete a location group', async () => {
+      await incentiveGroupService.deleteIncentiveGroup('user', singleIncentiveGroup.reference)
+      expect(visitSchedulerApiClient.deleteIncentiveGroup).toHaveBeenCalledWith(singleIncentiveGroup.reference)
+    })
+  })
 })

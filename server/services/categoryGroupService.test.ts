@@ -58,4 +58,11 @@ describe('Category group service', () => {
       expect(results).toEqual(singleCategoryGroup)
     })
   })
+
+  describe('deleteCategoryGroup', () => {
+    it('should delete a category group', async () => {
+      await categoryGroupService.deleteCategoryGroup('user', singleCategoryGroup.reference)
+      expect(visitSchedulerApiClient.deleteCategoryGroup).toHaveBeenCalledWith(singleCategoryGroup.reference)
+    })
+  })
 })

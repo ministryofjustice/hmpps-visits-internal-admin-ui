@@ -27,17 +27,6 @@ describe('Location group service', () => {
     jest.resetAllMocks()
   })
 
-  describe('getLocationGroups', () => {
-    it('should return an array of all location groups for a prison', async () => {
-      visitSchedulerApiClient.getLocationGroups.mockResolvedValue(locationGroups)
-
-      const results = await locationGroupService.getLocationGroups('user', 'HEI')
-
-      expect(results).toEqual(locationGroups)
-      expect(visitSchedulerApiClient.getLocationGroups).toHaveBeenCalledWith('HEI')
-    })
-  })
-
   describe('getSingleLocationGroup', () => {
     it('should return an a single location group', async () => {
       visitSchedulerApiClient.getSingleLocationGroup.mockResolvedValue(singleLocationGroup)
@@ -49,6 +38,17 @@ describe('Location group service', () => {
     })
   })
 
+  describe('getLocationGroups', () => {
+    it('should return an array of all location groups for a prison', async () => {
+      visitSchedulerApiClient.getLocationGroups.mockResolvedValue(locationGroups)
+
+      const results = await locationGroupService.getLocationGroups('user', 'HEI')
+
+      expect(results).toEqual(locationGroups)
+      expect(visitSchedulerApiClient.getLocationGroups).toHaveBeenCalledWith('HEI')
+    })
+  })
+
   describe('createLocationGroup', () => {
     it('should create a location group', async () => {
       visitSchedulerApiClient.createLocationGroup.mockResolvedValue(singleLocationGroup)
@@ -56,6 +56,13 @@ describe('Location group service', () => {
       const results = await locationGroupService.createLocationGroup('user', createLocationGroupDto)
 
       expect(results).toEqual(singleLocationGroup)
+    })
+  })
+
+  describe('deleteLocationGroup', () => {
+    it('should delete a location group', async () => {
+      await locationGroupService.deleteLocationGroup('user', singleLocationGroup.reference)
+      expect(visitSchedulerApiClient.deleteLocationGroup).toHaveBeenCalledWith(singleLocationGroup.reference)
     })
   })
 })

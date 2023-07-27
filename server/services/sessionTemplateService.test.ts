@@ -27,6 +27,16 @@ describe('Session template service', () => {
     jest.resetAllMocks()
   })
 
+  describe('getSingleSessionTemplate', () => {
+    it('should return a single session template', async () => {
+      visitSchedulerApiClient.getSingleSessionTemplate.mockResolvedValue(singleSessionTemplate)
+
+      const results = await sessionTemplateService.getSingleSessionTemplate('user', 'HEI')
+
+      expect(results).toEqual(singleSessionTemplate)
+    })
+  })
+
   describe('getSessionTemplates', () => {
     it('should return an array of all session templates for a prison', async () => {
       visitSchedulerApiClient.getSessionTemplates.mockResolvedValue(sessionTemplates)
@@ -38,13 +48,24 @@ describe('Session template service', () => {
     })
   })
 
-  describe('getSingleSessionTemplate', () => {
-    it('should return a single session template', async () => {
-      visitSchedulerApiClient.getSingleSessionTemplate.mockResolvedValue(singleSessionTemplate)
+  describe('activateSessionTemplate', () => {
+    it('should activate a session template', async () => {
+      await sessionTemplateService.activateSessionTemplate('user', singleSessionTemplate.reference)
+      expect(visitSchedulerApiClient.activateSessionTemplate).toHaveBeenCalledWith(singleSessionTemplate.reference)
+    })
+  })
 
-      const results = await sessionTemplateService.getSingleSessionTemplate('user', 'HEI')
+  describe('deactivateSessionTemplate', () => {
+    it('should deactivate a session template', async () => {
+      await sessionTemplateService.deactivateSessionTemplate('user', singleSessionTemplate.reference)
+      expect(visitSchedulerApiClient.deactivateSessionTemplate).toHaveBeenCalledWith(singleSessionTemplate.reference)
+    })
+  })
 
-      expect(results).toEqual(singleSessionTemplate)
+  describe('deleteSessionTemplate', () => {
+    it('should delete a session template', async () => {
+      await sessionTemplateService.deleteSessionTemplate('user', singleSessionTemplate.reference)
+      expect(visitSchedulerApiClient.deleteSessionTemplate).toHaveBeenCalledWith(singleSessionTemplate.reference)
     })
   })
 

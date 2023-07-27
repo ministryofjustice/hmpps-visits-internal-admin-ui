@@ -175,6 +175,50 @@ describe('visitSchedulerApiClient', () => {
     })
   })
 
+  describe('activateSessionTemplate', () => {
+    it('should return activated prison', async () => {
+      const sessionTemplate = TestData.sessionTemplate()
+
+      fakeVisitSchedulerApi
+        .put(`/admin/session-templates/template/${sessionTemplate.reference}/activate`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, sessionTemplate)
+
+      const output = await visitSchedulerApiClient.activateSessionTemplate(sessionTemplate.reference)
+
+      expect(output).toEqual(sessionTemplate)
+    })
+  })
+
+  describe('deactivateSessionTemplate', () => {
+    it('should return activated prison', async () => {
+      const sessionTemplate = TestData.sessionTemplate({ active: false })
+
+      fakeVisitSchedulerApi
+        .put(`/admin/session-templates/template/${sessionTemplate.reference}/deactivate`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, sessionTemplate)
+
+      const output = await visitSchedulerApiClient.deactivateSessionTemplate(sessionTemplate.reference)
+
+      expect(output).toEqual(sessionTemplate)
+    })
+  })
+
+  describe('deleteSessionTemplate', () => {
+    it('should make call to remove exclude date from a prison', async () => {
+      const sessionTemplate = TestData.sessionTemplate()
+
+      fakeVisitSchedulerApi
+        .delete(`/admin/session-templates/template/${sessionTemplate.reference}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200)
+
+      await visitSchedulerApiClient.deleteSessionTemplate(sessionTemplate.reference)
+      expect(fakeVisitSchedulerApi.isDone()).toBe(true)
+    })
+  })
+
   describe('createSessionTemplate', () => {
     it('should add a new session template', async () => {
       const createSessionTemplateDto = TestData.createSessionTemplateDto()
@@ -253,6 +297,20 @@ describe('visitSchedulerApiClient', () => {
     })
   })
 
+  describe('deleteLocationGroup', () => {
+    it('should delete a location group', async () => {
+      const locationGroup = TestData.locationGroup()
+
+      fakeVisitSchedulerApi
+        .delete(`/admin/location-groups/group/${locationGroup.reference}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200)
+
+      await visitSchedulerApiClient.deleteLocationGroup(locationGroup.reference)
+      expect(fakeVisitSchedulerApi.isDone()).toBe(true)
+    })
+  })
+
   describe('getSingleCategoryGroup', () => {
     it('should return a single category group', async () => {
       const getSingleCategoryGroup = TestData.categoryGroup()
@@ -304,6 +362,20 @@ describe('visitSchedulerApiClient', () => {
     })
   })
 
+  describe('deleteCategoryGroup', () => {
+    it('should delete a category group', async () => {
+      const categoryGroup = TestData.categoryGroup()
+
+      fakeVisitSchedulerApi
+        .delete(`/admin/category-groups/group/${categoryGroup.reference}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200)
+
+      await visitSchedulerApiClient.deleteCategoryGroup(categoryGroup.reference)
+      expect(fakeVisitSchedulerApi.isDone()).toBe(true)
+    })
+  })
+
   describe('getSingleIncentiveGroup', () => {
     it('should return an incentive level group', async () => {
       const getSingleIncentiveGroup = TestData.incentiveLevelGroup()
@@ -352,6 +424,20 @@ describe('visitSchedulerApiClient', () => {
       const output = await visitSchedulerApiClient.createIncentiveGroup(createIncentiveGroupDto)
 
       expect(output).toEqual(singleIncentiveGroup)
+    })
+  })
+
+  describe('deleteIncentiveGroup', () => {
+    it('should delete an incentive group', async () => {
+      const incentiveGroup = TestData.incentiveLevelGroup()
+
+      fakeVisitSchedulerApi
+        .delete(`/admin/incentive-groups/group/${incentiveGroup.reference}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200)
+
+      await visitSchedulerApiClient.deleteIncentiveGroup(incentiveGroup.reference)
+      expect(fakeVisitSchedulerApi.isDone()).toBe(true)
     })
   })
 })

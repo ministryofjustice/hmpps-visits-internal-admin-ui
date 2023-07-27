@@ -8,6 +8,13 @@ export default class SessionTemplateService {
     private readonly hmppsAuthClient: HmppsAuthClient,
   ) {}
 
+  async getSingleSessionTemplate(username: string, reference: string): Promise<SessionTemplate> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    return visitSchedulerApiClient.getSingleSessionTemplate(reference)
+  }
+
   async getSessionTemplates(
     username: string,
     prisonCode: string,
@@ -44,13 +51,6 @@ export default class SessionTemplateService {
     logger.info(`Session template '${reference}' deleted by ${username}`)
 
     return visitSchedulerApiClient.deleteSessionTemplate(reference)
-  }
-
-  async getSingleSessionTemplate(username: string, reference: string): Promise<SessionTemplate> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    return visitSchedulerApiClient.getSingleSessionTemplate(reference)
   }
 
   async createSessionTemplate(
