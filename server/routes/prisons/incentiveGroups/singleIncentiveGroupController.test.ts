@@ -52,6 +52,17 @@ describe('Single incentive group page', () => {
           )
         })
     })
+
+    it('should have the correct back link, when coming from the session template', () => {
+      return request(app)
+        .get(`/prisons/HEI/incentive-groups/${incentiveGroup.reference}?sessionTemplateRef=-afe.dcc.a8`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('.govuk-back-link').eq(0).attr('href')).toBe('/prisons/HEI/session-templates/-afe.dcc.a8')
+          expect($('h1').text()).toContain('Hewell (HMP)')
+        })
+    })
   })
 
   describe('POST /prisons/{:prisonId}/location-groups/{:reference}/delete', () => {
