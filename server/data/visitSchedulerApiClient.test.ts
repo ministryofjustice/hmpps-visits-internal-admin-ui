@@ -247,21 +247,17 @@ describe('visitSchedulerApiClient', () => {
     })
   })
 
-  describe('createSessionTemplate', () => {
+  describe('updateSessionTemplate', () => {
     it('should update a new session template', async () => {
       const updateSessionTemplateDto = TestData.updateSessionTemplateDto()
       const reference = 'ABC-DEF-GHI'
       fakeVisitSchedulerApi
         .put(`/admin/session-templates/template/${reference}`, <UpdateSessionTemplateDto>{
           name: updateSessionTemplateDto.name,
-          weeklyFrequency: updateSessionTemplateDto.weeklyFrequency,
           sessionCapacity: updateSessionTemplateDto.sessionCapacity,
           sessionDateRange: updateSessionTemplateDto.sessionDateRange,
           sessionTimeSlot: updateSessionTemplateDto.sessionTimeSlot,
           visitRoom: updateSessionTemplateDto.visitRoom,
-          categoryGroupReferences: [],
-          incentiveLevelGroupReferences: [],
-          locationGroupReferences: [],
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, updateSessionTemplateDto)

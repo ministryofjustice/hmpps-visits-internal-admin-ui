@@ -151,6 +151,7 @@ export default class EditSessionTemplateController {
 
   public validate(): ValidationChain[] {
     return [
+      body('name').trim().isLength({ min: 3 }).withMessage('Enter a name over 3 characters long'),
       body('endTime').custom((_value, { req }) => {
         const startTime = getTime(parseISO(`2000-01-01T${req.body.startTime}`))
         const endTime = getTime(parseISO(`2000-01-01T${req.body.endTime}`))
