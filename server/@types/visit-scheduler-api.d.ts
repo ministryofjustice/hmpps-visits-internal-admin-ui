@@ -1093,6 +1093,9 @@ export interface components {
        */
       weeklyFrequency?: number
     }
+    ValidationErrorResponse: {
+      validationMessages: string[]
+    }
     /** @description Visit */
     VisitDto: {
       /**
@@ -1447,6 +1450,12 @@ export interface operations {
           'application/json': string
         }
       }
+      /** @description Category group delete validation errorsvalidation errors */
+      400: {
+        content: {
+          'application/json': components['schemas']['ValidationErrorResponse']
+        }
+      }
       /** @description Unauthorized to access this endpoint */
       401: {
         content: {
@@ -1641,6 +1650,12 @@ export interface operations {
           'application/json': string
         }
       }
+      /** @description Incentive group delete validation errors */
+      400: {
+        content: {
+          'application/json': components['schemas']['ValidationErrorResponse']
+        }
+      }
       /** @description Unauthorized to access this endpoint */
       401: {
         content: {
@@ -1833,6 +1848,12 @@ export interface operations {
       200: {
         content: {
           'application/json': string
+        }
+      }
+      /** @description Location group delete validation errors */
+      400: {
+        content: {
+          'application/json': components['schemas']['ValidationErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -2290,6 +2311,12 @@ export interface operations {
           'application/json': components['schemas']['SessionTemplateDto']
         }
       }
+      /** @description Session Template update validation errors */
+      400: {
+        content: {
+          'application/json': components['schemas']['ValidationErrorResponse']
+        }
+      }
       /** @description Unauthorized to access this endpoint */
       401: {
         content: {
@@ -2329,6 +2356,12 @@ export interface operations {
       200: {
         content: {
           'application/json': string
+        }
+      }
+      /** @description Session Template delete validation errors */
+      400: {
+        content: {
+          'application/json': components['schemas']['ValidationErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */

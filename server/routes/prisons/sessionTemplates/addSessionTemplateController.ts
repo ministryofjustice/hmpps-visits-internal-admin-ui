@@ -252,7 +252,7 @@ export default class AddSessionTemplateController {
       body(['openCapacity', 'closedCapacity']).trim().toInt().isInt().withMessage('Enter a number'),
       body(['openCapacity', 'closedCapacity']).custom((_value, { req }) => {
         const { openCapacity, closedCapacity } = req.body
-        if (openCapacity === 0 && closedCapacity === 0) {
+        if (openCapacity <= 0 && closedCapacity <= 0) {
           throw new Error('Enter a capacity for either open or closed')
         }
         return true

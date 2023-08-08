@@ -70,4 +70,21 @@ describe('format a sanitised response error as a flash error message', () => {
     expect(flashMessage[0]).toStrictEqual({ msg: '400 Bad Request' })
     expect(flashMessage[1]).toStrictEqual({ msg: 'API message' })
   })
+
+  it('should render error code and message plus validationMessages if present', () => {
+    const error = <SanitisedError>{
+      status: 400,
+      message: 'Bad Request',
+      data: {
+        validationMessages: ['API message A', 'API message B'],
+      },
+    }
+
+    const flashMessage = responseErrorToFlashMessage(error)
+
+    expect(flashMessage.length).toBe(3)
+    expect(flashMessage[0]).toStrictEqual({ msg: '400 Bad Request' })
+    expect(flashMessage[1]).toStrictEqual({ msg: 'API message A' })
+    expect(flashMessage[2]).toStrictEqual({ msg: 'API message B' })
+  })
 })
