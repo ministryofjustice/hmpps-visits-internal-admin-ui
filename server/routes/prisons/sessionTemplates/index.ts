@@ -42,9 +42,9 @@ export default function routes(services: Services): Router {
     addSessionTemplate.validate(),
     addSessionTemplate.add(),
   )
-  get('/prisons/:prisonId([A-Z]{3})/session-templates/edit/:reference', editSessionTemplate.view())
+  get('/prisons/:prisonId([A-Z]{3})/session-templates/:reference/edit', editSessionTemplate.view())
   postWithValidation(
-    '/prisons/:prisonId([A-Z]{3})/session-templates/edit/:reference',
+    '/prisons/:prisonId([A-Z]{3})/session-templates/:reference/edit',
     editSessionTemplate.validate(),
     editSessionTemplate.update(),
   )

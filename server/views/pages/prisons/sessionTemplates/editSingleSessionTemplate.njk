@@ -63,7 +63,7 @@
       {% endfor %}
 
 
-      <form action="/prisons/{{ prison.code }}/session-templates/edit/{{ reference }}" method="POST" novalidate>
+      <form action="/prisons/{{ prison.code }}/session-templates/{{ reference }}/edit" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukInput({
@@ -224,7 +224,7 @@
           errorMessage: errors | findError('visitRoom')
         }) }}
 
-        <h2 class="govuk-heading-m">Category groups</h2>
+        {# <h2 class="govuk-heading-m">Category groups</h2>
         {% if categoryGroupsItems | length %}
           {%- set categoryGroupsHtml %}
             {{ govukCheckboxes({
@@ -339,7 +339,7 @@
           }) }}
         {% else %}
           <p>There are no location groups set up for this prison.</p>
-        {% endif %}
+        {% endif %} #}
 
 
         {{ govukButton({
