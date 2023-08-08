@@ -117,8 +117,8 @@ export default class EditSessionTemplateController {
       const updateSessionTemplateDto: UpdateSessionTemplateDto = {
         name: req.body.name,
         sessionCapacity: {
-          open: 1,
-          closed: 1,
+          open: req.body.openCapacity,
+          closed: req.body.closedCapacity,
         },
         sessionDateRange: {
           validFromDate: `${req.body.validFromDateYear}-${validFromDateMonth}-${validFromDateDay}`,
