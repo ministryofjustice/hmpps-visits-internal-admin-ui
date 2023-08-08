@@ -15,6 +15,7 @@ describe('Session template service', () => {
   const sessionTemplates = [TestData.sessionTemplate()]
   const singleSessionTemplate = TestData.sessionTemplate()
   const createSessionTemplateDto = TestData.createSessionTemplateDto()
+  const updateSessionTemplateDto = TestData.updateSessionTemplateDto()
 
   beforeEach(() => {
     VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
@@ -74,6 +75,20 @@ describe('Session template service', () => {
       visitSchedulerApiClient.createSessionTemplate.mockResolvedValue(singleSessionTemplate)
 
       const results = await sessionTemplateService.createSessionTemplate('user', createSessionTemplateDto)
+
+      expect(results).toEqual(singleSessionTemplate)
+    })
+  })
+
+  describe('updateSessionTemplate', () => {
+    it('should update a session template', async () => {
+      visitSchedulerApiClient.updateSessionTemplate.mockResolvedValue(singleSessionTemplate)
+
+      const results = await sessionTemplateService.updateSessionTemplate(
+        'user',
+        'ABC-DEF-GHI',
+        updateSessionTemplateDto,
+      )
 
       expect(results).toEqual(singleSessionTemplate)
     })
