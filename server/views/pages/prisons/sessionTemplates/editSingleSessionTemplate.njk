@@ -1,0 +1,353 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+
+{% set pageHeaderTitle = 'Update session template' %}
+{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: true
+  }
+] %}
+{% set backLinkHref = "/prisons/" + prison.code + "/session-templates" %}
+
+{% block content %}
+  {{ super() }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prison.name }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+      {# Build incentive group array for checkboxes #}
+      {% set incentiveGroupsItems = [] %}
+      {% for incentiveGroup in incentiveGroups %}
+        {% set incentiveGroupsItems = (incentiveGroupsItems.push({
+          value: incentiveGroup.reference,
+          text: incentiveGroup.name
+        }), incentiveGroupsItems) %}
+      {% endfor %}
+
+      {# Build category group array for checkboxes #}
+      {% set categoryGroupsItems = [] %}
+      {% for categoryGroup in categoryGroups %}
+        {% set categoryGroupsItems = (categoryGroupsItems.push({
+          value: categoryGroup.reference,
+          text: categoryGroup.name
+        }), categoryGroupsItems) %}
+      {% endfor %}
+
+      {# Build location group array for checkboxes #}
+      {% set locationGroupsItems = [] %}
+      {% for locationGroup in locationGroups %}
+        {% set locationGroupsItems = (locationGroupsItems.push({
+          value: locationGroup.reference,
+          text: locationGroup.name
+        }), locationGroupsItems) %}
+      {% endfor %}
+
+
+      <form action="/prisons/{{ prison.code }}/session-templates/edit/{{ reference }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukInput({
+          label: {
+            text: "Template name",
+            classes: "govuk-label--m"
+          },
+          classes: "govuk-!-width-three-quarters",
+          id: "name",
+          name: "name",
+          value: formValues.name,
+          autocomplete: "off",
+          errorMessage: errors | findError('name')
+        }) }}
+
+        {{ govukDateInput({
+          id: "validFromDate",
+          fieldset: {
+            legend: {
+              text: "Template start date",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          hint: {
+            text: "For example, 27 3 2023"
+          },
+          errorMessage: errors | findError('validFromDate'),
+          items: [
+            {
+              label: "Day",
+              name: "validFromDateDay",
+              classes: "govuk-input--width-2",
+              autocomplete: "off",
+              value: formValues.validFromDateDay
+            },
+            {
+              label: "Month",
+              name: "validFromDateMonth",
+              classes: "govuk-input--width-2",
+              autocomplete: "off",
+              value: formValues.validFromDateMonth
+            },
+            {
+              label: "Year",
+              name: "validFromDateYear",
+              classes: "govuk-input--width-4",
+              autocomplete: "off",
+              value: formValues.validFromDateYear
+            }
+          ]
+        }) }}
+
+        {%- set endDateHtml %}
+          {{ govukDateInput({
+            id: "validToDate",
+            fieldset: {
+              legend: {
+                text: "Template end date",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            hint: {
+              text: "For example, 27 3 2023"
+            },
+            items: [
+              {
+                label: "Day",
+                name: "validToDateDay",
+                classes: "govuk-input--width-2",
+                autocomplete: "off",
+                value: formValues.validToDateDay
+              },
+              {
+                label: "Month",
+                name: "validToDateMonth",
+                classes: "govuk-input--width-2",
+                autocomplete: "off",
+                value: formValues.validToDateMonth
+              },
+              {
+                label: "Year",
+                name: "validToDateYear",
+                classes: "govuk-input--width-4",
+                autocomplete: "off",
+                value: formValues.validToDateYear
+              }
+            ]
+          }) }}
+        {% endset -%}
+        {{ govukCheckboxes({
+          name: "hasEndDate",
+          fieldset: {
+            legend: {
+              text: "Does this session have an end date?",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          errorMessage: errors | findError('hasEndDate'),
+          items: [
+            {
+              text: "Yes",
+              value: "yes",
+              conditional: {
+              html: endDateHtml
+            },
+              checked: formValues.hasEndDate === "yes"
+            }
+          ]
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Open capacity",
+            classes: "govuk-label--m"
+          },
+          hint: {
+            text: "What is the open capacity?"
+          },
+          classes: "govuk-!-width-one-third",
+          id: "openCapacity",
+          name: "openCapacity",
+          inputmode: "numeric",
+          value: formValues.openCapacity,
+          autocomplete: "off",
+          errorMessage: errors | findError('openCapacity')
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Closed capacity",
+            classes: "govuk-label--m"
+          },
+          hint: {
+            text: "What is the closed capacity?"
+          },
+          classes: "govuk-!-width-one-third",
+          id: "closedCapacity",
+          name: "closedCapacity",
+          inputmode: "numeric",
+          value: formValues.closedCapacity,
+          autocomplete: "off",
+          errorMessage: errors | findError('closedCapacity')
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Visit room",
+            classes: "govuk-label--m"
+          },
+          hint: {
+            text: "What is the visit room name?"
+          },
+          classes: "govuk-!-width-one-third",
+          id: "visitRoom",
+          name: "visitRoom",
+          value: formValues.visitRoom,
+          autocomplete: "off",
+          errorMessage: errors | findError('visitRoom')
+        }) }}
+
+        <h2 class="govuk-heading-m">Category groups</h2>
+        {% if categoryGroupsItems | length %}
+          {%- set categoryGroupsHtml %}
+            {{ govukCheckboxes({
+              name: "categoryGroupReferences",
+              fieldset: {
+                legend: {
+                  text: "Which category groups?",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--s"
+                },
+                attributes: { "data-test": "category-groups" }
+              },
+              hint: {
+                text: "Select all that apply."
+              },
+              items: categoryGroupsItems,
+              values: formValues.categoryGroupReferences,
+              errorMessage: errors | findError('categoryGroupReferences')
+            }) }}
+          {% endset -%}
+          {{ govukCheckboxes({
+            name: "hasCategoryGroups",
+            errorMessage: errors | findError('hasCategoryGroups'),
+            items: [
+              {
+                text: "Add category groups to this session template?",
+                value: "yes",
+                conditional: {
+                html: categoryGroupsHtml
+              },
+                checked: formValues.hasCategoryGroups === "yes"
+              }
+            ]
+          }) }}
+        {% else %}
+          <p>There are no category groups set up for this prison.</p>
+        {% endif %}
+
+        <h2 class="govuk-heading-m">Incentive level groups</h2>
+        {% if incentiveGroupsItems | length %}
+          {%- set incentiveGroupsHtml %}
+            {{ govukCheckboxes({
+              name: "incentiveGroupReferences",
+              fieldset: {
+                legend: {
+                  text: "Which incentive level groups?",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--s"
+                },
+                attributes: { "data-test": "incentive-groups" }
+              },
+              hint: {
+                text: "Select all that apply."
+              },
+              items: incentiveGroupsItems,
+              values: formValues.incentiveGroupReferences,
+              errorMessage: errors | findError('incentiveGroupReferences')
+            }) }}
+          {% endset -%}
+          {{ govukCheckboxes({
+            name: "hasIncentiveGroups",
+            errorMessage: errors | findError('hasIncentiveGroups'),
+            items: [
+              {
+                text: "Add incentive level groups to this session template?",
+                value: "yes",
+                conditional: {
+                html: incentiveGroupsHtml
+              },
+                checked: formValues.hasIncentiveGroups === "yes"
+              }
+            ]
+          }) }}
+        {% else %}
+          <p>There are no incentive groups set up for this prison.</p>
+        {% endif %}
+
+        <h2 class="govuk-heading-m">Location groups</h2>
+        {% if locationGroupsItems | length %}
+          {%- set locationGroupsHtml %}
+            {{ govukCheckboxes({
+              name: "locationGroupReferences",
+              fieldset: {
+                legend: {
+                  text: "Which location groups?",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--s"
+                },
+                attributes: { "data-test": "location-groups" }
+              },
+              hint: {
+                text: "Select all that apply."
+              },
+              items: locationGroupsItems,
+              values: formValues.locationGroupReferences,
+              errorMessage: errors | findError('locationGroupReferences')
+            }) }}
+          {% endset -%}
+          {{ govukCheckboxes({
+            name: "hasLocationGroups",
+            errorMessage: errors | findError('hasLocationGroups'),
+            items: [
+              {
+                text: "Add location groups to this session template?",
+                value: "yes",
+                conditional: {
+                html: locationGroupsHtml
+              },
+                checked: formValues.hasLocationGroups === "yes"
+              }
+            ]
+          }) }}
+        {% else %}
+          <p>There are no location groups set up for this prison.</p>
+        {% endif %}
+
+
+        {{ govukButton({
+          text: "Update",
+          attributes: { "data-test": "submit" },
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

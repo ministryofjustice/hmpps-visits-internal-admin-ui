@@ -191,6 +191,13 @@ export interface paths {
      */
     put: operations['deActivateSessionTemplate']
   }
+  '/admin/session-templates/template/{reference}/stats': {
+    /**
+     * Get session template visits stats using given session template reference
+     * @description Session template visits stats using given session template reference
+     */
+    post: operations['getSessionTemplateVisitStats']
+  }
   '/config/prisons/supported': {
     /**
      * Get supported prisons
@@ -293,9 +300,23 @@ export type webhooks = Record<string, never>
 
 export interface components {
   schemas: {
+    BookingRequestDto: {
+      /** @description Username for user who actioned this request */
+      actionedBy: string
+      /**
+       * @description application method
+       * @enum {string}
+       */
+      applicationMethodType: 'PHONE' | 'WEBSITE' | 'EMAIL' | 'IN_PERSON' | 'NOT_KNOWN' | 'NOT_APPLICABLE'
+    }
     CancelVisitDto: {
       /** @description Username for user who actioned this request */
       actionedBy: string
+      /**
+       * @description application method
+       * @enum {string}
+       */
+      applicationMethodType: 'PHONE' | 'WEBSITE' | 'EMAIL' | 'IN_PERSON' | 'NOT_KNOWN' | 'NOT_APPLICABLE'
       cancelOutcome: components['schemas']['OutcomeDto']
     }
     ChangeVisitSlotRequestDto: {
@@ -474,6 +495,37 @@ export interface components {
       status: number
       userMessage?: string
     }
+    /** @description Event Audit */
+    EventAuditDto: {
+      /**
+       * @description Event actioned by - user id
+       * @example AB12345A
+       */
+      actionedBy: string
+      /**
+       * @description What was the application method for this event
+       * @enum {string}
+       */
+      applicationMethodType: 'PHONE' | 'WEBSITE' | 'EMAIL' | 'IN_PERSON' | 'NOT_KNOWN' | 'NOT_APPLICABLE'
+      /**
+       * Format: date-time
+       * @description event creat date and time
+       */
+      createTimestamp: string
+      /** @description Session template used for this event */
+      sessionTemplateReference?: string
+      /**
+       * @description The type of event
+       * @enum {string}
+       */
+      type:
+        | 'RESERVED_VISIT'
+        | 'CHANGING_VISIT'
+        | 'MIGRATED_VISIT'
+        | 'BOOKED_VISIT'
+        | 'UPDATED_VISIT'
+        | 'CANCELLED_VISIT'
+    }
     GetDlqResult: {
       messages: components['schemas']['DlqMessage'][]
       /** Format: int32 */
@@ -569,6 +621,11 @@ export interface components {
       visitType: 'SOCIAL'
       /** @description List of visitors associated with the visit */
       visitors?: components['schemas']['VisitorDto'][]
+    }
+    MigratedCancelVisitDto: {
+      /** @description Username for user who actioned this request */
+      actionedBy: string
+      cancelOutcome: components['schemas']['OutcomeDto']
     }
     /** @description Visit Outcome */
     OutcomeDto: {
@@ -681,6 +738,14 @@ export interface components {
     PurgeQueueResult: {
       /** Format: int32 */
       messagesFoundCount: number
+    }
+    RequestSessionTemplateVisitStatsDto: {
+      /**
+       * Format: date
+       * @description Visits from date stats
+       * @example 2019-11-02
+       */
+      visitsFromDate: string
     }
     ReserveVisitSlotDto: {
       /** @description Username for user who actioned this request */
@@ -900,6 +965,32 @@ export interface components {
        */
       weeklyFrequency: number
     }
+    /** @description count of visits by date */
+    SessionTemplateVisitCountsDto: {
+      /**
+       * Format: int32
+       * @description Count of booked or reserved visits for a date
+       * @example 10
+       */
+      visitCount: number
+      /**
+       * Format: date
+       * @description Date when the visits are booked or reserved
+       * @example 2023-07-01
+       */
+      visitDate: string
+    }
+    SessionTemplateVisitStatsDto: {
+      minimumCapacity: components['schemas']['SessionCapacityDto']
+      /**
+       * Format: int32
+       * @description visit count for given date
+       * @example 10
+       */
+      visitCount: number
+      /** @description count of visits by date */
+      visitsByDate?: components['schemas']['SessionTemplateVisitCountsDto'][]
+    }
     /** @description The start and end time of the generated visit session(s) */
     SessionTimeSlotDto: {
       /**
@@ -991,11 +1082,16 @@ export interface components {
       sessionDateRange?: components['schemas']['SessionDateRangeDto']
       sessionTimeSlot?: components['schemas']['SessionTimeSlotDto']
       /**
+       * @description Visit Room
+       * @example Visits Main Hall
+       */
+      visitRoom?: string
+      /**
        * Format: int32
        * @description number of weeks until the weekly day is repeated
        * @example 1
        */
-      weeklyFrequency: number
+      weeklyFrequency?: number
     }
     /** @description Visit */
     VisitDto: {
@@ -1004,16 +1100,6 @@ export interface components {
        * @example dfs-wjs-eqr
        */
       applicationReference: string
-      /**
-       * @description Cancelled By - user id for the user who cancelled the visit
-       * @example AB12345A
-       */
-      cancelledBy?: string
-      /**
-       * @description Created By - user id for the user who created the visit
-       * @example AB12345A
-       */
-      createdBy: string
       /**
        * Format: date-time
        * @description The visit created date and time
@@ -1079,11 +1165,6 @@ export interface components {
        * @description The date and time of the visit
        */
       startTimestamp: string
-      /**
-       * @description Updated By - user id for the user who updated the visit
-       * @example AB12345A
-       */
-      updatedBy?: string
       visitContact?: components['schemas']['ContactDto']
       /** @description Visit Notes */
       visitNotes: components['schemas']['VisitNoteDto'][]
@@ -2352,6 +2433,52 @@ export interface operations {
       }
     }
   }
+  getSessionTemplateVisitStats: {
+    /**
+     * Get session template visits stats using given session template reference
+     * @description Session template visits stats using given session template reference
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example v9-d7-ed-7u
+       */
+      path: {
+        reference: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RequestSessionTemplateVisitStatsDto']
+      }
+    }
+    responses: {
+      /** @description Session template visits stats */
+      200: {
+        content: {
+          'application/json': components['schemas']['SessionTemplateVisitStatsDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get Session template visits stats */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description session template can't be found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   getSupportedPrisons: {
     /**
      * Get supported prisons
@@ -2425,7 +2552,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['CancelVisitDto']
+        'application/json': components['schemas']['MigratedCancelVisitDto']
       }
     }
     responses: {
@@ -2812,6 +2939,11 @@ export interface operations {
         applicationReference: string
       }
     }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BookingRequestDto']
+      }
+    }
     responses: {
       /** @description Visit updated */
       200: {
@@ -3051,7 +3183,7 @@ export interface operations {
       /** @description Visit History Information Returned */
       200: {
         content: {
-          'application/json': components['schemas']['VisitDto'][]
+          'application/json': components['schemas']['EventAuditDto'][]
         }
       }
       /** @description Incorrect request to Get visit history */

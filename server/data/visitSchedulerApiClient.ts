@@ -11,6 +11,7 @@ import {
   CreateLocationGroupDto,
   CreateIncentiveGroupDto,
   CreateCategoryGroupDto,
+  UpdateSessionTemplateDto,
 } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
@@ -112,6 +113,16 @@ export default class VisitSchedulerApiClient {
     return this.restClient.post({
       path: `/admin/session-templates/template`,
       data: createSessionTemplateDto,
+    })
+  }
+
+  async updateSessionTemplate(
+    reference: string,
+    updateSessionTemplateDto: UpdateSessionTemplateDto,
+  ): Promise<SessionTemplate> {
+    return this.restClient.put({
+      path: `/admin/session-templates/template/${reference}`,
+      data: updateSessionTemplateDto,
     })
   }
 
