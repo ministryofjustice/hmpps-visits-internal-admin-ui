@@ -10,6 +10,7 @@ import {
   CreateLocationGroupDto,
   CreateIncentiveGroupDto,
   CreateCategoryGroupDto,
+  UpdateSessionTemplateDto,
 } from '../../data/visitSchedulerApiTypes'
 
 export default class TestData {
@@ -120,6 +121,19 @@ export default class TestData {
       incentiveLevelGroupReferences,
       locationGroupReferences,
     } as CreateSessionTemplateDto)
+
+  static updateSessionTemplateDto = ({
+    name = 'session template name',
+    sessionCapacity = { open: 10, closed: 5 },
+    sessionDateRange = { validFromDate: '2023-02-01', validToDate: '2024-12-31' },
+    visitRoom = 'visit room name',
+  }: Partial<UpdateSessionTemplateDto> = {}): UpdateSessionTemplateDto =>
+    ({
+      name,
+      sessionCapacity,
+      sessionDateRange,
+      visitRoom,
+    } as UpdateSessionTemplateDto)
 
   static locationGroup = ({
     name = 'Wing A',

@@ -8,6 +8,7 @@ import {
   CreateLocationGroupDto,
   CreateSessionTemplateDto,
   PrisonDto,
+  UpdateSessionTemplateDto,
 } from './visitSchedulerApiTypes'
 
 describe('visitSchedulerApiClient', () => {
@@ -243,6 +244,27 @@ describe('visitSchedulerApiClient', () => {
       const output = await visitSchedulerApiClient.createSessionTemplate(createSessionTemplateDto)
 
       expect(output).toEqual(createSessionTemplateDto)
+    })
+  })
+
+  describe('updateSessionTemplate', () => {
+    it('should update a new session template', async () => {
+      const updateSessionTemplateDto = TestData.updateSessionTemplateDto()
+      const reference = 'ABC-DEF-GHI'
+      fakeVisitSchedulerApi
+        .put(`/admin/session-templates/template/${reference}`, <UpdateSessionTemplateDto>{
+          name: updateSessionTemplateDto.name,
+          sessionCapacity: updateSessionTemplateDto.sessionCapacity,
+          sessionDateRange: updateSessionTemplateDto.sessionDateRange,
+          sessionTimeSlot: updateSessionTemplateDto.sessionTimeSlot,
+          visitRoom: updateSessionTemplateDto.visitRoom,
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, updateSessionTemplateDto)
+
+      const output = await visitSchedulerApiClient.updateSessionTemplate(reference, updateSessionTemplateDto)
+
+      expect(output).toEqual(updateSessionTemplateDto)
     })
   })
 

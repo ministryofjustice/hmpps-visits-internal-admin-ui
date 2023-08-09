@@ -8,11 +8,10 @@ import {
   CategoryGroupService,
   LocationGroupService,
 } from '../../../services'
-import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
-import daysOfWeek from '../../../constants/daysOfWeek'
+import { UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
 
-export default class AddSessionTemplateController {
+export default class EditSessionTemplateController {
   public constructor(
     private readonly prisonService: PrisonService,
     private readonly sessionTemplateService: SessionTemplateService,
@@ -23,37 +22,8 @@ export default class AddSessionTemplateController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { prisonId } = req.params
-
-      const prisonPromise = this.prisonService.getPrison(res.locals.user.username, prisonId)
-      const incentivePromise = this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
-      const categoryPromise = this.categoryGroupService.getCategoryGroups(res.locals.user.username, prisonId)
-      const locationPromise = this.locationGroupService.getLocationGroups(res.locals.user.username, prisonId)
-
-      const [prison, incentiveGroups, categoryGroups, locationGroups] = await Promise.all([
-        prisonPromise,
-        incentivePromise,
-        categoryPromise,
-        locationPromise,
-      ])
-
-      const formValues = req.flash('formValues')?.[0] || {}
-
-      res.render('pages/prisons/sessionTemplates/addSessionTemplate', {
-        errors: req.flash('errors'),
-        prison,
-        incentiveGroups,
-        categoryGroups,
-        locationGroups,
-        daysOfWeek,
-        formValues,
-      })
-    }
-  }
-
-  public populateNewFromExisting(): RequestHandler {
-    return async (req, res) => {
       const { prisonId, reference } = req.params
+      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
       const sessionTemplate = await this.sessionTemplateService.getSingleSessionTemplate(
         res.locals.user.username,
@@ -70,30 +40,30 @@ export default class AddSessionTemplateController {
       const validToDateMonth = validToDateSplit[1] || undefined
       const validToDateDay = validToDateSplit[2] || undefined
 
-      let categoryGroupReferences: string[] = []
-      const categoryGroups = sessionTemplate.prisonerCategoryGroups
-      if (categoryGroups !== undefined && categoryGroups.length > 0) {
-        categoryGroupReferences = categoryGroups.map(categoryGroup => categoryGroup.reference)
-      }
+      // const incentiveGroups = await this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
+      // const categoryGroups = await this.categoryGroupService.getCategoryGroups(res.locals.user.username, prisonId)
+      // const locationGroups = await this.locationGroupService.getLocationGroups(res.locals.user.username, prisonId)
 
-      let incentiveGroupReferences: string[] = []
-      const incentiveGroups = sessionTemplate.prisonerIncentiveLevelGroups
-      if (incentiveGroups !== undefined && incentiveGroups.length > 0) {
-        incentiveGroupReferences = incentiveGroups.map(incentiveGroup => incentiveGroup.reference)
-      }
+      // let categoryGroupReferences: string[] = []
+      // const activeCategoryGroups = sessionTemplate.prisonerCategoryGroups
+      // if (activeCategoryGroups !== undefined && activeCategoryGroups.length > 0) {
+      //   categoryGroupReferences = activeCategoryGroups.map(categoryGroup => categoryGroup.reference)
+      // }
 
-      let locationGroupReferences: string[] = []
-      const locationGroups = sessionTemplate.permittedLocationGroups
-      if (locationGroups !== undefined && locationGroups.length > 0) {
-        locationGroupReferences = locationGroups.map(locationGroup => locationGroup.reference)
-      }
+      // let incentiveGroupReferences: string[] = []
+      // const activeIncentiveGroups = sessionTemplate.prisonerIncentiveLevelGroups
+      // if (activeIncentiveGroups !== undefined && activeIncentiveGroups.length > 0) {
+      //   incentiveGroupReferences = activeIncentiveGroups.map(incentiveGroup => incentiveGroup.reference)
+      // }
+
+      // let locationGroupReferences: string[] = []
+      // const activeLocationGroups = sessionTemplate.permittedLocationGroups
+      // if (activeLocationGroups !== undefined && activeLocationGroups.length > 0) {
+      //   locationGroupReferences = activeLocationGroups.map(locationGroup => locationGroup.reference)
+      // }
 
       const formValues = {
-        name: `COPY - ${sessionTemplate.name}`,
-        dayOfWeek: sessionTemplate.dayOfWeek,
-        startTime: sessionTemplate.sessionTimeSlot.startTime,
-        endTime: sessionTemplate.sessionTimeSlot.endTime,
-        weeklyFrequency: sessionTemplate.weeklyFrequency.toString(),
+        name: sessionTemplate.name,
         validFromDateDay,
         validFromDateMonth,
         validFromDateYear,
@@ -104,24 +74,33 @@ export default class AddSessionTemplateController {
         openCapacity: sessionTemplate.sessionCapacity.open.toString(),
         closedCapacity: sessionTemplate.sessionCapacity.closed.toString(),
         visitRoom: sessionTemplate.visitRoom,
-        hasIncentiveGroups: incentiveGroupReferences.length > 0 ? 'yes' : undefined,
-        incentiveGroupReferences,
-        hasCategoryGroups: categoryGroupReferences.length > 0 ? 'yes' : undefined,
-        categoryGroupReferences,
-        hasLocationGroups: locationGroupReferences.length > 0 ? 'yes' : undefined,
-        locationGroupReferences,
+        // hasIncentiveGroups: incentiveGroupReferences.length > 0 ? 'yes' : undefined,
+        // incentiveGroupReferences,
+        // hasCategoryGroups: categoryGroupReferences.length > 0 ? 'yes' : undefined,
+        // categoryGroupReferences,
+        // hasLocationGroups: locationGroupReferences.length > 0 ? 'yes' : undefined,
+        // locationGroupReferences,
       }
 
       req.flash('formValues', formValues)
-      return res.redirect(`/prisons/${prisonId}/session-templates/add`)
+      return res.render('pages/prisons/sessionTemplates/editSingleSessionTemplate', {
+        errors: req.flash('errors'),
+        message: req.flash('message'),
+        formValues,
+        // incentiveGroups,
+        // categoryGroups,
+        // locationGroups,
+        prison,
+        reference,
+      })
     }
   }
 
-  public add(): RequestHandler {
+  public update(): RequestHandler {
     return async (req, res) => {
-      const { prisonId } = req.params
+      const { prisonId, reference } = req.params
 
-      const originalUrl = `/prisons/${prisonId}/session-templates/add`
+      const originalUrl = `/prisons/${prisonId}/session-templates/${reference}/edit`
 
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
@@ -135,11 +114,8 @@ export default class AddSessionTemplateController {
       const validToDateDay = req.body.validToDateDay.padStart(2, '0')
       const validToDateMonth = req.body.validToDateMonth.padStart(2, '0')
 
-      const createSessionTemplateDto: CreateSessionTemplateDto = {
+      const updateSessionTemplateDto: UpdateSessionTemplateDto = {
         name: req.body.name,
-        weeklyFrequency: req.body.weeklyFrequency,
-        dayOfWeek: req.body.dayOfWeek,
-        prisonId,
         sessionCapacity: {
           open: req.body.openCapacity,
           closed: req.body.closedCapacity,
@@ -151,22 +127,19 @@ export default class AddSessionTemplateController {
               ? `${req.body.validToDateYear}-${validToDateMonth}-${validToDateDay}`
               : undefined,
         },
-        sessionTimeSlot: {
-          startTime: req.body.startTime,
-          endTime: req.body.endTime,
-        },
         visitRoom: req.body.visitRoom,
-        categoryGroupReferences: req.body.hasCategoryGroups === 'yes' ? req.body.categoryGroupReferences : [],
-        incentiveLevelGroupReferences: req.body.hasIncentiveGroups === 'yes' ? req.body.incentiveGroupReferences : [],
-        locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
+        // categoryGroupReferences: req.body.hasCategoryGroups === 'yes' ? req.body.categoryGroupReferences : [],
+        // incentiveLevelGroupReferences: req.body.hasIncentiveGroups === 'yes' ? req.body.incentiveGroupReferences : [],
+        // locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
       }
 
       try {
-        const { name, reference } = await this.sessionTemplateService.createSessionTemplate(
+        const { name } = await this.sessionTemplateService.updateSessionTemplate(
           res.locals.user.username,
-          createSessionTemplateDto,
+          reference,
+          updateSessionTemplateDto,
         )
-        req.flash('message', `Session template '${name}' has been created`)
+        req.flash('message', `Session template '${name}' has been updated`)
         return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
@@ -178,10 +151,7 @@ export default class AddSessionTemplateController {
 
   public validate(): ValidationChain[] {
     return [
-      body('name').trim().isLength({ min: 3, max: 100 }).withMessage('Enter a name between 3 and 100 characters long'),
-      body('dayOfWeek').isIn(daysOfWeek).withMessage('Select a day of the week'),
-      body('startTime').trim().isTime({ hourFormat: 'hour24' }).withMessage('Enter a valid time'),
-      body('endTime').trim().isTime({ hourFormat: 'hour24' }).withMessage('Enter a valid time'),
+      body('name').trim().isLength({ min: 3 }).withMessage('Enter a name over 3 characters long'),
       body('endTime').custom((_value, { req }) => {
         const startTime = getTime(parseISO(`2000-01-01T${req.body.startTime}`))
         const endTime = getTime(parseISO(`2000-01-01T${req.body.endTime}`))
@@ -190,11 +160,6 @@ export default class AddSessionTemplateController {
         }
         return true
       }),
-      body('weeklyFrequency')
-        .trim()
-        .toInt()
-        .isInt({ min: 1, max: 12 })
-        .withMessage('Enter a weekly frequency value between 1 and 12'),
       body('validFromDateDay').trim().isInt({ min: 1, max: 31 }).withMessage('Enter a valid day'),
       body('validFromDateMonth').trim().isInt({ min: 1, max: 12 }).withMessage('Enter a valid month'),
       body('validFromDateYear')

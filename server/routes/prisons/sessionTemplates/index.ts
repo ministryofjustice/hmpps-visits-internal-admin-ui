@@ -5,6 +5,7 @@ import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import SessionTemplatesController from './sessionTemplatesController'
 import SingleSessionTemplateController from './singleSessionTemplateController'
 import AddSessionTemplateController from './addSessionTemplateController'
+import EditSessionTemplateController from './editSessionTemplateController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -19,6 +20,14 @@ export default function routes(services: Services): Router {
     services.prisonService,
     services.sessionTemplateService,
   )
+  const editSessionTemplate = new EditSessionTemplateController(
+    services.prisonService,
+    services.sessionTemplateService,
+    services.incentiveGroupService,
+    services.categoryGroupService,
+    services.locationGroupService,
+  )
+
   const addSessionTemplate = new AddSessionTemplateController(
     services.prisonService,
     services.sessionTemplateService,
@@ -33,6 +42,13 @@ export default function routes(services: Services): Router {
     addSessionTemplate.validate(),
     addSessionTemplate.add(),
   )
+  get('/prisons/:prisonId([A-Z]{3})/session-templates/:reference/edit', editSessionTemplate.view())
+  postWithValidation(
+    '/prisons/:prisonId([A-Z]{3})/session-templates/:reference/edit',
+    editSessionTemplate.validate(),
+    editSessionTemplate.update(),
+  )
+
   post('/prisons/:prisonId/session-templates/:reference/copy', addSessionTemplate.populateNewFromExisting())
 
   get('/prisons/:prisonId([A-Z]{3})/session-templates', sessionTemplates.view())
