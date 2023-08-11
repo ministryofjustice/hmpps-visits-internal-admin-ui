@@ -90,8 +90,12 @@ export default class EditSessionTemplateController {
         requestVisitStatsDto,
         reference,
       )
-      const firstDate = visitStats.visitsByDate[0].visitDate
-      const lastDate = visitStats.visitsByDate[visitStats.visitsByDate.length - 1].visitDate
+      let firstDate = ''
+      let lastDate = ''
+      if (visitStats.visitsByDate.length) {
+        firstDate = visitStats.visitsByDate[0].visitDate
+        lastDate = visitStats.visitsByDate[visitStats.visitsByDate.length - 1].visitDate
+      }
 
       req.flash('formValues', formValues)
       return res.render('pages/prisons/sessionTemplates/editSingleSessionTemplate', {

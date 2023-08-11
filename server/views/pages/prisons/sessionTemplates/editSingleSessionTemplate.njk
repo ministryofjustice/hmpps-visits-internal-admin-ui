@@ -107,7 +107,7 @@
             }
           },
           hint: {
-            text: "This must be before: " + (firstDate | formatDate)
+            text: "This must be before: " + firstDate | formatDate if firstDate !== '' else 'Any date can be set'
           },
           errorMessage: errors | findError('validFromDate'),
           items: [
@@ -145,7 +145,7 @@
               }
             },
             hint: {
-              text: "This must be after: " + (lastDate | formatDate)
+            text: "This must be after: " + lastDate | formatDate if lastDate !== '' else 'Any date can be set'
             },
             items: [
               {
@@ -199,7 +199,7 @@
             classes: "govuk-label--m"
           },
           hint: {
-            text: "What is the open capacity? - The minimum allowed is currently: " + (visitStats.minimumCapacity.open if visitStats.minimumCapacity.open > 0 else 'any')
+            text: "The minimum allowed is currently: " + visitStats.minimumCapacity.open if visitStats.minimumCapacity.open > 0 else 'Any capacity can be set'
           },
           classes: "govuk-!-width-one-third",
           id: "openCapacity",
@@ -216,7 +216,7 @@
             classes: "govuk-label--m"
           },
           hint: {
-            text: "What is the closed capacity? - The minimum allowed is currently: " + (visitStats.minimumCapacity.closed if visitStats.minimumCapacity.closed > 0 else 'any')
+            text: "The minimum allowed is currently: " + visitStats.minimumCapacity.closed if visitStats.minimumCapacity.closed > 0 else 'Any capacity can be set'
           },
           classes: "govuk-!-width-one-third",
           id: "closedCapacity",
