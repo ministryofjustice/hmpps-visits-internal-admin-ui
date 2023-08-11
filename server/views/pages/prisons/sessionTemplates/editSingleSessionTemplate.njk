@@ -6,7 +6,7 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
-
+{%- from "moj/components/banner/macro.njk" import mojBanner -%}
 
 {% set pageHeaderTitle = 'Update session template' %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
@@ -28,7 +28,7 @@
   {{ super() }}
 
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-three-quarters">
 
       <h1 class="govuk-heading-l">
         <span class="govuk-caption-l">{{ prison.name }}</span>
@@ -62,6 +62,25 @@
         }), locationGroupsItems) %}
       {% endfor %}
 
+      {% set infoBannerHtml %}
+      <p data-test="total-booked-test">This visit session template currently has {{ visitStats.visitCount }} future visits booked</p>
+      {% for stats in visitStats.visitsByDate %}
+        <p>For the date: {{ stats.visitDate | formatDate }}, there is currently {{ stats.visitCount }} visits booked</p>
+      {% endfor %}
+      {% endset %}
+
+      {% if infoBannerHtml | length %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {{ mojBanner({
+              type: "information",
+              html: infoBannerHtml,
+              iconFallbackText: "Information"
+            }) }}
+          </div>
+        </div>
+      {% endif %}
+
 
       <form action="/prisons/{{ prison.code }}/session-templates/{{ reference }}/edit" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -88,7 +107,7 @@
             }
           },
           hint: {
-            text: "For example, 27 3 2023"
+            text: "This must be before: " + (firstDate | formatDate)
           },
           errorMessage: errors | findError('validFromDate'),
           items: [
@@ -126,7 +145,7 @@
               }
             },
             hint: {
-              text: "For example, 27 3 2023"
+              text: "This must be after: " + (lastDate | formatDate)
             },
             items: [
               {
@@ -180,7 +199,7 @@
             classes: "govuk-label--m"
           },
           hint: {
-            text: "What is the open capacity?"
+            text: "What is the open capacity? - The minimum allowed is currently: " + (visitStats.minimumCapacity.open if visitStats.minimumCapacity.open > 0 else 'any')
           },
           classes: "govuk-!-width-one-third",
           id: "openCapacity",
@@ -197,7 +216,7 @@
             classes: "govuk-label--m"
           },
           hint: {
-            text: "What is the closed capacity?"
+            text: "What is the closed capacity? - The minimum allowed is currently: " + (visitStats.minimumCapacity.closed if visitStats.minimumCapacity.closed > 0 else 'any')
           },
           classes: "govuk-!-width-one-third",
           id: "closedCapacity",

@@ -9,6 +9,8 @@ import {
   LocationGroup,
   CategoryGroup,
   CreateSessionTemplateDto,
+  RequestSessionTemplateVisitStatsDto,
+  SessionTemplateVisitStatsDto,
 } from '../../server/data/visitSchedulerApiTypes'
 
 type Prison = components['schemas']['PrisonDto']
@@ -274,6 +276,35 @@ export default {
         status: 201,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: sessionTemplate,
+      },
+    })
+  },
+
+  stubGetTemplateStats: ({
+    requestVisitStatsDto,
+    reference,
+    visitStats,
+  }: {
+    requestVisitStatsDto: RequestSessionTemplateVisitStatsDto
+    reference: string
+    visitStats: SessionTemplateVisitStatsDto
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'POST',
+        url: `/visitScheduler/admin/session-templates/template/${reference}/stats`,
+        bodyPatterns: [
+          {
+            equalToJson: {
+              visitsFromDate: requestVisitStatsDto.visitsFromDate,
+            },
+          },
+        ],
+      },
+      response: {
+        status: 201,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: visitStats,
       },
     })
   },

@@ -2,7 +2,9 @@ import logger from '../../logger'
 import { RestClientBuilder, VisitSchedulerApiClient, HmppsAuthClient } from '../data'
 import {
   CreateSessionTemplateDto,
+  RequestSessionTemplateVisitStatsDto,
   SessionTemplate,
+  SessionTemplateVisitStatsDto,
   SessionTemplatesRangeType,
   UpdateSessionTemplateDto,
 } from '../data/visitSchedulerApiTypes'
@@ -85,5 +87,16 @@ export default class SessionTemplateService {
       `Session template '${sessionTemplate.reference}' updated for prison '${sessionTemplate.prisonId}' by ${username}`,
     )
     return sessionTemplate
+  }
+
+  async getTemplateStats(
+    username: string,
+    requestVisitStatsDto: RequestSessionTemplateVisitStatsDto,
+    reference: string,
+  ): Promise<SessionTemplateVisitStatsDto> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    return visitSchedulerApiClient.getTemplateStats(requestVisitStatsDto, reference)
   }
 }

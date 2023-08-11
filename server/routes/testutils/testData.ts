@@ -11,6 +11,8 @@ import {
   CreateIncentiveGroupDto,
   CreateCategoryGroupDto,
   UpdateSessionTemplateDto,
+  RequestSessionTemplateVisitStatsDto,
+  SessionTemplateVisitStatsDto,
 } from '../../data/visitSchedulerApiTypes'
 
 export default class TestData {
@@ -188,4 +190,18 @@ export default class TestData {
     prisonId = 'HEI',
     incentiveLevels = ['ENHANCED'],
   }: Partial<CreateIncentiveGroupDto> = {}): CreateIncentiveGroupDto => ({ name, prisonId, incentiveLevels })
+
+  static requestVisitStatsDto = ({
+    visitsFromDate = '2023-01-01',
+  }: Partial<RequestSessionTemplateVisitStatsDto> = {}): RequestSessionTemplateVisitStatsDto => ({ visitsFromDate })
+
+  static visitStats = ({
+    minimumCapacity = { open: 3, closed: 1 },
+    visitCount = 4,
+    visitsByDate = [{ visitCount: 4, visitDate: '2023-01-08' }],
+  }: Partial<SessionTemplateVisitStatsDto> = {}): SessionTemplateVisitStatsDto => ({
+    minimumCapacity,
+    visitCount,
+    visitsByDate,
+  })
 }

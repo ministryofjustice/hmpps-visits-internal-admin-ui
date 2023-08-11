@@ -8,7 +8,7 @@ import {
   CategoryGroupService,
   LocationGroupService,
 } from '../../../services'
-import { UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
+import { RequestSessionTemplateVisitStatsDto, UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class EditSessionTemplateController {
@@ -82,6 +82,17 @@ export default class EditSessionTemplateController {
         // locationGroupReferences,
       }
 
+      const requestVisitStatsDto: RequestSessionTemplateVisitStatsDto = {
+        visitsFromDate: new Date().toISOString().slice(0, 10),
+      }
+      const visitStats = await this.sessionTemplateService.getTemplateStats(
+        res.locals.user.username,
+        requestVisitStatsDto,
+        reference,
+      )
+      const firstDate = visitStats.visitsByDate[0].visitDate
+      const lastDate = visitStats.visitsByDate[visitStats.visitsByDate.length - 1].visitDate
+
       req.flash('formValues', formValues)
       return res.render('pages/prisons/sessionTemplates/editSingleSessionTemplate', {
         errors: req.flash('errors'),
@@ -92,6 +103,9 @@ export default class EditSessionTemplateController {
         // locationGroups,
         prison,
         reference,
+        visitStats,
+        firstDate,
+        lastDate,
       })
     }
   }
