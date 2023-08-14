@@ -36,7 +36,7 @@ context('Add session template', () => {
     reference: '-lfe~dcb~fc',
   })
 
-  const requestVisitStatsDto = TestData.requestVisitStatsDto({ visitsFromDate: '2023-08-11' })
+  const requestVisitStatsDto = TestData.requestVisitStatsDto({ visitsFromDate: new Date().toISOString().slice(0, 10) })
   const visitStats = TestData.visitStats()
 
   beforeEach(() => {
