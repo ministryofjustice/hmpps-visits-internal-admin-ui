@@ -7,6 +7,9 @@ context('Change active/inactive session template', () => {
   let deactivatedSessionTemplate = null
   let activeSessionTemplate = null
 
+  const requestVisitStatsDto = TestData.requestVisitStatsDto({ visitsFromDate: new Date().toISOString().slice(0, 10) })
+  const visitStats = TestData.visitStats()
+
   beforeEach(() => {
     const activePrison = TestData.prisonDto({ active: true })
     activeSessionTemplate = TestData.sessionTemplate({ active: true })
@@ -26,6 +29,11 @@ context('Change active/inactive session template', () => {
   it('session template should be deactivated and button should activate', () => {
     // Given
     cy.task('stubGetSessionTemplate', { sessionTemplate: deactivatedSessionTemplate })
+    cy.task('stubGetTemplateStats', {
+      requestVisitStatsDto,
+      reference: deactivatedSessionTemplate.reference,
+      visitStats,
+    })
     const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
 
     // When
@@ -40,6 +48,11 @@ context('Change active/inactive session template', () => {
   it('when inactive session template is activated details should change accordingly', () => {
     // Given
     cy.task('stubGetSessionTemplate', { sessionTemplate: deactivatedSessionTemplate })
+    cy.task('stubGetTemplateStats', {
+      requestVisitStatsDto,
+      reference: deactivatedSessionTemplate.reference,
+      visitStats,
+    })
     const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
     viewSessionTemplatePage.goTo(prisonCode, deactivatedSessionTemplate.reference)
 
@@ -58,6 +71,11 @@ context('Change active/inactive session template', () => {
   it('session template should be activated and button should deactivate', () => {
     // Given
     cy.task('stubGetSessionTemplate', { sessionTemplate: activeSessionTemplate })
+    cy.task('stubGetTemplateStats', {
+      requestVisitStatsDto,
+      reference: deactivatedSessionTemplate.reference,
+      visitStats,
+    })
     const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
 
     // When
@@ -74,6 +92,11 @@ context('Change active/inactive session template', () => {
   it('when active session template is deactivated details should change accordingly', () => {
     // Given
     cy.task('stubGetSessionTemplate', { sessionTemplate: activeSessionTemplate })
+    cy.task('stubGetTemplateStats', {
+      requestVisitStatsDto,
+      reference: deactivatedSessionTemplate.reference,
+      visitStats,
+    })
     const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
     viewSessionTemplatePage.goTo(prisonCode, activeSessionTemplate.reference)
 

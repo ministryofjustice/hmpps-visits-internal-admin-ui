@@ -26,7 +26,9 @@ const reference = '-afe.dcc.0f'
 
 beforeEach(() => {
   const sessionTemplate = TestData.sessionTemplate()
+  const visitStats = TestData.visitStats()
   sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplate)
+  sessionTemplateService.getTemplateStats.mockResolvedValue(visitStats)
 
   flashData = {}
   flashProvider.mockImplementation(key => flashData[key])
@@ -63,16 +65,28 @@ describe('Update a session template', () => {
         expect($('h1 span').text().trim()).toBe(prison.name)
         expect($('h1').text().trim()).toContain('Update session template')
 
+        expect($('[data-test="total-booked-test"]').text().trim()).toBe(
+          'This visit session template currently has 4 future visits booked',
+        )
+        expect($('.moj-banner').text().trim()).toContain(
+          'For the date: 8 January 2023, there is currently 4 visits booked',
+        )
+
         expect($(`form[action=${url}][method="POST"]`).length).toBe(1)
 
         expect($('#name').attr('value')).toBe('WEDNESDAY, 2023-03-21, 13:45')
 
         expect($('#validFromDate-validFromDateDay').attr('value')).toBe('21')
         expect($('#validFromDate-validFromDateMonth').attr('value')).toBe('03')
+        expect($('#validFromDate-hint').text().trim()).toContain('This must be before: 8 January 2023')
+
+        expect($('#validToDate-hint').text().trim()).toContain('This must be after: 8 January 2023')
 
         expect($('#openCapacity').attr('value')).toBe('35')
+        expect($('#openCapacity-hint').text().trim()).toContain('The minimum allowed is currently: 3')
 
         expect($('#closedCapacity').attr('value')).toBe('2')
+        expect($('#closedCapacity-hint').text().trim()).toContain('The minimum allowed is currently: 1')
 
         expect($('#visitRoom').attr('value')).toBe('Visits Main Room')
 

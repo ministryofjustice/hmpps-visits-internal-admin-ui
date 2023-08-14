@@ -3,6 +3,7 @@
 {%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{%- from "moj/components/banner/macro.njk" import mojBanner -%}
 
 {% set pageHeaderTitle = sessionTemplate.name %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
@@ -74,6 +75,25 @@
           None
         {%- endif -%}
       {%- endset -%}
+
+      {% set infoBannerHtml %}
+      <p data-test="total-booked-test">This visit session template currently has {{ visitStats.visitCount }} future {{ 'visits' if visitStats.visitCount >= 2 else 'visit' }} booked</p>
+      {% for stats in visitStats.visitsByDate %}
+        <p>For the date: {{ stats.visitDate | formatDate }}, there is currently {{ stats.visitCount }} {{ 'visits' if stats.visitCount >= 2 else 'visit' }} booked</p>
+      {% endfor %}
+      {% endset %}
+
+      {% if infoBannerHtml | length %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-three-quarters">
+            {{ mojBanner({
+              type: "information",
+              html: infoBannerHtml,
+              iconFallbackText: "Information"
+            }) }}
+          </div>
+        </div>
+      {% endif %}
 
       {{ govukSummaryList({
         rows: [

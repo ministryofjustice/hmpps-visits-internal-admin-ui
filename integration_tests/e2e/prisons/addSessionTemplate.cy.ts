@@ -36,6 +36,9 @@ context('Add session template', () => {
     reference: '-lfe~dcb~fc',
   })
 
+  const requestVisitStatsDto = TestData.requestVisitStatsDto({ visitsFromDate: new Date().toISOString().slice(0, 10) })
+  const visitStats = TestData.visitStats()
+
   beforeEach(() => {
     const activePrison = TestData.prisonDto({ active: true, code: prisonCode })
     sessionTemplate = TestData.sessionTemplate({ active: false, prisonId: prisonCode })
@@ -162,6 +165,11 @@ context('Add session template', () => {
       locationGroupReferences: [locationGroupOne.reference, locationGroupTwo.reference],
     })
     cy.task('stubCreateSessionTemplatePost', { createSessionTemplate, sessionTemplate })
+    cy.task('stubGetTemplateStats', {
+      requestVisitStatsDto,
+      reference: sessionTemplate.reference,
+      visitStats,
+    })
 
     const addSessionTemplatePage = Page.createPage(AddSessionTemplatePage)
     addSessionTemplatePage.goTo(prisonCode)

@@ -7,6 +7,9 @@ context('Delete a session template failure', () => {
   const prisonCode = 'HEI'
   let sessionTemplate = null
 
+  const requestVisitStatsDto = TestData.requestVisitStatsDto({ visitsFromDate: new Date().toISOString().slice(0, 10) })
+  const visitStats = TestData.visitStats()
+
   beforeEach(() => {
     const activePrison = TestData.prisonDto({ active: true })
     sessionTemplate = TestData.sessionTemplate({ active: false, prisonId: prisonCode, reference: '-act.dcc.0f' })
@@ -29,6 +32,12 @@ context('Delete a session template failure', () => {
   })
 
   it('when session template is deleted but validation fails on backend user should be shown error message', () => {
+    cy.task('stubGetTemplateStats', {
+      requestVisitStatsDto,
+      reference: sessionTemplate.reference,
+      visitStats,
+    })
+
     // Given
     const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
     viewSessionTemplatePage.goTo(prisonCode, sessionTemplate.reference)

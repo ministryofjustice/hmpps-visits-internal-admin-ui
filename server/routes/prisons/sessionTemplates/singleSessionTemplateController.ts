@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { PrisonService, SessionTemplateService } from '../../../services'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { RequestSessionTemplateVisitStatsDto } from '../../../data/visitSchedulerApiTypes'
 
 export default class SingleSessionTemplateController {
   public constructor(
@@ -18,11 +19,21 @@ export default class SingleSessionTemplateController {
         reference,
       )
 
+      const requestVisitStatsDto: RequestSessionTemplateVisitStatsDto = {
+        visitsFromDate: new Date().toISOString().slice(0, 10),
+      }
+      const visitStats = await this.sessionTemplateService.getTemplateStats(
+        res.locals.user.username,
+        requestVisitStatsDto,
+        reference,
+      )
+
       return res.render('pages/prisons/sessionTemplates/viewSingleSessionTemplate', {
         errors: req.flash('errors'),
         message: req.flash('message'),
         prison,
         sessionTemplate,
+        visitStats,
       })
     }
   }

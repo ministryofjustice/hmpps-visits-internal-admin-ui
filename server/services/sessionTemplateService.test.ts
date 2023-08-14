@@ -93,4 +93,16 @@ describe('Session template service', () => {
       expect(results).toEqual(singleSessionTemplate)
     })
   })
+
+  describe('getTemplateStats', () => {
+    it('should return the stastics for a session template', async () => {
+      const visitStats = TestData.visitStats()
+      const requestVisitStatsDto = TestData.requestVisitStatsDto()
+      visitSchedulerApiClient.getTemplateStats.mockResolvedValue(visitStats)
+
+      const results = await sessionTemplateService.getTemplateStats('user', requestVisitStatsDto, 'ab-cd-ef')
+
+      expect(results).toEqual(visitStats)
+    })
+  })
 })
