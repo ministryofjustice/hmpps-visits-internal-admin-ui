@@ -96,7 +96,7 @@ export default class EditSessionTemplateController {
         firstDate = visitStats.visitsByDate[0].visitDate
         lastDate = visitStats.visitsByDate[visitStats.visitsByDate.length - 1].visitDate
       }
-      console.log(visitStats)
+
       req.flash('formValues', formValues)
       return res.render('pages/prisons/sessionTemplates/editSingleSessionTemplate', {
         errors: req.flash('errors'),
