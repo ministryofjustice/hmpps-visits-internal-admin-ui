@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
+import path from 'path'
 import nunjucks, { Environment } from 'nunjucks'
 import express from 'express'
-import path from 'path'
 import { FieldValidationError } from 'express-validator'
 import { formatDate, initialiseName } from './utils'
 import { ApplicationInfo } from '../applicationInfo'

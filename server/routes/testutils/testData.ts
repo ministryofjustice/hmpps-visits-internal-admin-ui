@@ -18,7 +18,7 @@ import {
 export default class TestData {
   // PrisonDto from Visit Scheduler
   static prisonDto = ({ active = true, code = 'HEI', excludeDates = [] }: Partial<PrisonDto> = {}): PrisonDto =>
-    ({ active, code, excludeDates } as PrisonDto)
+    ({ active, code, excludeDates }) as PrisonDto
 
   // Prison (with name)
   static prison = ({
@@ -26,7 +26,7 @@ export default class TestData {
     code = 'HEI',
     excludeDates = [],
     name = 'Hewell (HMP)',
-  }: Partial<Prison> = {}): Prison => ({ active, code, excludeDates, name } as Prison)
+  }: Partial<Prison> = {}): Prison => ({ active, code, excludeDates, name }) as Prison
 
   // Array of Visit scheduler PrisonDto
   static prisonDtos = ({
@@ -95,7 +95,7 @@ export default class TestData {
       visitType,
       weeklyFrequency,
       active,
-    } as SessionTemplate)
+    }) as SessionTemplate
 
   static createSessionTemplateDto = ({
     name = 'session template name',
@@ -122,7 +122,7 @@ export default class TestData {
       categoryGroupReferences,
       incentiveLevelGroupReferences,
       locationGroupReferences,
-    } as CreateSessionTemplateDto)
+    }) as CreateSessionTemplateDto
 
   static updateSessionTemplateDto = ({
     name = 'session template name',
@@ -135,7 +135,7 @@ export default class TestData {
       sessionCapacity,
       sessionDateRange,
       visitRoom,
-    } as UpdateSessionTemplateDto)
+    }) as UpdateSessionTemplateDto
 
   static locationGroup = ({
     name = 'Wing A',
