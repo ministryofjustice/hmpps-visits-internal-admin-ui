@@ -112,6 +112,37 @@ describe('Add a location group', () => {
         })
     })
 
+    it('should not send entries for blank levels', () => {
+      const createLocationGroupDto = TestData.createLocationGroupDto({
+        locations: [{ levelOneCode: '1a' }, { levelOneCode: '1b', levelTwoCode: '2b' }],
+      })
+
+      const locationGroup = TestData.locationGroup({ ...createLocationGroupDto })
+      locationGroupService.createLocationGroup.mockResolvedValue(locationGroup)
+
+      return request(app)
+        .post(url)
+        .send(`name=${createLocationGroupDto.name}`)
+        .send('location[0][levelOneCode]=1a')
+        .send('location[0][levelTwoCode]=')
+        .send('location[0][levelThreeCode]=')
+        .send('location[0][levelFourCode]=')
+        .send('location[1][levelOneCode]=1b')
+        .send('location[1][levelTwoCode]=2b')
+        .send('location[1][levelThreeCode]=')
+        .send('location[1][levelFourCode]=')
+        .expect(302)
+        .expect('location', `/prisons/${prison.code}/location-groups/${locationGroup.reference}`)
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalledWith('errors')
+          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(locationGroupService.createLocationGroup.mock.calls[0]).toStrictEqual([
+            'user1',
+            createLocationGroupDto,
+          ])
+        })
+    })
+
     it('should set validation errors for invalid form data and set data in formValues', () => {
       const expectedValidationErrors = [
         expect.objectContaining({ path: 'name', msg: 'Enter a name between 3 and 100 characters long' }),

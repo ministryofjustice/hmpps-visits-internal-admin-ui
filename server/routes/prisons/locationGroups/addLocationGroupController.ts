@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService, LocationGroupService } from '../../../services'
-import { CreateLocationGroupDto } from '../../../data/visitSchedulerApiTypes'
+import { CreateLocationGroupDto, LocationGroup } from '../../../data/visitSchedulerApiTypes'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class AddLocationGroupController {
@@ -37,10 +37,21 @@ export default class AddLocationGroupController {
         return res.redirect(originalUrl)
       }
 
+      // empty location levels come through as empty strings so need to be removed
+      type LocationLevels = LocationGroup['locations'][number]
+      const locations: LocationLevels[] = []
+      req.body.location.forEach((location: LocationLevels) => {
+        const sanitisedLocation: LocationLevels = Object.fromEntries(
+          Object.entries(location).filter(e => e[1] !== ''),
+        ) as LocationLevels
+
+        locations.push(sanitisedLocation)
+      })
+
       const createLocationGroupDto: CreateLocationGroupDto = {
         name: req.body.name,
         prisonId,
-        locations: req.body.location,
+        locations,
       }
 
       try {
