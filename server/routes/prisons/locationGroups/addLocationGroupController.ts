@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService, LocationGroupService } from '../../../services'
-import { CreateLocationGroupDto } from '../../../data/visitSchedulerApiTypes'
+import { CreateLocationGroupDto, singleLocation } from '../../../data/visitSchedulerApiTypes'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class AddLocationGroupController {
@@ -37,10 +37,20 @@ export default class AddLocationGroupController {
         return res.redirect(originalUrl)
       }
 
+      const locations: singleLocation[] = []
+      req.body.location.forEach((location: singleLocation) => {
+        locations.push({
+          levelOneCode: location.levelOneCode,
+          levelTwoCode: location.levelTwoCode !== '' ? location.levelTwoCode : undefined,
+          levelThreeCode: location.levelThreeCode !== '' ? location.levelThreeCode : undefined,
+          levelFourCode: location.levelFourCode !== '' ? location.levelFourCode : undefined,
+        })
+      })
+
       const createLocationGroupDto: CreateLocationGroupDto = {
         name: req.body.name,
         prisonId,
-        locations: req.body.location,
+        locations,
       }
 
       try {
