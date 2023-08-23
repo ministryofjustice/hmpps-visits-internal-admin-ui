@@ -112,54 +112,35 @@ describe('Add a location group', () => {
         })
     })
 
-    // Sending undefined sets NULL in the database
-    it('should send valid data with some blank levels, and send to orchestration as undefined ', () => {
+    it('should not send entries for blank levels', () => {
       const createLocationGroupDto = TestData.createLocationGroupDto({
-        locations: [
-          { levelOneCode: '1a', levelTwoCode: '2a', levelThreeCode: '3a', levelFourCode: '4a' },
-          { levelOneCode: '1b', levelTwoCode: '2b', levelThreeCode: '3b', levelFourCode: undefined },
-          { levelOneCode: '1c', levelTwoCode: '2c', levelThreeCode: undefined, levelFourCode: undefined },
-          { levelOneCode: '1d', levelTwoCode: undefined, levelThreeCode: undefined, levelFourCode: undefined },
-        ],
+        locations: [{ levelOneCode: '1a' }, { levelOneCode: '1b', levelTwoCode: '2b' }],
       })
 
       const locationGroup = TestData.locationGroup({ ...createLocationGroupDto })
       locationGroupService.createLocationGroup.mockResolvedValue(locationGroup)
 
-      return (
-        request(app)
-          .post(url)
-          .send(`name=${createLocationGroupDto.name}`)
-          // Row 1
-          .send('location[0][levelOneCode]=1a')
-          .send('location[0][levelTwoCode]=2a')
-          .send('location[0][levelThreeCode]=3a')
-          .send('location[0][levelFourCode]=4a')
-          // Row 2
-          .send('location[1][levelOneCode]=1b')
-          .send('location[1][levelTwoCode]=2b')
-          .send('location[1][levelThreeCode]=3b')
-          .send('location[1][levelFourCode]=')
-          // Row 3
-          .send('location[2][levelOneCode]=1c')
-          .send('location[2][levelTwoCode]=2c')
-          .send('location[2][levelThreeCode]=')
-          .send('location[2][levelFourCode]=')
-          // Row 4
-          .send('location[3][levelOneCode]=1d')
-          .send('location[3][levelTwoCode]=')
-          .send('location[3][levelThreeCode]=')
-          .send('location[3][levelFourCode]=')
-
-          .expect(302)
-          .expect('location', `/prisons/${prison.code}/location-groups/${locationGroup.reference}`)
-          .expect(() => {
-            expect(flashProvider).not.toHaveBeenCalledWith('errors')
-            expect(flashProvider).not.toHaveBeenCalledWith('formValues')
-
-            expect(locationGroupService.createLocationGroup).toHaveBeenCalledWith('user1', createLocationGroupDto)
-          })
-      )
+      return request(app)
+        .post(url)
+        .send(`name=${createLocationGroupDto.name}`)
+        .send('location[0][levelOneCode]=1a')
+        .send('location[0][levelTwoCode]=')
+        .send('location[0][levelThreeCode]=')
+        .send('location[0][levelFourCode]=')
+        .send('location[1][levelOneCode]=1b')
+        .send('location[1][levelTwoCode]=2b')
+        .send('location[1][levelThreeCode]=')
+        .send('location[1][levelFourCode]=')
+        .expect(302)
+        .expect('location', `/prisons/${prison.code}/location-groups/${locationGroup.reference}`)
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalledWith('errors')
+          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(locationGroupService.createLocationGroup.mock.calls[0]).toStrictEqual([
+            'user1',
+            createLocationGroupDto,
+          ])
+        })
     })
 
     it('should set validation errors for invalid form data and set data in formValues', () => {
