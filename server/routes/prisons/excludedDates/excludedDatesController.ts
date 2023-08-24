@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { PrisonService } from '../../../services'
+import { PrisonService, VisitService } from '../../../services'
 import { formatDate, responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class ExcludedDatesController {
-  public constructor(private readonly prisonService: PrisonService) {}
+  public constructor(private readonly prisonService: PrisonService, private readonly visitService: VisitService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
@@ -33,11 +33,12 @@ export default class ExcludedDatesController {
 
       const { excludeDate } = req.body
 
+      const visitCount = await this.visitService.getVisitCountByDate(res.locals.user.username, prisonId, excludeDate)
+
       return res.render('pages/prisons/excludedDates/viewExcludedDates', {
-        // errors: req.flash('errors'),
         prison,
         excludeDate: excludeDate.toString().split('-'),
-        // message: req.flash('message'),
+        visitCount,
       })
     }
   }

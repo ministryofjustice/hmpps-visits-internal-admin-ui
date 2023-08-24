@@ -11,7 +11,7 @@ export default function routes(services: Services): Router {
   const postWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
     router.post(path, ...validationChain, asyncMiddleware(handler))
 
-  const excludedDates = new ExcludedDatesController(services.prisonService)
+  const excludedDates = new ExcludedDatesController(services.prisonService, services.visitService)
 
   get('/prisons/:prisonId([A-Z]{3})/excluded-dates', excludedDates.view())
 

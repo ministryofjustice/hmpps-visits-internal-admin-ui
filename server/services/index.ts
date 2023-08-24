@@ -5,6 +5,7 @@ import SessionTemplateService from './sessionTemplateService'
 import LocationGroupService from './locationGroupService'
 import CategoryGroupService from './categoryGroupService'
 import IncentiveGroupService from './incentiveGroupService'
+import VisitService from './visitService'
 
 export const services = () => {
   const { hmppsAuthClient, applicationInfo, prisonRegisterApiClientBuilder, visitSchedulerApiClientBuilder } =
@@ -26,6 +27,8 @@ export const services = () => {
 
   const userService = new UserService(hmppsAuthClient)
 
+  const visitService = new VisitService(visitSchedulerApiClientBuilder, hmppsAuthClient)
+
   return {
     applicationInfo,
     categoryGroupService,
@@ -34,6 +37,7 @@ export const services = () => {
     prisonService,
     sessionTemplateService,
     userService,
+    visitService,
   }
 }
 
@@ -46,4 +50,5 @@ export {
   PrisonService,
   SessionTemplateService,
   UserService,
+  VisitService,
 }
