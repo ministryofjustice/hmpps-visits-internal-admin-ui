@@ -21,6 +21,11 @@ export default function routes(services: Services): Router {
     excludedDates.addDate(),
   )
   postWithValidation(
+    '/prisons/:prisonId([A-Z]{3})/excluded-dates/check',
+    excludedDates.validate(),
+    excludedDates.checkDate(),
+  )
+  postWithValidation(
     '/prisons/:prisonId([A-Z]{3})/excluded-dates/remove',
     // TODO - add validation
     [],

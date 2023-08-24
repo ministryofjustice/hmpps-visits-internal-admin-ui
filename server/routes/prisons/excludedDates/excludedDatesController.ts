@@ -19,6 +19,29 @@ export default class ExcludedDatesController {
     }
   }
 
+  public checkDate(): RequestHandler {
+    return async (req, res) => {
+      const { prisonId } = req.params
+      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const originalUrl = `/prisons/${prisonId}/excluded-dates`
+      const errors = validationResult(req)
+
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array())
+        return res.redirect(originalUrl)
+      }
+
+      const { excludeDate } = req.body
+
+      return res.render('pages/prisons/excludedDates/viewExcludedDates', {
+        // errors: req.flash('errors'),
+        prison,
+        excludeDate: excludeDate.toString().split('-'),
+        // message: req.flash('message'),
+      })
+    }
+  }
+
   public addDate(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
