@@ -4,7 +4,10 @@ import { PrisonService, VisitService } from '../../../services'
 import { formatDate, responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class ExcludedDatesController {
-  public constructor(private readonly prisonService: PrisonService, private readonly visitService: VisitService) {}
+  public constructor(
+    private readonly prisonService: PrisonService,
+    private readonly visitService: VisitService,
+  ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
