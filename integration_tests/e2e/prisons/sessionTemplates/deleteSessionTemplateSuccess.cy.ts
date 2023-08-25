@@ -1,9 +1,10 @@
-import TestData from '../../../server/routes/testutils/testData'
-import Page from '../../pages/page'
-import ViewSessionTemplatePage from '../../pages/prisons/viewSessionTemplatePage'
-import { SessionTemplatesRangeType } from '../../../server/data/visitSchedulerApiTypes'
+import TestData from '../../../../server/routes/testutils/testData'
+import Page from '../../../pages/page'
+import ViewSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatePage'
+import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
+import { SessionTemplatesRangeType } from '../../../../server/data/visitSchedulerApiTypes'
 
-context('Delete a session template failure', () => {
+context('Delete a session template success', () => {
   const prisonCode = 'HEI'
   let sessionTemplate = null
 
@@ -23,7 +24,7 @@ context('Delete a session template failure', () => {
     cy.task('stubGetPrison', activePrison)
     cy.task('stubGetSessionTemplate', { sessionTemplate })
 
-    cy.task('stubDeleteSessionTemplateFailure', {
+    cy.task('stubDeleteSessionTemplate', {
       sessionTemplate,
     })
     cy.task('stubGetSessionTemplates', { prisonCode, rangeType })
@@ -31,7 +32,7 @@ context('Delete a session template failure', () => {
     cy.signIn()
   })
 
-  it('when session template is deleted but validation fails on backend user should be shown error message', () => {
+  it('when session template is deleted user should be redirected to session templates screen', () => {
     cy.task('stubGetTemplateStats', {
       requestVisitStatsDto,
       reference: sessionTemplate.reference,
@@ -46,9 +47,7 @@ context('Delete a session template failure', () => {
     viewSessionTemplatePage.getDeleteSessionTemplateButton().click()
 
     // Then
-    const viewSessionTemplatePageFailure = Page.verifyOnPage(ViewSessionTemplatePage)
-    viewSessionTemplatePageFailure
-      .errorSummary()
-      .contains(`Failed to delete session template with reference - ${sessionTemplate.reference}`)
+    const viewSessionTemplatesPage = Page.verifyOnPage(ViewSessionTemplatesPage)
+    viewSessionTemplatesPage.successMessage().contains(`Session template '${sessionTemplate.name}' has been deleted`)
   })
 })

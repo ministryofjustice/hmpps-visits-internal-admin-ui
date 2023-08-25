@@ -1,10 +1,9 @@
-import TestData from '../../../server/routes/testutils/testData'
-import Page from '../../pages/page'
-import ViewSessionTemplatePage from '../../pages/prisons/viewSessionTemplatePage'
-import ViewSessionTemplatesPage from '../../pages/prisons/viewSessionTemplatesPage'
-import { SessionTemplatesRangeType } from '../../../server/data/visitSchedulerApiTypes'
+import TestData from '../../../../server/routes/testutils/testData'
+import Page from '../../../pages/page'
+import ViewSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatePage'
+import { SessionTemplatesRangeType } from '../../../../server/data/visitSchedulerApiTypes'
 
-context('Delete a session template success', () => {
+context('Delete a session template failure', () => {
   const prisonCode = 'HEI'
   let sessionTemplate = null
 
@@ -24,7 +23,7 @@ context('Delete a session template success', () => {
     cy.task('stubGetPrison', activePrison)
     cy.task('stubGetSessionTemplate', { sessionTemplate })
 
-    cy.task('stubDeleteSessionTemplate', {
+    cy.task('stubDeleteSessionTemplateFailure', {
       sessionTemplate,
     })
     cy.task('stubGetSessionTemplates', { prisonCode, rangeType })
@@ -32,7 +31,7 @@ context('Delete a session template success', () => {
     cy.signIn()
   })
 
-  it('when session template is deleted user should be redirected to session templates screen', () => {
+  it('when session template is deleted but validation fails on backend user should be shown error message', () => {
     cy.task('stubGetTemplateStats', {
       requestVisitStatsDto,
       reference: sessionTemplate.reference,
@@ -47,7 +46,9 @@ context('Delete a session template success', () => {
     viewSessionTemplatePage.getDeleteSessionTemplateButton().click()
 
     // Then
-    const viewSessionTemplatesPage = Page.verifyOnPage(ViewSessionTemplatesPage)
-    viewSessionTemplatesPage.successMessage().contains(`Session template '${sessionTemplate.name}' has been deleted`)
+    const viewSessionTemplatePageFailure = Page.verifyOnPage(ViewSessionTemplatePage)
+    viewSessionTemplatePageFailure
+      .errorSummary()
+      .contains(`Failed to delete session template with reference - ${sessionTemplate.reference}`)
   })
 })

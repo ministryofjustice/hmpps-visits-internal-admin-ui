@@ -1,9 +1,9 @@
-import TestData from '../../../server/routes/testutils/testData'
-import Page from '../../pages/page'
-import AddSessionTemplatePage from '../../pages/prisons/addSessionTemplatePage'
-import ViewSessionTemplatesPage from '../../pages/prisons/viewSessionTemplatesPage'
-import ViewSessionTemplatePage from '../../pages/prisons/viewSessionTemplatePage'
-import { SessionTemplatesRangeType } from '../../../server/data/visitSchedulerApiTypes'
+import TestData from '../../../../server/routes/testutils/testData'
+import Page from '../../../pages/page'
+import AddSessionTemplatePage from '../../../pages/prisons/sessionTemplates/addSessionTemplatePage'
+import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
+import ViewSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatePage'
+import { SessionTemplatesRangeType } from '../../../../server/data/visitSchedulerApiTypes'
 
 context('Add session template', () => {
   const prisonCode = 'HEI'

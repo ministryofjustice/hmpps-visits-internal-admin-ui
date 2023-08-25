@@ -11,5 +11,5 @@ export default class SupportedPrisonsPage extends Page {
 
   createPrison = (): PageElement => cy.get('[data-test="submit"]')
 
-  succesMessage = (): PageElement => cy.get('.moj-banner--success')
+  successMessage = (): PageElement => cy.get('.moj-banner--success')
 }
