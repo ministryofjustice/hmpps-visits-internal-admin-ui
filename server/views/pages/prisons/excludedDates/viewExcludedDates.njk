@@ -120,8 +120,8 @@
       {% if excludeDate %}
         <h2 class="govuk-heading-m">Add an exclude date</h2>
         <p>
-          There {{ "is" | pluralise(visitCount, "are") }} <strong>{{ visitCount }}</strong> {{ "visit" | pluralise(visitCount) }}
-          booked for <strong>{{ excludeDate | join('-') | formatDate }}</strong>.
+          There {{ "is" | pluralise(visitCount, "are") }} <strong data-test="visit-count">{{ visitCount }}</strong> {{ "visit" | pluralise(visitCount) }}
+          booked for <strong data-test="exclude-date">{{ excludeDate | join('-') | formatDate }}</strong>.
         </p>
         <form action="/prisons/{{ prison.code }}/excluded-dates/add" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
