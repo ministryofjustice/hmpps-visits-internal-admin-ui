@@ -1,4 +1,4 @@
-import Page from '../page'
+import Page from '../../page'
 
 export default class AddViewSessionTemplatePage extends Page {
   constructor() {
