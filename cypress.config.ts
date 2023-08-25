@@ -3,7 +3,11 @@ import { resetStubs } from './integration_tests/mockApis/wiremock'
 import auth from './integration_tests/mockApis/auth'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import prisonRegister from './integration_tests/mockApis/prisonRegisterMocks'
-import visitScheduler from './integration_tests/mockApis/visitSchedulerMocks'
+import categoryGroups from './integration_tests/mockApis/visitScheduler/categoryGroups'
+import incentiveGroups from './integration_tests/mockApis/visitScheduler/incentiveGroups'
+import locationGroups from './integration_tests/mockApis/visitScheduler/locationGroups'
+import prisons from './integration_tests/mockApis/visitScheduler/prisons'
+import sessionTemplates from './integration_tests/mockApis/visitScheduler/sessionTemplates'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -28,7 +32,13 @@ export default defineConfig({
         ...tokenVerification,
 
         ...prisonRegister,
-        ...visitScheduler,
+
+        // visit scheduler mock APIs
+        ...categoryGroups,
+        ...incentiveGroups,
+        ...locationGroups,
+        ...prisons,
+        ...sessionTemplates,
       })
     },
     baseUrl: 'http://localhost:3007',

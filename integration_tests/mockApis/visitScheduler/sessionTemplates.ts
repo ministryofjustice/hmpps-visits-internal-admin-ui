@@ -1,152 +1,15 @@
 import { SuperAgentRequest } from 'superagent'
-import { stubFor } from './wiremock'
-import TestData from '../../server/routes/testutils/testData'
-import { components } from '../../server/@types/visit-scheduler-api'
+import { stubFor } from '../wiremock'
+import TestData from '../../../server/routes/testutils/testData'
 import {
   SessionTemplatesRangeType,
   SessionTemplate,
-  IncentiveLevelGroup,
-  LocationGroup,
-  CategoryGroup,
   CreateSessionTemplateDto,
   RequestSessionTemplateVisitStatsDto,
   SessionTemplateVisitStatsDto,
-} from '../../server/data/visitSchedulerApiTypes'
-
-type Prison = components['schemas']['PrisonDto']
+} from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
-  stubLocationGroups: ({
-    prisonCode,
-    body = [TestData.locationGroup()],
-  }: {
-    prisonCode: string
-    body: Array<LocationGroup>
-  }): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        url: `/visitScheduler/admin/location-groups/${prisonCode}`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: body,
-      },
-    })
-  },
-  stubIncentiveGroups: ({
-    prisonCode,
-    body = [TestData.incentiveLevelGroup()],
-  }: {
-    prisonCode: string
-    body: Array<IncentiveLevelGroup>
-  }): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        url: `/visitScheduler/admin/incentive-groups/${prisonCode}`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: body,
-      },
-    })
-  },
-  stubCategoryGroups: ({
-    prisonCode,
-    body = [TestData.categoryGroup()],
-  }: {
-    prisonCode: string
-    body: Array<CategoryGroup>
-  }): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        url: `/visitScheduler/admin/category-groups/${prisonCode}`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: body,
-      },
-    })
-  },
-  stubGetAllPrisons: (): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        url: '/visitScheduler/admin/prisons',
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: TestData.prisonDtos(),
-      },
-    })
-  },
-  stubGetPrison: (prison: Prison): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        url: `/visitScheduler/admin/prisons/prison/${prison.code}`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: prison,
-      },
-    })
-  },
-  stubCreatePrison: (prison: Prison): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'POST',
-        url: '/visitScheduler/admin/prisons/prison',
-        bodyPatterns: [
-          {
-            equalToJson: {
-              active: prison.active,
-              code: prison.code,
-              excludeDates: prison.excludeDates,
-            },
-          },
-        ],
-      },
-      response: {
-        status: 201,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: prison,
-      },
-    })
-  },
-  stubActivatePrison: (prisonCode: string): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'PUT',
-        url: `/visitScheduler/admin/prisons/prison/${prisonCode}/activate`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: TestData.prisonDto({ active: true }),
-      },
-    })
-  },
-  stubDeactivatePrison: (prisonCode: string): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'PUT',
-        url: `/visitScheduler/admin/prisons/prison/${prisonCode}/deactivate`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: TestData.prisonDto({ active: false }),
-      },
-    })
-  },
   stubGetSessionTemplates: ({
     prisonCode,
     rangeType,
@@ -279,7 +142,6 @@ export default {
       },
     })
   },
-
   stubGetTemplateStats: ({
     requestVisitStatsDto,
     reference,
