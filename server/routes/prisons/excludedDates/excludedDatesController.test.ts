@@ -4,7 +4,7 @@ import * as cheerio from 'cheerio'
 import { FieldValidationError } from 'express-validator'
 
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
-import { createMockPrisonService } from '../../../services/testutils/mocks'
+import { createMockPrisonService, createMockVisitService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import { FlashErrorMessage } from '../../../@types/visits-admin'
 
@@ -12,6 +12,7 @@ let app: Express
 let flashData: Record<string, string | FlashErrorMessage>
 
 const prisonService = createMockPrisonService()
+const visitService = createMockVisitService()
 
 const excludeDates = ['2023-12-25', '2024-12-25']
 const prison = TestData.prison()
@@ -23,7 +24,8 @@ beforeEach(() => {
   prisonService.getPrison.mockResolvedValue(prison)
   prisonService.addExcludeDate.mockResolvedValue(prisonWithExcludeDates)
   prisonService.removeExcludeDate.mockResolvedValue()
-  app = appWithAllRoutes({ services: { prisonService } })
+  visitService.getVisitCountByDate.mockResolvedValue(1)
+  app = appWithAllRoutes({ services: { prisonService, visitService } })
 })
 
 afterEach(() => {
@@ -98,8 +100,30 @@ describe('Add / Remove excluded date', () => {
       })
   })
 
+  describe('Check date on excluded dates page', () => {
+    it('POST /prisons/{:prisonId}/excluded-date/check', () => {
+      const date = '2023-12-26'
+
+      return request(app)
+        .post(`/prisons/${prison.code}/excluded-dates/check`)
+        .send('excludeDate[day]=26')
+        .send('excludeDate[month]=12')
+        .send('excludeDate[year]=2023')
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="visit-count"]').text()).toBe('1')
+          expect($('[data-test="exclude-date"]').text()).toBe('26 December 2023')
+          expect($('[data-test="add-date-cancel"]').attr('href')).toBe(`/prisons/${prison.code}/excluded-dates`)
+          expect(visitService.getVisitCountByDate).toHaveBeenCalledTimes(1)
+          expect(visitService.getVisitCountByDate).toHaveBeenCalledWith('user1', prison.code, date)
+        })
+    })
+  })
+
   describe('Add date to excluded dates', () => {
-    it('POST /prisons/{:prisonId}/excluded-dates', () => {
+    it('POST /prisons/{:prisonId}/excluded-dates/add', () => {
       const date = '2023-12-26'
 
       return request(app)

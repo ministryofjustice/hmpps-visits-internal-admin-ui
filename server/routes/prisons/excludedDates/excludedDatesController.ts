@@ -1,10 +1,13 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { PrisonService } from '../../../services'
+import { PrisonService, VisitService } from '../../../services'
 import { formatDate, responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class ExcludedDatesController {
-  public constructor(private readonly prisonService: PrisonService) {}
+  public constructor(
+    private readonly prisonService: PrisonService,
+    private readonly visitService: VisitService,
+  ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
@@ -15,6 +18,30 @@ export default class ExcludedDatesController {
         errors: req.flash('errors'),
         prison,
         message: req.flash('message'),
+      })
+    }
+  }
+
+  public checkDate(): RequestHandler {
+    return async (req, res) => {
+      const { prisonId } = req.params
+      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const originalUrl = `/prisons/${prisonId}/excluded-dates`
+      const errors = validationResult(req)
+
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array())
+        return res.redirect(originalUrl)
+      }
+
+      const { excludeDate } = req.body
+
+      const visitCount = await this.visitService.getVisitCountByDate(res.locals.user.username, prisonId, excludeDate)
+
+      return res.render('pages/prisons/excludedDates/viewExcludedDates', {
+        prison,
+        excludeDate: excludeDate.toString().split('-'),
+        visitCount,
       })
     }
   }

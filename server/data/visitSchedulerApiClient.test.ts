@@ -7,6 +7,7 @@ import {
   CreateIncentiveGroupDto,
   CreateLocationGroupDto,
   CreateSessionTemplateDto,
+  PageVisitDto,
   PrisonDto,
   RequestSessionTemplateVisitStatsDto,
   UpdateSessionTemplateDto,
@@ -29,6 +30,31 @@ describe('visitSchedulerApiClient', () => {
     }
     nock.abortPendingRequests()
     nock.cleanAll()
+  })
+
+  describe('getBookedVisitsByDate', () => {
+    it('should return visits booked on given date', async () => {
+      const results: PageVisitDto = {
+        totalElements: 1,
+      }
+
+      fakeVisitSchedulerApi
+        .get(`/visits/search`)
+        .query({
+          prisonId: 'HEI',
+          startDateTime: '2022-05-23T00:00:00',
+          endDateTime: '2022-05-23T23:59:59',
+          visitStatus: 'BOOKED',
+          page: '0',
+          size: '1000',
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, results)
+
+      const output = await visitSchedulerApiClient.getBookedVisitsByDate('HEI', '2022-05-23')
+
+      expect(output).toEqual(results)
+    })
   })
 
   describe('getAllPrisons', () => {

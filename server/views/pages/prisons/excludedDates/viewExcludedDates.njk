@@ -90,7 +90,7 @@
               }),
               attributes: { "data-test": "exclude-date-row" }
             }
-            ]), excludeDateRows) %}
+          ]), excludeDateRows) %}
         {%- endfor %}
 
         <form action="/prisons/{{ prison.code }}/excluded-dates/remove" method="POST" novalidate>
@@ -110,15 +110,42 @@
             }) }}
         </form>
 
-        {% else %}
-          <p class="govuk-body">
-            There are no excluded dates for this prison.
-          </p>
-        {% endif %}
+      {% else %}
+        <p class="govuk-body">
+          There are no excluded dates for this prison.
+        </p>
+      {% endif %}
 
 
-
+      {% if excludeDate %}
+        <h2 class="govuk-heading-m">Add an exclude date</h2>
+        <p>
+          There {{ "is" | pluralise(visitCount, "are") }} <strong data-test="visit-count">{{ visitCount }}</strong> {{ "visit" | pluralise(visitCount) }}
+          booked for <strong data-test="exclude-date">{{ excludeDate | join('-') | formatDate }}</strong>.
+        </p>
         <form action="/prisons/{{ prison.code }}/excluded-dates/add" method="POST" novalidate>
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          <input type="hidden" name="excludeDate[year]" value="{{ excludeDate[0] }}">
+          <input type="hidden" name="excludeDate[month]" value="{{ excludeDate[1] }}">
+          <input type="hidden" name="excludeDate[day]" value="{{ excludeDate[2] }}">
+
+          {{ govukButton({
+            text: "Add exclude date",
+            preventDoubleClick: true,
+            attributes: { "data-test": "add-date" }
+            }) }}
+          <br>
+          {{ govukButton({
+            text: "Cancel",
+            classes: "govuk-button--secondary",
+            href: "/prisons/" + prison.code + "/excluded-dates",
+            attributes: { "data-test": "add-date-cancel" }
+            }) }}
+        </form>
+
+      {% else %}
+
+        <form action="/prisons/{{ prison.code }}/excluded-dates/check" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             {{ govukDateInput({
               id: "excludeDate",
@@ -154,14 +181,13 @@
               errorMessage: errors | findError('excludeDate')
             }) }}
 
-            {{ govukButton({
-              text: "Add exclude date",
-              preventDoubleClick: true,
-              attributes: { "data-test": "submit" }
-              }) }}
-          </form>
-        </div>
-      </div>
+          {{ govukButton({
+            text: "Check this date",
+            preventDoubleClick: true,
+            attributes: { "data-test": "check-date" }
+            }) }}
+        </form>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

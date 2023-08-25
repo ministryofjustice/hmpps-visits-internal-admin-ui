@@ -24,3 +24,6 @@ export type SessionTemplatesRangeType = operations['getSessionTemplates']['param
 export type UpdateSessionTemplateDto = components['schemas']['UpdateSessionTemplateDto']
 export type RequestSessionTemplateVisitStatsDto = components['schemas']['RequestSessionTemplateVisitStatsDto']
 export type SessionTemplateVisitStatsDto = components['schemas']['SessionTemplateVisitStatsDto']
+
+// Visits
+export type PageVisitDto = components['schemas']['PageVisitDto']

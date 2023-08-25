@@ -14,6 +14,7 @@ import {
   UpdateSessionTemplateDto,
   RequestSessionTemplateVisitStatsDto,
   SessionTemplateVisitStatsDto,
+  PageVisitDto,
 } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
@@ -21,6 +22,20 @@ export default class VisitSchedulerApiClient {
 
   constructor(token: string) {
     this.restClient = new RestClient('visitSchedulerApiClient', config.apis.visitScheduler, token)
+  }
+
+  async getBookedVisitsByDate(prisonId: string, date: string): Promise<PageVisitDto> {
+    return this.restClient.get({
+      path: `/visits/search`,
+      query: new URLSearchParams({
+        prisonId,
+        startDateTime: `${date}T00:00:00`,
+        endDateTime: `${date}T23:59:59`,
+        visitStatus: 'BOOKED',
+        page: '0',
+        size: '1000',
+      }).toString(),
+    })
   }
 
   async getAllPrisons(): Promise<PrisonDto[]> {
