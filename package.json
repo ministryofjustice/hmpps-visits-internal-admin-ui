@@ -132,7 +132,7 @@
     "@types/http-errors": "^2.0.1",
     "@types/jest": "^29.5.4",
     "@types/jsonwebtoken": "^9.0.2",
-    "@types/node": "^18.17.9",
+    "@types/node": "^18.17.11",
     "@types/nunjucks": "^3.2.3",
     "@types/passport": "^1.0.12",
     "@types/passport-oauth2": "^1.4.12",
@@ -170,6 +170,6 @@
     "sass": "^1.66.1",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   }
 }
