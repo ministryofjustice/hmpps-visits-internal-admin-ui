@@ -4,7 +4,7 @@ import { PageVisitDto } from '../data/visitSchedulerApiTypes'
 
 const token = 'some token'
 
-describe('Location group service', () => {
+describe('Visit service', () => {
   const hmppsAuthClient = createMockHmppsAuthClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()
 
@@ -28,7 +28,7 @@ describe('Location group service', () => {
   })
 
   describe('getVisitCountByDate', () => {
-    it('should return an a single location group', async () => {
+    it('should return a count of visits booked on the given date', async () => {
       visitSchedulerApiClient.getBookedVisitsByDate.mockResolvedValue(pageVisitDto)
 
       const results = await visitService.getVisitCountByDate('user', 'HEI', '2022-05-23')
