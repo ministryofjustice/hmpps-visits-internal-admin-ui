@@ -8,8 +8,8 @@ import { SessionTemplatesRangeType } from '../../../../server/data/visitSchedule
 context('Add session template', () => {
   const prisonCode = 'HEI'
   let sessionTemplate = null
-  const incentiveLevelGroupOne = TestData.incentiveLevelGroup()
-  const incentiveLevelGroupTwo = TestData.incentiveLevelGroup({
+  const incentiveLevelGroupOne = TestData.incentiveGroup()
+  const incentiveLevelGroupTwo = TestData.incentiveGroup({
     name: 'Super Enhanced',
     incentiveLevels: ['ENHANCED_2'],
     reference: '-bfe~dcb~fc',

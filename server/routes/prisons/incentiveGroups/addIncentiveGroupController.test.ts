@@ -85,7 +85,7 @@ describe('Add an incentive group', () => {
     it('should send valid data to create an incentive group and redirect to view template', () => {
       const createIncentiveGroupDto = TestData.createIncentiveGroupDto()
 
-      const incentiveGroup = TestData.incentiveLevelGroup({ ...createIncentiveGroupDto })
+      const incentiveGroup = TestData.incentiveGroup({ ...createIncentiveGroupDto })
       incentiveGroupService.createIncentiveGroup.mockResolvedValue(incentiveGroup)
 
       return request(app)

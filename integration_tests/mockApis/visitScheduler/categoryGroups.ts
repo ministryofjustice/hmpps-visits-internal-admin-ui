@@ -1,12 +1,11 @@
 import { SuperAgentRequest } from 'superagent'
 import { stubFor } from '../wiremock'
-import TestData from '../../../server/routes/testutils/testData'
 import { CategoryGroup } from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
   stubCategoryGroups: ({
     prisonCode,
-    body = [TestData.categoryGroup()],
+    body = [],
   }: {
     prisonCode: string
     body: Array<CategoryGroup>

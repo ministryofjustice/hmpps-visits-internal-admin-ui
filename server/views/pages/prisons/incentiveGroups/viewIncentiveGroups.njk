@@ -50,10 +50,12 @@
       {% for incentiveLevelGroup in incentiveGroups %}
         {% set rows = (rows.push([
         {
-          html: '<a href="/prisons/' + prison.code + '/incentive-groups/' + incentiveLevelGroup.reference + '">' + incentiveLevelGroup.name + "</a>"
+          html: '<a href="/prisons/' + prison.code + '/incentive-groups/' + incentiveLevelGroup.reference + '">' + incentiveLevelGroup.name + "</a>",
+          attributes: { "data-test": "incentive-group-name" }
         },
         {
-          html: '<ul class="govuk-list govuk-list--bullet"><li>' + (incentiveLevelGroup.incentiveLevels | join('</li><li>')) + '</li></ul>'
+          html: '<ul class="govuk-list govuk-list--bullet"><li>' + (incentiveLevelGroup.incentiveLevels | join('</li><li>')) + '</li></ul>',
+          attributes: { "data-test": "incentive-group-levels" }
         }
         ]), rows) %}
       {% endfor %}

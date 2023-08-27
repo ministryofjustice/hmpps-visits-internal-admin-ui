@@ -7,7 +7,7 @@ import {
   LocationGroup,
   SessionTemplate,
   SessionTemplatesRangeType,
-  IncentiveLevelGroup,
+  IncentiveGroup,
   CreateLocationGroupDto,
   CreateIncentiveGroupDto,
   CreateCategoryGroupDto,
@@ -206,19 +206,19 @@ export default class VisitSchedulerApiClient {
   }
 
   // Incentive level groups
-  async getSingleIncentiveGroup(reference: string): Promise<IncentiveLevelGroup> {
+  async getSingleIncentiveGroup(reference: string): Promise<IncentiveGroup> {
     return this.restClient.get({
       path: `/admin/incentive-groups/group/${reference}`,
     })
   }
 
-  async getIncentiveGroups(prisonCode: string): Promise<IncentiveLevelGroup[]> {
+  async getIncentiveGroups(prisonCode: string): Promise<IncentiveGroup[]> {
     return this.restClient.get({
       path: `/admin/incentive-groups/${prisonCode}`,
     })
   }
 
-  async createIncentiveGroup(createIncentiveGroupDto: CreateIncentiveGroupDto): Promise<IncentiveLevelGroup> {
+  async createIncentiveGroup(createIncentiveGroupDto: CreateIncentiveGroupDto): Promise<IncentiveGroup> {
     return this.restClient.post({
       path: `/admin/incentive-groups/group`,
       data: createIncentiveGroupDto,

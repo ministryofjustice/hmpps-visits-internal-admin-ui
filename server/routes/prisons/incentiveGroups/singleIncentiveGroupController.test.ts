@@ -15,7 +15,7 @@ const incentiveGroupService = createMockIncentiveGroupService()
 const allPrisons = TestData.prisons()
 const prison = TestData.prison()
 
-const incentiveGroup = TestData.incentiveLevelGroup()
+const incentiveGroup = TestData.incentiveGroup()
 
 beforeEach(() => {
   flashData = {}

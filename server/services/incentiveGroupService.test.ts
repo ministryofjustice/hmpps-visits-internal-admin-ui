@@ -12,8 +12,8 @@ describe('Incentive level group service', () => {
 
   const VisitSchedulerApiClientFactory = jest.fn()
 
-  const singleIncentiveGroup = TestData.incentiveLevelGroup()
-  const incentiveGroups = [TestData.incentiveLevelGroup()]
+  const singleIncentiveGroup = TestData.incentiveGroup()
+  const incentiveGroups = [TestData.incentiveGroup()]
   const createIncentiveGroupDto = TestData.createIncentiveGroupDto()
 
   beforeEach(() => {
