@@ -1,7 +1,7 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import HomePage from '../../../pages/home'
 import Page from '../../../pages/page'
-import SupportedPrisonsPage from '../../../pages/prisons/prisonsPage'
+import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisonsPage'
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
 import PrisonStatusPage from '../../../pages/prisons/prisonStatus/prisonStatusPage'
 import { SessionTemplatesRangeType } from '../../../../server/data/visitSchedulerApiTypes'
@@ -31,10 +31,10 @@ context('Supported prisons', () => {
     cy.task('stubGetPrison', inactivePrison)
     cy.task('stubGetSessionTemplates', { prisonCode, rangeType })
 
-    supportedPrisonsPage.selectPrison(prisonCode).click()
+    supportedPrisonsPage.getPrisonByCode(prisonCode).click()
     const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
-    viewSessionTemplatePage.statusTab().click()
+    viewSessionTemplatePage.selectStatusTab()
     const prisonStatusPage = Page.verifyOnPage(PrisonStatusPage)
 
     prisonStatusPage.prisonStatusLabel().contains('inactive')
@@ -58,10 +58,10 @@ context('Supported prisons', () => {
     cy.task('stubGetPrison', activePrison)
     cy.task('stubGetSessionTemplates', { prisonCode, rangeType })
 
-    supportedPrisonsPage.selectPrison(prisonCode).click()
+    supportedPrisonsPage.getPrisonByCode(prisonCode).click()
     const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
-    viewSessionTemplatePage.statusTab().click()
+    viewSessionTemplatePage.selectStatusTab()
     const prisonStatusPage = Page.verifyOnPage(PrisonStatusPage)
 
     prisonStatusPage.prisonStatusLabel().contains('active')

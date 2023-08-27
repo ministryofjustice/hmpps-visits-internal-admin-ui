@@ -1,6 +1,6 @@
-import Page from '../../page'
+import PrisonPage from '../../prisonPage'
 
-export default class AddViewSessionTemplatePage extends Page {
+export default class AddViewSessionTemplatePage extends PrisonPage {
   constructor() {
     super('Hewell (HMP)')
   }
