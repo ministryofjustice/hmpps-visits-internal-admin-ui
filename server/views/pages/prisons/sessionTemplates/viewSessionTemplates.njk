@@ -1,23 +1,12 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
+{% from "components/subNavigation.njk" import subNavigation %}
 
 {% set pageHeaderTitle = prison.name %}
 {% set pageTitle = applicationName + " - Session templates - " + pageHeaderTitle %}
-
-{% set primaryNavItems = [
-  {
-    text: "Home",
-    href: "/"
-  },
-  {
-    text: "Prisons",
-    href: "/prisons",
-    active: true
-  }
-  ] %}
+{% set activePrimaryNav = "prisons" %}
 
 {% macro groupCountIfNotEmpty(groupArray, label) %}
   {% if groupArray | length %}
@@ -49,31 +38,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
-      {{ mojSubNavigation({
-        label: "Sub navigation",
-        classes: "govuk-!-margin-top-3",
-        items: [{
-          text: "Session templates",
-          href: "/prisons/" + prison.code + "/session-templates",
-          active: true
-        }, {
-          text: "Excluded dates",
-          href: "/prisons/" + prison.code + "/excluded-dates"
-        }, {
-          text: "Category groups",
-          href: "/prisons/" + prison.code + "/category-groups"
-        }, {
-          text: "Incentive level groups",
-          href: "/prisons/" + prison.code + "/incentive-groups"
-        }, {
-          text: "Location groups",
-          href: "/prisons/" + prison.code + "/location-groups"
-        }, {
-          text: "Status",
-          href: "/prisons/" + prison.code + "/status",
-          attributes: { "data-test": "tab-status" }
-        }]
-      }) }}
+      {{ subNavigation(prison.code, "session-templates") }}
 
       <h2 class="govuk-heading-m">Session templates</h2>
 

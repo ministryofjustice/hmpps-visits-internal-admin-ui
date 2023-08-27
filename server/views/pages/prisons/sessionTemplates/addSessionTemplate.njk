@@ -10,18 +10,7 @@
 
 {% set pageHeaderTitle = 'Add session template' %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
-
-{% set primaryNavItems = [
-  {
-    text: "Home",
-    href: "/"
-  },
-  {
-    text: "Prisons",
-    href: "/prisons",
-    active: true
-  }
-] %}
+{% set activePrimaryNav = "prisons" %}
 {% set backLinkHref = "/prisons/" + prison.code + "/session-templates" %}
 
 {% block content %}

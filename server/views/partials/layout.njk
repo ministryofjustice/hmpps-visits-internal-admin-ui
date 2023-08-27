@@ -14,10 +14,22 @@
 
 {% block header %}
   {% include "./header.njk" %}
-  {% if primaryNavItems %}
+
+  {% if activePrimaryNav %}
     {{ mojPrimaryNavigation({
       label: 'Primary navigation',
-      items: primaryNavItems
+      items: [
+      {
+        text: "Home",
+        href: "/",
+        active: activePrimaryNav === "home"
+      },
+      {
+        text: "Prisons",
+        href: "/prisons",
+        active: activePrimaryNav === "prisons"
+      }
+      ]
     }) }}
   {% endif %}
 {% endblock %}

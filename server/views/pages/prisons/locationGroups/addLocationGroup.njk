@@ -6,18 +6,7 @@
 
 {% set pageHeaderTitle = 'Add a location group' %}
 {% set pageTitle = applicationName + " - Location groups - " + pageHeaderTitle %}
-
-{% set primaryNavItems = [
-  {
-    text: "Home",
-    href: "/"
-  },
-  {
-    text: "Prisons",
-    href: "/prisons",
-    active: true
-  }
-] %}
+{% set activePrimaryNav = "prisons" %}
 {% set backLinkHref = "/prisons/" + prison.code + "/location-groups" %}
 
 {% block content %}

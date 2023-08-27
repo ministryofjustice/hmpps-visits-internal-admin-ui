@@ -7,19 +7,7 @@
 
 {% set pageHeaderTitle = incentiveGroup.name %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
-
-{% set primaryNavItems = [
-  {
-    text: "Home",
-    href: "/"
-  },
-  {
-    text: "Prisons",
-    href: "/prisons",
-    active: true
-  }
-  ] %}
-
+{% set activePrimaryNav = "prisons" %}
 {% set backLinkHref = "/prisons/" + prison.code +
   ( "/session-templates/" + sessionTemplateRef if sessionTemplateRef else "/incentive-groups") %}
 
