@@ -16,6 +16,18 @@ export default {
       },
     })
   },
+  stubDeleteIncentiveGroup: (incentiveGroup: IncentiveGroup): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'DELETE',
+        url: `/visitScheduler/admin/incentive-groups/group/${incentiveGroup.reference}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    })
+  },
   stubIncentiveGroups: ({
     prisonCode,
     body = [],

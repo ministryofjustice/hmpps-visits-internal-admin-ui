@@ -17,11 +17,12 @@ context('Incentive groups - single', () => {
     cy.signIn()
 
     cy.task('stubGetPrison', TestData.prisonDto())
-    cy.task('stubIncentiveGroups', { prisonCode: prison.code, body: [incentiveGroup] })
-    cy.task('stubSingleIncentiveGroup', incentiveGroup)
   })
 
   it('should navigate to view a single incentive group from the listing page', () => {
+    cy.task('stubIncentiveGroups', { prisonCode: prison.code, body: [incentiveGroup] })
+    cy.task('stubSingleIncentiveGroup', incentiveGroup)
+
     const viewIncentiveGroupsPage = ViewIncentiveGroupsPage.goTo(prison.code)
     viewIncentiveGroupsPage.getIncentiveGroup(0).click()
 
@@ -35,5 +36,17 @@ context('Incentive groups - single', () => {
     })
   })
 
-  // TODO Add test for delete incentive group
+  it('should delete an incentive group and return to the listing page', () => {
+    cy.task('stubSingleIncentiveGroup', incentiveGroup)
+
+    const viewSingleIncentiveGroupPage = ViewSingleIncentiveGroupPage.goTo(prison.code, incentiveGroup)
+
+    cy.task('stubDeleteIncentiveGroup', incentiveGroup)
+    cy.task('stubIncentiveGroups', { prisonCode: prison.code, body: [] })
+    viewSingleIncentiveGroupPage.delete()
+
+    const viewIncentiveGroupsPage = Page.verifyOnPage(ViewIncentiveGroupsPage)
+    viewIncentiveGroupsPage.successMessage().contains(`Incentive group '${incentiveGroup.name}' has been deleted`)
+    cy.contains('There are no incentive level groups for this prison')
+  })
 })
