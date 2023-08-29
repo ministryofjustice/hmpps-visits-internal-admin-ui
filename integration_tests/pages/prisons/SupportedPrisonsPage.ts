@@ -1,7 +1,6 @@
-import type { PageElement } from '../page'
-import PrisonPage from '../prisonPage'
+import Page, { PageElement } from '../page'
 
-export default class SupportedPrisonsPage extends PrisonPage {
+export default class SupportedPrisonsPage extends Page {
   constructor() {
     super('Supported prisons')
   }

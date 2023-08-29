@@ -6,7 +6,7 @@ import ViewIncentiveGroupsPage from '../../../pages/prisons/incentiveGroups/view
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
 import incentiveLevelNames from '../../../../server/constants/incentiveLevels'
 
-context('Incentive groups', () => {
+context('Incentive groups - list', () => {
   const prison = TestData.prison()
 
   beforeEach(() => {
