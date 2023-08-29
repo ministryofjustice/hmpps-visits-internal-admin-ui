@@ -1,6 +1,6 @@
 import { SuperAgentRequest } from 'superagent'
 import { stubFor } from '../wiremock'
-import { IncentiveGroup, IncentiveLevels } from '../../../server/data/visitSchedulerApiTypes'
+import { IncentiveGroup } from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
   stubSingleIncentiveGroup: (incentiveGroup: IncentiveGroup): SuperAgentRequest => {
