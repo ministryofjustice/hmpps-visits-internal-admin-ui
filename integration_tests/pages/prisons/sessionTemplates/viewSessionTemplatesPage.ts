@@ -1,13 +1,12 @@
-import Page, { PageElement } from '../../page'
+import type { PageElement } from '../../page'
+import PrisonPage from '../../prisonPage'
 
-export default class ViewSessionTemplatesPage extends Page {
+export default class ViewSessionTemplatesPage extends PrisonPage {
   constructor() {
     super('Hewell (HMP)')
   }
 
   goTo = (prisonCode: string) => cy.visit(`/prisons/${prisonCode}/session-templates`)
-
-  statusTab = (): PageElement => cy.get('[data-test=tab-status]')
 
   selectTemplatePrison = (prisonId: string, reference: string): PageElement =>
     cy.get(`a[href="/prisons/${prisonId}/session-templates/${reference}"]`)

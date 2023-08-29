@@ -6,18 +6,7 @@
 
 {% set pageHeaderTitle = "Supported prisons" %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
-
-{% set primaryNavItems = [
-  {
-    text: "Home",
-    href: "/"
-  },
-  {
-    text: "Prisons",
-    href: "/prisons",
-    active: true
-  }
-  ] %}
+{% set activePrimaryNav = "prisons" %}
 
 {% block content %}
 {{ super() }}

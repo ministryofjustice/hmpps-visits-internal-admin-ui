@@ -1,0 +1,39 @@
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+
+{% macro subNavigation(prisonCode, activeTab) %}
+  {{ mojSubNavigation({
+    label: "Sub navigation",
+    classes: "govuk-!-margin-top-3",
+    items: [{
+      text: "Session templates",
+      href: "/prisons/" + prisonCode + "/session-templates",
+      attributes: { "data-test": "tab-session-templates" },
+      active: activeTab === "session-templates"
+    }, {
+      text: "Excluded dates",
+      href: "/prisons/" + prisonCode + "/excluded-dates",
+      attributes: { "data-test": "tab-excluded-dates" },
+      active: activeTab === "excluded-dates"
+    }, {
+      text: "Category groups",
+      href: "/prisons/" + prisonCode + "/category-groups",
+      attributes: { "data-test": "tab-category-groups" },
+      active: activeTab === "category-groups"
+    }, {
+      text: "Incentive level groups",
+      href: "/prisons/" + prisonCode + "/incentive-groups",
+      attributes: { "data-test": "tab-incentive-groups" },
+      active: activeTab === "incentive-groups"
+    }, {
+      text: "Location groups",
+      href: "/prisons/" + prisonCode + "/location-groups",
+      attributes: { "data-test": "tab-location-groups" },
+      active: activeTab === "location-groups"
+    }, {
+      text: "Status",
+      href: "/prisons/" + prisonCode + "/status",
+      attributes: { "data-test": "tab-status" },
+      active: activeTab === "status"
+    }]
+  }) }}
+{% endmacro %}

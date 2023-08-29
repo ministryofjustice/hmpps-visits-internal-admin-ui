@@ -12,8 +12,8 @@ import {
 export default {
   stubGetSessionTemplates: ({
     prisonCode,
-    rangeType,
-    sessionTemplates = [TestData.sessionTemplate()],
+    rangeType = 'CURRENT_OR_FUTURE',
+    sessionTemplates = [],
   }: {
     prisonCode: string
     rangeType: SessionTemplatesRangeType

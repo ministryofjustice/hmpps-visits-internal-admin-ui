@@ -7,19 +7,7 @@
 
 {% set pageHeaderTitle = sessionTemplate.name %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
-
-{% set primaryNavItems = [
-  {
-    text: "Home",
-    href: "/"
-  },
-  {
-    text: "Prisons",
-    href: "/prisons",
-    active: true
-  }
-  ] %}
-
+{% set activePrimaryNav = "prisons" %}
 {% set backLinkHref = "/prisons/" + sessionTemplate.prisonId + "/session-templates" %}
 {% set changeStatusActionText = "activated" if sessionTemplate.active else "deactivated" %}
 

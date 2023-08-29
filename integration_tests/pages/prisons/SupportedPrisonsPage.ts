@@ -1,11 +1,12 @@
-import Page, { PageElement } from '../page'
+import type { PageElement } from '../page'
+import PrisonPage from '../prisonPage'
 
-export default class SupportedPrisonsPage extends Page {
+export default class SupportedPrisonsPage extends PrisonPage {
   constructor() {
     super('Supported prisons')
   }
 
-  selectPrison = (prisonId: string): PageElement => cy.get(`a[href="/prisons/${prisonId}/session-templates"]`)
+  getPrisonByCode = (prisonId: string): PageElement => cy.get(`a[href="/prisons/${prisonId}/session-templates"]`)
 
   enterPrisonCode = (prisonId: string): PageElement => cy.get('.govuk-input').type(prisonId)
 
