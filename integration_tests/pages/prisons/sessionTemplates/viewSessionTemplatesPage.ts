@@ -1,7 +1,6 @@
-import type { PageElement } from '../../page'
-import PrisonPage from '../../prisonPage'
+import Page, { PageElement } from '../../page'
 
-export default class ViewSessionTemplatesPage extends PrisonPage {
+export default class ViewSessionTemplatesPage extends Page {
   constructor() {
     super('Hewell (HMP)')
   }

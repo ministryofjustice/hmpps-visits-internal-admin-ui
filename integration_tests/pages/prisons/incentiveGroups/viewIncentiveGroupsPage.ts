@@ -1,14 +1,17 @@
 import type { PageElement } from '../../page'
-import PrisonPage from '../../prisonPage'
+import Page from '../../page'
 
-export default class ViewIncentiveGroupsPage extends PrisonPage {
+export default class ViewIncentiveGroupsPage extends Page {
   constructor() {
     super('Hewell (HMP)')
   }
 
-  goTo = (prisonCode: string) => cy.visit(`/prisons/${prisonCode}/incentive-groups`)
+  static goTo(prisonCode: string): ViewIncentiveGroupsPage {
+    cy.visit(`/prisons/${prisonCode}/incentive-groups`)
+    return Page.verifyOnPage(ViewIncentiveGroupsPage)
+  }
 
-  getIncentiveGroup = (index: number): PageElement => cy.get('[data-test="incentive-group-name"]').eq(index)
+  getIncentiveGroup = (index: number): PageElement => cy.get('[data-test="incentive-group-name"] a').eq(index)
 
   getIncentiveGroupLevels = (index: number): PageElement => cy.get('[data-test="incentive-group-levels"]').eq(index)
 }

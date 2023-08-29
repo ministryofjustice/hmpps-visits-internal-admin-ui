@@ -3,6 +3,19 @@ import { stubFor } from '../wiremock'
 import { IncentiveGroup } from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
+  stubSingleIncentiveGroup: (incentiveGroup: IncentiveGroup): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/visitScheduler/admin/incentive-groups/group/${incentiveGroup.reference}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: incentiveGroup,
+      },
+    })
+  },
   stubIncentiveGroups: ({
     prisonCode,
     body = [],
