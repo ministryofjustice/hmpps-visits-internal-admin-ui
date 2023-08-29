@@ -14,4 +14,6 @@ export default class ViewIncentiveGroupsPage extends Page {
   getIncentiveGroup = (index: number): PageElement => cy.get('[data-test="incentive-group-name"] a').eq(index)
 
   getIncentiveGroupLevels = (index: number): PageElement => cy.get('[data-test="incentive-group-levels"]').eq(index)
+
+  addIncentiveGroupButton = (): PageElement => cy.get('[data-test="add-incentive-group"]')
 }
