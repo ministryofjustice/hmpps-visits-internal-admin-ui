@@ -16,9 +16,5 @@ export default class ViewSessionTemplatePage extends PrisonPage {
   // delete session template button
   getDeleteSessionTemplateButton = (): PageElement => cy.get('[data-test=session-template-delete-button]')
 
-  successMessage = (): PageElement => cy.get('.moj-banner__message')
-
-  errorSummary = (): PageElement => cy.get('.govuk-error-summary')
-
   statusTab = (): PageElement => cy.get('.moj-sub-navigation__item').last()
 }

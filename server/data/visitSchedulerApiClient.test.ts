@@ -445,7 +445,7 @@ describe('visitSchedulerApiClient', () => {
 
   describe('getSingleIncentiveGroup', () => {
     it('should return an incentive level group', async () => {
-      const getSingleIncentiveGroup = TestData.incentiveLevelGroup()
+      const getSingleIncentiveGroup = TestData.incentiveGroup()
 
       fakeVisitSchedulerApi
         .get(`/admin/incentive-groups/group/${getSingleIncentiveGroup.reference}`)
@@ -461,7 +461,7 @@ describe('visitSchedulerApiClient', () => {
   describe('getIncentiveGroups', () => {
     it('should return all incentive level groups for a prison', async () => {
       const prisonCode = 'HEI'
-      const incentiveGroups = [TestData.incentiveLevelGroup()]
+      const incentiveGroups = [TestData.incentiveGroup()]
 
       fakeVisitSchedulerApi
         .get(`/admin/incentive-groups/${prisonCode}`)
@@ -477,7 +477,7 @@ describe('visitSchedulerApiClient', () => {
   describe('createIncentiveGroup', () => {
     it('should add a new incentive group', async () => {
       const createIncentiveGroupDto = TestData.createIncentiveGroupDto()
-      const singleIncentiveGroup = TestData.incentiveLevelGroup()
+      const singleIncentiveGroup = TestData.incentiveGroup()
 
       fakeVisitSchedulerApi
         .post('/admin/incentive-groups/group', <CreateIncentiveGroupDto>{
@@ -496,7 +496,7 @@ describe('visitSchedulerApiClient', () => {
 
   describe('deleteIncentiveGroup', () => {
     it('should delete an incentive group', async () => {
-      const incentiveGroup = TestData.incentiveLevelGroup()
+      const incentiveGroup = TestData.incentiveGroup()
 
       fakeVisitSchedulerApi
         .delete(`/admin/incentive-groups/group/${incentiveGroup.reference}`)

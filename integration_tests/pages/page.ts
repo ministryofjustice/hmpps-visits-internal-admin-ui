@@ -27,6 +27,10 @@ export default abstract class Page {
 
   manageDetails = (): PageElement => cy.get('[data-qa=manageDetails]')
 
+  successMessage = (): PageElement => cy.get('.moj-banner__message')
+
+  errorSummary = (): PageElement => cy.get('.govuk-error-summary')
+
   getByClass = (classValue: string): PageElement => cy.get(`.${classValue}]`)
 
   getById = (id: string): PageElement => cy.get(`#${id}`)

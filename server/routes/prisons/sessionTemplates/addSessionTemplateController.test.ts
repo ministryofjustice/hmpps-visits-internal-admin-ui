@@ -11,7 +11,7 @@ import {
 } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import { FlashErrorMessage } from '../../../@types/visits-admin'
-import { IncentiveLevelGroup, CategoryGroup, LocationGroup } from '../../../data/visitSchedulerApiTypes'
+import { IncentiveGroup, CategoryGroup, LocationGroup } from '../../../data/visitSchedulerApiTypes'
 
 let app: Express
 let flashData: Record<string, string | FlashErrorMessage | Record<string, string>[]>
@@ -167,7 +167,7 @@ describe('Add a session template', () => {
       sessionTemplate.prisonerIncentiveLevelGroups = [
         { reference: incentiveLevelGroupReferences[0] },
         { reference: incentiveLevelGroupReferences[1] },
-      ] as IncentiveLevelGroup[]
+      ] as IncentiveGroup[]
 
       sessionTemplate.prisonerCategoryGroups = [
         { reference: categoryGroupReferences[0] },

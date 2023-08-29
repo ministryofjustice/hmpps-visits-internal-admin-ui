@@ -1,15 +1,14 @@
 import { SuperAgentRequest } from 'superagent'
 import { stubFor } from '../wiremock'
-import TestData from '../../../server/routes/testutils/testData'
-import { IncentiveLevelGroup } from '../../../server/data/visitSchedulerApiTypes'
+import { IncentiveGroup } from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
   stubIncentiveGroups: ({
     prisonCode,
-    body = [TestData.incentiveLevelGroup()],
+    body = [],
   }: {
     prisonCode: string
-    body: Array<IncentiveLevelGroup>
+    body: Array<IncentiveGroup>
   }): SuperAgentRequest => {
     return stubFor({
       request: {

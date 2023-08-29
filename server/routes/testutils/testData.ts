@@ -6,7 +6,7 @@ import {
   SessionTemplate,
   CreateSessionTemplateDto,
   LocationGroup,
-  IncentiveLevelGroup,
+  IncentiveGroup,
   CreateLocationGroupDto,
   CreateIncentiveGroupDto,
   CreateCategoryGroupDto,
@@ -61,7 +61,7 @@ export default class TestData {
     permittedLocationGroups = Array<LocationGroup>(),
     prisonId = 'HEI',
     prisonerCategoryGroups = Array<CategoryGroup>(),
-    prisonerIncentiveLevelGroups = Array<IncentiveLevelGroup>(),
+    prisonerIncentiveLevelGroups = Array<IncentiveGroup>(),
     reference = '-afe.dcc.0f',
     sessionCapacity = {
       closed: 2,
@@ -179,11 +179,11 @@ export default class TestData {
     categories = ['A_EXCEPTIONAL', 'A_HIGH', 'A_PROVISIONAL', 'A_STANDARD'],
   }: Partial<CategoryGroup> = {}): CategoryGroup => ({ name, reference, categories })
 
-  static incentiveLevelGroup = ({
+  static incentiveGroup = ({
     name = 'Enhanced prisoners',
     reference = '-afe~dcb~fc',
     incentiveLevels = ['ENHANCED'],
-  }: Partial<IncentiveLevelGroup> = {}): IncentiveLevelGroup => ({ name, reference, incentiveLevels })
+  }: Partial<IncentiveGroup> = {}): IncentiveGroup => ({ name, reference, incentiveLevels })
 
   static createIncentiveGroupDto = ({
     name = 'Enhanced prisoners',

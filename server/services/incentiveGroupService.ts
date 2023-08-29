@@ -1,6 +1,6 @@
 import logger from '../../logger'
 import { RestClientBuilder, VisitSchedulerApiClient, HmppsAuthClient } from '../data'
-import { CreateIncentiveGroupDto, IncentiveLevelGroup } from '../data/visitSchedulerApiTypes'
+import { CreateIncentiveGroupDto, IncentiveGroup } from '../data/visitSchedulerApiTypes'
 
 export default class IncentiveGroupService {
   constructor(
@@ -8,14 +8,14 @@ export default class IncentiveGroupService {
     private readonly hmppsAuthClient: HmppsAuthClient,
   ) {}
 
-  async getSingleIncentiveGroup(username: string, reference: string): Promise<IncentiveLevelGroup> {
+  async getSingleIncentiveGroup(username: string, reference: string): Promise<IncentiveGroup> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     return visitSchedulerApiClient.getSingleIncentiveGroup(reference)
   }
 
-  async getIncentiveGroups(username: string, prisonCode: string): Promise<IncentiveLevelGroup[]> {
+  async getIncentiveGroups(username: string, prisonCode: string): Promise<IncentiveGroup[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
@@ -25,7 +25,7 @@ export default class IncentiveGroupService {
   async createIncentiveGroup(
     username: string,
     createIncentiveGrupDto: CreateIncentiveGroupDto,
-  ): Promise<IncentiveLevelGroup> {
+  ): Promise<IncentiveGroup> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
