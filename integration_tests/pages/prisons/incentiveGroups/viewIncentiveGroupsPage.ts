@@ -6,6 +6,11 @@ export default class ViewIncentiveGroupsPage extends Page {
     super('Hewell (HMP)')
   }
 
+  checkOnPage(): void {
+    super.checkOnPage()
+    this.getIncentiveGroupsTab().should('have.attr', 'aria-current', 'page')
+  }
+
   static goTo(prisonCode: string): ViewIncentiveGroupsPage {
     cy.visit(`/prisons/${prisonCode}/incentive-groups`)
     return Page.verifyOnPage(ViewIncentiveGroupsPage)

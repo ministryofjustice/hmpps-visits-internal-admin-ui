@@ -6,6 +6,11 @@ export default class ViewLocationGroupsPage extends Page {
     super('Hewell (HMP)')
   }
 
+  checkOnPage(): void {
+    super.checkOnPage()
+    this.getLocationGroupsTab().should('have.attr', 'aria-current', 'page')
+  }
+
   static goTo(prisonCode: string): ViewLocationGroupsPage {
     cy.visit(`/prisons/${prisonCode}/location-groups`)
     return Page.verifyOnPage(ViewLocationGroupsPage)

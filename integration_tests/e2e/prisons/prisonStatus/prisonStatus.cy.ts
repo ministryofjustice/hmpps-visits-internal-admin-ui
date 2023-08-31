@@ -34,7 +34,7 @@ context('Supported prisons', () => {
     supportedPrisonsPage.getPrisonByCode(prisonCode).click()
     const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
-    viewSessionTemplatePage.selectStatusTab()
+    viewSessionTemplatePage.getStatusTab().click()
     const prisonStatusPage = Page.verifyOnPage(PrisonStatusPage)
 
     prisonStatusPage.prisonStatusLabel().contains('inactive')
@@ -61,7 +61,7 @@ context('Supported prisons', () => {
     supportedPrisonsPage.getPrisonByCode(prisonCode).click()
     const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
-    viewSessionTemplatePage.selectStatusTab()
+    viewSessionTemplatePage.getStatusTab().click()
     const prisonStatusPage = Page.verifyOnPage(PrisonStatusPage)
 
     prisonStatusPage.prisonStatusLabel().contains('active')
