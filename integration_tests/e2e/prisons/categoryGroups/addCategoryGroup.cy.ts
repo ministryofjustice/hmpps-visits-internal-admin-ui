@@ -3,6 +3,7 @@ import Page from '../../../pages/page'
 import ViewCategoryGroupsPage from '../../../pages/prisons/categoryGroups/viewCategoryGroupsPage'
 import ViewSingleCategoryGroupPage from '../../../pages/prisons/categoryGroups/viewSingleCategoryGroupPage'
 import AddCategoryGroupPage from '../../../pages/prisons/categoryGroups/addCategoryGroupPage'
+import categoryList from '../../../../server/constants/prisonerCategories'
 
 context('Category groups - add', () => {
   const prison = TestData.prison()
@@ -43,6 +44,8 @@ context('Category groups - add', () => {
     )
     viewSingleCategoryGroupPage.successMessage().contains(`Category group '${categoryGroup.name}' has been created`)
     viewSingleCategoryGroupPage.getGroupReference().contains(categoryGroup.reference)
-    viewSingleCategoryGroupPage.getLevel(0).contains('Category A - High Risk')
+    categoryGroup.categories.forEach((level, index) => {
+      viewSingleCategoryGroupPage.getLevel(index).contains(categoryList[level])
+    })
   })
 })

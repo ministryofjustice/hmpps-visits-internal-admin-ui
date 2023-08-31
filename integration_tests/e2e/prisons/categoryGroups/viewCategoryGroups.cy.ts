@@ -4,6 +4,7 @@ import Page from '../../../pages/page'
 import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisonsPage'
 import ViewCategoryGroupsPage from '../../../pages/prisons/categoryGroups/viewCategoryGroupsPage'
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
+import categoryList from '../../../../server/constants/prisonerCategories'
 
 context('Category groups - list', () => {
   const prison = TestData.prison()
@@ -39,9 +40,8 @@ context('Category groups - list', () => {
     // Check listed category group
     const viewCategoryGroupsPage = Page.verifyOnPage(ViewCategoryGroupsPage)
     viewCategoryGroupsPage.getCategoryGroup(0).contains(categoryGroup.name)
-    viewCategoryGroupsPage.getCategoryGroupLevels(0).contains('Category A - Exceptional Risk')
-    viewCategoryGroupsPage.getCategoryGroupLevels(0).contains('Category A - High Risk')
-    viewCategoryGroupsPage.getCategoryGroupLevels(0).contains('Category A - Provisional')
-    viewCategoryGroupsPage.getCategoryGroupLevels(0).contains('Category A - Standard Risk')
+    categoryGroup.categories.forEach((level, index) => {
+      viewCategoryGroupsPage.getCategoryGroupLevels(index).contains(categoryList[level])
+    })
   })
 })

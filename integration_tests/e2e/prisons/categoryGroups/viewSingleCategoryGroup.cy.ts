@@ -2,6 +2,7 @@ import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
 import ViewCategoryGroupsPage from '../../../pages/prisons/categoryGroups/viewCategoryGroupsPage'
 import ViewSingleCategoryGroupPage from '../../../pages/prisons/categoryGroups/viewSingleCategoryGroupPage'
+import categoryList from '../../../../server/constants/prisonerCategories'
 
 context('Category groups - single', () => {
   const prison = TestData.prison()
@@ -32,10 +33,9 @@ context('Category groups - single', () => {
       `${prison.name} ${categoryGroup.name}`,
     )
     viewSingleCategoryGroupPage.getGroupReference().contains(categoryGroup.reference)
-    viewSingleCategoryGroupPage.getLevel(0).contains('Category A - Exceptional Risk')
-    viewSingleCategoryGroupPage.getLevel(1).contains('Category A - High Risk')
-    viewSingleCategoryGroupPage.getLevel(2).contains('Category A - Provisional')
-    viewSingleCategoryGroupPage.getLevel(3).contains('Category A - Standard Risk')
+    categoryGroup.categories.forEach((level, index) => {
+      viewSingleCategoryGroupPage.getLevel(index).contains(categoryList[level])
+    })
   })
 
   it('should delete a category group and return to the listing page', () => {
