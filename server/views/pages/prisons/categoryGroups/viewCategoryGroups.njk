@@ -41,7 +41,9 @@
         },
         items: [{
           text: 'Add category group',
-          href: "/prisons/" + prison.code + "/category-groups/add"
+          href: "/prisons/" + prison.code + "/category-groups/add",
+          attributes: { "data-test": "add-category-group" }
+
         }]
       }) }}
 
@@ -50,10 +52,14 @@
       {% for categoryGroup in categoryGroups %}
         {% set rows = (rows.push([
         {
-          html: '<a href="/prisons/' + prison.code + '/category-groups/' + categoryGroup.reference + '">' + categoryGroup.name + "</a>"
+          html: '<a href="/prisons/' + prison.code + '/category-groups/' + categoryGroup.reference + '">' + categoryGroup.name + "</a>",
+          attributes: { "data-test": "category-group-name" }
+
         },
         {
-          html: '<ul class="govuk-list govuk-list--bullet"><li>' + (categoryGroup.categories | join('</li><li>')) + '</li></ul>'
+          html: '<ul class="govuk-list govuk-list--bullet"><li>' + (categoryGroup.categories | join('</li><li>')) + '</li></ul>',
+          attributes: { "data-test": "category-group-levels" }
+
         }
         ]), rows) %}
       {% endfor %}
