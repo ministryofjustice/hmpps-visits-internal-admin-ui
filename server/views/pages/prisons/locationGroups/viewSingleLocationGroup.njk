@@ -22,26 +22,30 @@
         {{ pageHeaderTitle }}
       </h1>
 
-      <h2 class="govuk-heading-m">{{ locationGroup.reference }}</h2>
+      <h2 class="govuk-heading-m" data-test="reference">{{ locationGroup.reference }}</h2>
   
       {% set locationRows = [] %}
       {% for location in locationGroup.locations %}
         {% set locationRows = (locationRows.push([
           {
             text: location.levelOneCode,
-            classes: 'govuk-!-text-align-centre'
+            classes: 'govuk-!-text-align-centre',
+            attributes: { "data-test": "levelOneCode-" + loop.index }
           },
           {
             text: location.levelTwoCode if location.levelTwoCode.length else '-',
-            classes: 'govuk-!-text-align-centre'
+            classes: 'govuk-!-text-align-centre',
+            attributes: { "data-test": "levelTwoCode-" + loop.index }
           },
           {
             text: location.levelThreeCode if location.levelThreeCode.length else '-',
-            classes: 'govuk-!-text-align-centre'
+            classes: 'govuk-!-text-align-centre',
+            attributes: { "data-test": "levelThreeCode-" + loop.index }
           },
           {
             text: location.levelFourCode if location.levelFourCode.length else '-',
-            classes: 'govuk-!-text-align-centre'
+            classes: 'govuk-!-text-align-centre',
+            attributes: { "data-test": "levelFourCode-" + loop.index }
           }
         ]), locationRows) %}
       {% endfor %}
@@ -80,7 +84,7 @@
           classes: "govuk-button--warning",
           preventDoubleClick: true,
           disabled: (locationGroup.active),
-          attributes: { "data-test": "session-template-delete-button" }
+          attributes: { "data-test": "location-group-delete-button" }
         })}}
 
       </form>
