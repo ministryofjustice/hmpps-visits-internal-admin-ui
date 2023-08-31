@@ -136,7 +136,8 @@
 
           {{ govukButton({
             text: "Add another location",
-            classes: "govuk-button--secondary moj-add-another__add-button"
+            classes: "govuk-button--secondary moj-add-another__add-button",
+            attributes: { "data-test": "add-location-level" }
           }) }}
 
           {{ govukButton({

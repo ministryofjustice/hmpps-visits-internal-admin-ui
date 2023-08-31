@@ -41,7 +41,8 @@
         },
         items: [{
           text: 'Add location group',
-          href: "/prisons/" + prison.code + "/location-groups/add"
+          href: "/prisons/" + prison.code + "/location-groups/add",
+          attributes: { "data-test": "add-location-group" }
         }]
       }) }}
 
@@ -50,10 +51,12 @@
       {% for locationGroup in locationGroups %}
         {% set rows = (rows.push([
         {
-          html: '<a href="/prisons/' + prison.code + '/location-groups/' + locationGroup.reference + '">' + locationGroup.name + "</a>"
+          html: '<a href="/prisons/' + prison.code + '/location-groups/' + locationGroup.reference + '">' + locationGroup.name + "</a>",
+          attributes: { "data-test": "location-group-name" }
         },
         {
-          text: locationGroup.locations | length
+          text: locationGroup.locations | length,
+          attributes: { "data-test": "location-group-count" }
         }
         ]), rows) %}
       {% endfor %}

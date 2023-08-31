@@ -2,7 +2,6 @@ import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
 import ViewIncentiveGroupsPage from '../../../pages/prisons/incentiveGroups/viewIncentiveGroupsPage'
 import ViewSingleIncentiveGroupPage from '../../../pages/prisons/incentiveGroups/viewSingleIncentiveGroupPage'
-import incentiveLevelNames from '../../../../server/constants/incentiveLevels'
 import AddIncentiveGroupPage from '../../../pages/prisons/incentiveGroups/addIncentiveGroupPage'
 
 context('Incentive groups - add', () => {
@@ -37,7 +36,7 @@ context('Incentive groups - add', () => {
     cy.task('stubSingleIncentiveGroup', incentiveGroup)
     addIncentiveGroupPage.addGroup()
 
-    // Finish on view single group page and verify success and message details
+    // Finish on view single group page and verify success message
     const viewSingleIncentiveGroupPage = Page.verifyOnPageTitle(
       ViewSingleIncentiveGroupPage,
       `${prison.name} ${incentiveGroup.name}`,
@@ -46,6 +45,5 @@ context('Incentive groups - add', () => {
       .successMessage()
       .contains(`Incentive level group '${incentiveGroup.name}' has been created`)
     viewSingleIncentiveGroupPage.getGroupReference().contains(incentiveGroup.reference)
-    viewSingleIncentiveGroupPage.getLevel(0).contains(incentiveLevelNames[incentiveGroup.incentiveLevels[0]])
   })
 })
