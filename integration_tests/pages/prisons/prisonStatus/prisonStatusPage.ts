@@ -5,6 +5,11 @@ export default class prisonStatusPage extends Page {
     super('Hewell (HMP)')
   }
 
+  checkOnPage(): void {
+    super.checkOnPage()
+    this.getStatusTab().should('have.attr', 'aria-current', 'page')
+  }
+
   prisonStatusLabel = (): PageElement => cy.get('[data-test=prison-status]')
 
   // switch status Activate <-> Deactivate
