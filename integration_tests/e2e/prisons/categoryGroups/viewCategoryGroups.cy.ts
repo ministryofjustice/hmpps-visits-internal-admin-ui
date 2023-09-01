@@ -35,9 +35,9 @@ context('Category groups - list', () => {
     // Go to category groups page
     const categoryGroup = TestData.categoryGroup()
     cy.task('stubCategoryGroups', { prisonCode: prison.code, body: [categoryGroup] })
-    viewSessionTemplatesPage.selectCategoryGroupsTab()
+    viewSessionTemplatesPage.getCategoryGroupsTab().click()
 
-    // Check listed category group
+    // Check listed category groups
     const viewCategoryGroupsPage = Page.verifyOnPage(ViewCategoryGroupsPage)
     viewCategoryGroupsPage.getCategoryGroup(0).contains(categoryGroup.name)
     categoryGroup.categories.forEach((level, index) => {

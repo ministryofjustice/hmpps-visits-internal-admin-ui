@@ -19,7 +19,7 @@ context('Category groups - single', () => {
     cy.task('stubGetPrison', TestData.prisonDto())
   })
 
-  it('should navigate to view a single incentive group from the listing page', () => {
+  it('should navigate to view a single category group from the listing page', () => {
     cy.task('stubCategoryGroups', { prisonCode: prison.code, body: [categoryGroup] })
     cy.task('stubSingleCategoryGroup', categoryGroup)
 

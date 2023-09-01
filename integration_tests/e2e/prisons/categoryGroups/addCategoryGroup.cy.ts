@@ -24,8 +24,8 @@ context('Category groups - add', () => {
     cy.task('stubCategoryGroups', { prisonCode: prison.code, body: [] })
 
     // Category group listing page - click 'Add'
-    const viewcategoryGroupsPage = ViewCategoryGroupsPage.goTo(prison.code)
-    viewcategoryGroupsPage.addCategoryGroupButton().click()
+    const viewCategoryGroupsPage = ViewCategoryGroupsPage.goTo(prison.code)
+    viewCategoryGroupsPage.addCategoryGroupButton().click()
 
     // Enter details for new group on add page
     const addCategoryGroupPage = Page.verifyOnPageTitle(AddCategoryGroupPage, prison.name)
