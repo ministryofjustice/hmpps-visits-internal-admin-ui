@@ -40,15 +40,15 @@ export default abstract class Page {
   getByName = (name: string): PageElement => cy.get(`[name=${name}]`)
 
   // Sub-navigation sections
-  selectSessionTemplatesTab = (): PageElement => cy.get('[data-test="tab-session-templates"]').click()
+  getSessionTemplatesTab = (): PageElement => cy.get('[data-test="tab-session-templates"]')
 
-  selectExcludedDatesTab = (): PageElement => cy.get('[data-test="tab-excluded-dates"]').click()
+  getExcludedDatesTab = (): PageElement => cy.get('[data-test="tab-excluded-dates"]')
 
-  selectCategoryGroupsTab = (): PageElement => cy.get('[data-test="tab-category-groups"]').click()
+  getCategoryGroupsTab = (): PageElement => cy.get('[data-test="tab-category-groups"]')
 
-  selectIncentiveGroupsTab = (): PageElement => cy.get('[data-test="tab-incentive-groups"]').click()
+  getIncentiveGroupsTab = (): PageElement => cy.get('[data-test="tab-incentive-groups"]')
 
-  selectLocationGroupsTab = (): PageElement => cy.get('[data-test="tab-location-groups"]').click()
+  getLocationGroupsTab = (): PageElement => cy.get('[data-test="tab-location-groups"]')
 
-  selectStatusTab = (): PageElement => cy.get('[data-test="tab-status"]').click()
+  getStatusTab = (): PageElement => cy.get('[data-test="tab-status"]')
 }

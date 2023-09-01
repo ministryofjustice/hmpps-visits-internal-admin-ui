@@ -78,4 +78,51 @@ export default {
       },
     })
   },
+  stubAddExcludeDate: ({
+    excludeDate,
+    prisonDto,
+  }: {
+    excludeDate: string
+    prisonDto: PrisonDto
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/visitScheduler/admin/prisons/prison/${prisonDto.code}/exclude-date/add`,
+        bodyPatterns: [
+          {
+            equalToJson: { excludeDate },
+          },
+        ],
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: { ...prisonDto, excludeDates: [...prisonDto.excludeDates, excludeDate] },
+      },
+    })
+  },
+  stubRemoveExcludeDate: ({
+    prisonCode,
+    excludeDate,
+  }: {
+    prisonCode: string
+    excludeDate: string
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/visitScheduler/admin/prisons/prison/${prisonCode}/exclude-date/remove`,
+        bodyPatterns: [
+          {
+            equalToJson: { excludeDate },
+          },
+        ],
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    })
+  },
 }

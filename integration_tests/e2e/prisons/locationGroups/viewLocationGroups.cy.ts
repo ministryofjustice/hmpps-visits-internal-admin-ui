@@ -37,7 +37,7 @@ context('Location groups - list', () => {
       locations: [{ levelOneCode: 'A' }, { levelOneCode: 'B' }],
     })
     cy.task('stubLocationGroups', { prisonCode: prison.code, body: [locationGroup] })
-    viewSessionTemplatesPage.selectLocationGroupsTab()
+    viewSessionTemplatesPage.getLocationGroupsTab().click()
 
     // Check listed location group
     const viewLocationGroupsPage = Page.verifyOnPage(ViewLocationGroupsPage)

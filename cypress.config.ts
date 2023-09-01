@@ -8,6 +8,7 @@ import incentiveGroups from './integration_tests/mockApis/visitScheduler/incenti
 import locationGroups from './integration_tests/mockApis/visitScheduler/locationGroups'
 import prisons from './integration_tests/mockApis/visitScheduler/prisons'
 import sessionTemplates from './integration_tests/mockApis/visitScheduler/sessionTemplates'
+import visits from './integration_tests/mockApis/visitScheduler/visits'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -39,6 +40,7 @@ export default defineConfig({
         ...locationGroups,
         ...prisons,
         ...sessionTemplates,
+        ...visits,
       })
     },
     baseUrl: 'http://localhost:3007',
