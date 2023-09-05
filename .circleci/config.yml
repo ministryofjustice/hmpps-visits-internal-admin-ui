@@ -24,7 +24,7 @@ parameters:
 
   node-version:
     type: string
-    default: 18.15-browsers
+    default: 18.17-browsers
 
 jobs:
   build:
@@ -58,7 +58,7 @@ jobs:
             - node_modules
             - build
             - dist
-            - .cache/Cypress
+            - assets/stylesheets
 
   unit_test:
     executor:
