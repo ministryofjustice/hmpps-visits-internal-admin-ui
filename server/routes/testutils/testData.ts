@@ -197,8 +197,16 @@ export default class TestData {
 
   static visitStats = ({
     minimumCapacity = { open: 3, closed: 1 },
-    visitCount = 4,
-    visitsByDate = [{ visitCount: 4, visitDate: '2023-01-08' }],
+    visitCount = 8,
+    visitsByDate = [
+      {
+        visitCounts: {
+          open: 4,
+          closed: 4,
+        },
+        visitDate: '2023-01-08',
+      },
+    ],
   }: Partial<SessionTemplateVisitStatsDto> = {}): SessionTemplateVisitStatsDto => ({
     minimumCapacity,
     visitCount,
