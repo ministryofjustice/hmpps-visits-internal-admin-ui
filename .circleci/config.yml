@@ -10,7 +10,7 @@ feature_branch: &feature_branch
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@7.2.1
+  hmpps: ministryofjustice/hmpps@7
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -152,7 +152,6 @@ workflows:
             - hmpps-common-vars
           requires:
             - request-dev-preview-approval
-          helm_timeout: 5m
       - request-staging-preview-approval:
           <<: *feature_branch
           type: approval
@@ -168,7 +167,6 @@ workflows:
             - hmpps-visits-internal-admin-ui-stage
           requires:
             - request-staging-preview-approval
-          helm_timeout: 5m
 
       - hmpps/deploy_env:
           <<: *main_branch
@@ -182,7 +180,6 @@ workflows:
             - unit_test
             - integration_test
             - build_docker
-          helm_timeout: 5m
       - request-staging-approval:
           <<: *main_branch
           type: approval
@@ -198,7 +195,6 @@ workflows:
             - hmpps-visits-internal-admin-ui-stage
           requires:
             - request-staging-approval
-          helm_timeout: 5m
       - request-preprod-approval:
           type: approval
           requires:
@@ -213,7 +209,6 @@ workflows:
             - hmpps-visits-internal-admin-ui-preprod
           requires:
             - request-preprod-approval
-          helm_timeout: 5m
       - request-prod-approval:
           type: approval
           requires:
@@ -230,7 +225,6 @@ workflows:
             - hmpps-visits-internal-admin-ui-prod
           requires:
             - request-prod-approval
-          helm_timeout: 5m
 
 
   security:
