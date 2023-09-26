@@ -66,10 +66,10 @@ describe('Update a session template', () => {
         expect($('h1').text().trim()).toContain('Update session template')
 
         expect($('[data-test="total-booked-test"]').text().trim()).toBe(
-          'This visit session template currently has 4 future visits booked',
+          'This visit session template currently has 8 future visits booked',
         )
         expect($('.moj-banner').text().trim()).toContain(
-          'For the date: 8 January 2023, there is currently 4 visits booked',
+          'For the date: 8 January 2023, there is currently 4 open visits and 4 closed visits booked',
         )
 
         expect($(`form[action=${url}][method="POST"]`).length).toBe(1)

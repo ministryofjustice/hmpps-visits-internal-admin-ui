@@ -54,7 +54,7 @@
       {% set infoBannerHtml %}
       <p data-test="total-booked-test">This visit session template currently has {{ visitStats.visitCount }} future {{ 'visits' if visitStats.visitCount >= 2 else 'visit' }} booked</p>
       {% for stats in visitStats.visitsByDate %}
-        <p>For the date: {{ stats.visitDate | formatDate }}, there is currently {{ stats.visitCount }} {{ 'visits' if stats.visitCount >= 2 else 'visit' }} booked</p>
+        <p>For the date: {{ stats.visitDate | formatDate }}, there is currently {{ stats.visitCounts.open }} open {{ 'visits' if stats.visitCounts.open >= 2 else 'visit' }} and {{ stats.visitCounts.closed }} closed {{ 'visits' if stats.visitCounts.closed >= 2 else 'visit' }} booked</p>
       {% endfor %}
       {% endset %}
 

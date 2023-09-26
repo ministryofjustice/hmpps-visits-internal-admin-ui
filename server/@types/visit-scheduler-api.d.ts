@@ -153,12 +153,26 @@ export interface paths {
      */
     get: operations['getSessionTemplates']
   }
+  '/admin/session-templates/move/': {
+    /**
+     * Move visits from 1 session template to another.
+     * @description Move visits from 1 session template to another if the new session template has same details as the current one.
+     */
+    post: operations['moveVisits']
+  }
   '/admin/session-templates/template': {
     /**
      * Create a session template
      * @description Create a session templates
      */
     post: operations['createSessionTemplate']
+  }
+  '/admin/session-templates/template/matching/': {
+    /**
+     * Get matching session templates
+     * @description Get matching session templates
+     */
+    post: operations['getMatchingSessionTemplatesOnCreate']
   }
   '/admin/session-templates/template/{reference}': {
     /**
@@ -190,6 +204,13 @@ export interface paths {
      * @description Deactivate session template using given session template reference
      */
     put: operations['deActivateSessionTemplate']
+  }
+  '/admin/session-templates/template/{reference}/matching/': {
+    /**
+     * Get matching session templates
+     * @description Get matching session templates
+     */
+    post: operations['getMatchingSessionTemplatesOnUpdate']
   }
   '/admin/session-templates/template/{reference}/stats': {
     /**
@@ -252,6 +273,30 @@ export interface paths {
      * @description Retrieve all available support types
      */
     get: operations['getSupportTypes']
+  }
+  '/visits/notification/non-association/changed': {
+    /** To notify VSiP that non association between two prisoners has changed */
+    post: operations['notifyVSiPThatNonAssociationHasChanged']
+  }
+  '/visits/notification/person/restriction/changed': {
+    /** To notify VSiP that a change to person/visitor restriction has taken place */
+    post: operations['notifyVSiPThatPersonRestrictionChanged']
+  }
+  '/visits/notification/prisoner/received': {
+    /** To notify VSiP that a prisoner has been received */
+    post: operations['notifyVSiPThatPrisonerReceivedChanged']
+  }
+  '/visits/notification/prisoner/released': {
+    /** To notify VSiP that a prisoner has been released */
+    post: operations['notifyVSiPThatPrisonerReleasedChanged']
+  }
+  '/visits/notification/prisoner/restriction/changed': {
+    /** To notify VSiP that a change to prisoner restriction has taken place */
+    post: operations['notifyVSiPThatPrisonerRestrictionChanged']
+  }
+  '/visits/notification/visitor/restriction/changed': {
+    /** To notify VSiP that a change to a visitor restriction has taken place */
+    post: operations['notifyVSiPThatVisitorRestrictionChanged']
   }
   '/visits/search': {
     /**
@@ -627,6 +672,32 @@ export interface components {
       actionedBy: string
       cancelOutcome: components['schemas']['OutcomeDto']
     }
+    MoveVisitsDto: {
+      /**
+       * Format: date
+       * @description Date from which booked / reserved visits need to be moved .
+       * @example 2023-09-01
+       */
+      fromDate: string
+      /**
+       * @description Session template reference for session template from which booked / reserved visits need to be moved.
+       * @example v9d.7ed.7u
+       */
+      fromSessionTemplateReference: string
+      /**
+       * @description Session template reference for session template to which booked / reserved visits need to be moved.
+       * @example v9d.7ed.5e
+       */
+      toSessionTemplateReference: string
+    }
+    NonAssociationChangedNotificationDto: {
+      nonAssociationPrisonerNumber: string
+      prisonerNumber: string
+      /** Format: date */
+      validFromDate: string
+      /** Format: date */
+      validToDate?: string
+    }
     /** @description Visit Outcome */
     OutcomeDto: {
       /**
@@ -712,6 +783,14 @@ export interface components {
        */
       levelTwoCode?: string
     }
+    PersonRestrictionChangeNotificationDto: {
+      prisonerNumber: string
+      /** Format: date */
+      validFromDate: string
+      /** Format: date */
+      validToDate?: string
+      visitorId: string
+    }
     /** @description Prison dto */
     PrisonDto: {
       /**
@@ -734,6 +813,21 @@ export interface components {
        * @description exclude date
        */
       excludeDate: string
+    }
+    PrisonerReceivedNotificationDto: {
+      prisonCode: string
+      prisonerNumber: string
+    }
+    PrisonerReleasedNotificationDto: {
+      prisonCode: string
+      prisonerNumber: string
+    }
+    PrisonerRestrictionChangeNotificationDto: {
+      prisonerNumber: string
+      /** Format: date */
+      validFromDate: string
+      /** Format: date */
+      validToDate?: string
     }
     PurgeQueueResult: {
       /** Format: int32 */
@@ -905,6 +999,12 @@ export interface components {
       sessionTemplateReference: string
       sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
+       * @description visit type
+       * @example Social
+       * @enum {string}
+       */
+      visitType: 'SOCIAL'
+      /**
        * Format: int32
        * @description number of weeks until the weekly day is repeated
        * @example 1
@@ -922,7 +1022,7 @@ export interface components {
        * @example MONDAY
        * @enum {string}
        */
-      dayOfWeek?: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
+      dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
       /**
        * @description name
        * @example Monday Session
@@ -967,12 +1067,7 @@ export interface components {
     }
     /** @description count of visits by date */
     SessionTemplateVisitCountsDto: {
-      /**
-       * Format: int32
-       * @description Count of booked or reserved visits for a date
-       * @example 10
-       */
-      visitCount: number
+      visitCounts: components['schemas']['SessionCapacityDto']
       /**
        * Format: date
        * @description Date when the visits are booked or reserved
@@ -1286,6 +1381,13 @@ export interface components {
        * @example true
        */
       visitContact?: boolean
+    }
+    VisitorRestrictionChangeNotificationDto: {
+      personVisitorId: string
+      /** Format: date */
+      validFromDate: string
+      /** Format: date */
+      validToDate?: string
     }
     /** @description Visitor support */
     VisitorSupportDto: {
@@ -2213,6 +2315,49 @@ export interface operations {
       }
     }
   }
+  moveVisits: {
+    /**
+     * Move visits from 1 session template to another.
+     * @description Move visits from 1 session template to another if the new session template has same details as the current one.
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['MoveVisitsDto']
+      }
+    }
+    responses: {
+      /** @description Number of visits migrated on successful switching of session template. */
+      200: {
+        content: {
+          'application/json': number
+        }
+      }
+      /** @description Invalid session reference passed. */
+      400: {
+        content: {
+          'application/json': number
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get matching session templates */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unable to move visits to session template for reasons detailed */
+      404: {
+        content: {
+          'application/json': components['schemas']['ValidationErrorResponse']
+        }
+      }
+    }
+  }
   createSessionTemplate: {
     /**
      * Create a session template
@@ -2238,6 +2383,43 @@ export interface operations {
       }
       /** @description Incorrect permissions to create session templates */
       403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getMatchingSessionTemplatesOnCreate: {
+    /**
+     * Get matching session templates
+     * @description Get matching session templates
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateSessionTemplateDto']
+      }
+    }
+    responses: {
+      /** @description List of clashing session templates or empty list if no matches found */
+      200: {
+        content: {
+          'application/json': string[]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get matching session templates */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Invalid request */
+      404: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
@@ -2459,6 +2641,52 @@ export interface operations {
         }
       }
       /** @description session template can't be found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getMatchingSessionTemplatesOnUpdate: {
+    /**
+     * Get matching session templates
+     * @description Get matching session templates
+     */
+    parameters: {
+      /**
+       * @description reference
+       * @example v9-d7-ed-7u
+       */
+      path: {
+        reference: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateSessionTemplateDto']
+      }
+    }
+    responses: {
+      /** @description List of clashing session templates or empty list if no matches found */
+      200: {
+        content: {
+          'application/json': string[]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get matching session templates */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Invalid request */
       404: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
@@ -2845,6 +3073,624 @@ export interface operations {
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPThatNonAssociationHasChanged: {
+    /** To notify VSiP that non association between two prisoners has changed */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['NonAssociationChangedNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '103 CHECKPOINT'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '302 MOVED_TEMPORARILY'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '305 USE_PROXY'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '413 REQUEST_ENTITY_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '414 REQUEST_URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+            | '420 METHOD_FAILURE'
+            | '421 DESTINATION_LOCKED'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of change */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPThatPersonRestrictionChanged: {
+    /** To notify VSiP that a change to person/visitor restriction has taken place */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PersonRestrictionChangeNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '103 CHECKPOINT'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '302 MOVED_TEMPORARILY'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '305 USE_PROXY'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '413 REQUEST_ENTITY_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '414 REQUEST_URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+            | '420 METHOD_FAILURE'
+            | '421 DESTINATION_LOCKED'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of change */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPThatPrisonerReceivedChanged: {
+    /** To notify VSiP that a prisoner has been received */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerReceivedNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '103 CHECKPOINT'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '302 MOVED_TEMPORARILY'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '305 USE_PROXY'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '413 REQUEST_ENTITY_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '414 REQUEST_URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+            | '420 METHOD_FAILURE'
+            | '421 DESTINATION_LOCKED'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of change */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPThatPrisonerReleasedChanged: {
+    /** To notify VSiP that a prisoner has been released */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerReleasedNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '103 CHECKPOINT'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '302 MOVED_TEMPORARILY'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '305 USE_PROXY'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '413 REQUEST_ENTITY_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '414 REQUEST_URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+            | '420 METHOD_FAILURE'
+            | '421 DESTINATION_LOCKED'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of change */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPThatPrisonerRestrictionChanged: {
+    /** To notify VSiP that a change to prisoner restriction has taken place */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerRestrictionChangeNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '103 CHECKPOINT'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '302 MOVED_TEMPORARILY'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '305 USE_PROXY'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '413 REQUEST_ENTITY_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '414 REQUEST_URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+            | '420 METHOD_FAILURE'
+            | '421 DESTINATION_LOCKED'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of change */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPThatVisitorRestrictionChanged: {
+    /** To notify VSiP that a change to a visitor restriction has taken place */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['VisitorRestrictionChangeNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '103 CHECKPOINT'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '302 MOVED_TEMPORARILY'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '305 USE_PROXY'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '413 REQUEST_ENTITY_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '414 REQUEST_URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+            | '420 METHOD_FAILURE'
+            | '421 DESTINATION_LOCKED'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of change */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
+      403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
