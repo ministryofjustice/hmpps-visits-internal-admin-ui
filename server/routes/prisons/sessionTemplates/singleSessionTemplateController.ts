@@ -27,7 +27,6 @@ export default class SingleSessionTemplateController {
         requestVisitStatsDto,
         reference,
       )
-      console.log(visitStats)
 
       return res.render('pages/prisons/sessionTemplates/viewSingleSessionTemplate', {
         errors: req.flash('errors'),
