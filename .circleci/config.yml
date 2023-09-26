@@ -10,7 +10,7 @@ feature_branch: &feature_branch
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@7.2.1
+  hmpps: ministryofjustice/hmpps@7
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -93,8 +93,11 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Get wiremock # match version in docker-compose-test.yml
-          command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-jre8-standalone/2.35.0/wiremock-jre8-standalone-2.35.0.jar
+          name: Get wiremock (latest version)
+          command: |
+            LATEST_WIREMOCK_VERSION=$(curl --silent https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/maven-metadata.xml | sed -n 's/[[:space:]]*<latest>\(.*\)<\/latest>/\1/p')
+            echo "Wiremock latest version is: $LATEST_WIREMOCK_VERSION"
+            curl -o wiremock.jar "https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/$LATEST_WIREMOCK_VERSION/wiremock-standalone-$LATEST_WIREMOCK_VERSION.jar"
       - run:
           name: Run wiremock
           command: java -jar wiremock.jar --port 9091
@@ -152,7 +155,6 @@ workflows:
             - hmpps-common-vars
           requires:
             - request-dev-preview-approval
-          helm_timeout: 5m
       - request-staging-preview-approval:
           <<: *feature_branch
           type: approval
@@ -168,7 +170,6 @@ workflows:
             - hmpps-visits-internal-admin-ui-stage
           requires:
             - request-staging-preview-approval
-          helm_timeout: 5m
 
       - hmpps/deploy_env:
           <<: *main_branch
@@ -182,7 +183,6 @@ workflows:
             - unit_test
             - integration_test
             - build_docker
-          helm_timeout: 5m
       - request-staging-approval:
           <<: *main_branch
           type: approval
@@ -198,7 +198,6 @@ workflows:
             - hmpps-visits-internal-admin-ui-stage
           requires:
             - request-staging-approval
-          helm_timeout: 5m
       - request-preprod-approval:
           type: approval
           requires:
@@ -213,7 +212,6 @@ workflows:
             - hmpps-visits-internal-admin-ui-preprod
           requires:
             - request-preprod-approval
-          helm_timeout: 5m
       - request-prod-approval:
           type: approval
           requires:
@@ -230,7 +228,6 @@ workflows:
             - hmpps-visits-internal-admin-ui-prod
           requires:
             - request-prod-approval
-          helm_timeout: 5m
 
 
   security:
