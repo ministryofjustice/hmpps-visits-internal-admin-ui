@@ -29,7 +29,7 @@ context('Category groups - list', () => {
     // select Hewell
     cy.task('stubGetPrison', TestData.prisonDto())
     cy.task('stubGetSessionTemplates', { prisonCode: prison.code })
-    supportedPrisonsPage.getPrisonByCode(prison.code).click()
+    supportedPrisonsPage.getPrisonNameByCode(prison.code).click()
     const viewSessionTemplatesPage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
     // Go to category groups page
