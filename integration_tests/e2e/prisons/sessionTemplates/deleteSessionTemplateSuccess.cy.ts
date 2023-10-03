@@ -1,6 +1,6 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
-import ViewSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatePage'
+import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSingleSessionTemplatePage'
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
 import { SessionTemplatesRangeType } from '../../../../server/data/visitSchedulerApiTypes'
 
@@ -40,7 +40,7 @@ context('Delete a session template success', () => {
     })
 
     // Given
-    const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
+    const viewSessionTemplatePage = Page.createPage(ViewSingleSessionTemplatePage)
     viewSessionTemplatePage.goTo(prisonCode, sessionTemplate.reference)
 
     // When

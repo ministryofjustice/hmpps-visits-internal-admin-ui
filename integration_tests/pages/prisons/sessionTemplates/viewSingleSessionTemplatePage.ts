@@ -1,6 +1,6 @@
 import Page, { PageElement } from '../../page'
 
-export default class ViewSessionTemplatePage extends Page {
+export default class ViewSingleSessionTemplatePage extends Page {
   constructor() {
     super('Hewell (HMP)')
   }

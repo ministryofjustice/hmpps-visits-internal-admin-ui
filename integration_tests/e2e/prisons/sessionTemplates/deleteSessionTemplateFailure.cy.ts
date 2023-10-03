@@ -1,6 +1,6 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
-import ViewSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatePage'
+import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSingleSessionTemplatePage'
 import { SessionTemplatesRangeType } from '../../../../server/data/visitSchedulerApiTypes'
 
 context('Delete a session template failure', () => {
@@ -39,14 +39,14 @@ context('Delete a session template failure', () => {
     })
 
     // Given
-    const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
+    const viewSessionTemplatePage = Page.createPage(ViewSingleSessionTemplatePage)
     viewSessionTemplatePage.goTo(prisonCode, sessionTemplate.reference)
 
     // When
     viewSessionTemplatePage.getDeleteSessionTemplateButton().click()
 
     // Then
-    const viewSessionTemplatePageFailure = Page.verifyOnPage(ViewSessionTemplatePage)
+    const viewSessionTemplatePageFailure = Page.verifyOnPage(ViewSingleSessionTemplatePage)
     viewSessionTemplatePageFailure
       .errorSummary()
       .contains(`Failed to delete session template with reference - ${sessionTemplate.reference}`)
