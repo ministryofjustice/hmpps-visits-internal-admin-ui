@@ -63,7 +63,7 @@ context('Add session template', () => {
     viewSessionTemplatesPage.goTo(prisonCode)
 
     // When
-    viewSessionTemplatesPage.getAddSessionTemplateLink().click()
+    viewSessionTemplatesPage.getAddSessionTemplateButton().click()
 
     // Then
     Page.verifyOnPage(AddSessionTemplatePage)
