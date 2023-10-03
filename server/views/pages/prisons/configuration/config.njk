@@ -1,0 +1,115 @@
+{% extends "partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "components/subNavigation.njk" import subNavigation %}
+
+{% set pageHeaderTitle = prison.name %}
+{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+{% set activePrimaryNav = "prisons" %}
+
+{% set changeStatusAction = "deactivate" if prison.active else "activate" %}
+
+{% block content %}
+  {{ super() }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <h1 class="govuk-heading-l">
+        <span>{{ pageHeaderTitle }}</span>
+      </h1>
+
+      <p>This prison is currently
+        {{ govukTag({
+          text: "active" if prison.active else "inactive",
+          classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
+          attributes: { "data-test": "prison-status" }
+        }) }}
+      </p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {{ subNavigation(prison.code, "config") }}
+
+      {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+      <div class="govuk-!-width-two-thirds">
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: "Social visits email"
+              },
+              value: {
+                html: "<span data-test='prison-config-email'>" + information.email + "</span>"
+              },
+              actions: {
+                items: [
+                  {
+                    href: "/prisons/" + prison.code + "/configuration/edit/email",
+                    text: "Change" if information.email else "Add",
+                    visuallyHiddenText: "social visits email"
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Social visits telephone"
+              },
+              value: {
+                html: "<span data-test='prison-config-phone'>" + information.phone + "</span>",
+                attributes: { "data-test": "prison-config-phone" }
+              },
+              actions: {
+                items: [
+                  {
+                    href: "/prisons/" + prison.code + "/configuration/edit/phone",
+                    text: "Change" if information.phone else "Add",
+                    visuallyHiddenText: "social visits telephone"
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Prison web address"
+              },
+              value: {
+                html: "<a href='" + information.website + "' data-test='prison-config-website'>" + information.website + "</a>",
+                attributes: { "data-test": "prison-config-website" }
+              },
+              actions: {
+                items: [
+                  {
+                    href: "/prisons/" + prison.code + "/configuration/edit/website",
+                    text: "Change" if information.website else "Add",
+                    visuallyHiddenText: "prison web address"
+                  }
+                ]
+              }
+            }
+          ]
+        }) }}
+      </div>
+
+      <h2 class="govuk-heading-m">Change prison status</h2>
+
+      <form action="/prisons/{{ prison.code }}/{{ changeStatusAction }}" data-test="prison-change-status-form" method="POST" novalidate>
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukButton({
+          text: changeStatusAction | capitalize,
+          classes: "govuk-button--warning" if prison.active,
+          preventDoubleClick: true,
+          attributes: { "data-test": "prison-change-status" }
+        })}}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}
+

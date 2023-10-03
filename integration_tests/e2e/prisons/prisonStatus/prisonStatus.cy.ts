@@ -3,7 +3,7 @@ import HomePage from '../../../pages/home'
 import Page from '../../../pages/page'
 import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisonsPage'
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
-import PrisonStatusPage from '../../../pages/prisons/prisonStatus/prisonStatusPage'
+import PrisonConfigPage from '../../../pages/prisons/configuration/prisonConfigPage'
 import { SessionTemplatesRangeType } from '../../../../server/data/visitSchedulerApiTypes'
 
 context('Supported prisons', () => {
@@ -19,7 +19,7 @@ context('Supported prisons', () => {
     cy.signIn()
   })
 
-  it('should activate a prison', () => {
+  it('should activate a prison - display config information including not present if empty string', () => {
     const homePage = Page.verifyOnPage(HomePage)
     const inactivePrison = TestData.prisonDto({ active: false })
     const activePrison = TestData.prisonDto({ active: true })
@@ -34,16 +34,19 @@ context('Supported prisons', () => {
     supportedPrisonsPage.getPrisonByCode(prisonCode).click()
     const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
-    viewSessionTemplatePage.getStatusTab().click()
-    const prisonStatusPage = Page.verifyOnPage(PrisonStatusPage)
+    viewSessionTemplatePage.getConfigTab().click()
+    const prisonConfigPage = Page.verifyOnPage(PrisonConfigPage)
 
-    prisonStatusPage.prisonStatusLabel().contains('inactive')
+    prisonConfigPage.prisonStatusLabel().contains('inactive')
 
     cy.task('stubActivatePrison', prisonCode)
     cy.task('stubGetPrison', activePrison)
-    prisonStatusPage.switchStatus().submit()
-    prisonStatusPage.successMessage().contains('Hewell (HMP) has been activated')
-    prisonStatusPage.prisonStatusLabel().contains('active')
+    prisonConfigPage.switchStatus().submit()
+    prisonConfigPage.successMessage().contains('Hewell (HMP) has been activated')
+    prisonConfigPage.prisonStatusLabel().contains('active')
+    prisonConfigPage.prisonEmail().contains('HMPPS-prison-visits@hewell.gov.uk')
+    prisonConfigPage.prisonPhone().contains('Not set')
+    prisonConfigPage.prisonWebsite().contains('https://www.gov.uk/guidance/hewell-prison')
   })
 
   it('should deactivate a prison', () => {
@@ -61,15 +64,15 @@ context('Supported prisons', () => {
     supportedPrisonsPage.getPrisonByCode(prisonCode).click()
     const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
-    viewSessionTemplatePage.getStatusTab().click()
-    const prisonStatusPage = Page.verifyOnPage(PrisonStatusPage)
+    viewSessionTemplatePage.getConfigTab().click()
+    const prisonConfigPage = Page.verifyOnPage(PrisonConfigPage)
 
-    prisonStatusPage.prisonStatusLabel().contains('active')
+    prisonConfigPage.prisonStatusLabel().contains('active')
 
     cy.task('stubDeactivatePrison', prisonCode)
     cy.task('stubGetPrison', inactivePrison)
-    prisonStatusPage.switchStatus().submit()
-    prisonStatusPage.successMessage().contains('Hewell (HMP) has been deactivated')
-    prisonStatusPage.prisonStatusLabel().contains('inactive')
+    prisonConfigPage.switchStatus().submit()
+    prisonConfigPage.successMessage().contains('Hewell (HMP) has been deactivated')
+    prisonConfigPage.prisonStatusLabel().contains('inactive')
   })
 })

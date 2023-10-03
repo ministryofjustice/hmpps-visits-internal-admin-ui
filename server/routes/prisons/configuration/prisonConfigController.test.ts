@@ -16,6 +16,8 @@ const sessionTemplateService = createMockSessionTemplateService()
 const allPrisons = TestData.prisons()
 const activePrison = TestData.prison()
 const inactivePrison = TestData.prison({ active: false })
+const prisonConfig = TestData.prisonConfig()
+const prisonConfigUnset = TestData.prisonConfig({ email: '', phone: '', website: '' })
 
 beforeEach(() => {
   flashData = {}
@@ -23,6 +25,7 @@ beforeEach(() => {
 
   prisonService.getAllPrisons.mockResolvedValue(allPrisons)
   prisonService.getPrison.mockResolvedValue(activePrison)
+  prisonService.getPrisonConfig.mockResolvedValue(prisonConfig)
 
   app = appWithAllRoutes({ services: { prisonService, sessionTemplateService } })
 })
@@ -32,11 +35,11 @@ afterEach(() => {
 })
 
 describe('Prison status page', () => {
-  describe('GET /prisons/{:prisonId}/status', () => {
+  describe('GET /prisons/{:prisonId}/configuration', () => {
     describe('Prison status', () => {
       it('should display prison status information and offer correct action (active prison)', () => {
         return request(app)
-          .get('/prisons/HEI/status')
+          .get('/prisons/HEI/configuration')
           .expect('Content-Type', /html/)
           .expect(res => {
             const $ = cheerio.load(res.text)
@@ -52,13 +55,22 @@ describe('Prison status page', () => {
             expect($('[data-test="prison-status"]').text().trim()).toBe('active')
 
             expect($('.moj-sub-navigation__item').length).toBe(6)
-            expect($('.moj-sub-navigation__link[aria-current]').text()).toBe('Status')
-            expect($('.moj-sub-navigation__link[aria-current]').attr('href')).toBe('/prisons/HEI/status')
+            expect($('.moj-sub-navigation__link[aria-current]').text()).toBe('Configuration')
+            expect($('.moj-sub-navigation__link[aria-current]').attr('href')).toBe('/prisons/HEI/configuration')
 
             expect($('h2').text().trim()).toContain('Change prison status')
 
             expect($('[data-test="prison-change-status-form"]').attr('action').trim()).toBe('/prisons/HEI/deactivate')
             expect($('[data-test="prison-change-status"]').text().trim()).toBe('Deactivate')
+
+            expect($('[data-test="prison-config-email"]').text().trim()).toBe('hmpps-prison-visits@hewell.gov.uk')
+            expect($('[data-test="prison-config-phone"]').text().trim()).toBe('01477 885994')
+            expect($('[data-test="prison-config-website"]').text().trim()).toBe(
+              'https://www.gov.uk/guidance/hewell-prison',
+            )
+            expect($('[data-test="prison-config-website"]').attr('href')).toBe(
+              `https://www.gov.uk/guidance/hewell-prison`,
+            )
           })
       })
 
@@ -66,7 +78,7 @@ describe('Prison status page', () => {
         prisonService.getPrison.mockResolvedValue(inactivePrison)
 
         return request(app)
-          .get('/prisons/HEI/status')
+          .get('/prisons/HEI/configuration')
           .expect('Content-Type', /html/)
           .expect(res => {
             const $ = cheerio.load(res.text)
@@ -85,7 +97,7 @@ describe('Prison status page', () => {
         }
 
         return request(app)
-          .get('/prisons/HEI/status')
+          .get('/prisons/HEI/configuration')
           .expect('Content-Type', /html/)
           .expect(res => {
             const $ = cheerio.load(res.text)
@@ -99,12 +111,27 @@ describe('Prison status page', () => {
         flashData = { errors: [error] }
 
         return request(app)
-          .get('/prisons/HEI/status')
+          .get('/prisons/HEI/configuration')
           .expect('Content-Type', /html/)
           .expect(res => {
             const $ = cheerio.load(res.text)
             expect($('h1').text().trim()).toBe(activePrison.name)
             expect($('.govuk-error-summary').text()).toContain(error.msg)
+          })
+      })
+
+      it('should display "Not Set" when no configuratin information is present', () => {
+        prisonService.getPrisonConfig.mockResolvedValue(prisonConfigUnset)
+
+        return request(app)
+          .get('/prisons/HEI/configuration')
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+
+            expect($('[data-test="prison-config-email"]').text().trim()).toBe('Not set')
+            expect($('[data-test="prison-config-phone"]').text().trim()).toBe('Not set')
+            expect($('[data-test="prison-config-website"]').text().trim()).toBe('Not set')
           })
       })
     })
@@ -118,7 +145,7 @@ describe('Prison status page', () => {
       return request(app)
         .post('/prisons/HEI/activate')
         .expect(302)
-        .expect('location', `/prisons/HEI/status`)
+        .expect('location', `/prisons/HEI/configuration`)
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledWith('message', 'Hewell (HMP) has been activated')
           expect(prisonService.getPrisonName).toHaveBeenCalledTimes(1)
@@ -136,7 +163,7 @@ describe('Prison status page', () => {
       return request(app)
         .post('/prisons/HEI/activate')
         .expect(302)
-        .expect('location', `/prisons/HEI/status`)
+        .expect('location', `/prisons/HEI/configuration`)
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledWith('errors', [error])
           expect(prisonService.activatePrison).toHaveBeenCalledTimes(1)
@@ -153,7 +180,7 @@ describe('Prison status page', () => {
       return request(app)
         .post('/prisons/HEI/deactivate')
         .expect(302)
-        .expect('location', `/prisons/HEI/status`)
+        .expect('location', `/prisons/HEI/configuration`)
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledWith('message', 'Hewell (HMP) has been deactivated')
           expect(prisonService.getPrisonName).toHaveBeenCalledTimes(1)
@@ -171,7 +198,7 @@ describe('Prison status page', () => {
       return request(app)
         .post('/prisons/HEI/deactivate')
         .expect(302)
-        .expect('location', `/prisons/HEI/status`)
+        .expect('location', `/prisons/HEI/configuration`)
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledWith('errors', [error])
           expect(prisonService.deactivatePrison).toHaveBeenCalledTimes(1)

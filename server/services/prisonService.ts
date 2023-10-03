@@ -2,7 +2,7 @@ import { NotFound } from 'http-errors'
 import { HmppsAuthClient, PrisonRegisterApiClient, RestClientBuilder, VisitSchedulerApiClient } from '../data'
 import { PrisonDto } from '../data/visitSchedulerApiTypes'
 import logger from '../../logger'
-import { Prison } from '../@types/visits-admin'
+import { Prison, PrisonConfig } from '../@types/visits-admin'
 
 const A_DAY_IN_MS = 24 * 60 * 60 * 1000
 
@@ -104,6 +104,17 @@ export default class PrisonService {
     await this.refreshAllPrisons(username)
 
     return this.allPrisonRegisterPrisons
+  }
+
+  // will need to add prisonId
+  async getPrisonConfig(username: string): Promise<PrisonConfig> {
+    await this.refreshAllPrisons(username)
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const prisonRegisterApiClient = this.prisonRegisterApiClientFactory(token)
+
+    const prisonConfig = await prisonRegisterApiClient.getPrisonConfig()
+
+    return prisonConfig
   }
 
   private async refreshAllPrisons(username: string): Promise<void> {
