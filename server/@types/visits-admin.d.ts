@@ -7,7 +7,7 @@ export interface Prison extends PrisonDto {
   name: string
 }
 
-export type PrisonConfig = {
+export type PrisonContactDetails = {
   email?: string
   phone?: string
   website?: string

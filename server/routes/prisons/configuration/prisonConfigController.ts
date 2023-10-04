@@ -11,16 +11,8 @@ export default class PrisonConfigController {
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
       // will need to add prisonId
-      const information = await this.prisonService.getPrisonConfig(res.locals.user.username)
-      if (information.email === '') {
-        information.email = 'Not set'
-      }
-      if (information.phone === '') {
-        information.phone = 'Not set'
-      }
-      if (information.website === '') {
-        information.website = 'Not set'
-      }
+      const information = await this.prisonService.getPrisonContactDetails(res.locals.user.username)
+
       return res.render('pages/prisons/configuration/config', {
         errors: req.flash('errors'),
         prison,
@@ -35,18 +27,9 @@ export default class PrisonConfigController {
       const { prisonId, field } = req.params
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
       // will need to add prisonId
-      const information = await this.prisonService.getPrisonConfig(res.locals.user.username)
-
-      let value = ''
-      if (field === 'email') {
-        value = information.email
-      } else if (field === 'phone') {
-        value = information.phone
-      } else if (field === 'website') {
-        value = information.website
-      } else {
-        res.redirect('/prisons/:prisonId/configuration/')
-      }
+      const information = await this.prisonService.getPrisonContactDetails(res.locals.user.username)
+      // field will be one of these values - regexp used in the index route
+      const value = information[field as 'phone' | 'email' | 'website']
 
       return res.render('pages/prisons/configuration/edit', {
         errors: req.flash('errors'),

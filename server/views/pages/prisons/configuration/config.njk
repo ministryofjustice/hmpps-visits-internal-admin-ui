@@ -36,6 +36,15 @@
 
       {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
       <div class="govuk-!-width-two-thirds">
+
+        {% set prisonWebsiteHtml %}
+          {% if (information.website) %}
+            <a href="{{ information.website }}" target="_blank" data-test="prison-config-website">{{ information.website }}</a>
+          {% else %}
+            <span data-test="prison-config-website">Not set</span>
+          {% endif  %}
+        {% endset %}
+
         {{ govukSummaryList({
           rows: [
             {
@@ -43,7 +52,7 @@
                 text: "Social visits email"
               },
               value: {
-                html: "<span data-test='prison-config-email'>" + information.email + "</span>"
+                html: "<span data-test='prison-config-email'>" + (information.email if information.email else 'Not set') + "</span>"
               },
               actions: {
                 items: [
@@ -60,8 +69,7 @@
                 text: "Social visits telephone"
               },
               value: {
-                html: "<span data-test='prison-config-phone'>" + information.phone + "</span>",
-                attributes: { "data-test": "prison-config-phone" }
+                html: "<span data-test='prison-config-phone'>" + (information.phone if information.phone else 'Not set') + "</span>"
               },
               actions: {
                 items: [
@@ -78,8 +86,7 @@
                 text: "Prison web address"
               },
               value: {
-                html: "<a href='" + information.website + "' data-test='prison-config-website'>" + information.website + "</a>",
-                attributes: { "data-test": "prison-config-website" }
+                html: prisonWebsiteHtml
               },
               actions: {
                 items: [
@@ -112,4 +119,3 @@
     </div>
   </div>
 {% endblock %}
-

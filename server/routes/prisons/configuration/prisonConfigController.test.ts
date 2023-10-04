@@ -16,8 +16,8 @@ const sessionTemplateService = createMockSessionTemplateService()
 const allPrisons = TestData.prisons()
 const activePrison = TestData.prison()
 const inactivePrison = TestData.prison({ active: false })
-const prisonConfig = TestData.prisonConfig()
-const prisonConfigUnset = TestData.prisonConfig({ email: '', phone: '', website: '' })
+const prisonContactDetails = TestData.prisonContactDetails()
+const prisonContactDetailsUnset = TestData.prisonContactDetails({ email: '', phone: '', website: '' })
 
 beforeEach(() => {
   flashData = {}
@@ -25,7 +25,7 @@ beforeEach(() => {
 
   prisonService.getAllPrisons.mockResolvedValue(allPrisons)
   prisonService.getPrison.mockResolvedValue(activePrison)
-  prisonService.getPrisonConfig.mockResolvedValue(prisonConfig)
+  prisonService.getPrisonContactDetails.mockResolvedValue(prisonContactDetails)
 
   app = appWithAllRoutes({ services: { prisonService, sessionTemplateService } })
 })
@@ -121,7 +121,7 @@ describe('Prison status page', () => {
       })
 
       it('should display "Not Set" when no configuratin information is present', () => {
-        prisonService.getPrisonConfig.mockResolvedValue(prisonConfigUnset)
+        prisonService.getPrisonContactDetails.mockResolvedValue(prisonContactDetailsUnset)
 
         return request(app)
           .get('/prisons/HEI/configuration')

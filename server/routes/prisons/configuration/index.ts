@@ -11,8 +11,8 @@ export default function routes(services: Services): Router {
 
   const prisonConfig = new PrisonConfigController(services.prisonService)
 
-  get('/prisons/:prisonId/configuration/edit/:field', prisonConfig.edit())
-  get('/prisons/:prisonId/configuration', prisonConfig.view())
+  get('/prisons/:prisonId([A-Z]{3})/configuration/edit/:field(email|phone|website)', prisonConfig.edit())
+  get('/prisons/:prisonId([A-Z]{3})/configuration', prisonConfig.view())
   post('/prisons/:prisonId([A-Z]{3})/activate', prisonConfig.activate())
   post('/prisons/:prisonId([A-Z]{3})/deactivate', prisonConfig.deactivate())
 

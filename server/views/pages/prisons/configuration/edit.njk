@@ -16,7 +16,7 @@
 
 {% set pageTitle = applicationName + " - Configuration page - " + pageHeaderTitle %}
 {% set activePrimaryNav = "prisons" %}
-{% set backLinkHref = "/prisons/" + prison.code + "/location-groups" %}
+{% set backLinkHref = "/prisons/" + prison.code + "/configuration" %}
 
 {% block content %}
   {{ super() }}
@@ -31,7 +31,6 @@
 
       <form action="/prisons/{{prison.code}}/configuration/edit/{{field}}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-
 
         {{ govukInput({
           label: {
@@ -55,7 +54,5 @@
 
     </div>
   </div>
-
-
 
 {% endblock %}

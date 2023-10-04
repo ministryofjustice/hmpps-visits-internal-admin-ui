@@ -1,7 +1,7 @@
 import RestClient from './restClient'
 import config from '../config'
 import { PrisonRegisterPrison } from './prisonRegisterApiTypes'
-import { PrisonConfig } from '../@types/visits-admin'
+import { PrisonContactDetails } from '../@types/visits-admin'
 
 export default class PrisonRegisterApiClient {
   private restClient: RestClient
@@ -15,7 +15,7 @@ export default class PrisonRegisterApiClient {
   }
 
   // will need to add prisonId
-  async getPrisonConfig(): Promise<PrisonConfig> {
+  async getPrisonContactDetails(): Promise<PrisonContactDetails> {
     const information = {
       email: 'HMPPS-prison-visits@hewell.gov.uk',
       phone: '',
