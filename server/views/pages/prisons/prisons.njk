@@ -33,9 +33,9 @@
         {
           html: govukTag({
             text: "Active" if prison.active == true else "Inactive",
-            classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
-            attributes: { "data-test": "prison-status" }
-          })
+            classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey"
+          }),
+          attributes: { "data-test": "prison-status" }
         }
         ]), prisonRows) %}
     {%- endfor %}

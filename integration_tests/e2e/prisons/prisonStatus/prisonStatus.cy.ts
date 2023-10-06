@@ -31,7 +31,7 @@ context('Supported prisons', () => {
     cy.task('stubGetPrison', inactivePrison)
     cy.task('stubGetSessionTemplates', { prisonCode, rangeType })
 
-    supportedPrisonsPage.getPrisonByCode(prisonCode).click()
+    supportedPrisonsPage.getPrisonNameByCode(prisonCode).click()
     const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
     viewSessionTemplatePage.getStatusTab().click()
@@ -58,7 +58,7 @@ context('Supported prisons', () => {
     cy.task('stubGetPrison', activePrison)
     cy.task('stubGetSessionTemplates', { prisonCode, rangeType })
 
-    supportedPrisonsPage.getPrisonByCode(prisonCode).click()
+    supportedPrisonsPage.getPrisonNameByCode(prisonCode).click()
     const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
     viewSessionTemplatePage.getStatusTab().click()

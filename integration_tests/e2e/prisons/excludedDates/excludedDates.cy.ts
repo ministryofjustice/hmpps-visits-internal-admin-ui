@@ -30,7 +30,7 @@ context('Excluded dates', () => {
     // select Hewell
     cy.task('stubGetPrison', prisonDto)
     cy.task('stubGetSessionTemplates', { prisonCode: prisonDto.code })
-    supportedPrisonsPage.getPrisonByCode(prisonDto.code).click()
+    supportedPrisonsPage.getPrisonNameByCode(prisonDto.code).click()
     const viewSessionTemplatesPage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
     // Go to excluded dates page

@@ -2,7 +2,7 @@ import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
 import AddSessionTemplatePage from '../../../pages/prisons/sessionTemplates/addSessionTemplatePage'
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
-import ViewSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatePage'
+import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSingleSessionTemplatePage'
 import { SessionTemplatesRangeType } from '../../../../server/data/visitSchedulerApiTypes'
 
 context('Add session template', () => {
@@ -63,7 +63,7 @@ context('Add session template', () => {
     viewSessionTemplatesPage.goTo(prisonCode)
 
     // When
-    viewSessionTemplatesPage.getAddSessionTemplateLink().click()
+    viewSessionTemplatesPage.getAddSessionTemplateButton().click()
 
     // Then
     Page.verifyOnPage(AddSessionTemplatePage)
@@ -174,7 +174,7 @@ context('Add session template', () => {
     const addSessionTemplatePage = Page.createPage(AddSessionTemplatePage)
     addSessionTemplatePage.goTo(prisonCode)
 
-    const viewSessionTemplatePage = Page.createPage(ViewSessionTemplatePage)
+    const viewSessionTemplatePage = Page.createPage(ViewSingleSessionTemplatePage)
 
     // insert data info form
     addSessionTemplatePage.getNameInput().type(createSessionTemplate.name)
