@@ -3,7 +3,7 @@ import { stubFor } from '../wiremock'
 import { IncentiveGroup } from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
-  stubSingleIncentiveGroup: (incentiveGroup: IncentiveGroup): SuperAgentRequest => {
+  stubGetSingleIncentiveGroup: (incentiveGroup: IncentiveGroup): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
@@ -56,12 +56,12 @@ export default {
       },
     })
   },
-  stubIncentiveGroups: ({
+  stubGetIncentiveGroups: ({
     prisonCode,
     body = [],
   }: {
     prisonCode: string
-    body: Array<IncentiveGroup>
+    body: IncentiveGroup[]
   }): SuperAgentRequest => {
     return stubFor({
       request: {

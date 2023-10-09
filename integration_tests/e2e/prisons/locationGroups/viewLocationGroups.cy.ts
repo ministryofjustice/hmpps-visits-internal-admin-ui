@@ -36,7 +36,7 @@ context('Location groups - list', () => {
       name: 'Wings A & B',
       locations: [{ levelOneCode: 'A' }, { levelOneCode: 'B' }],
     })
-    cy.task('stubLocationGroups', { prisonCode: prison.code, body: [locationGroup] })
+    cy.task('stubGetLocationGroups', { prisonCode: prison.code, body: [locationGroup] })
     viewSessionTemplatesPage.getLocationGroupsTab().click()
 
     // Check listed location group

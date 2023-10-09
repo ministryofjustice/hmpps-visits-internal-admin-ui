@@ -34,7 +34,7 @@ context('Incentive groups - list', () => {
 
     // Go to incentive level groups page
     const incentiveGroup = TestData.incentiveGroup({ incentiveLevels: ['ENHANCED', 'ENHANCED_2'] })
-    cy.task('stubIncentiveGroups', { prisonCode: prison.code, body: [incentiveGroup] })
+    cy.task('stubGetIncentiveGroups', { prisonCode: prison.code, body: [incentiveGroup] })
     viewSessionTemplatesPage.getIncentiveGroupsTab().click()
 
     // Check listed incentive level group

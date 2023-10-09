@@ -1,4 +1,5 @@
 import { SuperAgentRequest } from 'superagent'
+import { format } from 'date-fns'
 import { stubFor } from '../wiremock'
 import TestData from '../../../server/routes/testutils/testData'
 import {
@@ -17,7 +18,7 @@ export default {
   }: {
     prisonCode: string
     rangeType: SessionTemplatesRangeType
-    sessionTemplates: Array<SessionTemplate>
+    sessionTemplates: SessionTemplate[]
   }): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -31,7 +32,7 @@ export default {
       },
     })
   },
-  stubGetSessionTemplate: ({
+  stubGetSingleSessionTemplate: ({
     sessionTemplate = TestData.sessionTemplate(),
   }: {
     sessionTemplate: SessionTemplate
@@ -143,7 +144,8 @@ export default {
     })
   },
   stubGetTemplateStats: ({
-    requestVisitStatsDto,
+    // default to today's date - yyyy-mm-dd
+    requestVisitStatsDto = { visitsFromDate: format(new Date(), 'yyyy-MM-dd') },
     reference,
     visitStats,
   }: {

@@ -36,7 +36,6 @@ context('Add session template', () => {
     reference: '-lfe~dcb~fc',
   })
 
-  const requestVisitStatsDto = TestData.requestVisitStatsDto({ visitsFromDate: new Date().toISOString().slice(0, 10) })
   const visitStats = TestData.visitStats()
 
   beforeEach(() => {
@@ -52,15 +51,14 @@ context('Add session template', () => {
     cy.task('stubGetPrison', activePrison)
     cy.task('stubPrisons')
     cy.task('stubGetSessionTemplates', { prisonCode, rangeType, sessionTemplates: [sessionTemplate] })
-    cy.task('stubIncentiveGroups', { prisonCode, body: [incentiveLevelGroupOne, incentiveLevelGroupTwo] })
-    cy.task('stubCategoryGroups', { prisonCode, body: [categoryGroupOne, categoryGroupTwo] })
-    cy.task('stubLocationGroups', { prisonCode, body: [locationGroupOne, locationGroupTwo] })
+    cy.task('stubGetIncentiveGroups', { prisonCode, body: [incentiveLevelGroupOne, incentiveLevelGroupTwo] })
+    cy.task('stubGetCategoryGroups', { prisonCode, body: [categoryGroupOne, categoryGroupTwo] })
+    cy.task('stubGetLocationGroups', { prisonCode, body: [locationGroupOne, locationGroupTwo] })
   })
 
   it('when on session template view clicking add session template should go to correct page', () => {
     // Given
-    const viewSessionTemplatesPage = Page.createPage(ViewSessionTemplatesPage)
-    viewSessionTemplatesPage.goTo(prisonCode)
+    const viewSessionTemplatesPage = ViewSessionTemplatesPage.goTo(prisonCode)
 
     // When
     viewSessionTemplatesPage.getAddSessionTemplateButton().click()
@@ -154,7 +152,7 @@ context('Add session template', () => {
 
     const startDateString = startDate.toISOString().slice(0, 10)
     const endDateString = endDate.toISOString().slice(0, 10)
-    cy.task('stubGetSessionTemplate', sessionTemplate)
+    cy.task('stubGetSingleSessionTemplate', sessionTemplate)
     const createSessionTemplate = TestData.createSessionTemplateDto({
       sessionDateRange: {
         validFromDate: startDateString,
@@ -166,7 +164,6 @@ context('Add session template', () => {
     })
     cy.task('stubCreateSessionTemplatePost', { createSessionTemplate, sessionTemplate })
     cy.task('stubGetTemplateStats', {
-      requestVisitStatsDto,
       reference: sessionTemplate.reference,
       visitStats,
     })

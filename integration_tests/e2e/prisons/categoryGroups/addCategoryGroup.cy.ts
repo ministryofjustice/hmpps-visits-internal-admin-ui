@@ -21,7 +21,7 @@ context('Category groups - add', () => {
   })
 
   it('should add a category group from the listings page', () => {
-    cy.task('stubCategoryGroups', { prisonCode: prison.code, body: [] })
+    cy.task('stubGetCategoryGroups', { prisonCode: prison.code, body: [] })
 
     // Category group listing page - click 'Add'
     const viewCategoryGroupsPage = ViewCategoryGroupsPage.goTo(prison.code)
@@ -34,7 +34,7 @@ context('Category groups - add', () => {
 
     // Submit form
     cy.task('stubCreateCategoryGroup', { prisonCode: prison.code, categoryGroup })
-    cy.task('stubSingleCategoryGroup', categoryGroup)
+    cy.task('stubGetSingleCategoryGroup', categoryGroup)
     addCategoryGroupPage.addGroup()
 
     // Finish on view single group page and verify success and message details

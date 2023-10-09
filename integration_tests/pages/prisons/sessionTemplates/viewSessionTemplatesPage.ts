@@ -1,4 +1,4 @@
-import Page from '../../page'
+import Page, { PageElement } from '../../page'
 
 export default class ViewSessionTemplatesPage extends Page {
   constructor() {
@@ -10,7 +10,12 @@ export default class ViewSessionTemplatesPage extends Page {
     this.getSessionTemplatesTab().should('have.attr', 'aria-current', 'page')
   }
 
-  goTo = (prisonCode: string) => cy.visit(`/prisons/${prisonCode}/session-templates`)
+  static goTo(prisonCode: string): ViewSessionTemplatesPage {
+    cy.visit(`/prisons/${prisonCode}/session-templates`)
+    return Page.verifyOnPage(ViewSessionTemplatesPage)
+  }
+
+  getSessionTemplate = (index: number): PageElement => cy.get('[data-test="template-name"] a').eq(index)
 
   getAddSessionTemplateButton = () => this.getByDataTest('add-session-template')
 }

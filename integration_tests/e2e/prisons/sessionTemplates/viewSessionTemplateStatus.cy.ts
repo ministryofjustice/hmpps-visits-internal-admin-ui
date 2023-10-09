@@ -7,7 +7,6 @@ context('Change active/inactive session template', () => {
   let deactivatedSessionTemplate = null
   let activeSessionTemplate = null
 
-  const requestVisitStatsDto = TestData.requestVisitStatsDto({ visitsFromDate: new Date().toISOString().slice(0, 10) })
   const visitStats = TestData.visitStats()
 
   beforeEach(() => {
@@ -28,9 +27,8 @@ context('Change active/inactive session template', () => {
 
   it('when inactive session template is activated details should change accordingly', () => {
     // Given
-    cy.task('stubGetSessionTemplate', { sessionTemplate: deactivatedSessionTemplate })
+    cy.task('stubGetSingleSessionTemplate', { sessionTemplate: deactivatedSessionTemplate })
     cy.task('stubGetTemplateStats', {
-      requestVisitStatsDto,
       reference: deactivatedSessionTemplate.reference,
       visitStats,
     })
@@ -38,7 +36,7 @@ context('Change active/inactive session template', () => {
     viewSessionTemplatePage.goTo(prisonCode, deactivatedSessionTemplate.reference)
 
     // When
-    cy.task('stubGetSessionTemplate', { sessionTemplate: activeSessionTemplate })
+    cy.task('stubGetSingleSessionTemplate', { sessionTemplate: activeSessionTemplate })
     viewSessionTemplatePage.getStatusSwitchButton().click()
 
     // Then
@@ -51,9 +49,8 @@ context('Change active/inactive session template', () => {
 
   it('when active session template is deactivated details should change accordingly', () => {
     // Given
-    cy.task('stubGetSessionTemplate', { sessionTemplate: activeSessionTemplate })
+    cy.task('stubGetSingleSessionTemplate', { sessionTemplate: activeSessionTemplate })
     cy.task('stubGetTemplateStats', {
-      requestVisitStatsDto,
       reference: deactivatedSessionTemplate.reference,
       visitStats,
     })
@@ -61,7 +58,7 @@ context('Change active/inactive session template', () => {
     viewSessionTemplatePage.goTo(prisonCode, activeSessionTemplate.reference)
 
     // When
-    cy.task('stubGetSessionTemplate', { sessionTemplate: deactivatedSessionTemplate })
+    cy.task('stubGetSingleSessionTemplate', { sessionTemplate: deactivatedSessionTemplate })
     viewSessionTemplatePage.getStatusSwitchButton().click()
 
     // Then

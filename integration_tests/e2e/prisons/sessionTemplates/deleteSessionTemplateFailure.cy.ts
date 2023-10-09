@@ -7,7 +7,6 @@ context('Delete a session template failure', () => {
   const prisonCode = 'HEI'
   let sessionTemplate = null
 
-  const requestVisitStatsDto = TestData.requestVisitStatsDto({ visitsFromDate: new Date().toISOString().slice(0, 10) })
   const visitStats = TestData.visitStats()
 
   beforeEach(() => {
@@ -21,7 +20,7 @@ context('Delete a session template failure', () => {
     cy.task('stubPrisons')
     cy.task('stubGetAllPrisons')
     cy.task('stubGetPrison', activePrison)
-    cy.task('stubGetSessionTemplate', { sessionTemplate })
+    cy.task('stubGetSingleSessionTemplate', { sessionTemplate })
 
     cy.task('stubDeleteSessionTemplateFailure', {
       sessionTemplate,
@@ -33,7 +32,6 @@ context('Delete a session template failure', () => {
 
   it('when session template is deleted but validation fails on backend user should be shown error message', () => {
     cy.task('stubGetTemplateStats', {
-      requestVisitStatsDto,
       reference: sessionTemplate.reference,
       visitStats,
     })

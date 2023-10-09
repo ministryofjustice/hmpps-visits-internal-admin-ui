@@ -8,7 +8,6 @@ context('Delete a session template success', () => {
   const prisonCode = 'HEI'
   let sessionTemplate = null
 
-  const requestVisitStatsDto = TestData.requestVisitStatsDto({ visitsFromDate: new Date().toISOString().slice(0, 10) })
   const visitStats = TestData.visitStats()
 
   beforeEach(() => {
@@ -22,7 +21,7 @@ context('Delete a session template success', () => {
     cy.task('stubPrisons')
     cy.task('stubGetAllPrisons')
     cy.task('stubGetPrison', activePrison)
-    cy.task('stubGetSessionTemplate', { sessionTemplate })
+    cy.task('stubGetSingleSessionTemplate', { sessionTemplate })
 
     cy.task('stubDeleteSessionTemplate', {
       sessionTemplate,
@@ -34,7 +33,6 @@ context('Delete a session template success', () => {
 
   it('when session template is deleted user should be redirected to session templates screen', () => {
     cy.task('stubGetTemplateStats', {
-      requestVisitStatsDto,
       reference: sessionTemplate.reference,
       visitStats,
     })

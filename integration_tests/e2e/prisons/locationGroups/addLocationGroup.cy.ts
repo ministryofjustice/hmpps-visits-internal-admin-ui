@@ -25,7 +25,7 @@ context('Location groups - add', () => {
   })
 
   it('should add a location group from the listings page', () => {
-    cy.task('stubLocationGroups', { prisonCode: prison.code, body: [] })
+    cy.task('stubGetLocationGroups', { prisonCode: prison.code, body: [] })
 
     // Location group listing page - click 'Add'
     const viewLocationGroupsPage = ViewLocationGroupsPage.goTo(prison.code)
@@ -43,7 +43,7 @@ context('Location groups - add', () => {
 
     // Submit form
     cy.task('stubCreateLocationGroup', { prisonCode: prison.code, locationGroup })
-    cy.task('stubSingleLocationGroup', locationGroup)
+    cy.task('stubGetSingleLocationGroup', locationGroup)
     addLocationGroupPage.addGroup()
 
     // Finish on view single group page and verify success message

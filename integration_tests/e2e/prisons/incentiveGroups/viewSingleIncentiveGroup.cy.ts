@@ -20,8 +20,8 @@ context('Incentive groups - single', () => {
   })
 
   it('should navigate to view a single incentive group from the listing page', () => {
-    cy.task('stubIncentiveGroups', { prisonCode: prison.code, body: [incentiveGroup] })
-    cy.task('stubSingleIncentiveGroup', incentiveGroup)
+    cy.task('stubGetIncentiveGroups', { prisonCode: prison.code, body: [incentiveGroup] })
+    cy.task('stubGetSingleIncentiveGroup', incentiveGroup)
 
     // listings page
     const viewIncentiveGroupsPage = ViewIncentiveGroupsPage.goTo(prison.code)
@@ -39,14 +39,14 @@ context('Incentive groups - single', () => {
   })
 
   it('should delete an incentive group and return to the listing page', () => {
-    cy.task('stubSingleIncentiveGroup', incentiveGroup)
+    cy.task('stubGetSingleIncentiveGroup', incentiveGroup)
 
     // navigate to single group page
     const viewSingleIncentiveGroupPage = ViewSingleIncentiveGroupPage.goTo(prison.code, incentiveGroup)
 
     // delete group
     cy.task('stubDeleteIncentiveGroup', incentiveGroup)
-    cy.task('stubIncentiveGroups', { prisonCode: prison.code, body: [] })
+    cy.task('stubGetIncentiveGroups', { prisonCode: prison.code, body: [] })
     viewSingleIncentiveGroupPage.delete()
 
     // finish on incentives group listing page with success message

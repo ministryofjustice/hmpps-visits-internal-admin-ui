@@ -20,7 +20,7 @@ context('Incentive groups - add', () => {
   })
 
   it('should add an incentive group from the listings page', () => {
-    cy.task('stubIncentiveGroups', { prisonCode: prison.code, body: [] })
+    cy.task('stubGetIncentiveGroups', { prisonCode: prison.code, body: [] })
 
     // Incentives group listing page - click 'Add'
     const viewIncentiveGroupsPage = ViewIncentiveGroupsPage.goTo(prison.code)
@@ -33,7 +33,7 @@ context('Incentive groups - add', () => {
 
     // Submit form
     cy.task('stubCreateIncentiveGroup', { prisonCode: prison.code, incentiveGroup })
-    cy.task('stubSingleIncentiveGroup', incentiveGroup)
+    cy.task('stubGetSingleIncentiveGroup', incentiveGroup)
     addIncentiveGroupPage.addGroup()
 
     // Finish on view single group page and verify success message
