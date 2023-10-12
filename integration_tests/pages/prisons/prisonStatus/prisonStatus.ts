@@ -12,8 +12,11 @@ export default class PrisonStatusPage extends Page {
 
   prisonStatusLabel = (): PageElement => cy.get('[data-test=prison-status]')
 
-  // switch status Activate <-> Deactivate
-  switchStatus = (): PageElement => cy.get('[data-test=prison-change-status-form]')
+  activatePrison = (): void => {
+    cy.get('[data-test="prison-change-status"]').contains('Activate').click()
+  }
 
-  statusTab = (): PageElement => cy.get('.moj-sub-navigation__item').last()
+  deactivatePrison = (): void => {
+    cy.get('[data-test="prison-change-status"]').contains('Deactivate').click()
+  }
 }

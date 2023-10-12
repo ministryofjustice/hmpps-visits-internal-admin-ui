@@ -40,7 +40,7 @@ context('Supported prisons', () => {
 
     cy.task('stubActivatePrison', prisonCode)
     cy.task('stubGetPrison', activePrison)
-    prisonStatusPage.switchStatus().submit()
+    prisonStatusPage.activatePrison()
     prisonStatusPage.successMessage().contains('Hewell (HMP) has been activated')
     prisonStatusPage.prisonStatusLabel().contains('active')
   })
@@ -67,7 +67,7 @@ context('Supported prisons', () => {
 
     cy.task('stubDeactivatePrison', prisonCode)
     cy.task('stubGetPrison', inactivePrison)
-    prisonStatusPage.switchStatus().submit()
+    prisonStatusPage.deactivatePrison()
     prisonStatusPage.successMessage().contains('Hewell (HMP) has been deactivated')
     prisonStatusPage.prisonStatusLabel().contains('inactive')
   })
