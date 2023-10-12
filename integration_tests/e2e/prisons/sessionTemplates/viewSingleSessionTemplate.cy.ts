@@ -7,6 +7,7 @@ import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplat
 context('Session templates - single', () => {
   const prison = TestData.prison()
   const sessionTemplate = TestData.sessionTemplate()
+  const inactiveSessionTemplate = TestData.sessionTemplate({ active: false })
   const visitStats = TestData.visitStats()
 
   const mediumDateFormat = 'd MMMM yyyy'
@@ -19,18 +20,18 @@ context('Session templates - single', () => {
     cy.signIn()
 
     cy.task('stubGetPrison', TestData.prisonDto())
-  })
-
-  it('should navigate to view a single session template from the listing page', () => {
     cy.task('stubGetSessionTemplates', {
       prisonCode: prison.code,
       sessionTemplates: [sessionTemplate],
     })
-    cy.task('stubGetSingleSessionTemplate', { sessionTemplate })
     cy.task('stubGetTemplateStats', {
       reference: sessionTemplate.reference,
       visitStats,
     })
+  })
+
+  it('should navigate to view a single session template from the listing page', () => {
+    cy.task('stubGetSingleSessionTemplate', { sessionTemplate })
 
     // start on listings page
     const viewSessionTemplatesPage = ViewSessionTemplatesPage.goTo(prison.code)
@@ -54,5 +55,21 @@ context('Session templates - single', () => {
     viewSingleSessionTemplatePage.getCategoryGroups().contains('None')
     viewSingleSessionTemplatePage.getIncentiveGroups().contains('None')
     viewSingleSessionTemplatePage.getLocationGroups().contains('None')
+  })
+
+  it('should delete a session template and return to the listing page', () => {
+    // Given
+    cy.task('stubGetSingleSessionTemplate', { sessionTemplate: inactiveSessionTemplate })
+    const viewSingleSessionTemplatePage = ViewSingleSessionTemplatePage.goTo(prison.code, inactiveSessionTemplate)
+
+    // When
+    cy.task('stubDeleteSessionTemplate', { sessionTemplate: inactiveSessionTemplate })
+    viewSingleSessionTemplatePage.deleteTemplate()
+
+    // Then
+    const viewSessionTemplatesPage = Page.verifyOnPage(ViewSessionTemplatesPage)
+    viewSessionTemplatesPage
+      .successMessage()
+      .contains(`Session template '${inactiveSessionTemplate.name}' has been deleted`)
   })
 })

@@ -90,22 +90,6 @@ export default {
     })
   },
 
-  stubDeleteSessionTemplateFailure: ({ sessionTemplate }: { sessionTemplate: SessionTemplate }): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'DELETE',
-        url: `/visitScheduler/admin/session-templates/template/${sessionTemplate.reference}`,
-      },
-      response: {
-        status: 400,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: {
-          developerMessage: `Failed to delete session template with reference - ${sessionTemplate.reference}`,
-        },
-      },
-    })
-  },
-
   stubCreateSessionTemplate: ({ sessionTemplate }: { sessionTemplate: SessionTemplate }): SuperAgentRequest => {
     return stubFor({
       request: {

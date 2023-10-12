@@ -42,6 +42,7 @@ export default class ViewSingleSessionTemplatePage extends Page {
   // switch status Activate <-> Deactivate
   getStatusSwitchButton = (): PageElement => cy.get('[data-test=session-template-change-status-button]')
 
-  // delete session template button
-  getDeleteSessionTemplateButton = (): PageElement => cy.get('[data-test=session-template-delete-button]')
+  deleteTemplate = (): void => {
+    cy.get('[data-test=session-template-delete-button]').click()
+  }
 }
