@@ -5,7 +5,6 @@ import TestData from '../../../server/routes/testutils/testData'
 import {
   SessionTemplatesRangeType,
   SessionTemplate,
-  CreateSessionTemplateDto,
   RequestSessionTemplateVisitStatsDto,
   SessionTemplateVisitStatsDto,
 } from '../../../server/data/visitSchedulerApiTypes'
@@ -107,13 +106,7 @@ export default {
     })
   },
 
-  stubCreateSessionTemplatePost: ({
-    createSessionTemplate,
-    sessionTemplate,
-  }: {
-    createSessionTemplate: CreateSessionTemplateDto
-    sessionTemplate: SessionTemplate
-  }): SuperAgentRequest => {
+  stubCreateSessionTemplate: ({ sessionTemplate }: { sessionTemplate: SessionTemplate }): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'POST',
@@ -121,17 +114,17 @@ export default {
         bodyPatterns: [
           {
             equalToJson: {
-              name: createSessionTemplate.name,
-              weeklyFrequency: createSessionTemplate.weeklyFrequency,
-              dayOfWeek: createSessionTemplate.dayOfWeek,
-              prisonId: createSessionTemplate.prisonId,
-              sessionCapacity: createSessionTemplate.sessionCapacity,
-              sessionDateRange: createSessionTemplate.sessionDateRange,
-              sessionTimeSlot: createSessionTemplate.sessionTimeSlot,
-              visitRoom: createSessionTemplate.visitRoom,
-              categoryGroupReferences: createSessionTemplate.categoryGroupReferences,
-              incentiveLevelGroupReferences: createSessionTemplate.incentiveLevelGroupReferences,
-              locationGroupReferences: createSessionTemplate.locationGroupReferences,
+              name: sessionTemplate.name,
+              weeklyFrequency: sessionTemplate.weeklyFrequency,
+              dayOfWeek: sessionTemplate.dayOfWeek,
+              prisonId: sessionTemplate.prisonId,
+              sessionCapacity: sessionTemplate.sessionCapacity,
+              sessionDateRange: sessionTemplate.sessionDateRange,
+              sessionTimeSlot: sessionTemplate.sessionTimeSlot,
+              visitRoom: sessionTemplate.visitRoom,
+              categoryGroupReferences: sessionTemplate.prisonerCategoryGroups.map(group => group.reference),
+              incentiveLevelGroupReferences: sessionTemplate.prisonerIncentiveLevelGroups.map(group => group.reference),
+              locationGroupReferences: sessionTemplate.permittedLocationGroups.map(group => group.reference),
             },
           },
         ],

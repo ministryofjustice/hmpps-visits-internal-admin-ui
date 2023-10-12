@@ -1,5 +1,4 @@
 import TestData from '../../../../server/routes/testutils/testData'
-import Page from '../../../pages/page'
 import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSingleSessionTemplatePage'
 
 context('Change active/inactive session template', () => {
@@ -18,7 +17,6 @@ context('Change active/inactive session template', () => {
     cy.task('stubAuthUser')
     cy.task('stubGetPrison', activePrison)
     cy.task('stubPrisons')
-    cy.task('stubGetAllPrisons')
     cy.task('stubActivateSessionTemplate')
     cy.task('stubDeactivateSessionTemplate')
 
@@ -32,19 +30,18 @@ context('Change active/inactive session template', () => {
       reference: deactivatedSessionTemplate.reference,
       visitStats,
     })
-    const viewSessionTemplatePage = Page.createPage(ViewSingleSessionTemplatePage)
-    viewSessionTemplatePage.goTo(prisonCode, deactivatedSessionTemplate.reference)
+    const viewSingleSessionTemplatePage = ViewSingleSessionTemplatePage.goTo(prisonCode, deactivatedSessionTemplate)
 
     // When
     cy.task('stubGetSingleSessionTemplate', { sessionTemplate: activeSessionTemplate })
-    viewSessionTemplatePage.getStatusSwitchButton().click()
+    viewSingleSessionTemplatePage.getStatusSwitchButton().click()
 
     // Then
-    const label = viewSessionTemplatePage.sessionTemplateStatusLabel()
+    const label = viewSingleSessionTemplatePage.getStatus()
     label.should('include.text', 'Active')
     label.should('not.include.text', 'Inactive')
-    viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Deactivate')
-    viewSessionTemplatePage.getDeleteSessionTemplateButton().should('be.disabled')
+    viewSingleSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Deactivate')
+    viewSingleSessionTemplatePage.getDeleteSessionTemplateButton().should('be.disabled')
   })
 
   it('when active session template is deactivated details should change accordingly', () => {
@@ -54,17 +51,16 @@ context('Change active/inactive session template', () => {
       reference: deactivatedSessionTemplate.reference,
       visitStats,
     })
-    const viewSessionTemplatePage = Page.createPage(ViewSingleSessionTemplatePage)
-    viewSessionTemplatePage.goTo(prisonCode, activeSessionTemplate.reference)
+    const viewSingleSessionTemplatePage = ViewSingleSessionTemplatePage.goTo(prisonCode, activeSessionTemplate)
 
     // When
     cy.task('stubGetSingleSessionTemplate', { sessionTemplate: deactivatedSessionTemplate })
-    viewSessionTemplatePage.getStatusSwitchButton().click()
+    viewSingleSessionTemplatePage.getStatusSwitchButton().click()
 
     // Then
-    const label = viewSessionTemplatePage.sessionTemplateStatusLabel()
+    const label = viewSingleSessionTemplatePage.getStatus()
     label.should('include.text', 'Inactive')
-    viewSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Activate')
-    viewSessionTemplatePage.getDeleteSessionTemplateButton().should('be.enabled')
+    viewSingleSessionTemplatePage.getStatusSwitchButton().should('include.text', 'Activate')
+    viewSingleSessionTemplatePage.getDeleteSessionTemplateButton().should('be.enabled')
   })
 })

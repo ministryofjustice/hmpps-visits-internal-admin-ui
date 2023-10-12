@@ -1,57 +1,80 @@
+import { CategoryGroup, IncentiveGroup, LocationGroup } from '../../../../server/data/visitSchedulerApiTypes'
 import Page from '../../page'
 
 export default class AddViewSessionTemplatePage extends Page {
-  constructor() {
-    super('Hewell (HMP)')
+  constructor(prisonName: string) {
+    super(`${prisonName} Add session template`)
   }
 
-  goTo = (prisonCode: string) => cy.visit(`/prisons/${prisonCode}/session-templates/add`)
-
-  clickSubmitButton = () => this.getByDataTest('submit').click()
-
-  getNameInput = () => this.getById('name')
-
-  getDayOfWeekInput = () => this.getById('dayOfWeek')
-
-  getStartTimeInput = () => this.getById('startTime')
-
-  getEndTimeInput = () => this.getById('endTime')
-
-  getWeeklyFrequencyInput = () => this.getById('weeklyFrequency')
-
-  enterValidFromDate = (date: Date) => {
-    this.getById('validFromDate-validFromDateYear').type(date.getFullYear().toString())
-    this.getById('validFromDate-validFromDateMonth').type((date.getMonth() + 1).toString())
-    this.getById('validFromDate-validFromDateDay').type(date.getDate().toString())
+  enterName = (name: string): void => {
+    cy.get('#name').type(name)
   }
 
-  getHasEndDateInput = () => this.getById('hasEndDate')
-
-  enterValidToDate = (date: Date) => {
-    this.getById('validToDate-validToDateYear').type(date.getFullYear().toString())
-    this.getById('validToDate-validToDateMonth').type((date.getMonth() + 1).toString())
-    this.getById('validToDate-validToDateDay').type(date.getDate().toString())
+  selectDayOfWeek = (dayOfWeek: string): void => {
+    cy.get('#dayOfWeek').select(dayOfWeek)
   }
 
-  getOpenCapacityInput = () => this.getById('openCapacity')
+  enterStartTime = (startTime: string): void => {
+    cy.get('#startTime').type(startTime)
+  }
 
-  getClosedCapacityInput = () => this.getById('closedCapacity')
+  enterEndTime = (endTime: string): void => {
+    cy.get('#endTime').type(endTime)
+  }
 
-  getVisitRoomInput = () => this.getById('visitRoom')
+  enterWeeklyFrequency = (frequency: number): void => {
+    cy.get('#weeklyFrequency').type(frequency.toString())
+  }
 
-  getSuccessMessage = () => this.getByClass('moj-banner__message')
+  enterValidFromDate = (date: string): void => {
+    const splitDate = date.split('-')
+    cy.get('#validFromDate-validFromDateDay').type(splitDate[2])
+    cy.get('#validFromDate-validFromDateMonth').type(splitDate[1])
+    cy.get('#validFromDate-validFromDateYear').type(splitDate[0])
+  }
 
-  errorSummary = () => this.getByClass('govuk-error-summary')
+  enterValidToDate = (date: string): void => {
+    const splitDate = date.split('-')
+    cy.get('#hasEndDate').check()
+    cy.get('#validToDate-validToDateDay').type(splitDate[2])
+    cy.get('#validToDate-validToDateMonth').type(splitDate[1])
+    cy.get('#validToDate-validToDateYear').type(splitDate[0])
+  }
 
-  getHasIncentiveGroupsCheckBox = () => this.getById('hasIncentiveGroups')
+  enterOpenCapacity = (capacity: number): void => {
+    cy.get('#openCapacity').type(capacity.toString())
+  }
 
-  getIncentiveGroupCheckBoxes = () => this.getByName('incentiveGroupReferences')
+  enterClosedCapacity = (capacity: number): void => {
+    cy.get('#closedCapacity').type(capacity.toString())
+  }
 
-  getHasCategoryGroupsCheckBox = () => this.getById('hasCategoryGroups')
+  enterVisitRoom = (room: string): void => {
+    cy.get('#visitRoom').type(room)
+  }
 
-  getCategoryGroupCheckBoxes = () => this.getByName('categoryGroupReferences')
+  addCategoryGroups = (categoryGroups: CategoryGroup[]): void => {
+    cy.get('#hasCategoryGroups').check()
+    categoryGroups.forEach(categoryGroup => {
+      cy.get('[data-test="category-groups"] label').contains(categoryGroup.name).siblings('input').check()
+    })
+  }
 
-  getHasLocationGroupsCheckBox = () => this.getById('hasLocationGroups')
+  addIncentiveGroups = (incentiveGroups: IncentiveGroup[]): void => {
+    cy.get('#hasIncentiveGroups').check()
+    incentiveGroups.forEach(incentiveGroup => {
+      cy.get('[data-test="incentive-groups"] label').contains(incentiveGroup.name).siblings('input').check()
+    })
+  }
 
-  getLocationGroupCheckBoxes = () => this.getByName('locationGroupReferences')
+  addLocationGroups = (locationGroups: LocationGroup[]): void => {
+    cy.get('#hasLocationGroups').check()
+    locationGroups.forEach(locationGroup => {
+      cy.get('[data-test="location-groups"] label').contains(locationGroup.name).siblings('input').check()
+    })
+  }
+
+  addTemplate = (): void => {
+    cy.get('[data-test="submit"]').click()
+  }
 }

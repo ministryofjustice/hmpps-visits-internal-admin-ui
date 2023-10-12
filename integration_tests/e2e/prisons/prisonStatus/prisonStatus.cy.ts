@@ -15,7 +15,6 @@ context('Supported prisons', () => {
     cy.task('stubAuthUser')
     cy.task('stubPrisons')
     cy.task('stubGetAllPrisons')
-
     cy.signIn()
   })
 

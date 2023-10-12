@@ -13,7 +13,6 @@ context('Incentive groups - add', () => {
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
     cy.task('stubPrisons')
-    cy.task('stubGetAllPrisons')
     cy.signIn()
 
     cy.task('stubGetPrison', TestData.prisonDto())
