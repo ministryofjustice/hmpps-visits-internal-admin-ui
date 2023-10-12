@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { getTime, isValid, parse, parseISO } from 'date-fns'
+import { format, getTime, isValid, parse, parseISO } from 'date-fns'
 import {
   PrisonService,
   SessionTemplateService,
@@ -83,7 +83,7 @@ export default class EditSessionTemplateController {
       }
 
       const requestVisitStatsDto: RequestSessionTemplateVisitStatsDto = {
-        visitsFromDate: new Date().toISOString().slice(0, 10),
+        visitsFromDate: format(new Date(), 'yyyy-MM-dd'),
       }
       const visitStats = await this.sessionTemplateService.getTemplateStats(
         res.locals.user.username,
