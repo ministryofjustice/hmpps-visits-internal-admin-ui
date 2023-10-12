@@ -1,8 +1,8 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
-import ViewIncentiveGroupsPage from '../../../pages/prisons/incentiveGroups/viewIncentiveGroupsPage'
-import ViewSingleIncentiveGroupPage from '../../../pages/prisons/incentiveGroups/viewSingleIncentiveGroupPage'
-import AddIncentiveGroupPage from '../../../pages/prisons/incentiveGroups/addIncentiveGroupPage'
+import ViewIncentiveGroupsPage from '../../../pages/prisons/incentiveGroups/viewIncentiveGroups'
+import ViewSingleIncentiveGroupPage from '../../../pages/prisons/incentiveGroups/viewSingleIncentiveGroup'
+import AddIncentiveGroupPage from '../../../pages/prisons/incentiveGroups/addIncentiveGroup'
 
 context('Incentive groups - add', () => {
   const prison = TestData.prison()

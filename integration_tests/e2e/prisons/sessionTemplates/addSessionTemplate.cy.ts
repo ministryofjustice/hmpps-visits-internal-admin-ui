@@ -1,8 +1,8 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
-import AddSessionTemplatePage from '../../../pages/prisons/sessionTemplates/addSessionTemplatePage'
-import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
-import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSingleSessionTemplatePage'
+import AddSessionTemplatePage from '../../../pages/prisons/sessionTemplates/addSessionTemplate'
+import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
+import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSingleSessionTemplate'
 
 context('Add session template', () => {
   const prison = TestData.prison()

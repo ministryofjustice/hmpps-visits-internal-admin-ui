@@ -1,7 +1,7 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
-import ViewLocationGroupsPage from '../../../pages/prisons/locationGroups/viewLocationGroupsPage'
-import ViewSingleLocationGroupPage from '../../../pages/prisons/locationGroups/viewSingleLocationGroupPage'
+import ViewLocationGroupsPage from '../../../pages/prisons/locationGroups/viewLocationGroups'
+import ViewSingleLocationGroupPage from '../../../pages/prisons/locationGroups/viewSingleLocationGroup'
 
 context('Location groups - single', () => {
   const prison = TestData.prison()

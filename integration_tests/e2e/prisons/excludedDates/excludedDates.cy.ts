@@ -2,9 +2,9 @@ import { PageVisitDto } from '../../../../server/data/visitSchedulerApiTypes'
 import TestData from '../../../../server/routes/testutils/testData'
 import HomePage from '../../../pages/home'
 import Page from '../../../pages/page'
-import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisonsPage'
-import ExcludedDatesPage from '../../../pages/prisons/excludedDates/excludedDatesPage'
-import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
+import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
+import ExcludedDatesPage from '../../../pages/prisons/excludedDates/excludedDates'
+import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
 
 context('Excluded dates', () => {
   const excludedDates = ['2023-02-01', '2023-03-02']

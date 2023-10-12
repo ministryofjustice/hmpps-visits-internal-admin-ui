@@ -1,9 +1,9 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import HomePage from '../../../pages/home'
 import Page from '../../../pages/page'
-import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisonsPage'
-import ViewIncentiveGroupsPage from '../../../pages/prisons/incentiveGroups/viewIncentiveGroupsPage'
-import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
+import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
+import ViewIncentiveGroupsPage from '../../../pages/prisons/incentiveGroups/viewIncentiveGroups'
+import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
 import incentiveLevelNames from '../../../../server/constants/incentiveLevels'
 
 context('Incentive groups - list', () => {

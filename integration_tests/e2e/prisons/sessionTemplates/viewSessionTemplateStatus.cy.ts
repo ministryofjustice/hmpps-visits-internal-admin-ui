@@ -1,5 +1,5 @@
 import TestData from '../../../../server/routes/testutils/testData'
-import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSingleSessionTemplatePage'
+import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSingleSessionTemplate'
 
 context('Change active/inactive session template', () => {
   const prisonCode = 'HEI'

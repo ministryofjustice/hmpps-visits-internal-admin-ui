@@ -1,9 +1,9 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import HomePage from '../../../pages/home'
 import Page from '../../../pages/page'
-import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisonsPage'
-import ViewCategoryGroupsPage from '../../../pages/prisons/categoryGroups/viewCategoryGroupsPage'
-import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
+import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
+import ViewCategoryGroupsPage from '../../../pages/prisons/categoryGroups/viewCategoryGroups'
+import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
 import categoryList from '../../../../server/constants/prisonerCategories'
 
 context('Category groups - list', () => {

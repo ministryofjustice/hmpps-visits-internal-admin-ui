@@ -1,8 +1,8 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
-import ViewCategoryGroupsPage from '../../../pages/prisons/categoryGroups/viewCategoryGroupsPage'
-import ViewSingleCategoryGroupPage from '../../../pages/prisons/categoryGroups/viewSingleCategoryGroupPage'
-import AddCategoryGroupPage from '../../../pages/prisons/categoryGroups/addCategoryGroupPage'
+import ViewCategoryGroupsPage from '../../../pages/prisons/categoryGroups/viewCategoryGroups'
+import ViewSingleCategoryGroupPage from '../../../pages/prisons/categoryGroups/viewSingleCategoryGroup'
+import AddCategoryGroupPage from '../../../pages/prisons/categoryGroups/addCategoryGroup'
 import categoryList from '../../../../server/constants/prisonerCategories'
 
 context('Category groups - add', () => {

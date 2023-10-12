@@ -1,6 +1,6 @@
 import Page, { PageElement } from '../../page'
 
-export default class prisonStatusPage extends Page {
+export default class PrisonStatusPage extends Page {
   constructor() {
     super('Hewell (HMP)')
   }
