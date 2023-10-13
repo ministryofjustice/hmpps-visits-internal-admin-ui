@@ -4,7 +4,7 @@ import AddSessionTemplatePage from '../../../pages/prisons/sessionTemplates/addS
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
 import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplates/viewSingleSessionTemplate'
 
-context('Add session template', () => {
+context('Session templates - add', () => {
   const prison = TestData.prison()
 
   beforeEach(() => {

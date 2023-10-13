@@ -39,8 +39,18 @@ export default class ViewSingleSessionTemplatePage extends Page {
 
   getLocationGroups = (): PageElement => cy.get('.test-template-locationGroups')
 
-  // switch status Activate <-> Deactivate
-  getStatusSwitchButton = (): PageElement => cy.get('[data-test=session-template-change-status-button]')
+  // Actions
+  getTemplateStatusButton = (): PageElement => cy.get('[data-test=session-template-change-status-button]')
+
+  activateTemplate = (): void => {
+    cy.get('[data-test=session-template-change-status-button]').contains('Activate').click()
+  }
+
+  deactivateTemplate = (): void => {
+    cy.get('[data-test=session-template-change-status-button]').contains('Deactivate').click()
+  }
+
+  getDeleteTemplateButton = (): PageElement => cy.get('[data-test=session-template-delete-button]')
 
   deleteTemplate = (): void => {
     cy.get('[data-test=session-template-delete-button]').click()
