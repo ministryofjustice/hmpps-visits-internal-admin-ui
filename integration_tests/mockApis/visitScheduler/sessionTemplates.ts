@@ -31,6 +31,7 @@ export default {
       },
     })
   },
+
   stubGetSingleSessionTemplate: ({
     sessionTemplate = TestData.sessionTemplate(),
   }: {
@@ -62,6 +63,7 @@ export default {
       },
     })
   },
+
   stubDeactivateSessionTemplate: (sessionTemplate = TestData.sessionTemplate()): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -120,6 +122,31 @@ export default {
       },
     })
   },
+
+  stubUpdateSessionTemplate: ({ sessionTemplate }: { sessionTemplate: SessionTemplate }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/visitScheduler/admin/session-templates/template/${sessionTemplate.reference}`,
+        bodyPatterns: [
+          {
+            equalToJson: {
+              name: sessionTemplate.name,
+              sessionCapacity: sessionTemplate.sessionCapacity,
+              sessionDateRange: sessionTemplate.sessionDateRange,
+              visitRoom: sessionTemplate.visitRoom,
+            },
+          },
+        ],
+      },
+      response: {
+        status: 201,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: sessionTemplate,
+      },
+    })
+  },
+
   stubGetTemplateStats: ({
     // default to today's date - yyyy-mm-dd
     requestVisitStatsDto = { visitsFromDate: format(new Date(), 'yyyy-MM-dd') },

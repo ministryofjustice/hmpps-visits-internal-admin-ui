@@ -1,7 +1,7 @@
 import { CategoryGroup, IncentiveGroup, LocationGroup } from '../../../../server/data/visitSchedulerApiTypes'
 import Page from '../../page'
 
-export default class AddViewSessionTemplatePage extends Page {
+export default class AddSessionTemplatePage extends Page {
   constructor(prisonName: string) {
     super(`${prisonName} Add session template`)
   }
