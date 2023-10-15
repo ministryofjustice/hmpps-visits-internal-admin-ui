@@ -7,6 +7,42 @@ import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplat
 context('Session templates - add', () => {
   const prison = TestData.prison()
 
+  const categoryGroupOne = TestData.categoryGroup()
+  const categoryGroupTwo = TestData.categoryGroup({
+    name: 'Female Aware',
+    categories: ['FEMALE_RESTRICTED'],
+    reference: '-sfe~dcb~fc',
+  })
+
+  const incentiveLevelGroupOne = TestData.incentiveGroup()
+  const incentiveLevelGroupTwo = TestData.incentiveGroup({
+    name: 'Super Enhanced',
+    incentiveLevels: ['ENHANCED_2'],
+    reference: '-bfe~dcb~fc',
+  })
+
+  const locationGroupOne = TestData.locationGroup()
+  const locationGroupTwo = TestData.locationGroup({
+    name: 'C Wing D2 cell',
+    locations: [
+      {
+        levelOneCode: 'C',
+        levelTwoCode: 'S',
+        levelThreeCode: 'L2',
+        levelFourCode: 'D2',
+      },
+    ],
+    reference: '-lfe~dcb~fc',
+  })
+
+  const sessionTemplate = TestData.sessionTemplate({
+    name: 'New session template',
+    prisonerCategoryGroups: [categoryGroupOne, categoryGroupTwo],
+    prisonerIncentiveLevelGroups: [incentiveLevelGroupOne, incentiveLevelGroupTwo],
+    permittedLocationGroups: [locationGroupOne, locationGroupTwo],
+    sessionDateRange: { validFromDate: '2023-02-01', validToDate: '2024-12-31' },
+  })
+
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
@@ -15,54 +51,21 @@ context('Session templates - add', () => {
     cy.signIn()
 
     cy.task('stubGetPrison', TestData.prisonDto())
-  })
-
-  it('should add a session template from the listings page', () => {
-    const categoryGroupOne = TestData.categoryGroup()
-    const categoryGroupTwo = TestData.categoryGroup({
-      name: 'Female Aware',
-      categories: ['FEMALE_RESTRICTED'],
-      reference: '-sfe~dcb~fc',
-    })
-
-    const incentiveLevelGroupOne = TestData.incentiveGroup()
-    const incentiveLevelGroupTwo = TestData.incentiveGroup({
-      name: 'Super Enhanced',
-      incentiveLevels: ['ENHANCED_2'],
-      reference: '-bfe~dcb~fc',
-    })
-
-    const locationGroupOne = TestData.locationGroup()
-    const locationGroupTwo = TestData.locationGroup({
-      name: 'C Wing D2 cell',
-      locations: [
-        {
-          levelOneCode: 'C',
-          levelTwoCode: 'S',
-          levelThreeCode: 'L2',
-          levelFourCode: 'D2',
-        },
-      ],
-      reference: '-lfe~dcb~fc',
-    })
-
-    const sessionTemplate = TestData.sessionTemplate({
-      name: 'New session template',
-      prisonerCategoryGroups: [categoryGroupOne, categoryGroupTwo],
-      prisonerIncentiveLevelGroups: [incentiveLevelGroupOne, incentiveLevelGroupTwo],
-      permittedLocationGroups: [locationGroupOne, locationGroupTwo],
-      sessionDateRange: { validFromDate: '2023-02-01', validToDate: '2024-12-31' },
-    })
-
-    cy.task('stubGetSessionTemplates', { prisonCode: prison.code })
     cy.task('stubGetIncentiveGroups', {
       prisonCode: prison.code,
       body: [incentiveLevelGroupOne, incentiveLevelGroupTwo],
     })
     cy.task('stubGetCategoryGroups', { prisonCode: prison.code, body: [categoryGroupOne, categoryGroupTwo] })
     cy.task('stubGetLocationGroups', { prisonCode: prison.code, body: [locationGroupOne, locationGroupTwo] })
+    cy.task('stubGetTemplateStats', {
+      reference: sessionTemplate.reference,
+      visitStats: TestData.visitStats({ visitCount: 0, visitsByDate: [] }),
+    })
+  })
 
+  it('should add a session template from the listings page', () => {
     // Session templates listing page - click 'Add'
+    cy.task('stubGetSessionTemplates', { prisonCode: prison.code })
     const viewSessionTemplatesPage = ViewSessionTemplatesPage.goTo(prison.code)
     viewSessionTemplatesPage.getAddSessionTemplateButton().click()
 
@@ -85,10 +88,6 @@ context('Session templates - add', () => {
     // Submit form to add template
     cy.task('stubCreateSessionTemplate', { sessionTemplate })
     cy.task('stubGetSingleSessionTemplate', { sessionTemplate })
-    cy.task('stubGetTemplateStats', {
-      reference: sessionTemplate.reference,
-      visitStats: TestData.visitStats({ visitCount: 0, visitsByDate: [] }),
-    })
     addSessionTemplatePage.addTemplate()
 
     // Finish in single session template view with success message
@@ -96,6 +95,27 @@ context('Session templates - add', () => {
     viewSingleSessionTemplatePage
       .successMessage()
       .contains(`Session template '${sessionTemplate.name}' has been created`)
+    viewSingleSessionTemplatePage.getReference().contains(sessionTemplate.reference)
+  })
+
+  it('should pre-populate add session template page when copying an existing template', () => {
+    // View single session template
+    cy.task('stubGetSingleSessionTemplate', { sessionTemplate })
+    const viewSingleSessionTemplatePage = ViewSingleSessionTemplatePage.goTo(prison.code, sessionTemplate)
+
+    // Copy template => Add session template page
+    viewSingleSessionTemplatePage.copyTemplate()
+    const addSessionTemplatePage = Page.verifyOnPageTitle(AddSessionTemplatePage, prison.name)
+
+    // Submit form to add template
+    const newTemplateName = `COPY - ${sessionTemplate.name}`
+    cy.task('stubCreateSessionTemplate', { sessionTemplate: { ...sessionTemplate, name: newTemplateName } })
+    cy.task('stubGetSingleSessionTemplate', { sessionTemplate: { ...sessionTemplate, name: newTemplateName } })
+    addSessionTemplatePage.addTemplate()
+
+    // Finish in single session template view with success message
+    viewSingleSessionTemplatePage.checkOnPage()
+    viewSingleSessionTemplatePage.successMessage().contains(`Session template '${newTemplateName}' has been created`)
     viewSingleSessionTemplatePage.getReference().contains(sessionTemplate.reference)
   })
 })
