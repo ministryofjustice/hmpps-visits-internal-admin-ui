@@ -1,7 +1,7 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
-import ViewLocationGroupsPage from '../../../pages/prisons/locationGroups/viewLocationGroupsPage'
-import ViewSingleLocationGroupPage from '../../../pages/prisons/locationGroups/viewSingleLocationGroupPage'
+import ViewLocationGroupsPage from '../../../pages/prisons/locationGroups/viewLocationGroups'
+import ViewSingleLocationGroupPage from '../../../pages/prisons/locationGroups/viewSingleLocationGroup'
 
 context('Location groups - single', () => {
   const prison = TestData.prison()
@@ -17,15 +17,14 @@ context('Location groups - single', () => {
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
     cy.task('stubPrisons')
-    cy.task('stubGetAllPrisons')
     cy.signIn()
 
     cy.task('stubGetPrison', TestData.prisonDto())
   })
 
   it('should navigate to view a single location group from the listing page', () => {
-    cy.task('stubLocationGroups', { prisonCode: prison.code, body: [locationGroup] })
-    cy.task('stubSingleLocationGroup', locationGroup)
+    cy.task('stubGetLocationGroups', { prisonCode: prison.code, body: [locationGroup] })
+    cy.task('stubGetSingleLocationGroup', locationGroup)
 
     // listings page
     const viewLocationGroupsPage = ViewLocationGroupsPage.goTo(prison.code)
@@ -49,14 +48,14 @@ context('Location groups - single', () => {
   })
 
   it('should delete a location group and return to the listing page', () => {
-    cy.task('stubSingleLocationGroup', locationGroup)
+    cy.task('stubGetSingleLocationGroup', locationGroup)
 
     // navigate to single group page
     const viewSingleLocationGroupPage = ViewSingleLocationGroupPage.goTo(prison.code, locationGroup)
 
     // delete group
     cy.task('stubDeleteLocationGroup', locationGroup)
-    cy.task('stubLocationGroups', { prisonCode: prison.code, body: [] })
+    cy.task('stubGetLocationGroups', { prisonCode: prison.code, body: [] })
     viewSingleLocationGroupPage.delete()
 
     // finish on location group listing page with success message

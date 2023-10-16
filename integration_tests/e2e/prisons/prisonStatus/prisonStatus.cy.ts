@@ -1,9 +1,9 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import HomePage from '../../../pages/home'
 import Page from '../../../pages/page'
-import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisonsPage'
-import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
-import PrisonStatusPage from '../../../pages/prisons/prisonStatus/prisonStatusPage'
+import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
+import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
+import PrisonStatusPage from '../../../pages/prisons/prisonStatus/prisonStatus'
 import { SessionTemplatesRangeType } from '../../../../server/data/visitSchedulerApiTypes'
 
 context('Supported prisons', () => {
@@ -15,7 +15,6 @@ context('Supported prisons', () => {
     cy.task('stubAuthUser')
     cy.task('stubPrisons')
     cy.task('stubGetAllPrisons')
-
     cy.signIn()
   })
 
@@ -41,7 +40,7 @@ context('Supported prisons', () => {
 
     cy.task('stubActivatePrison', prisonCode)
     cy.task('stubGetPrison', activePrison)
-    prisonStatusPage.switchStatus().submit()
+    prisonStatusPage.activatePrison()
     prisonStatusPage.successMessage().contains('Hewell (HMP) has been activated')
     prisonStatusPage.prisonStatusLabel().contains('active')
   })
@@ -68,7 +67,7 @@ context('Supported prisons', () => {
 
     cy.task('stubDeactivatePrison', prisonCode)
     cy.task('stubGetPrison', inactivePrison)
-    prisonStatusPage.switchStatus().submit()
+    prisonStatusPage.deactivatePrison()
     prisonStatusPage.successMessage().contains('Hewell (HMP) has been deactivated')
     prisonStatusPage.prisonStatusLabel().contains('inactive')
   })

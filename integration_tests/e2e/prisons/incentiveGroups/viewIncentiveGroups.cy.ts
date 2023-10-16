@@ -1,9 +1,9 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import HomePage from '../../../pages/home'
 import Page from '../../../pages/page'
-import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisonsPage'
-import ViewIncentiveGroupsPage from '../../../pages/prisons/incentiveGroups/viewIncentiveGroupsPage'
-import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
+import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
+import ViewIncentiveGroupsPage from '../../../pages/prisons/incentiveGroups/viewIncentiveGroups'
+import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
 import incentiveLevelNames from '../../../../server/constants/incentiveLevels'
 
 context('Incentive groups - list', () => {
@@ -34,7 +34,7 @@ context('Incentive groups - list', () => {
 
     // Go to incentive level groups page
     const incentiveGroup = TestData.incentiveGroup({ incentiveLevels: ['ENHANCED', 'ENHANCED_2'] })
-    cy.task('stubIncentiveGroups', { prisonCode: prison.code, body: [incentiveGroup] })
+    cy.task('stubGetIncentiveGroups', { prisonCode: prison.code, body: [incentiveGroup] })
     viewSessionTemplatesPage.getIncentiveGroupsTab().click()
 
     // Check listed incentive level group

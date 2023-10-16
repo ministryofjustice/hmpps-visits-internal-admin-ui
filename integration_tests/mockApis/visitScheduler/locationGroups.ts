@@ -3,7 +3,7 @@ import { stubFor } from '../wiremock'
 import { LocationGroup } from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
-  stubSingleLocationGroup: (locationGroup: LocationGroup): SuperAgentRequest => {
+  stubGetSingleLocationGroup: (locationGroup: LocationGroup): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
@@ -56,12 +56,12 @@ export default {
       },
     })
   },
-  stubLocationGroups: ({
+  stubGetLocationGroups: ({
     prisonCode,
     body = [],
   }: {
     prisonCode: string
-    body: Array<LocationGroup>
+    body: LocationGroup[]
   }): SuperAgentRequest => {
     return stubFor({
       request: {

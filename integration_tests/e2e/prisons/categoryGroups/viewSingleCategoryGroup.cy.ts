@@ -1,7 +1,7 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
-import ViewCategoryGroupsPage from '../../../pages/prisons/categoryGroups/viewCategoryGroupsPage'
-import ViewSingleCategoryGroupPage from '../../../pages/prisons/categoryGroups/viewSingleCategoryGroupPage'
+import ViewCategoryGroupsPage from '../../../pages/prisons/categoryGroups/viewCategoryGroups'
+import ViewSingleCategoryGroupPage from '../../../pages/prisons/categoryGroups/viewSingleCategoryGroup'
 import categoryList from '../../../../server/constants/prisonerCategories'
 
 context('Category groups - single', () => {
@@ -13,15 +13,14 @@ context('Category groups - single', () => {
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
     cy.task('stubPrisons')
-    cy.task('stubGetAllPrisons')
     cy.signIn()
 
     cy.task('stubGetPrison', TestData.prisonDto())
   })
 
   it('should navigate to view a single category group from the listing page', () => {
-    cy.task('stubCategoryGroups', { prisonCode: prison.code, body: [categoryGroup] })
-    cy.task('stubSingleCategoryGroup', categoryGroup)
+    cy.task('stubGetCategoryGroups', { prisonCode: prison.code, body: [categoryGroup] })
+    cy.task('stubGetSingleCategoryGroup', categoryGroup)
 
     // listings page
     const viewCategoryGroupsPage = ViewCategoryGroupsPage.goTo(prison.code)
@@ -39,14 +38,14 @@ context('Category groups - single', () => {
   })
 
   it('should delete a category group and return to the listing page', () => {
-    cy.task('stubSingleCategoryGroup', categoryGroup)
+    cy.task('stubGetSingleCategoryGroup', categoryGroup)
 
     // navigate to single group page
     const viewSingleCategoryGroupPage = ViewSingleCategoryGroupPage.goTo(prison.code, categoryGroup)
 
     // delete group
     cy.task('stubDeleteCategoryGroup', categoryGroup)
-    cy.task('stubCategoryGroups', { prisonCode: prison.code, body: [] })
+    cy.task('stubGetCategoryGroups', { prisonCode: prison.code, body: [] })
     viewSingleCategoryGroupPage.delete()
 
     // finish on category group listing page with success message

@@ -1,8 +1,8 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
-import ViewIncentiveGroupsPage from '../../../pages/prisons/incentiveGroups/viewIncentiveGroupsPage'
-import ViewSingleIncentiveGroupPage from '../../../pages/prisons/incentiveGroups/viewSingleIncentiveGroupPage'
-import AddIncentiveGroupPage from '../../../pages/prisons/incentiveGroups/addIncentiveGroupPage'
+import ViewIncentiveGroupsPage from '../../../pages/prisons/incentiveGroups/viewIncentiveGroups'
+import ViewSingleIncentiveGroupPage from '../../../pages/prisons/incentiveGroups/viewSingleIncentiveGroup'
+import AddIncentiveGroupPage from '../../../pages/prisons/incentiveGroups/addIncentiveGroup'
 
 context('Incentive groups - add', () => {
   const prison = TestData.prison()
@@ -13,14 +13,13 @@ context('Incentive groups - add', () => {
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
     cy.task('stubPrisons')
-    cy.task('stubGetAllPrisons')
     cy.signIn()
 
     cy.task('stubGetPrison', TestData.prisonDto())
   })
 
   it('should add an incentive group from the listings page', () => {
-    cy.task('stubIncentiveGroups', { prisonCode: prison.code, body: [] })
+    cy.task('stubGetIncentiveGroups', { prisonCode: prison.code, body: [] })
 
     // Incentives group listing page - click 'Add'
     const viewIncentiveGroupsPage = ViewIncentiveGroupsPage.goTo(prison.code)
@@ -33,7 +32,7 @@ context('Incentive groups - add', () => {
 
     // Submit form
     cy.task('stubCreateIncentiveGroup', { prisonCode: prison.code, incentiveGroup })
-    cy.task('stubSingleIncentiveGroup', incentiveGroup)
+    cy.task('stubGetSingleIncentiveGroup', incentiveGroup)
     addIncentiveGroupPage.addGroup()
 
     // Finish on view single group page and verify success message

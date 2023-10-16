@@ -58,10 +58,10 @@ export default class TestData {
   static sessionTemplate = ({
     dayOfWeek = 'WEDNESDAY',
     name = 'WEDNESDAY, 2023-03-21, 13:45',
-    permittedLocationGroups = Array<LocationGroup>(),
+    permittedLocationGroups = [],
     prisonId = 'HEI',
-    prisonerCategoryGroups = Array<CategoryGroup>(),
-    prisonerIncentiveLevelGroups = Array<IncentiveGroup>(),
+    prisonerCategoryGroups = [],
+    prisonerIncentiveLevelGroups = [],
     reference = '-afe.dcc.0f',
     sessionCapacity = {
       closed: 2,

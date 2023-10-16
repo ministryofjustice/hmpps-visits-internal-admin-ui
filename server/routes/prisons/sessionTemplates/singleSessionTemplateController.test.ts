@@ -75,7 +75,8 @@ describe('Single session template page', () => {
           expect($('[data-test="template-delete-form"]').attr('action')).toBe(
             `/prisons/${prison.code}/session-templates/${sessionTemplate.reference}/delete`,
           )
-          expect($('[data-test="session-template-delete-button"]').length).toBe(1)
+          // template active so Delete button should be disabled
+          expect($('[data-test="session-template-delete-button"]').prop('disabled')).toBe(true)
         })
     })
 
@@ -108,6 +109,22 @@ describe('Single session template page', () => {
           expect($('.test-template-locationGroups li a').eq(0).attr('href')).toBe(
             '/prisons/HEI/location-groups/loc-1-ref?sessionTemplateRef=-afe.dcc.0f',
           )
+        })
+    })
+
+    it('should enable delete button if the template is inactive', () => {
+      sessionTemplate.active = false
+
+      return request(app)
+        .get('/prisons/HEI/session-templates/-afe.dcc.0f')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('h1').text()).toContain('Hewell (HMP)')
+          expect($('h1').text()).toContain(sessionTemplate.name)
+
+          // template inactive so Delete button should be enabled
+          expect($('[data-test="session-template-delete-button"]').prop('disabled')).toBe(false)
         })
     })
   })
