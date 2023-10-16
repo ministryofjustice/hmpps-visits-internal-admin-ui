@@ -33,11 +33,11 @@ Or, to start the main services excluding the typescript app:
 
 `docker-compose up --scale=app=0 -d`
 
-Install dependencies using `npm install`, ensuring you are using `node v18.x` and `npm v9.x`
+Install dependencies using `npm install`, ensuring you are using `node v18.x` and `npm v10.x`
 
 Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json` and the CircleCI build config.
 
-Using your personal client credentials, create a `.env` local settings file
+Using credentials from the dev namespace, create a `.env` local settings file
 ```bash
 REDIS_HOST=localhost
 HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
@@ -45,7 +45,7 @@ HMPPS_AUTH_EXTERNAL_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
 NOMIS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
 NODE_ENV=development
 
-# Use personal client credentials for API and SYSTEM client
+# Use credentials from the dev namespace for API and SYSTEM client
 API_CLIENT_ID=clientid
 API_CLIENT_SECRET=clientsecret
 SYSTEM_CLIENT_ID=clientid
