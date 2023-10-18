@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express'
+import { format } from 'date-fns'
 import { PrisonService, SessionTemplateService } from '../../../services'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
 import { RequestSessionTemplateVisitStatsDto } from '../../../data/visitSchedulerApiTypes'
@@ -20,7 +21,7 @@ export default class SingleSessionTemplateController {
       )
 
       const requestVisitStatsDto: RequestSessionTemplateVisitStatsDto = {
-        visitsFromDate: new Date().toISOString().slice(0, 10),
+        visitsFromDate: format(new Date(), 'yyyy-MM-dd'),
       }
       const visitStats = await this.sessionTemplateService.getTemplateStats(
         res.locals.user.username,

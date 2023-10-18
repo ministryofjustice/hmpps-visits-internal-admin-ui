@@ -37,6 +37,8 @@
       {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
       <div class="govuk-!-width-two-thirds">
 
+        <h2 class="govuk-heading-m">Contact information</h2>
+
         {% set prisonWebsiteHtml %}
           {% if (information.website) %}
             <a href="{{ information.website }}" target="_blank" data-test="prison-config-website">{{ information.website }}</a>

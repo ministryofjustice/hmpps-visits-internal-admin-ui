@@ -1,8 +1,8 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
-import ViewLocationGroupsPage from '../../../pages/prisons/locationGroups/viewLocationGroupsPage'
-import AddLocationGroupPage from '../../../pages/prisons/locationGroups/addLocationGroupPage'
-import ViewSingleLocationGroupPage from '../../../pages/prisons/locationGroups/viewSingleLocationGroupPage'
+import ViewLocationGroupsPage from '../../../pages/prisons/locationGroups/viewLocationGroups'
+import AddLocationGroupPage from '../../../pages/prisons/locationGroups/addLocationGroup'
+import ViewSingleLocationGroupPage from '../../../pages/prisons/locationGroups/viewSingleLocationGroup'
 
 context('Location groups - add', () => {
   const prison = TestData.prison()
@@ -18,14 +18,13 @@ context('Location groups - add', () => {
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
     cy.task('stubPrisons')
-    cy.task('stubGetAllPrisons')
     cy.signIn()
 
     cy.task('stubGetPrison', TestData.prisonDto())
   })
 
   it('should add a location group from the listings page', () => {
-    cy.task('stubLocationGroups', { prisonCode: prison.code, body: [] })
+    cy.task('stubGetLocationGroups', { prisonCode: prison.code, body: [] })
 
     // Location group listing page - click 'Add'
     const viewLocationGroupsPage = ViewLocationGroupsPage.goTo(prison.code)
@@ -43,7 +42,7 @@ context('Location groups - add', () => {
 
     // Submit form
     cy.task('stubCreateLocationGroup', { prisonCode: prison.code, locationGroup })
-    cy.task('stubSingleLocationGroup', locationGroup)
+    cy.task('stubGetSingleLocationGroup', locationGroup)
     addLocationGroupPage.addGroup()
 
     // Finish on view single group page and verify success message

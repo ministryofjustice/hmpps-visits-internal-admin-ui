@@ -3,12 +3,12 @@ import { stubFor } from '../wiremock'
 import { CategoryGroup } from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
-  stubCategoryGroups: ({
+  stubGetCategoryGroups: ({
     prisonCode,
     body = [],
   }: {
     prisonCode: string
-    body: Array<CategoryGroup>
+    body: CategoryGroup[]
   }): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -22,7 +22,7 @@ export default {
       },
     })
   },
-  stubSingleCategoryGroup: (categoryGroup: CategoryGroup): SuperAgentRequest => {
+  stubGetSingleCategoryGroup: (categoryGroup: CategoryGroup): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',

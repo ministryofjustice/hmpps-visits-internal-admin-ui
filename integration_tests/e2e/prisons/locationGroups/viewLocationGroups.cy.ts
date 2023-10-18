@@ -1,9 +1,9 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import HomePage from '../../../pages/home'
 import Page from '../../../pages/page'
-import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisonsPage'
-import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplatesPage'
-import ViewLocationGroupsPage from '../../../pages/prisons/locationGroups/viewLocationGroupsPage'
+import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
+import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
+import ViewLocationGroupsPage from '../../../pages/prisons/locationGroups/viewLocationGroups'
 
 context('Location groups - list', () => {
   const prison = TestData.prison()
@@ -28,7 +28,7 @@ context('Location groups - list', () => {
     // select Hewell
     cy.task('stubGetPrison', TestData.prisonDto())
     cy.task('stubGetSessionTemplates', { prisonCode: prison.code })
-    supportedPrisonsPage.getPrisonByCode(prison.code).click()
+    supportedPrisonsPage.getPrisonNameByCode(prison.code).click()
     const viewSessionTemplatesPage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
     // Go to location groups page
@@ -36,7 +36,7 @@ context('Location groups - list', () => {
       name: 'Wings A & B',
       locations: [{ levelOneCode: 'A' }, { levelOneCode: 'B' }],
     })
-    cy.task('stubLocationGroups', { prisonCode: prison.code, body: [locationGroup] })
+    cy.task('stubGetLocationGroups', { prisonCode: prison.code, body: [locationGroup] })
     viewSessionTemplatesPage.getLocationGroupsTab().click()
 
     // Check listed location group

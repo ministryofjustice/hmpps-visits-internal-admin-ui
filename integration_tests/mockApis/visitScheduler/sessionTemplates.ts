@@ -1,10 +1,10 @@
 import { SuperAgentRequest } from 'superagent'
+import { format } from 'date-fns'
 import { stubFor } from '../wiremock'
 import TestData from '../../../server/routes/testutils/testData'
 import {
   SessionTemplatesRangeType,
   SessionTemplate,
-  CreateSessionTemplateDto,
   RequestSessionTemplateVisitStatsDto,
   SessionTemplateVisitStatsDto,
 } from '../../../server/data/visitSchedulerApiTypes'
@@ -17,7 +17,7 @@ export default {
   }: {
     prisonCode: string
     rangeType: SessionTemplatesRangeType
-    sessionTemplates: Array<SessionTemplate>
+    sessionTemplates: SessionTemplate[]
   }): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -31,7 +31,8 @@ export default {
       },
     })
   },
-  stubGetSessionTemplate: ({
+
+  stubGetSingleSessionTemplate: ({
     sessionTemplate = TestData.sessionTemplate(),
   }: {
     sessionTemplate: SessionTemplate
@@ -62,6 +63,7 @@ export default {
       },
     })
   },
+
   stubDeactivateSessionTemplate: (sessionTemplate = TestData.sessionTemplate()): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -90,29 +92,7 @@ export default {
     })
   },
 
-  stubDeleteSessionTemplateFailure: ({ sessionTemplate }: { sessionTemplate: SessionTemplate }): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'DELETE',
-        url: `/visitScheduler/admin/session-templates/template/${sessionTemplate.reference}`,
-      },
-      response: {
-        status: 400,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: {
-          developerMessage: `Failed to delete session template with reference - ${sessionTemplate.reference}`,
-        },
-      },
-    })
-  },
-
-  stubCreateSessionTemplatePost: ({
-    createSessionTemplate,
-    sessionTemplate,
-  }: {
-    createSessionTemplate: CreateSessionTemplateDto
-    sessionTemplate: SessionTemplate
-  }): SuperAgentRequest => {
+  stubCreateSessionTemplate: ({ sessionTemplate }: { sessionTemplate: SessionTemplate }): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'POST',
@@ -120,17 +100,17 @@ export default {
         bodyPatterns: [
           {
             equalToJson: {
-              name: createSessionTemplate.name,
-              weeklyFrequency: createSessionTemplate.weeklyFrequency,
-              dayOfWeek: createSessionTemplate.dayOfWeek,
-              prisonId: createSessionTemplate.prisonId,
-              sessionCapacity: createSessionTemplate.sessionCapacity,
-              sessionDateRange: createSessionTemplate.sessionDateRange,
-              sessionTimeSlot: createSessionTemplate.sessionTimeSlot,
-              visitRoom: createSessionTemplate.visitRoom,
-              categoryGroupReferences: createSessionTemplate.categoryGroupReferences,
-              incentiveLevelGroupReferences: createSessionTemplate.incentiveLevelGroupReferences,
-              locationGroupReferences: createSessionTemplate.locationGroupReferences,
+              name: sessionTemplate.name,
+              weeklyFrequency: sessionTemplate.weeklyFrequency,
+              dayOfWeek: sessionTemplate.dayOfWeek,
+              prisonId: sessionTemplate.prisonId,
+              sessionCapacity: sessionTemplate.sessionCapacity,
+              sessionDateRange: sessionTemplate.sessionDateRange,
+              sessionTimeSlot: sessionTemplate.sessionTimeSlot,
+              visitRoom: sessionTemplate.visitRoom,
+              categoryGroupReferences: sessionTemplate.prisonerCategoryGroups.map(group => group.reference),
+              incentiveLevelGroupReferences: sessionTemplate.prisonerIncentiveLevelGroups.map(group => group.reference),
+              locationGroupReferences: sessionTemplate.permittedLocationGroups.map(group => group.reference),
             },
           },
         ],
@@ -142,8 +122,34 @@ export default {
       },
     })
   },
+
+  stubUpdateSessionTemplate: ({ sessionTemplate }: { sessionTemplate: SessionTemplate }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/visitScheduler/admin/session-templates/template/${sessionTemplate.reference}`,
+        bodyPatterns: [
+          {
+            equalToJson: {
+              name: sessionTemplate.name,
+              sessionCapacity: sessionTemplate.sessionCapacity,
+              sessionDateRange: sessionTemplate.sessionDateRange,
+              visitRoom: sessionTemplate.visitRoom,
+            },
+          },
+        ],
+      },
+      response: {
+        status: 201,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: sessionTemplate,
+      },
+    })
+  },
+
   stubGetTemplateStats: ({
-    requestVisitStatsDto,
+    // default to today's date - yyyy-mm-dd
+    requestVisitStatsDto = { visitsFromDate: format(new Date(), 'yyyy-MM-dd') },
     reference,
     visitStats,
   }: {

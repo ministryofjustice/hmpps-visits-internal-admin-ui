@@ -4,7 +4,7 @@ import TestData from '../../../server/routes/testutils/testData'
 import { PrisonDto } from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
-  stubGetAllPrisons: (): SuperAgentRequest => {
+  stubGetAllPrisons: (prisons: PrisonDto[] = TestData.prisonDtos()): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
@@ -13,7 +13,7 @@ export default {
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: TestData.prisonDtos(),
+        jsonBody: prisons,
       },
     })
   },

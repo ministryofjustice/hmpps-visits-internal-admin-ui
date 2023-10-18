@@ -95,7 +95,7 @@ describe('Session template service', () => {
   })
 
   describe('getTemplateStats', () => {
-    it('should return the stastics for a session template', async () => {
+    it('should return the statistics for a session template', async () => {
       const visitStats = TestData.visitStats()
       const requestVisitStatsDto = TestData.requestVisitStatsDto()
       visitSchedulerApiClient.getTemplateStats.mockResolvedValue(visitStats)

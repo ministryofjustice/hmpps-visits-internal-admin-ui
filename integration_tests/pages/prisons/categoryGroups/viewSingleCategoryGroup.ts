@@ -1,14 +1,14 @@
 import { CategoryGroup } from '../../../../server/data/visitSchedulerApiTypes'
 import Page, { PageElement } from '../../page'
 
-export default class ViewSingleCategoryGroup extends Page {
+export default class ViewSingleCategoryGroupPage extends Page {
   constructor(title: string) {
     super(title)
   }
 
-  static goTo(prisonCode: string, categoryGroup: CategoryGroup): ViewSingleCategoryGroup {
+  static goTo(prisonCode: string, categoryGroup: CategoryGroup): ViewSingleCategoryGroupPage {
     cy.visit(`/prisons/${prisonCode}/category-groups/${categoryGroup.reference}`)
-    return Page.verifyOnPageTitle(ViewSingleCategoryGroup, categoryGroup.name)
+    return Page.verifyOnPageTitle(ViewSingleCategoryGroupPage, categoryGroup.name)
   }
 
   getGroupReference = (): PageElement => cy.get('.test-template-reference')
