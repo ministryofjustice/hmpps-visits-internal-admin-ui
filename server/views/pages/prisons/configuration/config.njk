@@ -4,7 +4,7 @@
 {% from "components/subNavigation.njk" import subNavigation %}
 
 {% set pageHeaderTitle = prison.name %}
-{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+{% set pageTitle = applicationName + " - Configuration - " + pageHeaderTitle %}
 {% set activePrimaryNav = "prisons" %}
 
 {% set changeStatusAction = "deactivate" if prison.active else "activate" %}
@@ -37,71 +37,60 @@
       {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
       <div class="govuk-!-width-two-thirds">
 
-        <h2 class="govuk-heading-m">Contact information</h2>
+        <h2 class="govuk-heading-m">Contact details</h2>
 
-        {% set prisonWebsiteHtml %}
-          {% if (information.website) %}
-            <a href="{{ information.website }}" target="_blank" data-test="prison-config-website">{{ information.website }}</a>
-          {% else %}
-            <span data-test="prison-config-website">Not set</span>
-          {% endif  %}
-        {% endset %}
+        {% if prisonContactDetails %}
+          {{ govukSummaryList({
+            rows: [
+              {
+                key: {
+                  text: "Social visits email"
+                },
+                value: {
+                  text: prisonContactDetails.emailAddress if prisonContactDetails.emailAddress else "Not set",
+                  classes: "test-contact-email"
+                }
+              },
+              {
+                key: {
+                  text: "Social visits telephone"
+                },
+                value: {
+                  text: prisonContactDetails.phoneNumber if prisonContactDetails.phoneNumber else "Not set",
+                  classes: "test-contact-phone"
+                }
+              },
+              {
+                key: {
+                  text: "Prison web address"
+                },
+                value: {
+                  html: '<a href="' + prisonContactDetails.webAddress + '" target="_blank">' + prisonContactDetails.webAddress + "</a>"
+                    if prisonContactDetails.webAddress else "Not set",
+                    classes: "test-contact-web"
+                }
+              }
+            ]
+          }) }}
 
-        {{ govukSummaryList({
-          rows: [
-            {
-              key: {
-                text: "Social visits email"
-              },
-              value: {
-                html: "<span data-test='prison-config-email'>" + (information.email if information.email else 'Not set') + "</span>"
-              },
-              actions: {
-                items: [
-                  {
-                    href: "/prisons/" + prison.code + "/configuration/edit/email",
-                    text: "Change" if information.email else "Add",
-                    visuallyHiddenText: "social visits email"
-                  }
-                ]
-              }
-            },
-            {
-              key: {
-                text: "Social visits telephone"
-              },
-              value: {
-                html: "<span data-test='prison-config-phone'>" + (information.phone if information.phone else 'Not set') + "</span>"
-              },
-              actions: {
-                items: [
-                  {
-                    href: "/prisons/" + prison.code + "/configuration/edit/phone",
-                    text: "Change" if information.phone else "Add",
-                    visuallyHiddenText: "social visits telephone"
-                  }
-                ]
-              }
-            },
-            {
-              key: {
-                text: "Prison web address"
-              },
-              value: {
-                html: prisonWebsiteHtml
-              },
-              actions: {
-                items: [
-                  {
-                    href: "/prisons/" + prison.code + "/configuration/edit/website",
-                    text: "Change" if information.website else "Add",
-                    visuallyHiddenText: "prison web address"
-                  }
-                ]
-              }
-            }
-          ]
-        }) }}
+          {{ govukButton({
+            text: "Edit contact details",
+            href: "/prisons/" + prison.code + "/configuration/contact-details/edit",
+            preventDoubleClick: true,
+            attributes: { "data-test": "contact-details-edit" }
+          })}}
+
+        {% else %}
+
+          <p>No contact details have been entered for this prison.</p>
+
+          {{ govukButton({
+            text: "Add contact details",
+            href: "/prisons/" + prison.code + "/configuration/contact-details/add",
+            preventDoubleClick: true,
+            attributes: { "data-test": "contact-details-add" }
+          })}}
+        {% endif %}
       </div>
 
       <h2 class="govuk-heading-m">Change prison status</h2>

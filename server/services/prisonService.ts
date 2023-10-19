@@ -2,7 +2,8 @@ import { NotFound } from 'http-errors'
 import { HmppsAuthClient, PrisonRegisterApiClient, RestClientBuilder, VisitSchedulerApiClient } from '../data'
 import { PrisonDto } from '../data/visitSchedulerApiTypes'
 import logger from '../../logger'
-import { Prison, PrisonContactDetails } from '../@types/visits-admin'
+import { Prison } from '../@types/visits-admin'
+import { PrisonContactDetails } from '../data/prisonRegisterApiTypes'
 
 const A_DAY_IN_MS = 24 * 60 * 60 * 1000
 
@@ -43,6 +44,48 @@ export default class PrisonService {
     allPrisonsWithNames.sort((a, b) => a.name.localeCompare(b.name))
 
     return allPrisonsWithNames
+  }
+
+  async getPrisonContactDetails(username: string, prisonCode: string): Promise<PrisonContactDetails | null> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const prisonRegisterApiClient = this.prisonRegisterApiClientFactory(token)
+
+    return prisonRegisterApiClient.getPrisonContactDetails(prisonCode)
+  }
+
+  async createPrisonContactDetails(
+    username: string,
+    prisonCode: string,
+    prisonContactDetails: PrisonContactDetails,
+  ): Promise<PrisonContactDetails | null> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const prisonRegisterApiClient = this.prisonRegisterApiClientFactory(token)
+
+    return prisonRegisterApiClient.createPrisonContactDetails(
+      prisonCode,
+      this.contactDetailsEmptyToNull(prisonContactDetails),
+    )
+  }
+
+  async deletePrisonContactDetails(username: string, prisonCode: string): Promise<void> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const prisonRegisterApiClient = this.prisonRegisterApiClientFactory(token)
+
+    return prisonRegisterApiClient.deletePrisonContactDetails(prisonCode)
+  }
+
+  async updatePrisonContactDetails(
+    username: string,
+    prisonCode: string,
+    contactDetails: PrisonContactDetails,
+  ): Promise<PrisonContactDetails | null> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const prisonRegisterApiClient = this.prisonRegisterApiClientFactory(token)
+
+    return prisonRegisterApiClient.updatePrisonContactDetails(
+      prisonCode,
+      this.contactDetailsEmptyToNull(contactDetails),
+    )
   }
 
   async createPrison(username: string, prisonCode: string): Promise<void> {
@@ -106,14 +149,6 @@ export default class PrisonService {
     return this.allPrisonRegisterPrisons
   }
 
-  // will need to add prisonId
-  async getPrisonContactDetails(username: string): Promise<PrisonContactDetails> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const prisonRegisterApiClient = this.prisonRegisterApiClientFactory(token)
-
-    return prisonRegisterApiClient.getPrisonContactDetails()
-  }
-
   private async refreshAllPrisons(username: string): Promise<void> {
     if (this.lastUpdated <= Date.now() - A_DAY_IN_MS) {
       const token = await this.hmppsAuthClient.getSystemClientToken(username)
@@ -126,6 +161,15 @@ export default class PrisonService {
         this.allPrisonRegisterPrisons[prison.prisonId] = prison.prisonName
       })
       this.lastUpdated = Date.now()
+    }
+  }
+
+  private contactDetailsEmptyToNull(contactDetails: PrisonContactDetails): PrisonContactDetails {
+    return {
+      type: contactDetails.type,
+      emailAddress: contactDetails.emailAddress || null,
+      phoneNumber: contactDetails.phoneNumber || null,
+      webAddress: contactDetails.webAddress || null,
     }
   }
 }

@@ -1,5 +1,5 @@
-import { Prison, PrisonContactDetails } from '../../@types/visits-admin'
-import { PrisonRegisterPrison } from '../../data/prisonRegisterApiTypes'
+import { Prison } from '../../@types/visits-admin'
+import { PrisonContactDetails, PrisonRegisterPrison } from '../../data/prisonRegisterApiTypes'
 import {
   CategoryGroup,
   PrisonDto,
@@ -214,12 +214,14 @@ export default class TestData {
   })
 
   static prisonContactDetails = ({
-    email = 'hmpps-prison-visits@hewell.gov.uk',
-    phone = '01477 885994',
-    website = 'https://www.gov.uk/guidance/hewell-prison',
+    type = 'SOCIAL_VISIT',
+    emailAddress = 'visits@example.com',
+    phoneNumber = '01234567890',
+    webAddress = 'https://www.example.com',
   }: Partial<PrisonContactDetails> = {}): PrisonContactDetails => ({
-    email,
-    phone,
-    website,
+    type,
+    emailAddress,
+    phoneNumber,
+    webAddress,
   })
 }

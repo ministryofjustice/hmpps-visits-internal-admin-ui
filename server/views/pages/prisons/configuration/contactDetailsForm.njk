@@ -1,0 +1,83 @@
+{% extends "partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/input/macro.njk" import govukInput -%}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+
+{% set pageHeaderTitle = action | capitalize + " contact details" %}
+{% set pageTitle = applicationName + " - Contact details - " + pageHeaderTitle %}
+{% set activePrimaryNav = "prisons" %}
+{% set backLinkHref = "/prisons/" + prison.code + "/configuration" %}
+
+{% block content %}
+  {{ super() }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prison.name }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <form action="/prisons/{{ prison.code }}/configuration/contact-details/{{ action }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukInput({
+          label: {
+            html: 'Social visits email',
+            classes: 'govuk-label--m'
+          },
+          id: 'emailAddress',
+          name: 'emailAddress',
+          classes: 'govuk-input--width-20',
+          value: formValues.emailAddress,
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('emailAddress')
+        }) }}
+
+        {{ govukInput({
+          label: {
+            html: 'Social visits telephone',
+            classes: 'govuk-label--m'
+          },
+          id: 'phoneNumber',
+          name: 'phoneNumber',
+          classes: 'govuk-input--width-20',
+          value: formValues.phoneNumber,
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('phoneNumber')
+        }) }}
+
+        {{ govukInput({
+          label: {
+            html: 'Prison web address',
+            classes: 'govuk-label--m'
+          },
+          id: 'webAddress',
+          name: 'webAddress',
+          classes: 'govuk-input--width-30 govuk-!-margin-bottom-4',
+          value: formValues.webAddress,
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('webAddress')
+        }) }}
+
+        {{ govukButton({
+          text: "Add" if action == "add" else "Update",
+          attributes: { "data-test": "submit" },
+          preventDoubleClick: true
+        }) }}
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

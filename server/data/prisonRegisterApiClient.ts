@@ -1,7 +1,6 @@
 import RestClient from './restClient'
 import config from '../config'
-import { PrisonRegisterPrison } from './prisonRegisterApiTypes'
-import { PrisonContactDetails } from '../@types/visits-admin'
+import { PrisonContactDetails, PrisonRegisterPrison } from './prisonRegisterApiTypes'
 
 export default class PrisonRegisterApiClient {
   private restClient: RestClient
@@ -14,13 +13,48 @@ export default class PrisonRegisterApiClient {
     return this.restClient.get({ path: '/prisons' })
   }
 
-  // will need to add prisonId
-  async getPrisonContactDetails(): Promise<PrisonContactDetails> {
-    const information = {
-      email: 'HMPPS-prison-visits@hewell.gov.uk',
-      phone: '',
-      website: 'https://www.gov.uk/guidance/hewell-prison',
+  async getPrisonContactDetails(prisonId: string): Promise<PrisonContactDetails | null> {
+    try {
+      return await this.restClient.get({
+        path: `/secure/prisons/id/${prisonId}/department/contact-details`,
+        query: new URLSearchParams({
+          departmentType: 'SOCIAL_VISIT',
+        }).toString(),
+      })
+    } catch (error) {
+      if (error.status === 404) {
+        return null
+      }
+      throw error
     }
-    return information
+  }
+
+  async createPrisonContactDetails(
+    prisonId: string,
+    prisonContactDetails: PrisonContactDetails,
+  ): Promise<PrisonContactDetails> {
+    return this.restClient.post({
+      path: `/secure/prisons/id/${prisonId}/department/contact-details`,
+      data: prisonContactDetails,
+    })
+  }
+
+  async deletePrisonContactDetails(prisonId: string): Promise<void> {
+    return this.restClient.delete({
+      path: `/secure/prisons/id/${prisonId}/department/contact-details`,
+      query: new URLSearchParams({
+        departmentType: 'SOCIAL_VISIT',
+      }).toString(),
+    })
+  }
+
+  async updatePrisonContactDetails(
+    prisonId: string,
+    prisonContactDetails: PrisonContactDetails,
+  ): Promise<PrisonContactDetails> {
+    return this.restClient.put({
+      path: `/secure/prisons/id/${prisonId}/department/contact-details?removeIfNull=true`,
+      data: prisonContactDetails,
+    })
   }
 }

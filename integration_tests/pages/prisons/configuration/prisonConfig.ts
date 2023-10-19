@@ -17,7 +17,7 @@ export default class PrisonConfigPage extends Page {
 
   prisonStatusLabel = (): PageElement => cy.get('[data-test=prison-status]')
 
-  // Contact information
+  // Contact details
   getEmail = (): PageElement => cy.get('[data-test=prison-config-email]')
 
   getPhone = (): PageElement => cy.get('[data-test=prison-config-phone]')

@@ -19,10 +19,10 @@ context('Prison configuration', () => {
     cy.signIn()
   })
 
-  describe('Contact information', () => {
+  describe('Prison contact details', () => {
     const prison = TestData.prison()
 
-    it('should display prison contact information', () => {
+    it('should display prison contact details', () => {
       cy.task('stubGetPrison', prison)
       const prisonConfigPage = PrisonConfigPage.goTo(prisonCode)
 

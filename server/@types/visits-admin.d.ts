@@ -6,9 +6,3 @@ export type FlashErrorMessage = ValidationError[] | Record<'msg', string>[]
 export interface Prison extends PrisonDto {
   name: string
 }
-
-export type PrisonContactDetails = {
-  email?: string
-  phone?: string
-  website?: string
-}

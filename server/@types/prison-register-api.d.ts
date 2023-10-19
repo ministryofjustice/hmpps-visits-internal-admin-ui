@@ -107,6 +107,13 @@ export interface paths {
      */
     get: operations['getPrisonsBySearchFilter']
   }
+  '/prisons/names': {
+    /**
+     * Get prison names
+     * @description prison id and full name
+     */
+    get: operations['getPrisonNames']
+  }
   '/prisons/id/{prisonId}': {
     /**
      * Get specified prison
@@ -362,6 +369,19 @@ export interface components {
       /** Format: int32 */
       messagesReturnedCount: number
       messages: components['schemas']['DlqMessage'][]
+    }
+    /** @description Full name of prison with id */
+    PrisonNameDto: {
+      /**
+       * @description Prison ID
+       * @example MDI
+       */
+      prisonId: string
+      /**
+       * @description Name of the prison
+       * @example Moorland HMP
+       */
+      prisonName: string
     }
   }
   responses: never
@@ -1148,6 +1168,20 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['PrisonDto'][]
+        }
+      }
+    }
+  }
+  /**
+   * Get prison names
+   * @description prison id and full name
+   */
+  getPrisonNames: {
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonNameDto'][]
         }
       }
     }
