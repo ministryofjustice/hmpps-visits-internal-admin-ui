@@ -3,6 +3,7 @@ import { ValidationChain } from 'express-validator'
 import { Services } from '../../../services'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import PrisonConfigController from './prisonConfigController'
+import AddEditContactDetailsController from './addEditContactDetailsController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -13,18 +14,23 @@ export default function routes(services: Services): Router {
     router.post(path, ...validationChain, asyncMiddleware(handler))
 
   const prisonConfig = new PrisonConfigController(services.prisonService)
+  const addEditContactDetailsController = new AddEditContactDetailsController(services.prisonService)
 
   get('/prisons/:prisonId([A-Z]{3})/configuration', prisonConfig.view())
-  get('/prisons/:prisonId([A-Z]{3})/configuration/contact-details/:action(add|edit)', prisonConfig.contactDetailsView())
+
+  get(
+    '/prisons/:prisonId([A-Z]{3})/configuration/contact-details/:action(add|edit)',
+    addEditContactDetailsController.view(),
+  )
   postWithValidation(
     '/prisons/:prisonId([A-Z]{3})/configuration/contact-details/add',
-    prisonConfig.validateContactDetails(),
-    prisonConfig.contactDetailsAddSubmit(),
+    addEditContactDetailsController.validate(),
+    addEditContactDetailsController.addSubmit(),
   )
   postWithValidation(
     '/prisons/:prisonId([A-Z]{3})/configuration/contact-details/edit',
-    prisonConfig.validateContactDetails(),
-    prisonConfig.contactDetailsEditSubmit(),
+    addEditContactDetailsController.validate(),
+    addEditContactDetailsController.editSubmit(),
   )
 
   post('/prisons/:prisonId([A-Z]{3})/activate', prisonConfig.activate())

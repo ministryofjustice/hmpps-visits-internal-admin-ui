@@ -65,7 +65,7 @@
                   text: "Prison web address"
                 },
                 value: {
-                  html: '<a href="' + prisonContactDetails.webAddress + '" target="_blank">' + prisonContactDetails.webAddress + "</a>"
+                  html: '<a href="' + prisonContactDetails.webAddress + '" target="_blank" rel="noopener noreferrer">' + prisonContactDetails.webAddress + "</a>"
                     if prisonContactDetails.webAddress else "Not set",
                     classes: "test-contact-web"
                 }
