@@ -18,11 +18,11 @@ export default class PrisonConfigPage extends Page {
   prisonStatusLabel = (): PageElement => cy.get('[data-test=prison-status]')
 
   // Contact details
-  getEmail = (): PageElement => cy.get('[data-test=prison-config-email]')
+  getEmail = (): PageElement => cy.get('.test-contact-email')
 
-  getPhone = (): PageElement => cy.get('[data-test=prison-config-phone]')
+  getPhone = (): PageElement => cy.get('.test-contact-phone')
 
-  getWebAddress = (): PageElement => cy.get('[data-test=prison-config-website]')
+  getWebAddress = (): PageElement => cy.get('.test-contact-web')
 
   // Status
   activatePrison = (): void => {

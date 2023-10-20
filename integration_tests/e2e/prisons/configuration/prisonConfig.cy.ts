@@ -17,6 +17,8 @@ context('Prison configuration', () => {
     cy.task('stubPrisons')
     cy.task('stubGetAllPrisons')
     cy.signIn()
+
+    cy.task('stubGetPrisonContactDetails', { prisonCode })
   })
 
   describe('Prison contact details', () => {
@@ -24,11 +26,13 @@ context('Prison configuration', () => {
 
     it('should display prison contact details', () => {
       cy.task('stubGetPrison', prison)
+      const prisonContactDetails = TestData.prisonContactDetails()
+
       const prisonConfigPage = PrisonConfigPage.goTo(prisonCode)
 
-      prisonConfigPage.getEmail().contains('hewell')
-      prisonConfigPage.getPhone().contains('Not set')
-      prisonConfigPage.getWebAddress().contains('gov.uk')
+      prisonConfigPage.getEmail().contains(prisonContactDetails.emailAddress)
+      prisonConfigPage.getPhone().contains(prisonContactDetails.phoneNumber)
+      prisonConfigPage.getWebAddress().contains(prisonContactDetails.webAddress)
     })
   })
 

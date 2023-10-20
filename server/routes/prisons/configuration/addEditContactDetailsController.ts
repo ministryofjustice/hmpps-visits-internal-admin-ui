@@ -90,7 +90,7 @@ export default class AddEditContactDetailsController {
 
       try {
         if (contactDetailsAreEmpty) {
-          await this.prisonService.deletePrisonContactDetails(res.locals.username, prisonId)
+          await this.prisonService.deletePrisonContactDetails(res.locals.user.username, prisonId)
           req.flash('message', 'Contact details removed (all values set to empty)')
         } else {
           await this.prisonService.updatePrisonContactDetails(res.locals.user.username, prisonId, {
