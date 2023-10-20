@@ -235,15 +235,13 @@
       </form>
 
       <h2 class="govuk-heading-m">Update this template</h2>
-      <form action="/prisons/{{ sessionTemplate.prisonId }}/session-templates/{{ sessionTemplate.reference }}/edit" data-test="template-edit-form" method="GET" novalidate>
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        {{ govukButton({
-          text: "Update",
-          classes: "govuk-button--warning" if sessionTemplate.active,
-          preventDoubleClick: true,
-          attributes: { "data-test": "session-template-edit-button" }
-          }) }}
-      </form>
+      {{ govukButton({
+        text: "Update",
+        classes: "govuk-button--warning" if sessionTemplate.active,
+        href: "/prisons/" + sessionTemplate.prisonId + "/session-templates/" + sessionTemplate.reference + "/edit",
+        preventDoubleClick: true,
+        attributes: { "data-test": "session-template-edit-button" }
+      }) }}
 
       <h2 class="govuk-heading-m">Copy this template</h2>
       <p>Start adding a new session template based on this one.</p>

@@ -77,6 +77,89 @@ describe('Prisons service', () => {
     })
   })
 
+  describe('Prison contact details', () => {
+    const prisonContactDetails = TestData.prisonContactDetails()
+
+    const prisonContactDetailsEmptyStrings = TestData.prisonContactDetails({
+      emailAddress: '',
+      phoneNumber: '',
+      webAddress: '',
+    })
+
+    const prisonContactDetailsNulls = TestData.prisonContactDetails({
+      emailAddress: null,
+      phoneNumber: null,
+      webAddress: null,
+    })
+
+    describe('getPrisonContactDetails', () => {
+      it('should return prison SOCIAL_VISIT contact details from the Prison Register', async () => {
+        prisonRegisterApiClient.getPrisonContactDetails.mockResolvedValue(prisonContactDetails)
+
+        const results = await prisonsService.getPrisonContactDetails('user', prison.code)
+        expect(results).toStrictEqual(prisonContactDetails)
+        expect(prisonRegisterApiClient.getPrisonContactDetails).toHaveBeenCalledWith('HEI')
+      })
+    })
+
+    describe('createPrisonContactDetails', () => {
+      it('should create prison SOCIAL_VISIT contact details for selected prison', async () => {
+        prisonRegisterApiClient.createPrisonContactDetails.mockResolvedValue(prisonContactDetails)
+
+        const results = await prisonsService.createPrisonContactDetails('user', prison.code, prisonContactDetails)
+        expect(results).toStrictEqual(prisonContactDetails)
+        expect(prisonRegisterApiClient.createPrisonContactDetails).toHaveBeenCalledWith('HEI', prisonContactDetails)
+      })
+
+      it('should create prison SOCIAL_VISIT contact details for selected prison - with empty values sent as NULL', async () => {
+        prisonRegisterApiClient.createPrisonContactDetails.mockResolvedValue(prisonContactDetailsNulls)
+
+        const results = await prisonsService.createPrisonContactDetails(
+          'user',
+          prison.code,
+          prisonContactDetailsEmptyStrings,
+        )
+        expect(results).toStrictEqual(prisonContactDetailsNulls)
+        expect(prisonRegisterApiClient.createPrisonContactDetails).toHaveBeenCalledWith(
+          'HEI',
+          prisonContactDetailsNulls,
+        )
+      })
+    })
+
+    describe('deletePrisonContactDetails', () => {
+      it('should delete prison SOCIAL_VISIT contact details for selected prison', async () => {
+        await prisonsService.deletePrisonContactDetails('user', prison.code)
+        expect(prisonRegisterApiClient.deletePrisonContactDetails).toHaveBeenCalledWith('HEI')
+      })
+    })
+
+    describe('updatePrisonContactDetails', () => {
+      it('should update prison SOCIAL_VISIT contact details for selected prison', async () => {
+        prisonRegisterApiClient.updatePrisonContactDetails.mockResolvedValue(prisonContactDetails)
+
+        const results = await prisonsService.updatePrisonContactDetails('user', prison.code, prisonContactDetails)
+        expect(results).toStrictEqual(prisonContactDetails)
+        expect(prisonRegisterApiClient.updatePrisonContactDetails).toHaveBeenCalledWith('HEI', prisonContactDetails)
+      })
+
+      it('should update prison SOCIAL_VISIT contact details for selected prison - with empty values sent as NULL', async () => {
+        prisonRegisterApiClient.updatePrisonContactDetails.mockResolvedValue(prisonContactDetailsNulls)
+
+        const results = await prisonsService.updatePrisonContactDetails(
+          'user',
+          prison.code,
+          prisonContactDetailsEmptyStrings,
+        )
+        expect(results).toStrictEqual(prisonContactDetailsNulls)
+        expect(prisonRegisterApiClient.updatePrisonContactDetails).toHaveBeenCalledWith(
+          'HEI',
+          prisonContactDetailsNulls,
+        )
+      })
+    })
+  })
+
   describe('createPrison', () => {
     it('should add prison to supported prisons', async () => {
       const newPrison = TestData.prisonDto({ active: false })

@@ -1,5 +1,5 @@
 import { Prison } from '../../@types/visits-admin'
-import { PrisonRegisterPrison } from '../../data/prisonRegisterApiTypes'
+import { PrisonContactDetails, PrisonRegisterPrison } from '../../data/prisonRegisterApiTypes'
 import {
   CategoryGroup,
   PrisonDto,
@@ -211,5 +211,17 @@ export default class TestData {
     minimumCapacity,
     visitCount,
     visitsByDate,
+  })
+
+  static prisonContactDetails = ({
+    type = 'SOCIAL_VISIT',
+    emailAddress = 'visits@example.com',
+    phoneNumber = '01234567890',
+    webAddress = 'https://www.example.com',
+  }: Partial<PrisonContactDetails> = {}): PrisonContactDetails => ({
+    type,
+    emailAddress,
+    phoneNumber,
+    webAddress,
   })
 }

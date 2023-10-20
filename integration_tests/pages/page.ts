@@ -44,5 +44,5 @@ export default abstract class Page {
 
   getLocationGroupsTab = (): PageElement => cy.get('[data-test="tab-location-groups"]')
 
-  getStatusTab = (): PageElement => cy.get('[data-test="tab-status"]')
+  getConfigTab = (): PageElement => cy.get('[data-test="tab-config"]')
 }

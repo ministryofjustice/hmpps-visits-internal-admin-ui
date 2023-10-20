@@ -23,6 +23,7 @@ export declare global {
       id: string
       flash(type: 'errors', message: FlashErrorMessage): number
       flash(type: 'formValues', message: Record<string, string | string[]>): number
+      flash(type: 'formValues'): [Record<string, string | string[]>]
       logout(done: (err: unknown) => void): void
     }
   }

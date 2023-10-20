@@ -1,6 +1,6 @@
 import RestClient from './restClient'
 import config from '../config'
-import { PrisonRegisterPrison } from './prisonRegisterApiTypes'
+import { PrisonContactDetails, PrisonRegisterPrison } from './prisonRegisterApiTypes'
 
 export default class PrisonRegisterApiClient {
   private restClient: RestClient
@@ -11,5 +11,50 @@ export default class PrisonRegisterApiClient {
 
   async getPrisons(): Promise<PrisonRegisterPrison[]> {
     return this.restClient.get({ path: '/prisons' })
+  }
+
+  async getPrisonContactDetails(prisonId: string): Promise<PrisonContactDetails | null> {
+    try {
+      return await this.restClient.get({
+        path: `/secure/prisons/id/${prisonId}/department/contact-details`,
+        query: new URLSearchParams({
+          departmentType: 'SOCIAL_VISIT',
+        }).toString(),
+      })
+    } catch (error) {
+      if (error.status === 404) {
+        return null
+      }
+      throw error
+    }
+  }
+
+  async createPrisonContactDetails(
+    prisonId: string,
+    prisonContactDetails: PrisonContactDetails,
+  ): Promise<PrisonContactDetails> {
+    return this.restClient.post({
+      path: `/secure/prisons/id/${prisonId}/department/contact-details`,
+      data: prisonContactDetails,
+    })
+  }
+
+  async deletePrisonContactDetails(prisonId: string): Promise<void> {
+    return this.restClient.delete({
+      path: `/secure/prisons/id/${prisonId}/department/contact-details`,
+      query: new URLSearchParams({
+        departmentType: 'SOCIAL_VISIT',
+      }).toString(),
+    })
+  }
+
+  async updatePrisonContactDetails(
+    prisonId: string,
+    prisonContactDetails: PrisonContactDetails,
+  ): Promise<PrisonContactDetails> {
+    return this.restClient.put({
+      path: `/secure/prisons/id/${prisonId}/department/contact-details?removeIfNull=true`,
+      data: prisonContactDetails,
+    })
   }
 }
