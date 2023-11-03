@@ -14,7 +14,7 @@ context('Excluded dates', () => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
-    cy.task('stubPrisons')
+    cy.task('stubPrisonNames')
     cy.task('stubGetAllPrisons')
     cy.signIn()
   })

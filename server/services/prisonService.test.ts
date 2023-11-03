@@ -14,21 +14,21 @@ describe('Prisons service', () => {
   const prisonRegisterApiClient = createMockPrisonRegisterApiClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()
 
-  let prisonsService: PrisonService
+  let prisonService: PrisonService
 
   const PrisonRegisterApiClientFactory = jest.fn()
   const VisitSchedulerApiClientFactory = jest.fn()
 
   const prisonDto = TestData.prisonDto()
   const prison = TestData.prison()
-  const prisonRegisterPrisons = TestData.prisonRegisterPrisons()
+  const prisonNames = TestData.prisonNames()
 
   beforeEach(() => {
     PrisonRegisterApiClientFactory.mockReturnValue(prisonRegisterApiClient)
     VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
-    prisonsService = new PrisonService(VisitSchedulerApiClientFactory, PrisonRegisterApiClientFactory, hmppsAuthClient)
+    prisonService = new PrisonService(VisitSchedulerApiClientFactory, PrisonRegisterApiClientFactory, hmppsAuthClient)
 
-    prisonRegisterApiClient.getPrisons.mockResolvedValue(prisonRegisterPrisons)
+    prisonRegisterApiClient.getPrisonNames.mockResolvedValue(prisonNames)
     hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
   })
 
@@ -39,7 +39,7 @@ describe('Prisons service', () => {
   describe('getPrison', () => {
     it('should return a Prison', async () => {
       visitSchedulerApiClient.getPrison.mockResolvedValue(prisonDto)
-      const results = await prisonsService.getPrison('user', prisonDto.code)
+      const results = await prisonService.getPrison('user', prisonDto.code)
 
       expect(results).toStrictEqual(prison)
     })
@@ -49,7 +49,7 @@ describe('Prisons service', () => {
       const prisonNotInRegister = TestData.prison({ ...prisonDtoNotInRegister, name: 'UNKNOWN' })
 
       visitSchedulerApiClient.getPrison.mockResolvedValue(prisonDtoNotInRegister)
-      const results = await prisonsService.getPrison('user', prisonDtoNotInRegister.code)
+      const results = await prisonService.getPrison('user', prisonDtoNotInRegister.code)
 
       expect(results).toStrictEqual(prisonNotInRegister)
     })
@@ -62,7 +62,7 @@ describe('Prisons service', () => {
     it('should return an array of all supported Prisons', async () => {
       visitSchedulerApiClient.getAllPrisons.mockResolvedValue(allPrisonDtos)
 
-      const results = await prisonsService.getAllPrisons('user')
+      const results = await prisonService.getAllPrisons('user')
 
       expect(results).toStrictEqual(allPrisons)
     })
@@ -71,7 +71,7 @@ describe('Prisons service', () => {
       const unsortedPrisonDtos = [allPrisonDtos[2], allPrisonDtos[0], allPrisonDtos[1]]
       visitSchedulerApiClient.getAllPrisons.mockResolvedValue(unsortedPrisonDtos)
 
-      const results = await prisonsService.getAllPrisons('user')
+      const results = await prisonService.getAllPrisons('user')
 
       expect(results).toStrictEqual(allPrisons)
     })
@@ -96,7 +96,7 @@ describe('Prisons service', () => {
       it('should return prison SOCIAL_VISIT contact details from the Prison Register', async () => {
         prisonRegisterApiClient.getPrisonContactDetails.mockResolvedValue(prisonContactDetails)
 
-        const results = await prisonsService.getPrisonContactDetails('user', prison.code)
+        const results = await prisonService.getPrisonContactDetails('user', prison.code)
         expect(results).toStrictEqual(prisonContactDetails)
         expect(prisonRegisterApiClient.getPrisonContactDetails).toHaveBeenCalledWith('HEI')
       })
@@ -106,7 +106,7 @@ describe('Prisons service', () => {
       it('should create prison SOCIAL_VISIT contact details for selected prison', async () => {
         prisonRegisterApiClient.createPrisonContactDetails.mockResolvedValue(prisonContactDetails)
 
-        const results = await prisonsService.createPrisonContactDetails('user', prison.code, prisonContactDetails)
+        const results = await prisonService.createPrisonContactDetails('user', prison.code, prisonContactDetails)
         expect(results).toStrictEqual(prisonContactDetails)
         expect(prisonRegisterApiClient.createPrisonContactDetails).toHaveBeenCalledWith('HEI', prisonContactDetails)
       })
@@ -114,7 +114,7 @@ describe('Prisons service', () => {
       it('should create prison SOCIAL_VISIT contact details for selected prison - with empty values sent as NULL', async () => {
         prisonRegisterApiClient.createPrisonContactDetails.mockResolvedValue(prisonContactDetailsNulls)
 
-        const results = await prisonsService.createPrisonContactDetails(
+        const results = await prisonService.createPrisonContactDetails(
           'user',
           prison.code,
           prisonContactDetailsEmptyStrings,
@@ -129,7 +129,7 @@ describe('Prisons service', () => {
 
     describe('deletePrisonContactDetails', () => {
       it('should delete prison SOCIAL_VISIT contact details for selected prison', async () => {
-        await prisonsService.deletePrisonContactDetails('user', prison.code)
+        await prisonService.deletePrisonContactDetails('user', prison.code)
         expect(prisonRegisterApiClient.deletePrisonContactDetails).toHaveBeenCalledWith('HEI')
       })
     })
@@ -138,7 +138,7 @@ describe('Prisons service', () => {
       it('should update prison SOCIAL_VISIT contact details for selected prison', async () => {
         prisonRegisterApiClient.updatePrisonContactDetails.mockResolvedValue(prisonContactDetails)
 
-        const results = await prisonsService.updatePrisonContactDetails('user', prison.code, prisonContactDetails)
+        const results = await prisonService.updatePrisonContactDetails('user', prison.code, prisonContactDetails)
         expect(results).toStrictEqual(prisonContactDetails)
         expect(prisonRegisterApiClient.updatePrisonContactDetails).toHaveBeenCalledWith('HEI', prisonContactDetails)
       })
@@ -146,7 +146,7 @@ describe('Prisons service', () => {
       it('should update prison SOCIAL_VISIT contact details for selected prison - with empty values sent as NULL', async () => {
         prisonRegisterApiClient.updatePrisonContactDetails.mockResolvedValue(prisonContactDetailsNulls)
 
-        const results = await prisonsService.updatePrisonContactDetails(
+        const results = await prisonService.updatePrisonContactDetails(
           'user',
           prison.code,
           prisonContactDetailsEmptyStrings,
@@ -164,43 +164,32 @@ describe('Prisons service', () => {
     it('should add prison to supported prisons', async () => {
       const newPrison = TestData.prisonDto({ active: false })
 
-      await prisonsService.createPrison('user', prisonDto.code)
+      await prisonService.createPrison('user', prisonDto.code)
       expect(visitSchedulerApiClient.createPrison).toHaveBeenCalledWith(newPrison)
     })
   })
 
   describe('getPrisonName', () => {
     it('should return prison name for given prison ID', async () => {
-      const results = await prisonsService.getPrisonName('user', prisonRegisterPrisons[0].prisonId)
-      expect(results).toBe(prisonRegisterPrisons[0].prisonName)
+      const results = await prisonService.getPrisonName('user', prisonNames[0].prisonId)
+      expect(results).toBe(prisonNames[0].prisonName)
     })
 
     it('should throw a 404 error if no name found for prison ID', async () => {
-      await expect(prisonsService.getPrisonName('user', 'XYZ')).rejects.toThrow(NotFound)
-    })
-  })
-
-  describe('getPrisonNames', () => {
-    it('should return object with all prisonId / prisonNames as key / value', async () => {
-      const results = await prisonsService.getPrisonNames('user')
-      expect(results).toStrictEqual({
-        [prisonRegisterPrisons[0].prisonId]: prisonRegisterPrisons[0].prisonName,
-        [prisonRegisterPrisons[1].prisonId]: prisonRegisterPrisons[1].prisonName,
-        [prisonRegisterPrisons[2].prisonId]: prisonRegisterPrisons[2].prisonName,
-      })
+      await expect(prisonService.getPrisonName('user', 'XYZ')).rejects.toThrow(NotFound)
     })
   })
 
   describe('activatePrison', () => {
     it('should change prison to active', async () => {
-      await prisonsService.activatePrison('user', prisonDto.code)
+      await prisonService.activatePrison('user', prisonDto.code)
       expect(visitSchedulerApiClient.activatePrison).toHaveBeenCalledWith('HEI')
     })
   })
 
   describe('deactivatePrison', () => {
     it('should change prison to inactive', async () => {
-      await prisonsService.deactivatePrison('user', prisonDto.code)
+      await prisonService.deactivatePrison('user', prisonDto.code)
       expect(visitSchedulerApiClient.deactivatePrison).toHaveBeenCalledWith('HEI')
     })
   })
@@ -208,7 +197,7 @@ describe('Prisons service', () => {
   describe('addExcludeDate', () => {
     it('should add an exclude date to a prison', async () => {
       const excludeDate = '2023-07-06'
-      await prisonsService.addExcludeDate('user', prisonDto.code, excludeDate)
+      await prisonService.addExcludeDate('user', prisonDto.code, excludeDate)
       expect(visitSchedulerApiClient.addExcludeDate).toHaveBeenCalledWith('HEI', excludeDate)
     })
   })
@@ -216,7 +205,7 @@ describe('Prisons service', () => {
   describe('removeExcludeDate', () => {
     it('should remove an exclude date to a prison', async () => {
       const excludeDate = '2023-07-06'
-      await prisonsService.removeExcludeDate('user', prisonDto.code, excludeDate)
+      await prisonService.removeExcludeDate('user', prisonDto.code, excludeDate)
       expect(visitSchedulerApiClient.removeExcludeDate).toHaveBeenCalledWith('HEI', excludeDate)
     })
   })
@@ -225,12 +214,12 @@ describe('Prisons service', () => {
     it('should call Prison register API to get all prison names and then use internal cache for subsequent calls', async () => {
       const results = []
 
-      results[0] = await prisonsService.getPrisonName('user', prisonRegisterPrisons[0].prisonId)
-      results[1] = await prisonsService.getPrisonName('user', prisonRegisterPrisons[0].prisonId)
+      results[0] = await prisonService.getPrisonName('user', prisonNames[0].prisonId)
+      results[1] = await prisonService.getPrisonName('user', prisonNames[0].prisonId)
 
-      expect(results[0]).toEqual(prisonRegisterPrisons[0].prisonName)
-      expect(results[1]).toEqual(prisonRegisterPrisons[0].prisonName)
-      expect(prisonRegisterApiClient.getPrisons).toHaveBeenCalledTimes(1)
+      expect(results[0]).toEqual(prisonNames[0].prisonName)
+      expect(results[1]).toEqual(prisonNames[0].prisonName)
+      expect(prisonRegisterApiClient.getPrisonNames).toHaveBeenCalledTimes(1)
     })
 
     it('should refresh internal cache of all prisons after 24 hours', async () => {
@@ -239,15 +228,15 @@ describe('Prisons service', () => {
       const A_DAY_IN_MS = 24 * 60 * 60 * 1000
       const results = []
 
-      results[0] = await prisonsService.getPrisonName('user', prisonRegisterPrisons[0].prisonId)
-      results[1] = await prisonsService.getPrisonName('user', prisonRegisterPrisons[0].prisonId)
+      results[0] = await prisonService.getPrisonName('user', prisonNames[0].prisonId)
+      results[1] = await prisonService.getPrisonName('user', prisonNames[0].prisonId)
       jest.advanceTimersByTime(A_DAY_IN_MS)
-      results[2] = await prisonsService.getPrisonName('user', prisonRegisterPrisons[0].prisonId)
+      results[2] = await prisonService.getPrisonName('user', prisonNames[0].prisonId)
 
-      expect(results[0]).toEqual(prisonRegisterPrisons[0].prisonName)
-      expect(results[1]).toEqual(prisonRegisterPrisons[0].prisonName)
-      expect(results[2]).toEqual(prisonRegisterPrisons[0].prisonName)
-      expect(prisonRegisterApiClient.getPrisons).toHaveBeenCalledTimes(2)
+      expect(results[0]).toEqual(prisonNames[0].prisonName)
+      expect(results[1]).toEqual(prisonNames[0].prisonName)
+      expect(results[2]).toEqual(prisonNames[0].prisonName)
+      expect(prisonRegisterApiClient.getPrisonNames).toHaveBeenCalledTimes(2)
 
       jest.useRealTimers()
     })

@@ -22,17 +22,17 @@ describe('prisonRegisterApiClient', () => {
     nock.cleanAll()
   })
 
-  describe('getPrisons', () => {
+  describe('getPrisonNames', () => {
     it('should return all prisons from the Prison Register', async () => {
-      const allPrisonRegisterPrisons = TestData.prisonRegisterPrisons()
+      const prisonNames = TestData.prisonNames()
 
       fakePrisonRegisterApi
-        .get('/prisons')
+        .get('/prisons/names')
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, allPrisonRegisterPrisons)
+        .reply(200, prisonNames)
 
-      const output = await prisonRegisterApiClient.getPrisons()
-      expect(output).toEqual(allPrisonRegisterPrisons)
+      const output = await prisonRegisterApiClient.getPrisonNames()
+      expect(output).toEqual(prisonNames)
     })
   })
 
