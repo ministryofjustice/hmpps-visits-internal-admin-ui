@@ -274,6 +274,13 @@ export interface paths {
      */
     get: operations['getSupportTypes']
   }
+  '/visits/notification/count': {
+    /**
+     * Get notification count
+     * @description Retrieve notification count by visit reference
+     */
+    get: operations['getNotificationCount']
+  }
   '/visits/notification/non-association/changed': {
     /** To notify VSiP that non association between two prisoners has changed */
     post: operations['notifyVSiPThatNonAssociationHasChanged']
@@ -297,6 +304,13 @@ export interface paths {
   '/visits/notification/visitor/restriction/changed': {
     /** To notify VSiP that a change to a visitor restriction has taken place */
     post: operations['notifyVSiPThatVisitorRestrictionChanged']
+  }
+  '/visits/notification/{prisonCode}/count': {
+    /**
+     * Get notification count for a prison
+     * @description Retrieve notification count by prison code
+     */
+    get: operations['getNotificationCountForPrison']
   }
   '/visits/search': {
     /**
@@ -693,10 +707,12 @@ export interface components {
     NonAssociationChangedNotificationDto: {
       nonAssociationPrisonerNumber: string
       prisonerNumber: string
-      /** Format: date */
-      validFromDate: string
-      /** Format: date */
-      validToDate?: string
+      /** @enum {string} */
+      type: 'NON_ASSOCIATION_CREATED' | 'NON_ASSOCIATION_UPSERT' | 'NON_ASSOCIATION_CLOSED' | 'NON_ASSOCIATION_DELETED'
+    }
+    NotificationCountDto: {
+      /** Format: int32 */
+      count: number
     }
     /** @description Visit Outcome */
     OutcomeDto: {
@@ -821,6 +837,14 @@ export interface components {
     PrisonerReleasedNotificationDto: {
       prisonCode: string
       prisonerNumber: string
+      /** @enum {string} */
+      reasonType:
+        | 'TEMPORARY_ABSENCE_RELEASE'
+        | 'RELEASED_TO_HOSPITAL'
+        | 'RELEASED'
+        | 'SENT_TO_COURT'
+        | 'TRANSFERRED'
+        | 'UNKNOWN'
     }
     PrisonerRestrictionChangeNotificationDto: {
       prisonerNumber: string
@@ -836,10 +860,16 @@ export interface components {
     RequestSessionTemplateVisitStatsDto: {
       /**
        * Format: date
-       * @description Visits from date stats
+       * @description Visits from date - for stats
        * @example 2019-11-02
        */
       visitsFromDate: string
+      /**
+       * Format: date
+       * @description Visits to date - for stats
+       * @example 2019-11-30
+       */
+      visitsToDate?: string
     }
     ReserveVisitSlotDto: {
       /** @description Username for user who actioned this request */
@@ -3083,6 +3113,32 @@ export interface operations {
       }
     }
   }
+  /**
+   * Get notification count
+   * @description Retrieve notification count by visit reference
+   */
+  getNotificationCount: {
+    responses: {
+      /** @description Retrieve notification count */
+      200: {
+        content: {
+          'application/json': components['schemas']['NotificationCountDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to access this endpoint */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   /** To notify VSiP that non association between two prisoners has changed */
   notifyVSiPThatNonAssociationHasChanged: {
     requestBody: {
@@ -3694,6 +3750,41 @@ export interface operations {
         }
       }
       /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Get notification count for a prison
+   * @description Retrieve notification count by prison code
+   */
+  getNotificationCountForPrison: {
+    parameters: {
+      path: {
+        /**
+         * @description prisonCode
+         * @example CFI
+         */
+        prisonCode: string
+      }
+    }
+    responses: {
+      /** @description Retrieve notification count for a prison */
+      200: {
+        content: {
+          'application/json': components['schemas']['NotificationCountDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to access this endpoint */
       403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
