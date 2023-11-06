@@ -60,33 +60,33 @@ export interface paths {
   '/prison-maintenance/id/{prisonId}': {
     /**
      * Update specified prison details
-     * @description Updates prison information, role required is MAINTAIN_REF_DATA
+     * @description Updates prison information, role required is MAINTAIN_REF_DATA or MAINTAIN_PRISON_DATA
      */
     put: operations['updatePrison']
   }
   '/prison-maintenance/id/{prisonId}/address/{addressId}': {
     /**
      * Update specified address details
-     * @description Updates address information, role required is MAINTAIN_REF_DATA
+     * @description Updates address information, role required is MAINTAIN_REF_DATA or MAINTAIN_PRISON_DATA
      */
     put: operations['updateAddress']
     /**
      * Delete specified address for specified Prison
-     * @description Deletes address information for a Prison, role required is MAINTAIN_REF_DATA
+     * @description Deletes address information for a Prison, role required is MAINTAIN_REF_DATA or MAINTAIN_PRISON_DATA
      */
     delete: operations['deleteAddress']
   }
   '/prison-maintenance': {
     /**
      * Adds a new prison
-     * @description Adds new prison information, role required is MAINTAIN_REF_DATA
+     * @description Adds new prison information, role required is MAINTAIN_REF_DATA or MAINTAIN_PRISON_DATA
      */
     post: operations['insertPrison']
   }
   '/prison-maintenance/id/{prisonId}/address': {
     /**
      * Add Address to existing Prison
-     * @description Adds an additional Address to an existing Prison, role required is MAINTAIN_REF_DATA
+     * @description Adds an additional Address to an existing Prison, role required is MAINTAIN_REF_DATA or MAINTAIN_PRISON_DATA
      */
     post: operations['addAddress']
   }
@@ -862,7 +862,7 @@ export interface operations {
   }
   /**
    * Update specified prison details
-   * @description Updates prison information, role required is MAINTAIN_REF_DATA
+   * @description Updates prison information, role required is MAINTAIN_REF_DATA or MAINTAIN_PRISON_DATA
    */
   updatePrison: {
     parameters: {
@@ -914,7 +914,7 @@ export interface operations {
   }
   /**
    * Update specified address details
-   * @description Updates address information, role required is MAINTAIN_REF_DATA
+   * @description Updates address information, role required is MAINTAIN_REF_DATA or MAINTAIN_PRISON_DATA
    */
   updateAddress: {
     parameters: {
@@ -971,7 +971,7 @@ export interface operations {
   }
   /**
    * Delete specified address for specified Prison
-   * @description Deletes address information for a Prison, role required is MAINTAIN_REF_DATA
+   * @description Deletes address information for a Prison, role required is MAINTAIN_REF_DATA or MAINTAIN_PRISON_DATA
    */
   deleteAddress: {
     parameters: {
@@ -1015,7 +1015,7 @@ export interface operations {
   }
   /**
    * Adds a new prison
-   * @description Adds new prison information, role required is MAINTAIN_REF_DATA
+   * @description Adds new prison information, role required is MAINTAIN_REF_DATA or MAINTAIN_PRISON_DATA
    */
   insertPrison: {
     requestBody: {
@@ -1052,7 +1052,7 @@ export interface operations {
   }
   /**
    * Add Address to existing Prison
-   * @description Adds an additional Address to an existing Prison, role required is MAINTAIN_REF_DATA
+   * @description Adds an additional Address to an existing Prison, role required is MAINTAIN_REF_DATA or MAINTAIN_PRISON_DATA
    */
   addAddress: {
     parameters: {

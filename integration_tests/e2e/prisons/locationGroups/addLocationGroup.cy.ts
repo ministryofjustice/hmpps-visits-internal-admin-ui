@@ -17,7 +17,7 @@ context('Location groups - add', () => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
-    cy.task('stubPrisons')
+    cy.task('stubPrisonNames')
     cy.signIn()
 
     cy.task('stubGetPrison', TestData.prisonDto())

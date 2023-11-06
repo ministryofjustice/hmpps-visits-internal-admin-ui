@@ -1,5 +1,5 @@
 import { Prison } from '../../@types/visits-admin'
-import { PrisonContactDetails, PrisonRegisterPrison } from '../../data/prisonRegisterApiTypes'
+import { PrisonContactDetails, PrisonName } from '../../data/prisonRegisterApiTypes'
 import {
   CategoryGroup,
   PrisonDto,
@@ -46,14 +46,14 @@ export default class TestData {
     ] as Prison[],
   } = {}): Prison[] => prisons
 
-  // Array of partial representation of Prison register PrisonDto objects
-  static prisonRegisterPrisons = ({
+  // Array Prison Register PrisonNames
+  static prisonNames = ({
     prisons = [
       { prisonId: 'HEI', prisonName: 'Hewell (HMP)' },
       { prisonId: 'PNI', prisonName: 'Preston (HMP & YOI)' },
       { prisonId: 'WWI', prisonName: 'Wandsworth (HMP & YOI)' },
-    ] as PrisonRegisterPrison[],
-  } = {}): PrisonRegisterPrison[] => prisons
+    ] as PrisonName[],
+  } = {}): PrisonName[] => prisons
 
   static sessionTemplate = ({
     dayOfWeek = 'WEDNESDAY',

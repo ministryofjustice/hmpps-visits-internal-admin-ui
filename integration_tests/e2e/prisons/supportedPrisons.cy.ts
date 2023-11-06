@@ -8,7 +8,7 @@ context('Supported prisons', () => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
-    cy.task('stubPrisons')
+    cy.task('stubPrisonNames')
     cy.signIn()
   })
 

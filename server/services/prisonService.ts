@@ -14,18 +14,18 @@ export default class PrisonService {
     private readonly hmppsAuthClient: HmppsAuthClient,
   ) {}
 
-  // store all prisons in object by prisonId, e.g. { HEI: 'Hewell (HMP), ... }
-  private allPrisonRegisterPrisons: Record<string, string>
+  // store all prison names in an object by prisonId, e.g. { HEI: 'Hewell (HMP), ... }
+  private prisonNames: Record<string, string>
 
   private lastUpdated = 0
 
   async getPrison(username: string, prisonId: string): Promise<Prison> {
-    await this.refreshAllPrisons(username)
+    await this.refreshPrisonNames(username)
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     const prisonDto = await visitSchedulerApiClient.getPrison(prisonId)
-    const name = this.allPrisonRegisterPrisons[prisonId] || 'UNKNOWN'
+    const name = this.prisonNames[prisonId] || 'UNKNOWN'
 
     return { ...prisonDto, name }
   }
@@ -135,31 +135,32 @@ export default class PrisonService {
   }
 
   async getPrisonName(username: string, prisonId: string): Promise<string> {
-    await this.refreshAllPrisons(username)
-    const prisonName = this.allPrisonRegisterPrisons[prisonId]
+    await this.refreshPrisonNames(username)
+    const prisonName = this.prisonNames[prisonId]
 
     if (!prisonName) throw new NotFound(`Prison ID '${prisonId}' not found`)
 
     return prisonName
   }
 
-  async getPrisonNames(username: string): Promise<Record<string, string>> {
-    await this.refreshAllPrisons(username)
+  private async getPrisonNames(username: string): Promise<Record<string, string>> {
+    await this.refreshPrisonNames(username)
 
-    return this.allPrisonRegisterPrisons
+    return this.prisonNames
   }
 
-  private async refreshAllPrisons(username: string): Promise<void> {
+  private async refreshPrisonNames(username: string): Promise<void> {
     if (this.lastUpdated <= Date.now() - A_DAY_IN_MS) {
       const token = await this.hmppsAuthClient.getSystemClientToken(username)
       const prisonRegisterApiClient = this.prisonRegisterApiClientFactory(token)
 
-      const allPrisonsFullDetails = await prisonRegisterApiClient.getPrisons()
-      this.allPrisonRegisterPrisons = {}
+      const prisonNamesArray = await prisonRegisterApiClient.getPrisonNames()
 
-      allPrisonsFullDetails.forEach(prison => {
-        this.allPrisonRegisterPrisons[prison.prisonId] = prison.prisonName
+      this.prisonNames = {}
+      prisonNamesArray.forEach(prison => {
+        this.prisonNames[prison.prisonId] = prison.prisonName
       })
+
       this.lastUpdated = Date.now()
     }
   }
