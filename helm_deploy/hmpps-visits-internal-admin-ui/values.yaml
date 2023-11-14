@@ -1,6 +1,5 @@
 generic-service:
   nameOverride: hmpps-visits-internal-admin-ui
-  serviceAccountName: visit-someone-in-prison
   productId: "DPS035"
   replicaCount: 4
 
