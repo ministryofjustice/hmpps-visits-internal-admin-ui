@@ -1,6 +1,6 @@
 generic-service:
   nameOverride: hmpps-visits-internal-admin-ui
-
+  productId: "DPS035"
   replicaCount: 4
 
   image:
