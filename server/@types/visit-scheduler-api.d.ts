@@ -117,6 +117,11 @@ export interface paths {
      * @description Gets prison by given prison id/code
      */
     get: operations['getPrison']
+    /**
+     * Update a prison
+     * @description Update a prison
+     */
+    put: operations['updatePrison']
   }
   '/admin/prisons/prison/{prisonCode}/activate': {
     /**
@@ -251,7 +256,7 @@ export interface paths {
      * Returns all visit sessions which are within the reservable time period - whether or not they are full
      * @description Retrieve all visits for a specified prisoner
      */
-    get: operations['getVisitSessions']
+    get: operations['getVisitBookingSessions']
   }
   '/visit-sessions/capacity': {
     /**
@@ -312,12 +317,26 @@ export interface paths {
      */
     get: operations['getNotificationCountForPrison']
   }
+  '/visits/notification/{prisonCode}/groups': {
+    /**
+     * get future notification visit groups by prison code
+     * @description Retrieve future notification visit groups by prison code
+     */
+    get: operations['getFutureNotificationVisitGroups']
+  }
   '/visits/search': {
     /**
      * Get visits
      * @description Retrieve visits with optional filters, sorted by start timestamp descending
      */
     get: operations['getVisitsByFilterPageable']
+  }
+  '/visits/session-template/{sessionTemplateReference}': {
+    /**
+     * Get visits by session template reference for a date or a range of dates
+     * @description Retrieve visits by session template reference for a date or a range of dates
+     */
+    get: operations['getVisitsBySessionTemplateReference']
   }
   '/visits/slot/reserve': {
     /** Reserve a slot (date/time slot) for a visit (a starting point) */
@@ -714,6 +733,21 @@ export interface components {
       /** Format: int32 */
       count: number
     }
+    NotificationGroupDto: {
+      /** @description List of details of affected visits */
+      affectedVisits: components['schemas']['PrisonerVisitsNotificationDto'][]
+      /**
+       * @description notification group Reference
+       * @example v9*d7*ed*7u
+       */
+      reference: string
+      /**
+       * @description notification event type
+       * @example NON_ASSOCIATION_EVENT
+       * @enum {string}
+       */
+      type: 'NON_ASSOCIATION_EVENT' | 'PRISONER_RELEASED_EVENT' | 'PRISONER_RESTRICTION_CHANGE_EVENT'
+    }
     /** @description Visit Outcome */
     OutcomeDto: {
       /**
@@ -821,6 +855,18 @@ export interface components {
       code: string
       /** @description exclude dates */
       excludeDates: string[]
+      /**
+       * Format: int32
+       * @description maximum number of days notice from the current date to booked a visit
+       * @example 28
+       */
+      policyNoticeDaysMax: number
+      /**
+       * Format: int32
+       * @description minimum number of days notice from the current date to booked a visit
+       * @example 2
+       */
+      policyNoticeDaysMin: number
     }
     /** @description Prison exclude date */
     PrisonExcludeDateDto: {
@@ -852,6 +898,30 @@ export interface components {
       validFromDate: string
       /** Format: date */
       validToDate?: string
+    }
+    /** @description List of details of affected visits */
+    PrisonerVisitsNotificationDto: {
+      /**
+       * @description Booked by user name
+       * @example SMITH1
+       */
+      bookedByUserName: string
+      /**
+       * @description Visit Booking Reference
+       * @example v9-d7-ed-7u
+       */
+      bookingReference: string
+      /**
+       * @description Prisoner Number
+       * @example AF34567G
+       */
+      prisonerNumber: string
+      /**
+       * Format: date
+       * @description The date of the visit
+       * @example 2023-11-08
+       */
+      visitDate: string
     }
     PurgeQueueResult: {
       /** Format: int32 */
@@ -1190,6 +1260,21 @@ export interface components {
        * @example Main group
        */
       name: string
+    }
+    /** @description Prison update dto */
+    UpdatePrisonDto: {
+      /**
+       * Format: int32
+       * @description maximum number of days notice from the current date to booked a visit
+       * @example 28
+       */
+      policyNoticeDaysMax?: number
+      /**
+       * Format: int32
+       * @description minimum number of days notice from the current date to booked a visit
+       * @example 2
+       */
+      policyNoticeDaysMin?: number
     }
     UpdateSessionTemplateDto: {
       /** @description list of group references for allowed prisoner category groups */
@@ -2138,6 +2223,46 @@ export interface operations {
     }
   }
   /**
+   * Update a prison
+   * @description Update a prison
+   */
+  updatePrison: {
+    parameters: {
+      path: {
+        /**
+         * @description prison id
+         * @example BHI
+         */
+        prisonCode: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePrisonDto']
+      }
+    }
+    responses: {
+      /** @description Prison created */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to update prison */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
    * Activate prison using given prison id/code
    * @description Activate prison using given prison id/code
    */
@@ -2945,7 +3070,7 @@ export interface operations {
    * Returns all visit sessions which are within the reservable time period - whether or not they are full
    * @description Retrieve all visits for a specified prisoner
    */
-  getVisitSessions: {
+  getVisitBookingSessions: {
     parameters: {
       query: {
         /**
@@ -3793,6 +3918,41 @@ export interface operations {
     }
   }
   /**
+   * get future notification visit groups by prison code
+   * @description Retrieve future notification visit groups by prison code
+   */
+  getFutureNotificationVisitGroups: {
+    parameters: {
+      path: {
+        /**
+         * @description prisonCode
+         * @example CFI
+         */
+        prisonCode: string
+      }
+    }
+    responses: {
+      /** @description Retrieved future notification visit groups by prison code */
+      200: {
+        content: {
+          'application/json': components['schemas']['NotificationGroupDto'][]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to access this endpoint */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
    * Get visits
    * @description Retrieve visits with optional filters, sorted by start timestamp descending
    */
@@ -3861,6 +4021,79 @@ export interface operations {
         }
       }
       /** @description Incorrect permissions to retrieve visits */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Get visits by session template reference for a date or a range of dates
+   * @description Retrieve visits by session template reference for a date or a range of dates
+   */
+  getVisitsBySessionTemplateReference: {
+    parameters: {
+      query: {
+        /**
+         * @description Get visits from date
+         * @example 2023-05-31
+         */
+        fromDate: string
+        /**
+         * @description Get visits to date
+         * @example 2023-05-31
+         */
+        toDate: string
+        /**
+         * @description Visit Restriction - OPEN / CLOSED / UNKNOWN
+         * @example OPEN
+         */
+        visitRestrictions?: string
+        /**
+         * @description Filter results by visit status
+         * @example BOOKED
+         */
+        visitStatus: ('RESERVED' | 'CHANGING' | 'BOOKED' | 'CANCELLED')[]
+        /**
+         * @description Pagination page number, starting at zero
+         * @example 0
+         */
+        page: number
+        /**
+         * @description Pagination size per page
+         * @example 50
+         */
+        size: number
+      }
+      path: {
+        /**
+         * @description Session template reference
+         * @example v9-d7-ed-7u
+         */
+        sessionTemplateReference: string
+      }
+    }
+    responses: {
+      /** @description Returns visits for a session template */
+      200: {
+        content: {
+          'application/json': components['schemas']['PageVisitDto']
+        }
+      }
+      /** @description Incorrect request to get visits by session template */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get visits by session template */
       403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']

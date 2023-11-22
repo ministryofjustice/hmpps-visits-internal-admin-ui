@@ -92,6 +92,37 @@
           })}}
         {% endif %}
       </div>
+      <h2 class="govuk-heading-m">Change booking window</h2>
+
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+            text: "Min booking window"
+          },
+            value: {
+            text: prison.policyNoticeDaysMin,
+            classes: "test-policy-notice-days-min"
+          }
+          },
+          {
+            key: {
+            text: "Max booking window"
+          },
+            value: {
+            text: prison.policyNoticeDaysMax,
+            classes: "test-policy-notice-days-max"
+          }
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+        text: "Edit booking window",
+        href: "/prisons/" + prison.code + "/configuration/booking-window/edit",
+        preventDoubleClick: true,
+        attributes: { "data-test": "booking-winodw-edit" }
+      })}}
 
       <h2 class="govuk-heading-m">Change prison status</h2>
 

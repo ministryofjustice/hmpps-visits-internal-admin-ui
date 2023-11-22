@@ -52,6 +52,27 @@ export default {
       },
     })
   },
+  stubUpdatePrison: (prison: PrisonDto): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/visitScheduler/admin/prisons/prison/${prison.code}`,
+        bodyPatterns: [
+          {
+            equalToJson: {
+              policyNoticeDaysMin: prison.policyNoticeDaysMin,
+              policyNoticeDaysMax: prison.policyNoticeDaysMax,
+            },
+          },
+        ],
+      },
+      response: {
+        status: 201,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: prison,
+      },
+    })
+  },
   stubActivatePrison: (prisonCode: string): SuperAgentRequest => {
     return stubFor({
       request: {

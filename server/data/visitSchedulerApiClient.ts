@@ -15,6 +15,7 @@ import {
   RequestSessionTemplateVisitStatsDto,
   SessionTemplateVisitStatsDto,
   PageVisitDto,
+  UpdatePrisonDto,
 } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
@@ -57,6 +58,18 @@ export default class VisitSchedulerApiClient {
         active: prison.active,
         code: prison.code,
         excludeDates: prison.excludeDates,
+        policyNoticeDaysMin: prison.policyNoticeDaysMin,
+        policyNoticeDaysMax: prison.policyNoticeDaysMax,
+      },
+    })
+  }
+
+  async updatePrison(prisonCode: string, updatePrison: UpdatePrisonDto): Promise<PrisonDto> {
+    return this.restClient.put({
+      path: `/admin/prisons/prison/${prisonCode}`,
+      data: <UpdatePrisonDto>{
+        policyNoticeDaysMin: updatePrison.policyNoticeDaysMin,
+        policyNoticeDaysMax: updatePrison.policyNoticeDaysMax,
       },
     })
   }

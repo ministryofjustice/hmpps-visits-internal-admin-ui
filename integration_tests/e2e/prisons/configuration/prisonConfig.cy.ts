@@ -5,6 +5,7 @@ import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
 import PrisonConfigPage from '../../../pages/prisons/configuration/prisonConfig'
 import { SessionTemplatesRangeType } from '../../../../server/data/visitSchedulerApiTypes'
+import PrisonBookingWindowPage from '../../../pages/prisons/configuration/prisonBookingWindowForm'
 
 context('Prison configuration', () => {
   const prisonCode = 'HEI'
@@ -21,10 +22,59 @@ context('Prison configuration', () => {
     cy.task('stubGetPrisonContactDetails', { prisonCode })
   })
 
-  describe('Prison contact details', () => {
+  describe('Prison booking window displayed', () => {
     const prison = TestData.prison()
 
     it('should display prison contact details', () => {
+      cy.task('stubGetPrison', prison)
+
+      const prisonConfigPage = PrisonConfigPage.goTo(prisonCode)
+
+      prisonConfigPage.getMinBookingWindow().contains(prison.policyNoticeDaysMin)
+      prisonConfigPage.getMaxBookingWindow().contains(prison.policyNoticeDaysMax)
+    })
+
+    it('when edit prison booking window button is pressed we should be on the edit form', () => {
+      cy.task('stubGetPrison', prison)
+
+      const prisonConfigPage = PrisonConfigPage.goTo(prisonCode)
+      prisonConfigPage.pressPrisonBookingWindowEditButton()
+      prisonConfigPage.isAtPath('/prisons/HEI/configuration/booking-window/edit')
+    })
+  })
+
+  describe('Prison booking window update form', () => {
+    const prison = TestData.prison()
+
+    it('should display prison booking window details when on update form', () => {
+      cy.task('stubGetPrison', prison)
+
+      const prisonBookingWindowPage = PrisonBookingWindowPage.goTo(prisonCode)
+      prisonBookingWindowPage.getMinBookingWindow().should('have.value', prison.policyNoticeDaysMin)
+      prisonBookingWindowPage.getMaxBookingWindow().should('have.value', prison.policyNoticeDaysMax)
+    })
+
+    it('should update min and max correctly when entered', () => {
+      const updatePrison = TestData.prison({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
+
+      cy.task('stubGetPrison', prison)
+      cy.task('stubUpdatePrison', updatePrison)
+
+      const prisonBookingWindowPage = PrisonBookingWindowPage.goTo(prisonCode)
+      prisonBookingWindowPage.getMinBookingWindow().clear().type(String(updatePrison.policyNoticeDaysMin))
+      prisonBookingWindowPage.getMaxBookingWindow().clear().type(String(updatePrison.policyNoticeDaysMax))
+      cy.task('stubGetPrison', updatePrison)
+      prisonBookingWindowPage.submit()
+      const prisonConfigPage = Page.verifyOnPage(PrisonConfigPage)
+      prisonConfigPage.getMinBookingWindow().contains(10)
+      prisonConfigPage.getMaxBookingWindow().contains(20)
+    })
+  })
+
+  describe('Prison contact details', () => {
+    const prison = TestData.prison()
+
+    it('should display prison booking window details', () => {
       cy.task('stubGetPrison', prison)
       const prisonContactDetails = TestData.prisonContactDetails()
 

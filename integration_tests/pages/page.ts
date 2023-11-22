@@ -17,6 +17,10 @@ export default abstract class Page {
     cy.get('h1').contains(this.title)
   }
 
+  isAtPath = (uri: string): void => {
+    cy.location('pathname').should('be.equal', uri)
+  }
+
   signOut = (): PageElement => cy.get('[data-qa=signOut]')
 
   manageDetails = (): PageElement => cy.get('[data-qa=manageDetails]')
@@ -25,7 +29,7 @@ export default abstract class Page {
 
   errorSummary = (): PageElement => cy.get('.govuk-error-summary')
 
-  getByClass = (classValue: string): PageElement => cy.get(`.${classValue}]`)
+  getByClass = (classValue: string): PageElement => cy.get(`.${classValue}`)
 
   getById = (id: string): PageElement => cy.get(`#${id}`)
 

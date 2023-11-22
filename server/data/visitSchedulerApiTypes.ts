@@ -16,6 +16,7 @@ export type CreateLocationGroupDto = components['schemas']['CreateLocationGroupD
 
 // Prison
 export type PrisonDto = components['schemas']['PrisonDto']
+export type UpdatePrisonDto = components['schemas']['UpdatePrisonDto']
 
 // Session templates
 export type CreateSessionTemplateDto = components['schemas']['CreateSessionTemplateDto']

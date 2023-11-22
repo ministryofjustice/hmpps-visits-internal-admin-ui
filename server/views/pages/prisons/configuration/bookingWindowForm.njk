@@ -1,0 +1,73 @@
+{% extends "partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/input/macro.njk" import govukInput -%}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+
+{% set pageHeaderTitle = action | capitalize + " Edit prison booking window" %}
+{% set pageTitle = applicationName + " - Edit prison booking window - " + pageHeaderTitle %}
+{% set activePrimaryNav = "prisons" %}
+{% set backLinkHref = "/prisons/" + prison.code + "/configuration" %}
+
+{% block content %}
+  {{ super() }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prison.name }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <form action="/prisons/{{ prison.code }}/configuration/booking-window/edit" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukInput({
+          label: {
+            html: 'Min',
+            classes: 'govuk-label--m'
+          },
+          id: 'policyNoticeDaysMin',
+          name: 'policyNoticeDaysMin',
+          classes: 'govuk-input--width-20',
+          value: formValues.policyNoticeDaysMin,
+          type: "number",
+          min:"0",
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('minBookingWindow')
+        }) }}
+
+        {{ govukInput({
+          label: {
+            html: 'Max',
+            classes: 'govuk-label--m'
+          },
+          id: 'policyNoticeDaysMax',
+          name: 'policyNoticeDaysMax',
+          classes: 'govuk-input--width-20',
+          value: formValues.policyNoticeDaysMax,
+          type: "number",
+          min:"0",
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('maxBookingWindow')
+        }) }}
+
+        {{ govukButton({
+          text: "Update",
+          attributes: { "data-test": "submit" },
+          preventDoubleClick: true
+        }) }}
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}
