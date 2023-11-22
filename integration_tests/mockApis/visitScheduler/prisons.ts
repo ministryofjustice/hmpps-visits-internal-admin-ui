@@ -41,6 +41,8 @@ export default {
               active: prison.active,
               code: prison.code,
               excludeDates: prison.excludeDates,
+              policyNoticeDaysMin: prison.policyNoticeDaysMin,
+              policyNoticeDaysMax: prison.policyNoticeDaysMax,
             },
           },
         ],
