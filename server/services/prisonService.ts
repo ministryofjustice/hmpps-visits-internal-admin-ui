@@ -1,6 +1,6 @@
 import { NotFound } from 'http-errors'
 import { HmppsAuthClient, PrisonRegisterApiClient, RestClientBuilder, VisitSchedulerApiClient } from '../data'
-import { PrisonDto } from '../data/visitSchedulerApiTypes'
+import { PrisonDto, UpdatePrisonDto } from '../data/visitSchedulerApiTypes'
 import logger from '../../logger'
 import { Prison } from '../@types/visits-admin'
 import { PrisonContactDetails } from '../data/prisonRegisterApiTypes'
@@ -96,10 +96,20 @@ export default class PrisonService {
       active: false,
       code: prisonCode,
       excludeDates: [],
+      policyNoticeDaysMin: 2,
+      policyNoticeDaysMax: 28,
     }
 
     logger.info(`Prison ${prisonCode} created by ${username}`)
     await visitSchedulerApiClient.createPrison(prison)
+  }
+
+  async updatePrisonDetails(username: string, prisonCode: string, updatePrison: UpdatePrisonDto): Promise<PrisonDto> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    logger.info(`Prison updated ${prisonCode} by ${username}`)
+    return visitSchedulerApiClient.updatePrison(prisonCode, updatePrison)
   }
 
   async activatePrison(username: string, prisonCode: string): Promise<PrisonDto> {

@@ -18,10 +18,18 @@ export default function routes(services: Services): Router {
 
   get('/prisons/:prisonId([A-Z]{3})/configuration', prisonConfig.view())
 
+  get('/prisons/:prisonId([A-Z]{3})/configuration/booking-window/edit', prisonConfig.editBookingWindow())
+  postWithValidation(
+    '/prisons/:prisonId([A-Z]{3})/configuration/booking-window/edit',
+    prisonConfig.validateBookingWindow(),
+    prisonConfig.editBookingWindowSubmit(),
+  )
+
   get(
     '/prisons/:prisonId([A-Z]{3})/configuration/contact-details/:action(add|edit)',
     addEditContactDetailsController.view(),
   )
+
   postWithValidation(
     '/prisons/:prisonId([A-Z]{3})/configuration/contact-details/add',
     addEditContactDetailsController.validate(),

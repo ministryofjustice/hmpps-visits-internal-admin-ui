@@ -21,6 +21,7 @@ describe('Prisons service', () => {
 
   const prisonDto = TestData.prisonDto()
   const prison = TestData.prison()
+  const updatePrisonDto = TestData.updatePrisonDto()
   const prisonNames = TestData.prisonNames()
 
   beforeEach(() => {
@@ -42,6 +43,25 @@ describe('Prisons service', () => {
       const results = await prisonService.getPrison('user', prisonDto.code)
 
       expect(results).toStrictEqual(prison)
+    })
+
+    it('should return Prison with UNKNOWN name if not in prison register', async () => {
+      const prisonDtoNotInRegister = TestData.prisonDto({ code: 'XYZ' })
+      const prisonNotInRegister = TestData.prison({ ...prisonDtoNotInRegister, name: 'UNKNOWN' })
+
+      visitSchedulerApiClient.getPrison.mockResolvedValue(prisonDtoNotInRegister)
+      const results = await prisonService.getPrison('user', prisonDtoNotInRegister.code)
+
+      expect(results).toStrictEqual(prisonNotInRegister)
+    })
+  })
+
+  describe('updatePrisonDetails', () => {
+    it('should return a Prison', async () => {
+      visitSchedulerApiClient.updatePrison.mockResolvedValue(prisonDto)
+      const results = await prisonService.updatePrisonDetails('user', prisonDto.code, updatePrisonDto)
+
+      expect(results).toStrictEqual(prisonDto)
     })
 
     it('should return Prison with UNKNOWN name if not in prison register', async () => {

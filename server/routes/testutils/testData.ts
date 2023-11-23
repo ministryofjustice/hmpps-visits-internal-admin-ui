@@ -13,12 +13,25 @@ import {
   UpdateSessionTemplateDto,
   RequestSessionTemplateVisitStatsDto,
   SessionTemplateVisitStatsDto,
+  UpdatePrisonDto,
 } from '../../data/visitSchedulerApiTypes'
 
 export default class TestData {
   // PrisonDto from Visit Scheduler
-  static prisonDto = ({ active = true, code = 'HEI', excludeDates = [] }: Partial<PrisonDto> = {}): PrisonDto =>
-    ({ active, code, excludeDates }) as PrisonDto
+  static prisonDto = ({
+    active = true,
+    code = 'HEI',
+    excludeDates = [],
+    policyNoticeDaysMin = 2,
+    policyNoticeDaysMax = 28,
+  }: Partial<PrisonDto> = {}): PrisonDto =>
+    ({ active, code, excludeDates, policyNoticeDaysMin, policyNoticeDaysMax }) as PrisonDto
+
+  static updatePrisonDto = ({
+    policyNoticeDaysMin = 2,
+    policyNoticeDaysMax = 28,
+  }: Partial<UpdatePrisonDto> = {}): UpdatePrisonDto =>
+    ({ policyNoticeDaysMin, policyNoticeDaysMax }) as UpdatePrisonDto
 
   // Prison (with name)
   static prison = ({
@@ -26,7 +39,10 @@ export default class TestData {
     code = 'HEI',
     excludeDates = [],
     name = 'Hewell (HMP)',
-  }: Partial<Prison> = {}): Prison => ({ active, code, excludeDates, name }) as Prison
+    policyNoticeDaysMin = 2,
+    policyNoticeDaysMax = 28,
+  }: Partial<Prison> = {}): Prison =>
+    ({ active, code, excludeDates, name, policyNoticeDaysMin, policyNoticeDaysMax }) as Prison
 
   // Array of Visit scheduler PrisonDto
   static prisonDtos = ({

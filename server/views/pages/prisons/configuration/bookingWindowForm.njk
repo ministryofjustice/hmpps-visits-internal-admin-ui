@@ -1,0 +1,75 @@
+{% extends "partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/input/macro.njk" import govukInput -%}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+
+{% set pageHeaderTitle = action | capitalize + " Edit prison booking window" %}
+{% set pageTitle = applicationName + " - Edit prison booking window - " + pageHeaderTitle %}
+{% set activePrimaryNav = "prisons" %}
+{% set backLinkHref = "/prisons/" + prison.code + "/configuration" %}
+
+{% block content %}
+  {{ super() }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prison.name }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <form action="/prisons/{{ prison.code }}/configuration/booking-window/edit" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukInput({
+          label: {
+            html: 'Min',
+            classes: 'govuk-label--m'
+          },
+          hint: {
+            text: "Enter a minimum value in days"
+          },
+          id: 'policyNoticeDaysMin',
+          name: 'policyNoticeDaysMin',
+          classes: 'govuk-input--width-20',
+          value: formValues.policyNoticeDaysMin,
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('policyNoticeDaysMin')
+        }) }}
+
+        {{ govukInput({
+          label: {
+            html: 'Max',
+            classes: 'govuk-label--m'
+          },
+          hint: {
+            text: "Enter a maximum value in days"
+          },
+          id: 'policyNoticeDaysMax',
+          name: 'policyNoticeDaysMax',
+          classes: 'govuk-input--width-20',
+          value: formValues.policyNoticeDaysMax,
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('policyNoticeDaysMax')
+        }) }}
+
+        {{ govukButton({
+          text: "Update",
+          attributes: { "data-test": "submit" },
+          preventDoubleClick: true
+        }) }}
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

@@ -90,6 +90,8 @@ describe('visitSchedulerApiClient', () => {
         active: false,
         code: 'BHI',
         excludeDates: [],
+        policyNoticeDaysMin: 2,
+        policyNoticeDaysMax: 28,
       }
 
       fakeVisitSchedulerApi
@@ -97,6 +99,8 @@ describe('visitSchedulerApiClient', () => {
           active: prison.active,
           code: prison.code,
           excludeDates: prison.excludeDates,
+          policyNoticeDaysMin: prison.policyNoticeDaysMin,
+          policyNoticeDaysMax: prison.policyNoticeDaysMax,
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, prison)
