@@ -57,7 +57,7 @@ describe('Prison booking window edit', () => {
     })
   })
 
-  describe(`PUT  ${editBookingWindowUrl}`, () => {
+  describe(`POST  ${editBookingWindowUrl}`, () => {
     prisonService.getPrison.mockResolvedValue(activePrison)
 
     it('should send valid data to edit booking window and redirect to view template', () => {
@@ -273,8 +273,8 @@ describe('Prison configuration', () => {
           .expect('Content-Type', /html/)
           .expect(res => {
             const $ = cheerio.load(res.text)
-            expect($('.test-policy-notice-days-min').text().trim()).toBe('2')
-            expect($('.test-policy-notice-days-max').text().trim()).toBe('28')
+            expect($('.test-policy-notice-days-min').text().trim()).toBe('2 days')
+            expect($('.test-policy-notice-days-max').text().trim()).toBe('28 days')
           })
       })
     })

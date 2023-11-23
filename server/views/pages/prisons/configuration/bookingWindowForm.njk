@@ -33,15 +33,16 @@
             html: 'Min',
             classes: 'govuk-label--m'
           },
+          hint: {
+            text: "Enter a minimum value in days"
+          },
           id: 'policyNoticeDaysMin',
           name: 'policyNoticeDaysMin',
           classes: 'govuk-input--width-20',
           value: formValues.policyNoticeDaysMin,
-          type: "number",
-          min:"0",
           autocomplete: "off",
           spellcheck: false,
-          errorMessage: errors | findError('minBookingWindow')
+          errorMessage: errors | findError('policyNoticeDaysMin')
         }) }}
 
         {{ govukInput({
@@ -49,15 +50,16 @@
             html: 'Max',
             classes: 'govuk-label--m'
           },
+          hint: {
+            text: "Enter a maximum value in days"
+          },
           id: 'policyNoticeDaysMax',
           name: 'policyNoticeDaysMax',
           classes: 'govuk-input--width-20',
           value: formValues.policyNoticeDaysMax,
-          type: "number",
-          min:"0",
           autocomplete: "off",
           spellcheck: false,
-          errorMessage: errors | findError('maxBookingWindow')
+          errorMessage: errors | findError('policyNoticeDaysMax')
         }) }}
 
         {{ govukButton({

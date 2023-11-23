@@ -95,13 +95,14 @@
       <h2 class="govuk-heading-m">Change booking window</h2>
 
       {{ govukSummaryList({
+        classes: "govuk-!-width-two-thirds",
         rows: [
           {
             key: {
             text: "Min booking window"
           },
             value: {
-            text: prison.policyNoticeDaysMin,
+            text: prison.policyNoticeDaysMin + (" day" | pluralise(prison.policyNoticeDaysMin)),
             classes: "test-policy-notice-days-min"
           }
           },
@@ -110,7 +111,7 @@
             text: "Max booking window"
           },
             value: {
-            text: prison.policyNoticeDaysMax,
+            text: prison.policyNoticeDaysMax + (" day" | pluralise(prison.policyNoticeDaysMin)),
             classes: "test-policy-notice-days-max"
           }
           }
@@ -121,7 +122,7 @@
         text: "Edit booking window",
         href: "/prisons/" + prison.code + "/configuration/booking-window/edit",
         preventDoubleClick: true,
-        attributes: { "data-test": "booking-winodw-edit" }
+        attributes: { "data-test": "booking-window-edit" }
       })}}
 
       <h2 class="govuk-heading-m">Change prison status</h2>

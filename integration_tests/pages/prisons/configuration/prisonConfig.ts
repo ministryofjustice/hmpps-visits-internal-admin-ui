@@ -29,7 +29,7 @@ export default class PrisonConfigPage extends Page {
   getMaxBookingWindow = (): PageElement => this.getByClass('test-policy-notice-days-max')
 
   pressPrisonBookingWindowEditButton = (): void => {
-    cy.get('[data-test="booking-winodw-edit"]').contains('Edit booking window').click()
+    cy.get('[data-test="booking-window-edit"]').contains('Edit booking window').click()
   }
 
   // Status

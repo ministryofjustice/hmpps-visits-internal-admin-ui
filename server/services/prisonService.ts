@@ -108,7 +108,7 @@ export default class PrisonService {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
-    logger.info(`Prison updated ${prisonCode} created by ${username}`)
+    logger.info(`Prison updated ${prisonCode} by ${username}`)
     return visitSchedulerApiClient.updatePrison(prisonCode, updatePrison)
   }
 
