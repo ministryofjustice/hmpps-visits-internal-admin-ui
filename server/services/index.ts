@@ -8,8 +8,13 @@ import IncentiveGroupService from './incentiveGroupService'
 import VisitService from './visitService'
 
 export const services = () => {
-  const { hmppsAuthClient, applicationInfo, prisonRegisterApiClientBuilder, visitSchedulerApiClientBuilder } =
-    dataAccess()
+  const {
+    hmppsAuthClient,
+    applicationInfo,
+    manageUsersApiClient,
+    prisonRegisterApiClientBuilder,
+    visitSchedulerApiClientBuilder,
+  } = dataAccess()
 
   const categoryGroupService = new CategoryGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
 
@@ -25,7 +30,7 @@ export const services = () => {
 
   const sessionTemplateService = new SessionTemplateService(visitSchedulerApiClientBuilder, hmppsAuthClient)
 
-  const userService = new UserService(hmppsAuthClient)
+  const userService = new UserService(manageUsersApiClient)
 
   const visitService = new VisitService(visitSchedulerApiClientBuilder, hmppsAuthClient)
 
