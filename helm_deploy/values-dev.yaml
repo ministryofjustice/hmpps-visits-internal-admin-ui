@@ -10,6 +10,7 @@ generic-service:
   env:
     INGRESS_URL: "https://visits-internal-admin-dev.prison.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
+    MANAGE_USERS_API_URL: "https://manage-users-api-dev.hmpps.service.justice.gov.uk"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-dev.prison.service.justice.gov.uk"
     PRISON_REGISTER_API_URL: "https://prison-register-dev.hmpps.service.justice.gov.uk"
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler-dev.prison.service.justice.gov.uk"

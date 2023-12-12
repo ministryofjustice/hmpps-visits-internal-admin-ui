@@ -14,7 +14,7 @@ context('Prison configuration', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
-    cy.task('stubAuthUser')
+    cy.task('stubManageUser')
     cy.task('stubPrisonNames')
     cy.task('stubGetAllPrisons')
     cy.signIn()
