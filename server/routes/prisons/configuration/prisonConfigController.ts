@@ -31,8 +31,8 @@ export default class PrisonConfigController {
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
       const formValues = {
-        policyNoticeDaysMin: prison.policyNoticeDaysMin,
-        policyNoticeDaysMax: prison.policyNoticeDaysMax,
+        policyNoticeDaysMin: prison.policyNoticeDaysMin.toString(),
+        policyNoticeDaysMax: prison.policyNoticeDaysMax.toString(),
         ...req.flash('formValues')?.[0],
       }
 
@@ -90,7 +90,8 @@ export default class PrisonConfigController {
         return res.redirect(originalUrl)
       }
 
-      const { policyNoticeDaysMin, policyNoticeDaysMax } = req.body
+      const { policyNoticeDaysMin, policyNoticeDaysMax }: { policyNoticeDaysMin: number; policyNoticeDaysMax: number } =
+        req.body
 
       try {
         await this.prisonService.updatePrisonDetails(res.locals.user.username, prisonId, {
@@ -113,15 +114,18 @@ export default class PrisonConfigController {
       body('policyNoticeDaysMin')
         .trim()
         .toInt()
-        .isInt({ min: 0 })
+        .isInt({ min: 1 })
         .withMessage('Enter a min booking window value of at least 1'),
       body('policyNoticeDaysMax')
         .trim()
         .toInt()
-        .isInt({ min: 0 })
+        .isInt({ min: 1 })
         .withMessage('Enter a max booking window value of at least 1'),
       body(['policyNoticeDaysMin']).custom((_value, { req }) => {
-        const { policyNoticeDaysMin, policyNoticeDaysMax } = req.body
+        const {
+          policyNoticeDaysMin,
+          policyNoticeDaysMax,
+        }: { policyNoticeDaysMin: number; policyNoticeDaysMax: number } = req.body
         if (policyNoticeDaysMin > policyNoticeDaysMax) {
           throw new Error('Enter a Min window less than or equal to the Max')
         }
