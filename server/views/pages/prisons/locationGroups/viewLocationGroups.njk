@@ -20,7 +20,7 @@
 
       <p>This prison is currently
         {{ govukTag({
-          text: "active" if prison.active else "inactive",
+          text: "Active" if prison.active else "Inactive",
           classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
           attributes: { "data-test": "prison-status" }
         }) }}
@@ -51,7 +51,7 @@
       {% for locationGroup in locationGroups %}
         {% set rows = (rows.push([
         {
-          html: '<a href="/prisons/' + prison.code + '/location-groups/' + locationGroup.reference + '">' + locationGroup.name + "</a>",
+          html: '<a class="govuk-link--no-visited-state" href="/prisons/' + prison.code + '/location-groups/' + locationGroup.reference + '">' + locationGroup.name + "</a>",
           attributes: { "data-test": "location-group-name" }
         },
         {

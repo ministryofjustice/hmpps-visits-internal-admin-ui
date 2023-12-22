@@ -11,7 +11,7 @@
 {% set pageHeaderTitle = 'Update session template' %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
 {% set activePrimaryNav = "prisons" %}
-{% set backLinkHref = "/prisons/" + prison.code + "/session-templates" %}
+{% set backLinkHref = "/prisons/" + prison.code + "/session-templates/" + reference %}
 
 {% block content %}
   {{ super() }}

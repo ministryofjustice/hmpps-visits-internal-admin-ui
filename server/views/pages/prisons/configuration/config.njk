@@ -21,7 +21,7 @@
 
       <p>This prison is currently
         {{ govukTag({
-          text: "active" if prison.active else "inactive",
+          text: "Active" if prison.active else "Inactive",
           classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
           attributes: { "data-test": "prison-status" }
         }) }}
@@ -65,7 +65,7 @@
                   text: "Prison web address"
                 },
                 value: {
-                  html: '<a href="' + prisonContactDetails.webAddress + '" target="_blank" rel="noopener noreferrer">' + prisonContactDetails.webAddress + "</a>"
+                  html: '<a class="govuk-link--no-visited-state" href="' + prisonContactDetails.webAddress + '" target="_blank" rel="noopener noreferrer">' + prisonContactDetails.webAddress + "</a>"
                     if prisonContactDetails.webAddress else "Not set",
                     classes: "test-contact-web"
                 }

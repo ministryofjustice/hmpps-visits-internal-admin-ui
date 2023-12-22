@@ -22,7 +22,7 @@
 
       <p>This prison is currently
         {{ govukTag({
-          text: "active" if prison.active else "inactive",
+          text: "Active" if prison.active else "Inactive",
           classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
           attributes: { "data-test": "prison-status" }
         }) }}

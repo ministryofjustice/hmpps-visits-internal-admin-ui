@@ -27,7 +27,7 @@
           <ul class="govuk-list govuk-list--bullet">
             {%- for categoryGroup in sessionTemplate.prisonerCategoryGroups -%}
               <li>
-                <a href="/prisons/{{ sessionTemplate.prisonId }}/category-groups/{{ categoryGroup.reference }}?sessionTemplateRef={{ sessionTemplate.reference }}">{{ categoryGroup.name }}</a>
+                <a class="govuk-link--no-visited-state" href="/prisons/{{ sessionTemplate.prisonId }}/category-groups/{{ categoryGroup.reference }}?sessionTemplateRef={{ sessionTemplate.reference }}">{{ categoryGroup.name }}</a>
               </li>
             {%- endfor -%}
           </ul>
@@ -41,7 +41,7 @@
           <ul class="govuk-list govuk-list--bullet">
             {%- for incentiveGroup in sessionTemplate.prisonerIncentiveLevelGroups -%}
               <li>
-                <a href="/prisons/{{ sessionTemplate.prisonId }}/incentive-groups/{{ incentiveGroup.reference }}?sessionTemplateRef={{ sessionTemplate.reference }}">{{ incentiveGroup.name }}</a>
+                <a class="govuk-link--no-visited-state" href="/prisons/{{ sessionTemplate.prisonId }}/incentive-groups/{{ incentiveGroup.reference }}?sessionTemplateRef={{ sessionTemplate.reference }}">{{ incentiveGroup.name }}</a>
               </li>
             {%- endfor -%}
           </ul>
@@ -55,7 +55,7 @@
           <ul class="govuk-list govuk-list--bullet">
             {%- for locationGroup in sessionTemplate.permittedLocationGroups -%}
               <li>
-                <a href="/prisons/{{ sessionTemplate.prisonId }}/location-groups/{{ locationGroup.reference }}?sessionTemplateRef={{ sessionTemplate.reference }}">{{ locationGroup.name }}</a>
+                <a class="govuk-link--no-visited-state" href="/prisons/{{ sessionTemplate.prisonId }}/location-groups/{{ locationGroup.reference }}?sessionTemplateRef={{ sessionTemplate.reference }}">{{ locationGroup.name }}</a>
               </li>
             {%- endfor -%}
           </ul>
