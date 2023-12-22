@@ -49,7 +49,7 @@ describe('Session templates listing page', () => {
 
           expect($('h1').text().trim()).toBe(prison.name)
 
-          expect($('[data-test="prison-status"]').text().trim()).toBe('active')
+          expect($('[data-test="prison-status"]').text().trim()).toBe('Active')
 
           expect($('.moj-sub-navigation__item').length).toBe(6)
           expect($('.moj-sub-navigation__link[aria-current]').text()).toBe('Session templates')

@@ -157,8 +157,6 @@
 
 {% block pageScripts %}
   <script nonce="{{ cspNonce }}">
-    window.MOJFrontend.initAll()
-
     const addAnotherItems = document.querySelectorAll('.moj-add-another__item')
 
     if (addAnotherItems.length > 1) {

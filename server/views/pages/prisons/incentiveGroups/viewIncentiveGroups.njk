@@ -20,7 +20,7 @@
 
       <p>This prison is currently
         {{ govukTag({
-          text: "active" if prison.active else "inactive",
+          text: "Active" if prison.active else "Inactive",
           classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
           attributes: { "data-test": "prison-status" }
         }) }}
@@ -51,7 +51,7 @@
       {% for incentiveLevelGroup in incentiveGroups %}
         {% set rows = (rows.push([
         {
-          html: '<a href="/prisons/' + prison.code + '/incentive-groups/' + incentiveLevelGroup.reference + '">' + incentiveLevelGroup.name + "</a>",
+          html: '<a class="govuk-link--no-visited-state" href="/prisons/' + prison.code + '/incentive-groups/' + incentiveLevelGroup.reference + '">' + incentiveLevelGroup.name + "</a>",
           attributes: { "data-test": "incentive-group-name" }
         },
         {
