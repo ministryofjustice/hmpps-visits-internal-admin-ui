@@ -7,6 +7,7 @@ import prisonRegister from './integration_tests/mockApis/prisonRegister'
 import categoryGroups from './integration_tests/mockApis/visitScheduler/categoryGroups'
 import incentiveGroups from './integration_tests/mockApis/visitScheduler/incentiveGroups'
 import locationGroups from './integration_tests/mockApis/visitScheduler/locationGroups'
+import visitScheduler from './integration_tests/mockApis/visitScheduler/visitScheduler'
 import prisons from './integration_tests/mockApis/visitScheduler/prisons'
 import sessionTemplates from './integration_tests/mockApis/visitScheduler/sessionTemplates'
 import visits from './integration_tests/mockApis/visitScheduler/visits'
@@ -42,6 +43,7 @@ export default defineConfig({
         ...prisons,
         ...sessionTemplates,
         ...visits,
+        ...visitScheduler,
       })
     },
     baseUrl: 'http://localhost:3007',
