@@ -87,8 +87,11 @@ describe('Add a category group', () => {
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/category-groups/${categoryGroup.reference}`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith(
+            'message',
+            `Category group '${createCategoryGroupDto.name}' has been created`,
+          )
 
           expect(categoryGroupService.createCategoryGroup).toHaveBeenCalledWith('user1', createCategoryGroupDto)
         })

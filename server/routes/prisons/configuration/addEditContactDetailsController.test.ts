@@ -102,8 +102,8 @@ describe('Add / edit contact details', () => {
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Contact details added')
 
           expect(prisonService.createPrisonContactDetails).toHaveBeenCalledWith(
             'user1',
@@ -125,8 +125,8 @@ describe('Add / edit contact details', () => {
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Contact details updated')
 
           expect(prisonService.updatePrisonContactDetails).toHaveBeenCalledWith(
             'user1',
@@ -176,8 +176,7 @@ describe('Add / edit contact details', () => {
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
           expect(flashProvider).toHaveBeenCalledWith('message', 'No contact details added (none entered)')
           expect(prisonService.createPrisonContactDetails).not.toHaveBeenCalled()
           expect(prisonService.updatePrisonContactDetails).not.toHaveBeenCalled()
@@ -194,8 +193,7 @@ describe('Add / edit contact details', () => {
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
           expect(flashProvider).toHaveBeenCalledWith('message', 'Contact details removed (all values set to empty)')
           expect(prisonService.createPrisonContactDetails).not.toHaveBeenCalled()
           expect(prisonService.updatePrisonContactDetails).not.toHaveBeenCalled()

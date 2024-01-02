@@ -70,8 +70,8 @@ describe('Prison booking window edit', () => {
         .expect(302)
         .expect('Location', `/prisons/${activePrison.code}/configuration`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Booking window updated')
           expect(prisonService.updatePrisonDetails).toHaveBeenCalledWith('user1', activePrison.code, testUpdateData)
         })
     })
@@ -93,6 +93,7 @@ describe('Prison booking window edit', () => {
         .expect(302)
         .expect('Location', `/prisons/HEI/configuration/booking-window/edit`)
         .expect(() => {
+          expect(flashProvider.mock.calls.length).toBe(2)
           expect(flashProvider).toHaveBeenCalledWith('errors', expect.arrayContaining(expectedValidationErrors))
           expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFormValues)
           expect(prisonService.updatePrisonDetails).not.toHaveBeenCalled()
@@ -118,6 +119,7 @@ describe('Prison booking window edit', () => {
         .expect(302)
         .expect('Location', `/prisons/HEI/configuration/booking-window/edit`)
         .expect(() => {
+          expect(flashProvider.mock.calls.length).toBe(2)
           expect(flashProvider).toHaveBeenCalledWith('errors', expect.arrayContaining(expectedValidationErrors))
           expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFormValues)
           expect(prisonService.updatePrisonDetails).not.toHaveBeenCalled()

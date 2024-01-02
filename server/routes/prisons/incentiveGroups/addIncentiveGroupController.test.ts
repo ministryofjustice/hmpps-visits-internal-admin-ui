@@ -95,8 +95,11 @@ describe('Add an incentive group', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/incentive-groups/${incentiveGroup.reference}`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith(
+            'message',
+            `Incentive level group '${createIncentiveGroupDto.name}' has been created`,
+          )
 
           expect(incentiveGroupService.createIncentiveGroup).toHaveBeenCalledWith('user1', createIncentiveGroupDto)
         })

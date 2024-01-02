@@ -105,8 +105,11 @@ describe('Add a location group', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/location-groups/${locationGroup.reference}`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith(
+            'message',
+            `Location group '${createLocationGroupDto.name}' has been created`,
+          )
 
           expect(locationGroupService.createLocationGroup).toHaveBeenCalledWith('user1', createLocationGroupDto)
         })
@@ -134,8 +137,11 @@ describe('Add a location group', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/location-groups/${locationGroup.reference}`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith(
+            'message',
+            `Location group '${createLocationGroupDto.name}' has been created`,
+          )
           expect(locationGroupService.createLocationGroup.mock.calls[0]).toStrictEqual([
             'user1',
             createLocationGroupDto,

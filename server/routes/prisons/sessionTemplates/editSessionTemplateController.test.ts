@@ -23,10 +23,10 @@ const locationGroupService = createMockLocationGroupService()
 
 const prison = TestData.prison()
 const reference = '-afe.dcc.0f'
+const sessionTemplate = TestData.sessionTemplate()
+const visitStats = TestData.visitStats()
 
 beforeEach(() => {
-  const sessionTemplate = TestData.sessionTemplate()
-  const visitStats = TestData.visitStats()
   sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplate)
   sessionTemplateService.getTemplateStats.mockResolvedValue(visitStats)
 
@@ -96,16 +96,21 @@ describe('Update a session template', () => {
   })
 
   describe('POST /prisons/{:prisonId}/session-templates/add', () => {
-    it('should send valid data to create session template and redirect to view template', () => {
+    it('should send valid data to update session template and redirect to view template', () => {
       // Given
       const updateSessionTemplateDto = TestData.updateSessionTemplateDto({
+        name: 'new session template name',
         sessionDateRange: { validFromDate: '2023-02-01', validToDate: '2024-12-31' },
+      })
+      sessionTemplateService.updateSessionTemplate.mockResolvedValue({
+        ...sessionTemplate,
+        ...updateSessionTemplateDto,
       })
 
       // When
       const results = request(app)
         .post(url)
-        .send('name=session template name')
+        .send(`name=${updateSessionTemplateDto.name}`)
         .send('validFromDateDay=01')
         .send('validFromDateMonth=02')
         .send('validFromDateYear=2023')
@@ -120,10 +125,13 @@ describe('Update a session template', () => {
       // Then
       return results
         .expect(302)
-        .expect('location', `/prisons/${prison.code}/session-templates/${reference}/edit`)
+        .expect('location', `/prisons/${prison.code}/session-templates/${reference}`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith(
+            'message',
+            `Session template '${updateSessionTemplateDto.name}' has been updated`,
+          )
           expect(sessionTemplateService.updateSessionTemplate).toHaveBeenCalledWith(
             'user1',
             reference,
