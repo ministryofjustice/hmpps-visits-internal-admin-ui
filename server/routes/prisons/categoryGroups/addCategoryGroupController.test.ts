@@ -1,6 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
+import { BadRequest } from 'http-errors'
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockCategoryGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
@@ -117,6 +118,27 @@ describe('Add a category group', () => {
           expect(flashProvider).toHaveBeenCalledWith('errors', expect.arrayContaining(expectedValidationErrors))
           expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFormValues)
           expect(categoryGroupService.createCategoryGroup).not.toHaveBeenCalled()
+        })
+    })
+
+    it('should handle API errors by setting flash errors and redirecting to same page', () => {
+      const createCategoryGroupDto = TestData.createCategoryGroupDto({ categories: ['C'] })
+      categoryGroupService.createCategoryGroup.mockRejectedValue(new BadRequest('API error!'))
+
+      return request(app)
+        .post(url)
+        .send(`name=${createCategoryGroupDto.name}`)
+        .send('prisonerCategories[0]=C')
+        .expect(302)
+        .expect('Location', url)
+        .expect(() => {
+          expect(categoryGroupService.createCategoryGroup).toHaveBeenCalledWith('user1', createCategoryGroupDto)
+          expect(flashProvider.mock.calls.length).toBe(2)
+          expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
+          expect(flashProvider).toHaveBeenCalledWith('formValues', {
+            name: createCategoryGroupDto.name,
+            prisonerCategories: ['C'],
+          })
         })
     })
   })
