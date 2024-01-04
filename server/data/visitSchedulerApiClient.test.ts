@@ -111,6 +111,25 @@ describe('visitSchedulerApiClient', () => {
     })
   })
 
+  describe('updatePrison', () => {
+    it('should return updated prison', async () => {
+      const prisonDto = TestData.prisonDto()
+      const updatePrisonDto = TestData.updatePrisonDto()
+
+      fakeVisitSchedulerApi
+        .put(`/admin/prisons/prison/${prisonDto.code}`, <PrisonDto>{
+          policyNoticeDaysMin: updatePrisonDto.policyNoticeDaysMin,
+          policyNoticeDaysMax: updatePrisonDto.policyNoticeDaysMax,
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, prisonDto)
+
+      const output = await visitSchedulerApiClient.updatePrison(prisonDto.code, updatePrisonDto)
+
+      expect(output).toEqual(prisonDto)
+    })
+  })
+
   describe('activatePrison', () => {
     it('should return activated prison', async () => {
       const prison = TestData.prisonDto()

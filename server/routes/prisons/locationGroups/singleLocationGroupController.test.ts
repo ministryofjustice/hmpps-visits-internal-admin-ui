@@ -1,6 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
+import { BadRequest } from 'http-errors'
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockLocationGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
@@ -37,12 +38,12 @@ describe('Single location group page', () => {
   describe('GET /prisons/{:prisonId}/location-groups/{:reference}', () => {
     it('should display all location group information', () => {
       return request(app)
-        .get('/prisons/HEI/location-groups/-afe~dcb~fb')
+        .get(`/prisons/${prison.code}/location-groups/${locationGroup.reference}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('.govuk-back-link').eq(0).attr('href')).toBe('/prisons/HEI/location-groups')
-          expect($('h1').text()).toContain('Hewell (HMP)')
+          expect($('.govuk-back-link').eq(0).attr('href')).toBe(`/prisons/${prison.code}/location-groups`)
+          expect($('h1').text()).toContain(prison.name)
           expect($('h1').text()).toContain(locationGroup.name)
           expect($('h2').text()).toContain(locationGroup.reference)
 
@@ -56,21 +57,20 @@ describe('Single location group page', () => {
 
     it('should have the correct back link, when coming from the session template', () => {
       return request(app)
-        .get(`/prisons/HEI/location-groups/${locationGroup.reference}?sessionTemplateRef=-afe.dcc.a8`)
+        .get(`/prisons/${prison.code}/location-groups/${locationGroup.reference}?sessionTemplateRef=-afe.dcc.a8`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('.govuk-back-link').eq(0).attr('href')).toBe('/prisons/HEI/session-templates/-afe.dcc.a8')
-          expect($('h1').text()).toContain('Hewell (HMP)')
+          expect($('.govuk-back-link').eq(0).attr('href')).toBe(`/prisons/${prison.code}/session-templates/-afe.dcc.a8`)
+          expect($('h1').text()).toContain(prison.name)
         })
     })
   })
 
   describe('POST /prisons/{:prisonId}/location-groups/{:reference}/delete', () => {
     it('should delete location group and set flash message', () => {
-      // Then
       return request(app)
-        .post(`/prisons/HEI/location-groups/-afe~dcb~fb/delete`)
+        .post(`/prisons/${prison.code}/location-groups/${locationGroup.reference}/delete`)
         .expect(302)
         .expect('location', `/prisons/${prison.code}/location-groups`)
         .expect(() => {
@@ -78,8 +78,20 @@ describe('Single location group page', () => {
             'message',
             `Location group '${locationGroup.name}' has been deleted`,
           )
-          expect(locationGroupService.deleteLocationGroup).toHaveBeenCalledTimes(1)
-          expect(locationGroupService.deleteLocationGroup).toHaveBeenCalledWith('user1', '-afe~dcb~fb')
+          expect(locationGroupService.deleteLocationGroup).toHaveBeenCalledWith('user1', `${locationGroup.reference}`)
+        })
+    })
+
+    it('should handle API errors by setting flash errors and redirecting to same page', () => {
+      locationGroupService.deleteLocationGroup.mockRejectedValue(new BadRequest('API error!'))
+
+      return request(app)
+        .post(`/prisons/${prison.code}/location-groups/${locationGroup.reference}/delete`)
+        .expect(302)
+        .expect('location', `/prisons/${prison.code}/location-groups/${locationGroup.reference}`)
+        .expect(() => {
+          expect(locationGroupService.deleteLocationGroup).toHaveBeenCalledWith('user1', `${locationGroup.reference}`)
+          expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
         })
     })
   })

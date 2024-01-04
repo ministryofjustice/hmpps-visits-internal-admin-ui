@@ -1,6 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
+import { BadRequest } from 'http-errors'
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockIncentiveGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
@@ -95,8 +96,11 @@ describe('Add an incentive group', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/incentive-groups/${incentiveGroup.reference}`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith(
+            'message',
+            `Incentive level group '${createIncentiveGroupDto.name}' has been created`,
+          )
 
           expect(incentiveGroupService.createIncentiveGroup).toHaveBeenCalledWith('user1', createIncentiveGroupDto)
         })
@@ -125,6 +129,27 @@ describe('Add an incentive group', () => {
           expect(flashProvider).toHaveBeenCalledWith('errors', expect.arrayContaining(expectedValidationErrors))
           expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFormValues)
           expect(incentiveGroupService.createIncentiveGroup).not.toHaveBeenCalled()
+        })
+    })
+
+    it('should handle API errors by setting flash errors and redirecting to same page', () => {
+      const createIncentiveGroupDto = TestData.createIncentiveGroupDto()
+      incentiveGroupService.createIncentiveGroup.mockRejectedValue(new BadRequest('API error!'))
+
+      return request(app)
+        .post(url)
+        .send(`name=${createIncentiveGroupDto.name}`)
+        .send('incentiveLevels=ENHANCED')
+        .expect(302)
+        .expect('location', `/prisons/${prison.code}/incentive-groups/add`)
+        .expect(() => {
+          expect(incentiveGroupService.createIncentiveGroup).toHaveBeenCalledWith('user1', createIncentiveGroupDto)
+          expect(flashProvider.mock.calls.length).toBe(2)
+          expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
+          expect(flashProvider).toHaveBeenCalledWith('formValues', {
+            name: createIncentiveGroupDto.name,
+            incentiveLevels: createIncentiveGroupDto.incentiveLevels,
+          })
         })
     })
   })

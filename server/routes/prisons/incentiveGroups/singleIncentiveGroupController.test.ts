@@ -1,6 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
+import { BadRequest } from 'http-errors'
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockIncentiveGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
@@ -67,7 +68,6 @@ describe('Single incentive group page', () => {
 
   describe('POST /prisons/{:prisonId}/location-groups/{:reference}/delete', () => {
     it('should delete location group and set flash message', () => {
-      // Then
       return request(app)
         .post(`/prisons/HEI/incentive-groups/${incentiveGroup.reference}/delete`)
         .expect(302)
@@ -79,6 +79,20 @@ describe('Single incentive group page', () => {
           )
           expect(incentiveGroupService.deleteIncentiveGroup).toHaveBeenCalledTimes(1)
           expect(incentiveGroupService.deleteIncentiveGroup).toHaveBeenCalledWith('user1', incentiveGroup.reference)
+        })
+    })
+
+    it('should handle API errors by setting flash errors and redirecting to same page', () => {
+      incentiveGroupService.deleteIncentiveGroup.mockRejectedValue(new BadRequest('API error!'))
+
+      return request(app)
+        .post(`/prisons/HEI/incentive-groups/${incentiveGroup.reference}/delete`)
+        .expect(302)
+        .expect('location', `/prisons/HEI/incentive-groups/${incentiveGroup.reference}`)
+        .expect(() => {
+          expect(incentiveGroupService.deleteIncentiveGroup).toHaveBeenCalledTimes(1)
+          expect(incentiveGroupService.deleteIncentiveGroup).toHaveBeenCalledWith('user1', incentiveGroup.reference)
+          expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
         })
     })
   })

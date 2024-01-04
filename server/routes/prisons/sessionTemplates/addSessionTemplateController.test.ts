@@ -214,8 +214,11 @@ describe('Add a session template', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/session-templates/${sessionTemplate.reference}`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith(
+            'message',
+            `Session template '${sessionTemplate.name}' has been created`,
+          )
           expect(sessionTemplateService.createSessionTemplate).toHaveBeenCalledWith('user1', createSessionTemplateDto)
         })
     })
@@ -321,6 +324,12 @@ describe('Add a session template', () => {
 })
 
 describe('Copy a session template', () => {
+  const sessionTemplateToCopy = TestData.sessionTemplate({
+    prisonerIncentiveLevelGroups: [TestData.incentiveGroup()],
+    prisonerCategoryGroups: [TestData.categoryGroup()],
+    permittedLocationGroups: [TestData.locationGroup()],
+  })
+
   const expectedFormValues: Record<string, string | string[]> = {
     name: 'COPY - WEDNESDAY, 2023-03-21, 13:45',
     dayOfWeek: 'WEDNESDAY',
@@ -333,18 +342,17 @@ describe('Copy a session template', () => {
     openCapacity: '35',
     closedCapacity: '2',
     visitRoom: 'Visits Main Room',
-    hasIncentiveGroups: undefined,
-    incentiveGroupReferences: [],
-    hasCategoryGroups: undefined,
-    categoryGroupReferences: [],
-    hasLocationGroups: undefined,
-    locationGroupReferences: [],
+    hasIncentiveGroups: 'yes',
+    incentiveGroupReferences: [sessionTemplateToCopy.prisonerIncentiveLevelGroups[0].reference],
+    hasCategoryGroups: 'yes',
+    categoryGroupReferences: [sessionTemplateToCopy.prisonerCategoryGroups[0].reference],
+    hasLocationGroups: 'yes',
+    locationGroupReferences: [sessionTemplateToCopy.permittedLocationGroups[0].reference],
   }
 
   describe('POST /prisons/{:prisonId}/session-templates/copy', () => {
     it('should pre-populate formValues in flash and redirect to add template form - no end date', () => {
       // Given
-      const sessionTemplateToCopy = TestData.sessionTemplate()
       sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplateToCopy)
 
       // When
@@ -367,7 +375,6 @@ describe('Copy a session template', () => {
 
     it('should pre-populate formValues in flash and redirect to add template form - with end date', () => {
       // Given
-      const sessionTemplateToCopy = TestData.sessionTemplate()
       sessionTemplateToCopy.sessionDateRange.validToDate = '2023-12-31'
       sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplateToCopy)
 

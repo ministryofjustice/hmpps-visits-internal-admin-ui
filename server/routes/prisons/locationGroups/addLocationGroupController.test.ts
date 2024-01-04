@@ -1,6 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
+import { BadRequest } from 'http-errors'
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockLocationGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
@@ -105,8 +106,11 @@ describe('Add a location group', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/location-groups/${locationGroup.reference}`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith(
+            'message',
+            `Location group '${createLocationGroupDto.name}' has been created`,
+          )
 
           expect(locationGroupService.createLocationGroup).toHaveBeenCalledWith('user1', createLocationGroupDto)
         })
@@ -134,8 +138,11 @@ describe('Add a location group', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/location-groups/${locationGroup.reference}`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith(
+            'message',
+            `Location group '${createLocationGroupDto.name}' has been created`,
+          )
           expect(locationGroupService.createLocationGroup.mock.calls[0]).toStrictEqual([
             'user1',
             createLocationGroupDto,
@@ -186,6 +193,32 @@ describe('Add a location group', () => {
           expect(flashProvider).toHaveBeenCalledWith('errors', expect.arrayContaining(expectedValidationErrors))
           expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFormValues)
           expect(locationGroupService.createLocationGroup).not.toHaveBeenCalled()
+        })
+    })
+
+    it('should handle API errors by setting flash errors and redirecting to same page', () => {
+      const createLocationGroupDto = TestData.createLocationGroupDto({
+        locations: [{ levelOneCode: '1a', levelTwoCode: '2a', levelThreeCode: '3a', levelFourCode: '4a' }],
+      })
+      locationGroupService.createLocationGroup.mockRejectedValue(new BadRequest('API error!'))
+
+      return request(app)
+        .post(url)
+        .send(`name=${createLocationGroupDto.name}`)
+        .send(`location[0][levelOneCode]=${createLocationGroupDto.locations[0].levelOneCode}`)
+        .send(`location[0][levelTwoCode]=${createLocationGroupDto.locations[0].levelTwoCode}`)
+        .send(`location[0][levelThreeCode]=${createLocationGroupDto.locations[0].levelThreeCode}`)
+        .send(`location[0][levelFourCode]=${createLocationGroupDto.locations[0].levelFourCode}`)
+        .expect(302)
+        .expect('location', `/prisons/${prison.code}/location-groups/add`)
+        .expect(() => {
+          expect(locationGroupService.createLocationGroup).toHaveBeenCalledWith('user1', createLocationGroupDto)
+          expect(flashProvider.mock.calls.length).toBe(2)
+          expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
+          expect(flashProvider).toHaveBeenCalledWith('formValues', {
+            name: createLocationGroupDto.name,
+            location: createLocationGroupDto.locations,
+          })
         })
     })
   })

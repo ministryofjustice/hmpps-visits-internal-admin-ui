@@ -1,6 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
+import { BadRequest } from 'http-errors'
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
@@ -102,8 +103,8 @@ describe('Add / edit contact details', () => {
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Contact details added')
 
           expect(prisonService.createPrisonContactDetails).toHaveBeenCalledWith(
             'user1',
@@ -125,8 +126,8 @@ describe('Add / edit contact details', () => {
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Contact details updated')
 
           expect(prisonService.updatePrisonContactDetails).toHaveBeenCalledWith(
             'user1',
@@ -167,6 +168,28 @@ describe('Add / edit contact details', () => {
       },
     )
 
+    it.each(['add', 'edit'])(
+      'should handle API errors by setting flash errors and redirecting to same page - %s',
+      (action: string) => {
+        const prisonContactDetails = TestData.prisonContactDetails()
+
+        prisonService.createPrisonContactDetails.mockRejectedValue(new BadRequest('API error!'))
+        prisonService.updatePrisonContactDetails.mockRejectedValue(new BadRequest('API error!'))
+
+        return request(app)
+          .post(`${baseUrl}/${action}`)
+          .send(`emailAddress=${prisonContactDetails.emailAddress}`)
+          .send(`phoneNumber=${prisonContactDetails.phoneNumber}`)
+          .send(`webAddress=${prisonContactDetails.webAddress}`)
+          .expect(302)
+          .expect('location', `${baseUrl}/${action}`)
+          .expect(() => {
+            expect(flashProvider.mock.calls.length).toBe(2)
+            expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
+          })
+      },
+    )
+
     it('should not add contact details if no data entered', () => {
       return request(app)
         .post(`${baseUrl}/add`)
@@ -176,8 +199,7 @@ describe('Add / edit contact details', () => {
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
           expect(flashProvider).toHaveBeenCalledWith('message', 'No contact details added (none entered)')
           expect(prisonService.createPrisonContactDetails).not.toHaveBeenCalled()
           expect(prisonService.updatePrisonContactDetails).not.toHaveBeenCalled()
@@ -194,8 +216,7 @@ describe('Add / edit contact details', () => {
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
-          expect(flashProvider).not.toHaveBeenCalledWith('errors')
-          expect(flashProvider).not.toHaveBeenCalledWith('formValues')
+          expect(flashProvider.mock.calls.length).toBe(1)
           expect(flashProvider).toHaveBeenCalledWith('message', 'Contact details removed (all values set to empty)')
           expect(prisonService.createPrisonContactDetails).not.toHaveBeenCalled()
           expect(prisonService.updatePrisonContactDetails).not.toHaveBeenCalled()
