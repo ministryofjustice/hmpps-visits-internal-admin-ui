@@ -125,6 +125,24 @@ describe('Prison booking window edit', () => {
           expect(prisonService.updatePrisonDetails).not.toHaveBeenCalled()
         })
     })
+
+    it('should handle API errors by setting flash errors and redirecting to same page', () => {
+      const testUpdateData = { policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 }
+      prisonService.updatePrisonDetails.mockRejectedValue(new BadRequest('API error!'))
+
+      return request(app)
+        .post(editBookingWindowUrl)
+        .send(`policyNoticeDaysMin=${testUpdateData.policyNoticeDaysMin}`)
+        .send(`policyNoticeDaysMax=${testUpdateData.policyNoticeDaysMax}`)
+        .expect(302)
+        .expect('Location', `/prisons/${activePrison.code}/configuration/booking-window/edit`)
+        .expect(() => {
+          expect(prisonService.updatePrisonDetails).toHaveBeenCalledWith('user1', activePrison.code, testUpdateData)
+          expect(flashProvider.mock.calls.length).toBe(2)
+          expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
+          expect(flashProvider).toHaveBeenCalledWith('formValues', testUpdateData)
+        })
+    })
   })
 })
 

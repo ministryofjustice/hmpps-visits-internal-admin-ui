@@ -1,6 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
+import { BadRequest } from 'http-errors'
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
@@ -163,6 +164,28 @@ describe('Add / edit contact details', () => {
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFormValues)
             expect(prisonService.createPrisonContactDetails).not.toHaveBeenCalled()
             expect(prisonService.updatePrisonContactDetails).not.toHaveBeenCalled()
+          })
+      },
+    )
+
+    it.each(['add', 'edit'])(
+      'should handle API errors by setting flash errors and redirecting to same page - %s',
+      (action: string) => {
+        const prisonContactDetails = TestData.prisonContactDetails()
+
+        prisonService.createPrisonContactDetails.mockRejectedValue(new BadRequest('API error!'))
+        prisonService.updatePrisonContactDetails.mockRejectedValue(new BadRequest('API error!'))
+
+        return request(app)
+          .post(`${baseUrl}/${action}`)
+          .send(`emailAddress=${prisonContactDetails.emailAddress}`)
+          .send(`phoneNumber=${prisonContactDetails.phoneNumber}`)
+          .send(`webAddress=${prisonContactDetails.webAddress}`)
+          .expect(302)
+          .expect('location', `${baseUrl}/${action}`)
+          .expect(() => {
+            expect(flashProvider.mock.calls.length).toBe(2)
+            expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
           })
       },
     )
