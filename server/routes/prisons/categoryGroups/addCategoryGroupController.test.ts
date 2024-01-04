@@ -137,7 +137,7 @@ describe('Add a category group', () => {
           expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
           expect(flashProvider).toHaveBeenCalledWith('formValues', {
             name: createCategoryGroupDto.name,
-            prisonerCategories: ['C'],
+            prisonerCategories: createCategoryGroupDto.categories,
           })
         })
     })
