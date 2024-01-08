@@ -212,6 +212,7 @@ export default class TestData {
   }: Partial<RequestSessionTemplateVisitStatsDto> = {}): RequestSessionTemplateVisitStatsDto => ({ visitsFromDate })
 
   static visitStats = ({
+    cancelCount = 0,
     minimumCapacity = { open: 3, closed: 1 },
     visitCount = 8,
     visitsByDate = [
@@ -224,6 +225,7 @@ export default class TestData {
       },
     ],
   }: Partial<SessionTemplateVisitStatsDto> = {}): SessionTemplateVisitStatsDto => ({
+    cancelCount,
     minimumCapacity,
     visitCount,
     visitsByDate,

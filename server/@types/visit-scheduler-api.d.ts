@@ -306,6 +306,13 @@ export interface paths {
     /** To notify VSiP that a change to prisoner restriction has taken place */
     post: operations['notifyVSiPThatPrisonerRestrictionChanged']
   }
+  '/visits/notification/visit/{reference}/types': {
+    /**
+     * get visit notification types by booking reference
+     * @description Retrieve visit  notification types by booking reference
+     */
+    get: operations['getNotificationTypesForBookingReference']
+  }
   '/visits/notification/visitor/restriction/changed': {
     /** To notify VSiP that a change to a visitor restriction has taken place */
     post: operations['notifyVSiPThatVisitorRestrictionChanged']
@@ -385,7 +392,14 @@ export interface components {
        * @description application method
        * @enum {string}
        */
-      applicationMethodType: 'PHONE' | 'WEBSITE' | 'EMAIL' | 'IN_PERSON' | 'NOT_KNOWN' | 'NOT_APPLICABLE'
+      applicationMethodType:
+        | 'PHONE'
+        | 'WEBSITE'
+        | 'EMAIL'
+        | 'IN_PERSON'
+        | 'NOT_KNOWN'
+        | 'NOT_APPLICABLE'
+        | 'BY_PRISONER'
     }
     CancelVisitDto: {
       /** @description Username for user who actioned this request */
@@ -394,7 +408,14 @@ export interface components {
        * @description application method
        * @enum {string}
        */
-      applicationMethodType: 'PHONE' | 'WEBSITE' | 'EMAIL' | 'IN_PERSON' | 'NOT_KNOWN' | 'NOT_APPLICABLE'
+      applicationMethodType:
+        | 'PHONE'
+        | 'WEBSITE'
+        | 'EMAIL'
+        | 'IN_PERSON'
+        | 'NOT_KNOWN'
+        | 'NOT_APPLICABLE'
+        | 'BY_PRISONER'
       cancelOutcome: components['schemas']['OutcomeDto']
     }
     ChangeVisitSlotRequestDto: {
@@ -584,7 +605,14 @@ export interface components {
        * @description What was the application method for this event
        * @enum {string}
        */
-      applicationMethodType: 'PHONE' | 'WEBSITE' | 'EMAIL' | 'IN_PERSON' | 'NOT_KNOWN' | 'NOT_APPLICABLE'
+      applicationMethodType:
+        | 'PHONE'
+        | 'WEBSITE'
+        | 'EMAIL'
+        | 'IN_PERSON'
+        | 'NOT_KNOWN'
+        | 'NOT_APPLICABLE'
+        | 'BY_PRISONER'
       /**
        * Format: date-time
        * @description event creat date and time
@@ -603,6 +631,10 @@ export interface components {
         | 'BOOKED_VISIT'
         | 'UPDATED_VISIT'
         | 'CANCELLED_VISIT'
+        | 'NON_ASSOCIATION_EVENT'
+        | 'PRISONER_RELEASED_EVENT'
+        | 'PRISONER_RESTRICTION_CHANGE_EVENT'
+        | 'PRISON_VISITS_BLOCKED_FOR_DATE'
     }
     GetDlqResult: {
       messages: components['schemas']['DlqMessage'][]
@@ -656,6 +688,7 @@ export interface components {
         | 'VISITOR_FAILED_SECURITY_CHECKS'
         | 'VISIT_ORDER_CANCELLED'
         | 'SUPERSEDED_CANCELLATION'
+        | 'DETAILS_CHANGED_AFTER_BOOKING'
       /**
        * @description Prison Id
        * @example MDI
@@ -746,7 +779,11 @@ export interface components {
        * @example NON_ASSOCIATION_EVENT
        * @enum {string}
        */
-      type: 'NON_ASSOCIATION_EVENT' | 'PRISONER_RELEASED_EVENT' | 'PRISONER_RESTRICTION_CHANGE_EVENT'
+      type:
+        | 'NON_ASSOCIATION_EVENT'
+        | 'PRISONER_RELEASED_EVENT'
+        | 'PRISONER_RESTRICTION_CHANGE_EVENT'
+        | 'PRISON_VISITS_BLOCKED_FOR_DATE'
     }
     /** @description Visit Outcome */
     OutcomeDto: {
@@ -775,6 +812,7 @@ export interface components {
         | 'VISITOR_FAILED_SECURITY_CHECKS'
         | 'VISIT_ORDER_CANCELLED'
         | 'SUPERSEDED_CANCELLATION'
+        | 'DETAILS_CHANGED_AFTER_BOOKING'
       /**
        * @description Outcome text
        * @example Because he got covid
@@ -1167,6 +1205,12 @@ export interface components {
     }
     /** @description count of visits by date */
     SessionTemplateVisitCountsDto: {
+      /**
+       * Format: int32
+       * @description canceled visit counts
+       * @example 10
+       */
+      cancelCount: number
       visitCounts: components['schemas']['SessionCapacityDto']
       /**
        * Format: date
@@ -1176,10 +1220,16 @@ export interface components {
       visitDate: string
     }
     SessionTemplateVisitStatsDto: {
+      /**
+       * Format: int32
+       * @description canceled visit counts
+       * @example 10
+       */
+      cancelCount: number
       minimumCapacity: components['schemas']['SessionCapacityDto']
       /**
        * Format: int32
-       * @description visit count for given date
+       * @description booked, reserved or changing visit counts
        * @example 10
        */
       visitCount: number
@@ -1353,6 +1403,7 @@ export interface components {
         | 'VISITOR_FAILED_SECURITY_CHECKS'
         | 'VISIT_ORDER_CANCELLED'
         | 'SUPERSEDED_CANCELLATION'
+        | 'DETAILS_CHANGED_AFTER_BOOKING'
       /**
        * @description Prison Id
        * @example MDI
@@ -3082,7 +3133,7 @@ export interface operations {
          * @description Filter results by prisoner id
          * @example A12345DC
          */
-        prisonerId?: string
+        prisonerId: string
         /**
          * @description Override the default minimum number of days notice from the current date
          * @example 2
@@ -3772,6 +3823,46 @@ export interface operations {
         }
       }
       /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * get visit notification types by booking reference
+   * @description Retrieve visit  notification types by booking reference
+   */
+  getNotificationTypesForBookingReference: {
+    parameters: {
+      path: {
+        /**
+         * @description bookingReference
+         * @example v9*d7*ed*7u
+         */
+        reference: string
+      }
+    }
+    responses: {
+      /** @description Retrieved visit  notification types by booking reference */
+      200: {
+        content: {
+          'application/json': (
+            | 'NON_ASSOCIATION_EVENT'
+            | 'PRISONER_RELEASED_EVENT'
+            | 'PRISONER_RESTRICTION_CHANGE_EVENT'
+            | 'PRISON_VISITS_BLOCKED_FOR_DATE'
+          )[]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to access this endpoint */
       403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
