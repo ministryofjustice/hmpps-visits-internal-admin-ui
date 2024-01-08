@@ -34,10 +34,12 @@ afterEach(() => {
 describe('Single session template page', () => {
   describe('GET /prisons/{:prisonId}/session-templates/{:reference}', () => {
     let sessionTemplate: SessionTemplate
+    const visitStats = TestData.visitStats()
 
     beforeEach(() => {
       sessionTemplate = TestData.sessionTemplate()
       sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplate)
+      sessionTemplateService.getTemplateStats.mockResolvedValue(visitStats)
     })
 
     it('should display all session template information', () => {
@@ -49,6 +51,9 @@ describe('Single session template page', () => {
           expect($('h1').text()).toContain('Hewell (HMP)')
           expect($('h1').text()).toContain(sessionTemplate.name)
 
+          expect($('[data-test="visit-stats"]').length).toBe(1)
+
+          expect($('.test-template-status').text()).toContain('Active')
           expect($('.test-template-reference').text()).toContain(sessionTemplate.reference)
           expect($('.test-template-dayOfWeek').text()).toContain('Wednesday')
           expect($('.test-template-startTime').text()).toContain(sessionTemplate.sessionTimeSlot.startTime)

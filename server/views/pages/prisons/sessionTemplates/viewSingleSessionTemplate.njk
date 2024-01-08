@@ -3,7 +3,7 @@
 {%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
-{%- from "moj/components/banner/macro.njk" import mojBanner -%}
+{%- from "components/sessionTemplateVisitStats.njk" import sessionTemplateVisitStats -%}
 
 {% set pageHeaderTitle = sessionTemplate.name %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
@@ -64,24 +64,7 @@
         {%- endif -%}
       {%- endset -%}
 
-      {% set infoBannerHtml %}
-      <p data-test="total-booked-test">This visit session template currently has {{ visitStats.visitCount }} future {{ 'visits' if visitStats.visitCount >= 2 else 'visit' }} booked</p>
-      {% for stats in visitStats.visitsByDate %}
-        <p>For the date: {{ stats.visitDate | formatDate }}, there is currently {{ stats.visitCounts.open }} open {{ 'visits' if stats.visitCounts.open >= 2 else 'visit' }} and {{ stats.visitCounts.closed }} closed {{ 'visits' if stats.visitCounts.closed >= 2 else 'visit' }} booked</p>
-      {% endfor %}
-      {% endset %}
-
-      {% if infoBannerHtml | length %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-three-quarters">
-            {{ mojBanner({
-              type: "information",
-              html: infoBannerHtml,
-              iconFallbackText: "Information"
-            }) }}
-          </div>
-        </div>
-      {% endif %}
+      {{ sessionTemplateVisitStats(visitStats) }}
 
       {{ govukSummaryList({
         rows: [
@@ -94,7 +77,7 @@
               text: "Active" if sessionTemplate.active == true else "Inactive",
               classes: "govuk-tag--blue" if sessionTemplate.active else "govuk-tag--grey"
             }),
-            classes: "test-template-status-value"
+            classes: "test-template-status"
           },
             classes: "test-template-status"
           },

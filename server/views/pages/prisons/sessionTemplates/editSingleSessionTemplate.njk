@@ -6,7 +6,7 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
-{%- from "moj/components/banner/macro.njk" import mojBanner -%}
+{%- from "components/sessionTemplateVisitStats.njk" import sessionTemplateVisitStats -%}
 
 {% set pageHeaderTitle = 'Update session template' %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
@@ -51,25 +51,7 @@
         }), locationGroupsItems) %}
       {% endfor %}
 
-      {% set infoBannerHtml %}
-      <p data-test="total-booked-test">This visit session template currently has {{ visitStats.visitCount }} future {{ 'visits' if visitStats.visitCount >= 2 else 'visit' }} booked</p>
-      {% for stats in visitStats.visitsByDate %}
-        <p>For the date: {{ stats.visitDate | formatDate }}, there is currently {{ stats.visitCounts.open }} open {{ 'visits' if stats.visitCounts.open >= 2 else 'visit' }} and {{ stats.visitCounts.closed }} closed {{ 'visits' if stats.visitCounts.closed >= 2 else 'visit' }} booked</p>
-      {% endfor %}
-      {% endset %}
-
-      {% if infoBannerHtml | length %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-two-thirds">
-            {{ mojBanner({
-              type: "information",
-              html: infoBannerHtml,
-              iconFallbackText: "Information"
-            }) }}
-          </div>
-        </div>
-      {% endif %}
-
+      {{ sessionTemplateVisitStats(visitStats) }}
 
       <form action="/prisons/{{ prison.code }}/session-templates/{{ reference }}/edit" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
