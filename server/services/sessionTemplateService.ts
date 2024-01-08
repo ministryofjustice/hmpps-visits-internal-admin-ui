@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import logger from '../../logger'
 import { RestClientBuilder, VisitSchedulerApiClient, HmppsAuthClient } from '../data'
 import {
@@ -89,13 +90,13 @@ export default class SessionTemplateService {
     return sessionTemplate
   }
 
-  async getTemplateStats(
-    username: string,
-    requestVisitStatsDto: RequestSessionTemplateVisitStatsDto,
-    reference: string,
-  ): Promise<SessionTemplateVisitStatsDto> {
+  async getFutureTemplateStats(username: string, reference: string): Promise<SessionTemplateVisitStatsDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    const requestVisitStatsDto: RequestSessionTemplateVisitStatsDto = {
+      visitsFromDate: format(new Date(), 'yyyy-MM-dd'),
+    }
 
     return visitSchedulerApiClient.getTemplateStats(requestVisitStatsDto, reference)
   }

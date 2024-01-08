@@ -39,7 +39,7 @@ describe('Single session template page', () => {
     beforeEach(() => {
       sessionTemplate = TestData.sessionTemplate()
       sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplate)
-      sessionTemplateService.getTemplateStats.mockResolvedValue(visitStats)
+      sessionTemplateService.getFutureTemplateStats.mockResolvedValue(visitStats)
     })
 
     it('should display all session template information', () => {

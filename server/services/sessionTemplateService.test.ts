@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import SessionTemplateService from './sessionTemplateService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
@@ -94,15 +95,18 @@ describe('Session template service', () => {
     })
   })
 
-  describe('getTemplateStats', () => {
+  describe('getFutureTemplateStats', () => {
     it('should return the statistics for a session template', async () => {
       const visitStats = TestData.visitStats()
-      const requestVisitStatsDto = TestData.requestVisitStatsDto()
+      const requestVisitStatsDto = TestData.requestVisitStatsDto({
+        visitsFromDate: format(new Date(), 'yyyy-MM-dd'),
+      })
       visitSchedulerApiClient.getTemplateStats.mockResolvedValue(visitStats)
 
-      const results = await sessionTemplateService.getTemplateStats('user', requestVisitStatsDto, 'ab-cd-ef')
+      const results = await sessionTemplateService.getFutureTemplateStats('user', 'ab-cd-ef')
 
       expect(results).toEqual(visitStats)
+      expect(visitSchedulerApiClient.getTemplateStats).toHaveBeenCalledWith(requestVisitStatsDto, 'ab-cd-ef')
     })
   })
 })
