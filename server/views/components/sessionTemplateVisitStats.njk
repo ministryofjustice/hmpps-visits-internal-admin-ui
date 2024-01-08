@@ -4,7 +4,7 @@
 
 {% set visitStatsHtml %}
   <p>
-    This session template has 
+    This session template has
     <strong>{{ visitStats.visitCount }} booked {{ "visit" | pluralise(visitStats.visitCount) }}</strong>
     and <strong>{{ visitStats.cancelCount }} cancelled {{ "visit" | pluralise(visitStats.cancelCount) }}</strong> in the future.
   </p>
@@ -14,7 +14,7 @@
     <ul class="govuk-list govuk-list--bullet">
       {% for statsForDate in visitStats.visitsByDate %}
         <li>
-          {{ statsForDate.visitDate | formatDate }} – {{statsForDate.visitCounts.open }} open and {{statsForDate.visitCounts.closed }} closed
+          {{ statsForDate.visitDate | formatDate }} – {{statsForDate.cancelCount }} cancelled, {{statsForDate.visitCounts.open }} open and {{statsForDate.visitCounts.closed }} closed
         </li>
       {% endfor %}
     </ul>

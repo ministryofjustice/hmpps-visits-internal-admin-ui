@@ -213,13 +213,14 @@ export default class TestData {
 
   static visitStats = ({
     cancelCount = 0,
-    minimumCapacity = { open: 3, closed: 1 },
-    visitCount = 8,
+    minimumCapacity = { open: 4, closed: 3 },
+    visitCount = 7,
     visitsByDate = [
       {
+        cancelCount: 0,
         visitCounts: {
           open: 4,
-          closed: 4,
+          closed: 3,
         },
         visitDate: '2023-01-08',
       },
