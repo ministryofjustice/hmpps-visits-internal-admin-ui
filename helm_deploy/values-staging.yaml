@@ -16,5 +16,9 @@ generic-service:
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler-staging.prison.service.justice.gov.uk"
     APPLICATIONINSIGHTS_CONNECTION_STRING: null # disable App Insights for staging
 
+  namespace_secrets:
+    hmpps-visits-internal-admin-ui:
+      APPINSIGHTS_INSTRUMENTATIONKEY: null # disable App Insights for staging
+
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
