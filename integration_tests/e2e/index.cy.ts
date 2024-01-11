@@ -10,8 +10,8 @@ context('Home page', () => {
   })
 
   it('should render the index page with the correct tiles', () => {
-    const homePage = Page.verifyOnPage(IndexPage)
+    const indexPage = Page.verifyOnPage(IndexPage)
 
-    homePage.supportedPrisonsCard().contains('Supported prisons')
+    indexPage.supportedPrisonsCard().contains('Supported prisons')
   })
 })

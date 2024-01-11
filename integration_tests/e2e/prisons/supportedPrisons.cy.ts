@@ -15,10 +15,10 @@ context('Supported prisons', () => {
   it('should navigate to the list of all supported prisons', () => {
     const prisons = TestData.prisonDtos()
     cy.task('stubGetAllPrisons', prisons)
-    const homePage = Page.verifyOnPage(IndexPage)
+    const indexPage = Page.verifyOnPage(IndexPage)
 
-    homePage.supportedPrisonsCard().contains('Supported prisons')
-    homePage.supportedPrisonsCard().click()
+    indexPage.supportedPrisonsCard().contains('Supported prisons')
+    indexPage.supportedPrisonsCard().click()
 
     const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
     supportedPrisonsPage.getPrisonNameByCode('HEI').contains('Hewell')
@@ -33,10 +33,10 @@ context('Supported prisons', () => {
 
   it('should create a Prison', () => {
     cy.task('stubGetAllPrisons', [])
-    const homePage = Page.verifyOnPage(IndexPage)
+    const indexPage = Page.verifyOnPage(IndexPage)
 
-    homePage.supportedPrisonsCard().contains('Supported prisons')
-    homePage.supportedPrisonsCard().click()
+    indexPage.supportedPrisonsCard().contains('Supported prisons')
+    indexPage.supportedPrisonsCard().click()
 
     const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
     const newPrison = TestData.prisonDto({ active: false })

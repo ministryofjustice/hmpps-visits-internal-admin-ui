@@ -20,8 +20,8 @@ context('Category groups - list', () => {
 
   it('should navigate to the list of category groups for a prison', () => {
     // home page
-    const homePage = Page.verifyOnPage(IndexPage)
-    homePage.supportedPrisonsCard().click()
+    const indexPage = Page.verifyOnPage(IndexPage)
+    indexPage.supportedPrisonsCard().click()
 
     // supported prisons list
     const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)

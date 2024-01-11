@@ -91,9 +91,9 @@ context('Prison configuration', () => {
     const activePrison = TestData.prisonDto({ active: true })
 
     it('should activate a prison', () => {
-      const homePage = Page.verifyOnPage(IndexPage)
-      homePage.supportedPrisonsCard().contains('Supported prisons')
-      homePage.supportedPrisonsCard().click()
+      const indexPage = Page.verifyOnPage(IndexPage)
+      indexPage.supportedPrisonsCard().contains('Supported prisons')
+      indexPage.supportedPrisonsCard().click()
       const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
 
       cy.task('stubGetPrison', inactivePrison)
@@ -115,9 +115,9 @@ context('Prison configuration', () => {
     })
 
     it('should deactivate a prison', () => {
-      const homePage = Page.verifyOnPage(IndexPage)
-      homePage.supportedPrisonsCard().contains('Supported prisons')
-      homePage.supportedPrisonsCard().click()
+      const indexPage = Page.verifyOnPage(IndexPage)
+      indexPage.supportedPrisonsCard().contains('Supported prisons')
+      indexPage.supportedPrisonsCard().click()
       const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
 
       cy.task('stubGetPrison', activePrison)
