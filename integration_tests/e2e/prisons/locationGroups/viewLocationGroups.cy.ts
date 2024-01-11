@@ -1,5 +1,5 @@
 import TestData from '../../../../server/routes/testutils/testData'
-import HomePage from '../../../pages/home'
+import IndexPage from '../../../pages'
 import Page from '../../../pages/page'
 import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
@@ -19,7 +19,7 @@ context('Location groups - list', () => {
 
   it('should navigate to the list of location groups for a prison', () => {
     // home page
-    const homePage = Page.verifyOnPage(HomePage)
+    const homePage = Page.verifyOnPage(IndexPage)
     homePage.supportedPrisonsCard().click()
 
     // supported prisons list

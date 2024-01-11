@@ -1,18 +1,21 @@
 /* eslint-disable no-param-reassign */
 import path from 'path'
-import nunjucks, { Environment } from 'nunjucks'
+import nunjucks from 'nunjucks'
 import express from 'express'
 import { FieldValidationError } from 'express-validator'
 import { formatDate, initialiseName } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
+import config from '../config'
 
 const production = process.env.NODE_ENV === 'production'
 
-export default function nunjucksSetup(app: express.Express, applicationInfo: ApplicationInfo): void {
+export default function nunjucksSetup(app: express.Express, applicationInfo: ApplicationInfo): nunjucks.Environment {
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Visits internal admin'
+  app.locals.environmentName = config.environmentName
+  app.locals.environmentNameColour = config.environmentName === 'PRE-PRODUCTION' ? 'govuk-tag--green' : ''
 
   // Cachebusting version string
   if (production) {
@@ -26,10 +29,6 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     })
   }
 
-  registerNunjucks(app)
-}
-
-export function registerNunjucks(app: express.Express): Environment {
   const njkEnv = nunjucks.configure(
     [
       path.join(__dirname, '../../server/views'),

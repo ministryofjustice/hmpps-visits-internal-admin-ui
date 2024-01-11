@@ -1,5 +1,5 @@
 import TestData from '../../../../server/routes/testutils/testData'
-import HomePage from '../../../pages/home'
+import IndexPage from '../../../pages'
 import Page from '../../../pages/page'
 import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
@@ -91,7 +91,7 @@ context('Prison configuration', () => {
     const activePrison = TestData.prisonDto({ active: true })
 
     it('should activate a prison', () => {
-      const homePage = Page.verifyOnPage(HomePage)
+      const homePage = Page.verifyOnPage(IndexPage)
       homePage.supportedPrisonsCard().contains('Supported prisons')
       homePage.supportedPrisonsCard().click()
       const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
@@ -115,7 +115,7 @@ context('Prison configuration', () => {
     })
 
     it('should deactivate a prison', () => {
-      const homePage = Page.verifyOnPage(HomePage)
+      const homePage = Page.verifyOnPage(IndexPage)
       homePage.supportedPrisonsCard().contains('Supported prisons')
       homePage.supportedPrisonsCard().click()
       const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)

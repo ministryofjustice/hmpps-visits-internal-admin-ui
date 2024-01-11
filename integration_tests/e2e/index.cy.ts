@@ -1,4 +1,4 @@
-import HomePage from '../pages/home'
+import IndexPage from '../pages'
 import Page from '../pages/page'
 
 context('Home page', () => {
@@ -10,7 +10,7 @@ context('Home page', () => {
   })
 
   it('should render the index page with the correct tiles', () => {
-    const homePage = Page.verifyOnPage(HomePage)
+    const homePage = Page.verifyOnPage(IndexPage)
 
     homePage.supportedPrisonsCard().contains('Supported prisons')
   })

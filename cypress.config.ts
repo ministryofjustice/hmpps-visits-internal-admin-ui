@@ -25,8 +25,6 @@ export default defineConfig({
   viewportWidth: 1280,
   viewportHeight: 1400,
   e2e: {
-    // We've imported your old cypress plugins here.
-    // You may want to clean this up later by importing these.
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
@@ -50,6 +48,5 @@ export default defineConfig({
     excludeSpecPattern: '**/!(*.cy).ts',
     specPattern: 'integration_tests/e2e/**/*.cy.{js,jsx,ts,tsx}',
     supportFile: 'integration_tests/support/index.ts',
-    experimentalRunAllSpecs: true,
   },
 })

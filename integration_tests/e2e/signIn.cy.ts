@@ -1,10 +1,10 @@
-import IndexPage from '../pages/home'
+import IndexPage from '../pages/index'
 import AuthSignInPage from '../pages/authSignIn'
 import Page from '../pages/page'
 import AuthManageDetailsPage from '../pages/authManageDetails'
 import AuthorisationErrorPage from '../pages/authorisationError'
 
-context('SignIn', () => {
+context('Sign In', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
@@ -27,7 +27,13 @@ context('SignIn', () => {
     indexPage.headerUserName().should('contain.text', 'J. Smith')
   })
 
-  it('User can log out', () => {
+  it('Phase banner visible in header', () => {
+    cy.signIn()
+    const indexPage = Page.verifyOnPage(IndexPage)
+    indexPage.headerPhaseBanner().should('contain.text', 'dev')
+  })
+
+  it('User can sign out', () => {
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.signOut().click()
@@ -36,6 +42,7 @@ context('SignIn', () => {
 
   it('User can manage their details', () => {
     cy.signIn()
+    cy.task('stubAuthManageDetails')
     const indexPage = Page.verifyOnPage(IndexPage)
 
     indexPage.manageDetails().get('a').invoke('removeAttr', 'target')
@@ -68,7 +75,7 @@ context('SignIn', () => {
   })
 
   it('User without required role is directed to Authorisation Error page', () => {
-    cy.task('stubSignIn', 'SOME_OTHER_ROLE')
+    cy.task('stubSignIn', ['SOME_OTHER_ROLE'])
     cy.signIn({ failOnStatusCode: false })
     const authorisationErrorPage = Page.verifyOnPage(AuthorisationErrorPage)
     authorisationErrorPage.message().contains('You are not authorised to use this application')

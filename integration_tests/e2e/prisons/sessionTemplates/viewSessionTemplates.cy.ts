@@ -1,5 +1,5 @@
 import TestData from '../../../../server/routes/testutils/testData'
-import HomePage from '../../../pages/home'
+import IndexPage from '../../../pages'
 import Page from '../../../pages/page'
 import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
@@ -24,7 +24,7 @@ context('Session templates - list', () => {
     })
 
     // home page
-    const homePage = Page.verifyOnPage(HomePage)
+    const homePage = Page.verifyOnPage(IndexPage)
     homePage.supportedPrisonsCard().click()
 
     // supported prisons list

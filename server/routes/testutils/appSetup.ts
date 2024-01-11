@@ -7,6 +7,7 @@ const testAppInfo: ApplicationInfo = {
   buildNumber: '1',
   gitRef: 'long ref',
   gitShortHash: 'short ref',
+  branchName: 'main',
 }
 
 jest.mock('../../applicationInfo', () => {
@@ -15,22 +16,21 @@ jest.mock('../../applicationInfo', () => {
 
 import express, { Express } from 'express'
 import cookieSession from 'cookie-session'
-import createError from 'http-errors'
+import { NotFound } from 'http-errors'
 
 import routes from '../index'
-
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
 
-export const user = {
-  firstName: 'first',
-  lastName: 'last',
+export const user: Express.User = {
+  name: 'FIRST LAST',
   userId: 'id',
   token: 'token',
   username: 'user1',
   displayName: 'First Last',
+  active: true,
   activeCaseLoadId: 'MDI',
   authSource: 'NOMIS',
 }
@@ -47,14 +47,15 @@ function appSetup(services: Services, production: boolean, userSupplier: () => E
   app.use((req, res, next) => {
     req.user = userSupplier()
     req.flash = flashProvider
-    res.locals = {}
-    res.locals.user = { ...req.user }
+    res.locals = {
+      user: { ...req.user },
+    }
     next()
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(routes(services))
-  app.use((req, res, next) => next(createError(404, 'Not found')))
+  app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 
   return app
