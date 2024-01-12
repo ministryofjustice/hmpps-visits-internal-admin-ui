@@ -1,6 +1,6 @@
 import { PageVisitDto } from '../../../../server/data/visitSchedulerApiTypes'
 import TestData from '../../../../server/routes/testutils/testData'
-import HomePage from '../../../pages/home'
+import IndexPage from '../../../pages'
 import Page from '../../../pages/page'
 import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
 import ExcludedDatesPage from '../../../pages/prisons/excludedDates/excludedDates'
@@ -21,8 +21,8 @@ context('Excluded dates', () => {
 
   it('should navigate to the list of excluded dates for a prison', () => {
     // home page
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.supportedPrisonsCard().click()
+    const indexPage = Page.verifyOnPage(IndexPage)
+    indexPage.supportedPrisonsCard().click()
 
     // supported prisons list
     const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)

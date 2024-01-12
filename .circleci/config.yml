@@ -24,7 +24,7 @@ parameters:
 
   node-version:
     type: string
-    default: 20.9-browsers
+    default: 20.10-browsers
 
 jobs:
   build:
@@ -75,14 +75,11 @@ jobs:
           path: test_results
       - store_artifacts:
           path: test_results/unit-test-reports.html
-      - store_artifacts:
-          path: test_results/jest/coverage
 
   integration_test:
     executor:
-      name: hmpps/node_redis
-      node_tag: << pipeline.parameters.node-version >>
-      redis_tag: "7.0"
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
     steps:
       - checkout
       - attach_workspace:

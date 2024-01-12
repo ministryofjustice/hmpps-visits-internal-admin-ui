@@ -21,10 +21,10 @@
     "lint": "eslint . --cache --max-warnings 0",
     "typecheck": "tsc && tsc -p integration_tests",
     "test": "jest",
-    "test:ci": "jest --runInBand --coverage",
+    "test:ci": "jest --runInBand",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "int-test": "cypress run --config video=false",
-    "int-test-ui": "cypress open",
+    "int-test-ui": "cypress open --e2e --browser chrome",
     "clean": "rm -rf dist build node_modules stylesheets"
   },
   "engines": {
@@ -43,7 +43,6 @@
     "collectCoverageFrom": [
       "server/**/*.{ts,js,jsx,mjs}"
     ],
-    "coverageDirectory": "test_results/jest/coverage",
     "testMatch": [
       "<rootDir>/(server|job)/**/?(*.)(cy|test).{ts,js,jsx,mjs}"
     ],
@@ -132,7 +131,7 @@
     "@types/http-errors": "^2.0.4",
     "@types/jest": "^29.5.11",
     "@types/jsonwebtoken": "^9.0.5",
-    "@types/node": "^20.10.8",
+    "@types/node": "^20.11.0",
     "@types/nunjucks": "^3.2.6",
     "@types/passport": "^1.0.16",
     "@types/passport-oauth2": "^1.4.15",

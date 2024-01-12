@@ -1,16 +1,6 @@
 version: '3.1'
 services:
 
-  redis-vsip-admin:
-    image: 'redis:7.2'
-    networks:
-      - hmpps
-    container_name: redis-vsip-admin
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-    ports:
-      - '6379:6379'
-
   hmpps-auth:
     image: quay.io/hmpps/hmpps-auth:latest
     networks:
@@ -24,28 +14,20 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
-  prison-register:
-    image: quay.io/hmpps/prison-register:latest
-    networks:
-      - hmpps
-    container_name: prison-register
-    ports:
-      - "8082:8080"
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - OAUTH_ENDPOINT_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-
   app:
-    build: .
+    build:
+      context: .
+      args:
+        BUILD_NUMBER: "1.0.0"
+        GIT_REF: "a1b2c3"
+        GIT_BRANCH: main
     networks:
       - hmpps
-    depends_on: [redis-vsip-admin]
     ports:
       - "3000:3000"
     environment:
-      - REDIS_HOST=redis-vsip-admin
+      - PRODUCT_ID=UNASSIGNED
+      - REDIS_ENABLED=false
       - HMPPS_AUTH_EXTERNAL_URL=http://localhost:9090/auth
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
       # These will need to match new creds in the seed auth service auth
@@ -53,6 +35,10 @@ services:
       - API_CLIENT_SECRET=client-secret
       - SYSTEM_CLIENT_ID=system-client-id
       - SYSTEM_CLIENT_SECRET=system-client-secret
+      - SESSION_SECRET=somesecretvalue
+      - TOKEN_VERIFICATION_API_URL=http://hmpps-auth:8080/auth
+      - TOKEN_VERIFICATION_ENABLED=false
+      - INGRESS_URL=http://localhost:3000
 
 networks:
   hmpps:

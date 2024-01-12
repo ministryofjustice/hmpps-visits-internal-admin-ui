@@ -1,6 +1,6 @@
 /* eslint-disable import/first */
 /*
- * Do app insights first as it does some magic instrumentation work, i.e. it affects other 'require's
+ * Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
  * In particular, applicationinsights automatically collects bunyan logs
  */
 import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureAppInsights'
@@ -13,15 +13,19 @@ buildAppInsightsClient(applicationInfo)
 import HmppsAuthClient from './hmppsAuthClient'
 import ManageUsersApiClient from './manageUsersApiClient'
 import { createRedisClient } from './redisClient'
-import TokenStore from './tokenStore'
+import RedisTokenStore from './tokenStore/redisTokenStore'
+import InMemoryTokenStore from './tokenStore/inMemoryTokenStore'
 import PrisonRegisterApiClient from './prisonRegisterApiClient'
 import VisitSchedulerApiClient from './visitSchedulerApiClient'
+import config from '../config'
 
 type RestClientBuilder<T> = (token: string) => T
 
 export const dataAccess = () => ({
   applicationInfo,
-  hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
+  hmppsAuthClient: new HmppsAuthClient(
+    config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore(),
+  ),
   manageUsersApiClient: new ManageUsersApiClient(),
   prisonRegisterApiClientBuilder: ((token: string) =>
     new PrisonRegisterApiClient(token)) as RestClientBuilder<PrisonRegisterApiClient>,

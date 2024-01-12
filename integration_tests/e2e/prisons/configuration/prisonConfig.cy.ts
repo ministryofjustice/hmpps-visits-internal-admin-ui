@@ -1,5 +1,5 @@
 import TestData from '../../../../server/routes/testutils/testData'
-import HomePage from '../../../pages/home'
+import IndexPage from '../../../pages'
 import Page from '../../../pages/page'
 import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
@@ -91,9 +91,9 @@ context('Prison configuration', () => {
     const activePrison = TestData.prisonDto({ active: true })
 
     it('should activate a prison', () => {
-      const homePage = Page.verifyOnPage(HomePage)
-      homePage.supportedPrisonsCard().contains('Supported prisons')
-      homePage.supportedPrisonsCard().click()
+      const indexPage = Page.verifyOnPage(IndexPage)
+      indexPage.supportedPrisonsCard().contains('Supported prisons')
+      indexPage.supportedPrisonsCard().click()
       const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
 
       cy.task('stubGetPrison', inactivePrison)
@@ -115,9 +115,9 @@ context('Prison configuration', () => {
     })
 
     it('should deactivate a prison', () => {
-      const homePage = Page.verifyOnPage(HomePage)
-      homePage.supportedPrisonsCard().contains('Supported prisons')
-      homePage.supportedPrisonsCard().click()
+      const indexPage = Page.verifyOnPage(IndexPage)
+      indexPage.supportedPrisonsCard().contains('Supported prisons')
+      indexPage.supportedPrisonsCard().click()
       const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
 
       cy.task('stubGetPrison', activePrison)

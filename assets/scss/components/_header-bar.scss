@@ -30,6 +30,7 @@
     }
 
     &__service-name {
+      display: none;
       @include govuk-font(24);
 
       @include govuk-media-query($from: desktop) {
@@ -137,4 +138,9 @@
   @media print {
     display: none;
   }
+}
+
+.govuk-phase-banner {
+  @include govuk-width-container;
+  border: none;
 }
