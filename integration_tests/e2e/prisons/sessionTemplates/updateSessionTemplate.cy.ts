@@ -22,7 +22,7 @@ context('Session templates - update', () => {
     cy.task('stubGetSingleSessionTemplate', { sessionTemplate })
     cy.task('stubGetTemplateStats', {
       reference: sessionTemplate.reference,
-      visitStats: TestData.visitStats({ visitCount: 0, visitsByDate: [] }),
+      sessionTemplateVisitStats: TestData.sessionTemplateVisitStatsDto({ visitCount: 0, visitsByDate: [] }),
     })
 
     // On view single session template page, select update template

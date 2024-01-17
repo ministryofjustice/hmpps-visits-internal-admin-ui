@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { format, getTime, isValid, parse, parseISO } from 'date-fns'
+import { getTime, isValid, parse, parseISO } from 'date-fns'
 import {
   PrisonService,
   SessionTemplateService,
@@ -8,7 +8,7 @@ import {
   CategoryGroupService,
   LocationGroupService,
 } from '../../../services'
-import { RequestSessionTemplateVisitStatsDto, UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
+import { UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class EditSessionTemplateController {
@@ -82,20 +82,11 @@ export default class EditSessionTemplateController {
         // locationGroupReferences,
       }
 
-      const requestVisitStatsDto: RequestSessionTemplateVisitStatsDto = {
-        visitsFromDate: format(new Date(), 'yyyy-MM-dd'),
-      }
-      const visitStats = await this.sessionTemplateService.getTemplateStats(
-        res.locals.user.username,
-        requestVisitStatsDto,
-        reference,
-      )
-      let firstDate = ''
-      let lastDate = ''
-      if (visitStats.visitsByDate.length) {
-        firstDate = visitStats.visitsByDate[0].visitDate
-        lastDate = visitStats.visitsByDate[visitStats.visitsByDate.length - 1].visitDate
-      }
+      const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
+
+      const visitDates = Object.keys(visitStats.dates)
+      const firstDate = visitDates.at(0) ?? ''
+      const lastDate = visitDates.at(-1) ?? ''
 
       req.flash('formValues', formValues)
       return res.render('pages/prisons/sessionTemplates/editSingleSessionTemplate', {

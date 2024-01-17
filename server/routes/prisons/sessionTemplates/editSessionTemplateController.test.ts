@@ -24,11 +24,11 @@ const locationGroupService = createMockLocationGroupService()
 const prison = TestData.prison()
 const reference = '-afe.dcc.0f'
 const sessionTemplate = TestData.sessionTemplate()
-const visitStats = TestData.visitStats()
+const visitStatsSummary = TestData.visitStatsSummary()
 
 beforeEach(() => {
   sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplate)
-  sessionTemplateService.getTemplateStats.mockResolvedValue(visitStats)
+  sessionTemplateService.getTemplateStats.mockResolvedValue(visitStatsSummary)
 
   flashData = {}
   flashProvider.mockImplementation(key => flashData[key])
@@ -65,12 +65,7 @@ describe('Update a session template', () => {
         expect($('h1 span').text().trim()).toBe(prison.name)
         expect($('h1').text().trim()).toContain('Update session template')
 
-        expect($('[data-test="total-booked-test"]').text().trim()).toBe(
-          'This visit session template currently has 8 future visits booked',
-        )
-        expect($('.moj-banner').text().trim()).toContain(
-          'For the date: 8 January 2023, there is currently 4 open visits and 4 closed visits booked',
-        )
+        expect($('[data-test="visit-stats"]').length).toBe(1)
 
         expect($(`form[action=${url}][method="POST"]`).length).toBe(1)
 
@@ -83,10 +78,10 @@ describe('Update a session template', () => {
         expect($('#validToDate-hint').text().trim()).toContain('This must be after: 8 January 2023')
 
         expect($('#openCapacity').attr('value')).toBe('35')
-        expect($('#openCapacity-hint').text().trim()).toContain('The minimum allowed is currently: 3')
+        expect($('#openCapacity-hint').text().trim()).toContain('The minimum allowed is currently 4')
 
         expect($('#closedCapacity').attr('value')).toBe('2')
-        expect($('#closedCapacity-hint').text().trim()).toContain('The minimum allowed is currently: 1')
+        expect($('#closedCapacity-hint').text().trim()).toContain('The minimum allowed is currently 3')
 
         expect($('#visitRoom').attr('value')).toBe('Visits Main Room')
 

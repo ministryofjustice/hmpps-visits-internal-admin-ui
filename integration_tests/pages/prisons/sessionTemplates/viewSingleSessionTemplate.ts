@@ -11,7 +11,7 @@ export default class ViewSingleSessionTemplatePage extends Page {
     return Page.verifyOnPageTitle(ViewSingleSessionTemplatePage, sessionTemplate.name)
   }
 
-  getStatus = (): PageElement => cy.get('.test-template-status-value')
+  getStatus = (): PageElement => cy.get('.test-template-status')
 
   getReference = (): PageElement => cy.get('.test-template-reference')
 

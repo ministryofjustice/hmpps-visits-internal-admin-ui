@@ -7,7 +7,7 @@ import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplat
 context('Session templates - single', () => {
   const prison = TestData.prison()
   const sessionTemplate = TestData.sessionTemplate()
-  const visitStats = TestData.visitStats()
+  const sessionTemplateVisitStatsDto = TestData.sessionTemplateVisitStatsDto()
 
   const mediumDateFormat = 'd MMMM yyyy'
 
@@ -29,7 +29,7 @@ context('Session templates - single', () => {
     })
     cy.task('stubGetTemplateStats', {
       reference: sessionTemplate.reference,
-      visitStats,
+      sessionTemplateVisitStats: sessionTemplateVisitStatsDto,
     })
 
     // start on listings page
