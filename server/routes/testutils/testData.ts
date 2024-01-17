@@ -1,4 +1,4 @@
-import { Prison } from '../../@types/visits-admin'
+import { Prison, VisitStatsSummary } from '../../@types/visits-admin'
 import { PrisonContactDetails, PrisonName } from '../../data/prisonRegisterApiTypes'
 import {
   CategoryGroup,
@@ -211,16 +211,24 @@ export default class TestData {
     visitsFromDate = '2023-01-01',
   }: Partial<RequestSessionTemplateVisitStatsDto> = {}): RequestSessionTemplateVisitStatsDto => ({ visitsFromDate })
 
-  static visitStats = ({
-    cancelCount = 0,
+  static sessionTemplateVisitStatsDto = ({
+    cancelCount = 1,
     minimumCapacity = { open: 4, closed: 3 },
     visitCount = 7,
     visitsByDate = [
       {
-        cancelCount: 0,
         visitCounts: {
           open: 4,
           closed: 3,
+        },
+        visitDate: '2023-01-08',
+      },
+    ],
+    cancelVisitsByDate = [
+      {
+        visitCounts: {
+          open: 1,
+          closed: 0,
         },
         visitDate: '2023-01-08',
       },
@@ -230,6 +238,21 @@ export default class TestData {
     minimumCapacity,
     visitCount,
     visitsByDate,
+    cancelVisitsByDate,
+  })
+
+  static visitStatsSummary = ({
+    bookedCount = 7,
+    cancelCount = 1,
+    minimumCapacity = { open: 4, closed: 3 },
+    dates = {
+      '2023-01-08': { booked: 7, cancelled: 1 },
+    },
+  }: Partial<VisitStatsSummary> = {}): VisitStatsSummary => ({
+    bookedCount,
+    cancelCount,
+    minimumCapacity,
+    dates,
   })
 
   static prisonContactDetails = ({

@@ -5,10 +5,10 @@ import {
   CreateSessionTemplateDto,
   RequestSessionTemplateVisitStatsDto,
   SessionTemplate,
-  SessionTemplateVisitStatsDto,
   SessionTemplatesRangeType,
   UpdateSessionTemplateDto,
 } from '../data/visitSchedulerApiTypes'
+import { VisitStatsSummary } from '../@types/visits-admin'
 
 export default class SessionTemplateService {
   constructor(
@@ -90,14 +90,37 @@ export default class SessionTemplateService {
     return sessionTemplate
   }
 
-  async getFutureTemplateStats(username: string, reference: string): Promise<SessionTemplateVisitStatsDto> {
+  async getTemplateStats(username: string, reference: string): Promise<VisitStatsSummary> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
     const requestVisitStatsDto: RequestSessionTemplateVisitStatsDto = {
       visitsFromDate: format(new Date(), 'yyyy-MM-dd'),
     }
+    const templateStats = await visitSchedulerApiClient.getTemplateStats(requestVisitStatsDto, reference)
 
-    return visitSchedulerApiClient.getTemplateStats(requestVisitStatsDto, reference)
+    const dates = new Map<string, { booked?: number; cancelled?: number }>()
+
+    templateStats.visitsByDate.forEach(date =>
+      dates.set(date.visitDate, { booked: date.visitCounts.open + date.visitCounts.closed }),
+    )
+
+    templateStats.cancelVisitsByDate.forEach(date =>
+      dates.has(date.visitDate)
+        ? dates.set(date.visitDate, {
+            booked: dates.get(date.visitDate).booked,
+            cancelled: date.visitCounts.open + date.visitCounts.closed,
+          })
+        : dates.set(date.visitDate, { cancelled: date.visitCounts.open + date.visitCounts.closed }),
+    )
+
+    const sortedDates = [...dates.entries()].sort()
+
+    return {
+      bookedCount: templateStats.visitCount,
+      cancelCount: templateStats.cancelCount,
+      minimumCapacity: templateStats.minimumCapacity,
+      dates: Object.fromEntries(sortedDates),
+    }
   }
 }

@@ -1,7 +1,7 @@
-import { format } from 'date-fns'
 import SessionTemplateService from './sessionTemplateService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
+import { VisitStatsSummary } from '../@types/visits-admin'
 
 const token = 'some token'
 
@@ -27,6 +27,7 @@ describe('Session template service', () => {
 
   afterEach(() => {
     jest.resetAllMocks()
+    jest.useRealTimers()
   })
 
   describe('getSingleSessionTemplate', () => {
@@ -95,18 +96,74 @@ describe('Session template service', () => {
     })
   })
 
-  describe('getFutureTemplateStats', () => {
-    it('should return the statistics for a session template', async () => {
-      const visitStats = TestData.visitStats()
+  describe('getTemplateStats', () => {
+    const visitsFromDate = '2024-01-10'
+
+    beforeEach(() => {
+      jest.useFakeTimers()
+      jest.setSystemTime(new Date(visitsFromDate))
+    })
+
+    it('should return the upcoming visit stats summary in ascending date order for a session template', async () => {
       const requestVisitStatsDto = TestData.requestVisitStatsDto({
-        visitsFromDate: format(new Date(), 'yyyy-MM-dd'),
+        visitsFromDate,
       })
-      visitSchedulerApiClient.getTemplateStats.mockResolvedValue(visitStats)
 
-      const results = await sessionTemplateService.getFutureTemplateStats('user', 'ab-cd-ef')
+      const sessionTemplateVisitStatsDto = TestData.sessionTemplateVisitStatsDto({
+        cancelCount: 5,
+        visitCount: 6,
+        visitsByDate: [
+          { visitDate: '2024-01-15', visitCounts: { open: 1, closed: 2 } },
+          { visitDate: '2024-01-25', visitCounts: { open: 0, closed: 3 } },
+        ],
+        cancelVisitsByDate: [
+          { visitDate: '2024-01-20', visitCounts: { open: 1, closed: 0 } },
+          { visitDate: '2024-01-25', visitCounts: { open: 3, closed: 1 } },
+        ],
+      })
 
-      expect(results).toEqual(visitStats)
+      const expectedResults: VisitStatsSummary = {
+        bookedCount: 6,
+        cancelCount: 5,
+        minimumCapacity: sessionTemplateVisitStatsDto.minimumCapacity,
+        dates: {
+          '2024-01-15': { booked: 3 },
+          '2024-01-20': { cancelled: 1 },
+          '2024-01-25': { booked: 3, cancelled: 4 },
+        },
+      }
+
+      visitSchedulerApiClient.getTemplateStats.mockResolvedValue(sessionTemplateVisitStatsDto)
+      const results = await sessionTemplateService.getTemplateStats('user', 'ab-cd-ef')
+
       expect(visitSchedulerApiClient.getTemplateStats).toHaveBeenCalledWith(requestVisitStatsDto, 'ab-cd-ef')
+      expect(results).toEqual(expectedResults)
+    })
+
+    it('should return handle no upcoming visit stats', async () => {
+      const requestVisitStatsDto = TestData.requestVisitStatsDto({
+        visitsFromDate,
+      })
+
+      const sessionTemplateVisitStatsDto = TestData.sessionTemplateVisitStatsDto({
+        cancelCount: 0,
+        visitCount: 0,
+        visitsByDate: [],
+        cancelVisitsByDate: [],
+      })
+
+      const expectedResults: VisitStatsSummary = {
+        bookedCount: 0,
+        cancelCount: 0,
+        minimumCapacity: sessionTemplateVisitStatsDto.minimumCapacity,
+        dates: {},
+      }
+
+      visitSchedulerApiClient.getTemplateStats.mockResolvedValue(sessionTemplateVisitStatsDto)
+      const results = await sessionTemplateService.getTemplateStats('user', 'ab-cd-ef')
+
+      expect(visitSchedulerApiClient.getTemplateStats).toHaveBeenCalledWith(requestVisitStatsDto, 'ab-cd-ef')
+      expect(results).toEqual(expectedResults)
     })
   })
 })

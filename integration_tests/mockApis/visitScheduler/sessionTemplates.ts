@@ -151,11 +151,11 @@ export default {
     // default to today's date - yyyy-mm-dd
     requestVisitStatsDto = { visitsFromDate: format(new Date(), 'yyyy-MM-dd') },
     reference,
-    visitStats,
+    sessionTemplateVisitStats,
   }: {
     requestVisitStatsDto: RequestSessionTemplateVisitStatsDto
     reference: string
-    visitStats: SessionTemplateVisitStatsDto
+    sessionTemplateVisitStats: SessionTemplateVisitStatsDto
   }): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -172,7 +172,7 @@ export default {
       response: {
         status: 201,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: visitStats,
+        jsonBody: sessionTemplateVisitStats,
       },
     })
   },

@@ -5,23 +5,23 @@
 {% set visitStatsHtml %}
   <p>
     This session template has
-    <strong>{{ visitStats.visitCount }} booked {{ "visit" | pluralise(visitStats.visitCount) }}</strong>
+    <strong>{{ visitStats.bookedCount }} booked {{ "visit" | pluralise(visitStats.bookedCount) }}</strong>
     and <strong>{{ visitStats.cancelCount }} cancelled {{ "visit" | pluralise(visitStats.cancelCount) }}</strong> in the future.
   </p>
 
-  {% if visitStats.visitsByDate | length %}
-    <p>Future booked visits:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      {% for statsForDate in visitStats.visitsByDate %}
-        <li>
-          {{ statsForDate.visitDate | formatDate }} – {{statsForDate.cancelCount }} cancelled, {{statsForDate.visitCounts.open }} open and {{statsForDate.visitCounts.closed }} closed
-        </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
+  <ul class="govuk-list govuk-list--bullet">
+    {% for visitDate, counts in visitStats.dates %}
+      <li>
+        {{ visitDate | formatDate }} –
+        {%- if counts.booked %} {{ counts.booked }} booked{% endif -%}
+        {%- if counts.booked and counts.cancelled %} and{% endif -%}
+        {%- if counts.cancelled %} {{ counts.cancelled }} cancelled{% endif -%}
+      </li>
+    {% endfor %}
+  </ul>
 {% endset %}
 
-{% if visitStats.cancelCount > 0 or visitStats.visitCount > 0 %}
+{% if visitStats.cancelCount > 0 or visitStats.bookedCount > 0 %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       {{ mojBanner({

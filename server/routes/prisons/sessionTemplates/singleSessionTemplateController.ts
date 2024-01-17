@@ -18,7 +18,7 @@ export default class SingleSessionTemplateController {
         reference,
       )
 
-      const visitStats = await this.sessionTemplateService.getFutureTemplateStats(res.locals.user.username, reference)
+      const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
 
       return res.render('pages/prisons/sessionTemplates/viewSingleSessionTemplate', {
         errors: req.flash('errors'),

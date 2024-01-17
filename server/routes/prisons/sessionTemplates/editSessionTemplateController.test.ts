@@ -24,11 +24,11 @@ const locationGroupService = createMockLocationGroupService()
 const prison = TestData.prison()
 const reference = '-afe.dcc.0f'
 const sessionTemplate = TestData.sessionTemplate()
-const visitStats = TestData.visitStats()
+const visitStatsSummary = TestData.visitStatsSummary()
 
 beforeEach(() => {
   sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplate)
-  sessionTemplateService.getFutureTemplateStats.mockResolvedValue(visitStats)
+  sessionTemplateService.getTemplateStats.mockResolvedValue(visitStatsSummary)
 
   flashData = {}
   flashProvider.mockImplementation(key => flashData[key])

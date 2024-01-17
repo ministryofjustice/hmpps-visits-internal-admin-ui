@@ -1205,12 +1205,6 @@ export interface components {
     }
     /** @description count of visits by date */
     SessionTemplateVisitCountsDto: {
-      /**
-       * Format: int32
-       * @description canceled visit counts
-       * @example 10
-       */
-      cancelCount: number
       visitCounts: components['schemas']['SessionCapacityDto']
       /**
        * Format: date
@@ -1226,6 +1220,8 @@ export interface components {
        * @example 10
        */
       cancelCount: number
+      /** @description count of cancelled visits by date */
+      cancelVisitsByDate?: components['schemas']['SessionTemplateVisitCountsDto'][]
       minimumCapacity: components['schemas']['SessionCapacityDto']
       /**
        * Format: int32

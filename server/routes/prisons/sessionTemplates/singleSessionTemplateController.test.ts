@@ -34,12 +34,11 @@ afterEach(() => {
 describe('Single session template page', () => {
   describe('GET /prisons/{:prisonId}/session-templates/{:reference}', () => {
     let sessionTemplate: SessionTemplate
-    const visitStats = TestData.visitStats()
 
     beforeEach(() => {
       sessionTemplate = TestData.sessionTemplate()
       sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplate)
-      sessionTemplateService.getFutureTemplateStats.mockResolvedValue(visitStats)
+      sessionTemplateService.getTemplateStats.mockResolvedValue(TestData.visitStatsSummary())
     })
 
     it('should display all session template information', () => {

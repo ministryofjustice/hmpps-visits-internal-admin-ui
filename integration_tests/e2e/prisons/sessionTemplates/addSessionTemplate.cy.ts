@@ -59,7 +59,7 @@ context('Session templates - add', () => {
     cy.task('stubGetLocationGroups', { prisonCode: prison.code, body: [locationGroupOne, locationGroupTwo] })
     cy.task('stubGetTemplateStats', {
       reference: sessionTemplate.reference,
-      visitStats: TestData.visitStats({ visitCount: 0, visitsByDate: [] }),
+      sessionTemplateVisitStats: TestData.sessionTemplateVisitStatsDto({ visitCount: 0, visitsByDate: [] }),
     })
   })
 

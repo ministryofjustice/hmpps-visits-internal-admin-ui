@@ -6,7 +6,7 @@ context('Session templates - status', () => {
   const activeSessionTemplate = TestData.sessionTemplate({ active: true })
   const deactivatedSessionTemplate = TestData.sessionTemplate({ active: false })
 
-  const visitStats = TestData.visitStats()
+  const sessionTemplateVisitStatsDto = TestData.sessionTemplateVisitStatsDto()
 
   beforeEach(() => {
     cy.task('reset')
@@ -25,7 +25,7 @@ context('Session templates - status', () => {
     cy.task('stubGetSingleSessionTemplate', { sessionTemplate: deactivatedSessionTemplate })
     cy.task('stubGetTemplateStats', {
       reference: deactivatedSessionTemplate.reference,
-      visitStats,
+      sessionTemplateVisitStats: sessionTemplateVisitStatsDto,
     })
     const viewSingleSessionTemplatePage = ViewSingleSessionTemplatePage.goTo(prison.code, deactivatedSessionTemplate)
 
@@ -44,7 +44,7 @@ context('Session templates - status', () => {
     cy.task('stubGetSingleSessionTemplate', { sessionTemplate: activeSessionTemplate })
     cy.task('stubGetTemplateStats', {
       reference: deactivatedSessionTemplate.reference,
-      visitStats,
+      sessionTemplateVisitStats: sessionTemplateVisitStatsDto,
     })
     const viewSingleSessionTemplatePage = ViewSingleSessionTemplatePage.goTo(prison.code, activeSessionTemplate)
 

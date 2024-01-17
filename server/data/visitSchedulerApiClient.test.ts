@@ -321,18 +321,18 @@ describe('visitSchedulerApiClient', () => {
   describe('getTemplateStats', () => {
     it('should return statistics for a session template', async () => {
       const requestVisitStatsDto = TestData.requestVisitStatsDto()
-      const visitStats = TestData.visitStats()
+      const sessionTemplateVisitStatsDto = TestData.sessionTemplateVisitStatsDto()
       const reference = 'ABC-DEF-GHI'
       fakeVisitSchedulerApi
         .post(`/admin/session-templates/template/${reference}/stats`, <RequestSessionTemplateVisitStatsDto>{
           visitsFromDate: requestVisitStatsDto.visitsFromDate,
         })
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(201, visitStats)
+        .reply(201, sessionTemplateVisitStatsDto)
 
       const output = await visitSchedulerApiClient.getTemplateStats(requestVisitStatsDto, reference)
 
-      expect(output).toEqual(visitStats)
+      expect(output).toEqual(sessionTemplateVisitStatsDto)
     })
   })
 

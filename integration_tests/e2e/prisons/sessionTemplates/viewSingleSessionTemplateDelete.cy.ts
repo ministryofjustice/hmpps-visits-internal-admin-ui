@@ -6,7 +6,7 @@ import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplat
 context('Session templates - delete', () => {
   const prison = TestData.prison()
   const sessionTemplate = TestData.sessionTemplate({ active: false })
-  const visitStats = TestData.visitStats()
+  const sessionTemplateVisitStatsDto = TestData.sessionTemplateVisitStatsDto()
 
   beforeEach(() => {
     cy.task('reset')
@@ -26,7 +26,7 @@ context('Session templates - delete', () => {
     })
     cy.task('stubGetTemplateStats', {
       reference: sessionTemplate.reference,
-      visitStats,
+      sessionTemplateVisitStats: sessionTemplateVisitStatsDto,
     })
     cy.task('stubGetSingleSessionTemplate', { sessionTemplate })
     const viewSingleSessionTemplatePage = ViewSingleSessionTemplatePage.goTo(prison.code, sessionTemplate)

@@ -82,14 +82,11 @@ export default class EditSessionTemplateController {
         // locationGroupReferences,
       }
 
-      const visitStats = await this.sessionTemplateService.getFutureTemplateStats(res.locals.user.username, reference)
+      const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
 
-      let firstDate = ''
-      let lastDate = ''
-      if (visitStats.visitsByDate.length) {
-        firstDate = visitStats.visitsByDate[0].visitDate
-        lastDate = visitStats.visitsByDate[visitStats.visitsByDate.length - 1].visitDate
-      }
+      const visitDates = Object.keys(visitStats.dates)
+      const firstDate = visitDates.at(0) ?? ''
+      const lastDate = visitDates.at(-1) ?? ''
 
       req.flash('formValues', formValues)
       return res.render('pages/prisons/sessionTemplates/editSingleSessionTemplate', {
