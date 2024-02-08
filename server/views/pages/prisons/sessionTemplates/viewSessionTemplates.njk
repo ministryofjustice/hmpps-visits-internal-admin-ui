@@ -189,7 +189,7 @@
 {% block pageScripts %}
   <script nonce="{{ cspNonce }}">
     new MOJFrontend.ButtonMenu({
-      container: $(".moj-identity-bar .moj-button-menu:last"),
+      container: document.querySelectorAll(".moj-button-menu")[1],
       mq: "(min-width: 1000em)",
       buttonText: "Filter templates",
       buttonClasses:
