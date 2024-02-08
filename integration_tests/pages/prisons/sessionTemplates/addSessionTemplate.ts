@@ -35,7 +35,7 @@ export default class AddSessionTemplatePage extends Page {
 
   enterValidToDate = (date: string): void => {
     const splitDate = date.split('-')
-    cy.get('#hasEndDate').check()
+    cy.get('#hasEndDate').check({ force: true })
     cy.get('#validToDate-validToDateDay').type(splitDate[2])
     cy.get('#validToDate-validToDateMonth').type(splitDate[1])
     cy.get('#validToDate-validToDateYear').type(splitDate[0])
@@ -54,23 +54,32 @@ export default class AddSessionTemplatePage extends Page {
   }
 
   addCategoryGroups = (categoryGroups: CategoryGroup[]): void => {
-    cy.get('#hasCategoryGroups').check()
+    cy.get('#hasCategoryGroups').check({ force: true })
     categoryGroups.forEach(categoryGroup => {
-      cy.get('[data-test="category-groups"] label').contains(categoryGroup.name).siblings('input').check()
+      cy.get('[data-test="category-groups"] label')
+        .contains(categoryGroup.name)
+        .siblings('input')
+        .check({ force: true })
     })
   }
 
   addIncentiveGroups = (incentiveGroups: IncentiveGroup[]): void => {
-    cy.get('#hasIncentiveGroups').check()
+    cy.get('#hasIncentiveGroups').check({ force: true })
     incentiveGroups.forEach(incentiveGroup => {
-      cy.get('[data-test="incentive-groups"] label').contains(incentiveGroup.name).siblings('input').check()
+      cy.get('[data-test="incentive-groups"] label')
+        .contains(incentiveGroup.name)
+        .siblings('input')
+        .check({ force: true })
     })
   }
 
   addLocationGroups = (locationGroups: LocationGroup[]): void => {
-    cy.get('#hasLocationGroups').check()
+    cy.get('#hasLocationGroups').check({ force: true })
     locationGroups.forEach(locationGroup => {
-      cy.get('[data-test="location-groups"] label').contains(locationGroup.name).siblings('input').check()
+      cy.get('[data-test="location-groups"] label')
+        .contains(locationGroup.name)
+        .siblings('input')
+        .check({ force: true })
     })
   }
 

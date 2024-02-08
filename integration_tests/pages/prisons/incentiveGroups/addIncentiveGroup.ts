@@ -10,7 +10,7 @@ export default class AddIncentiveGroupPage extends Page {
   }
 
   selectLevel = (level: string): void => {
-    cy.get(`[name="incentiveLevels"][value="${level}"]`).check()
+    cy.get(`[name="incentiveLevels"][value="${level}"]`).check({ force: true })
   }
 
   addGroup = (): void => {

@@ -22,7 +22,7 @@ export default class UpdateSessionTemplatePage extends Page {
 
   enterValidToDate = (date: string): void => {
     const splitDate = date.split('-')
-    cy.get('#hasEndDate').check()
+    cy.get('#hasEndDate').check({ force: true })
     cy.get('#validToDate-validToDateDay').type(splitDate[2])
     cy.get('#validToDate-validToDateMonth').type(splitDate[1])
     cy.get('#validToDate-validToDateYear').type(splitDate[0])

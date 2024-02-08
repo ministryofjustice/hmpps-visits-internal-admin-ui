@@ -10,7 +10,7 @@ export default class AddCategoryGroupPage extends Page {
   }
 
   selectLevel = (level: string): void => {
-    cy.get(`[name="prisonerCategories"][value="${level}"]`).check()
+    cy.get(`[name="prisonerCategories"][value="${level}"]`).check({ force: true })
   }
 
   addGroup = (): void => {
