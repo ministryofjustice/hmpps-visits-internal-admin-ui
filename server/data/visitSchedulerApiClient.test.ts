@@ -42,8 +42,8 @@ describe('visitSchedulerApiClient', () => {
         .get(`/visits/search`)
         .query({
           prisonId: 'HEI',
-          startDateTime: '2022-05-23T00:00:00',
-          endDateTime: '2022-05-23T23:59:59',
+          visitStartDate: '2022-05-23',
+          visitEndDate: '2022-05-23',
           visitStatus: 'BOOKED',
           page: '0',
           size: '1000',

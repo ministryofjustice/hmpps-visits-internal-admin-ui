@@ -18,8 +18,8 @@ export default {
         urlPath: '/visitScheduler/visits/search',
         queryParameters: {
           prisonId: { equalTo: prisonCode },
-          startDateTime: { equalTo: `${date}T00:00:00` },
-          endDateTime: { equalTo: `${date}T23:59:59` },
+          visitStartDate: { equalTo: date },
+          visitEndDate: { equalTo: date },
           visitStatus: { equalTo: 'BOOKED' },
           page: { equalTo: '0' },
           size: { equalTo: '1000' },

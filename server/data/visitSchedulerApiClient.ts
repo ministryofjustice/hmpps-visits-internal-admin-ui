@@ -30,8 +30,8 @@ export default class VisitSchedulerApiClient {
       path: `/visits/search`,
       query: new URLSearchParams({
         prisonId,
-        startDateTime: `${date}T00:00:00`,
-        endDateTime: `${date}T23:59:59`,
+        visitStartDate: date,
+        visitEndDate: date,
         visitStatus: 'BOOKED',
         page: '0',
         size: '1000',
