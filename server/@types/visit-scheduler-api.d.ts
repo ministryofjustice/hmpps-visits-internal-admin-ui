@@ -279,6 +279,18 @@ export interface paths {
      */
     get: operations['getSupportTypes']
   }
+  '/visits/application/slot/reserve': {
+    /** Create an initial application and reserve a slot */
+    post: operations['createInitialApplication']
+  }
+  '/visits/application/{bookingReference}/change': {
+    /** Create an application for an existing visit */
+    put: operations['createApplicationForAnExistingVisit']
+  }
+  '/visits/application/{reference}/slot/change': {
+    /** Change an incomplete application */
+    put: operations['changeIncompleteApplication']
+  }
   '/visits/notification/count': {
     /**
      * Get notification count
@@ -338,6 +350,13 @@ export interface paths {
      */
     get: operations['getVisitsByFilterPageable']
   }
+  '/visits/search/future/{prisonerNumber}': {
+    /**
+     * Get future (booked and cancelled) visits for a prisoner
+     * @description Get future visits for given prisoner number
+     */
+    get: operations['getFutureVisitsBySessionPrisoner']
+  }
   '/visits/session-template/{sessionTemplateReference}': {
     /**
      * Get visits by session template reference for a date or a range of dates
@@ -345,17 +364,9 @@ export interface paths {
      */
     get: operations['getVisitsBySessionTemplateReference']
   }
-  '/visits/slot/reserve': {
-    /** Reserve a slot (date/time slot) for a visit (a starting point) */
-    post: operations['reserveVisitSlot']
-  }
   '/visits/{applicationReference}/book': {
     /** Book a visit (end of flow) */
     put: operations['bookVisit']
-  }
-  '/visits/{applicationReference}/slot/change': {
-    /** Change a reserved slot and associated details for a visit (before booking) */
-    put: operations['changeReservedVisitSlot']
   }
   '/visits/{reference}': {
     /**
@@ -367,10 +378,6 @@ export interface paths {
   '/visits/{reference}/cancel': {
     /** Cancel an existing booked visit */
     put: operations['cancelVisit']
-  }
-  '/visits/{reference}/change': {
-    /** Change a booked visit, (a starting point) */
-    put: operations['changeBookedVisit']
   }
   '/visits/{reference}/history': {
     /**
@@ -385,6 +392,78 @@ export type webhooks = Record<string, never>
 
 export interface components {
   schemas: {
+    /** @description Visit */
+    ApplicationDto: {
+      /**
+       * @description Is the application complete
+       * @example true
+       */
+      completed: boolean
+      /**
+       * Format: date-time
+       * @description The visit created date and time
+       */
+      createdTimestamp: string
+      /**
+       * Format: date-time
+       * @description The finishing date and time of the visit
+       */
+      endTimestamp: string
+      /**
+       * Format: date-time
+       * @description The visit modified date and time
+       */
+      modifiedTimestamp: string
+      /**
+       * @description Prison Id
+       * @example MDI
+       */
+      prisonId: string
+      /**
+       * @description Prisoner Id
+       * @example AF34567G
+       */
+      prisonerId: string
+      /**
+       * @description reference
+       * @example v9-d7-ed-7u
+       */
+      reference: string
+      /**
+       * @description Is the application reserved
+       * @example true
+       */
+      reserved: boolean
+      /**
+       * @description session template Reference
+       * @example dfs-wjs-eqr
+       */
+      sessionTemplateReference?: string
+      /**
+       * Format: date-time
+       * @description The date and time of the visit
+       */
+      startTimestamp: string
+      visitContact?: components['schemas']['ContactDto']
+      /** @description Visit Notes */
+      visitNotes: components['schemas']['VisitNoteDto'][]
+      /**
+       * @description Visit Restriction
+       * @example OPEN
+       * @enum {string}
+       */
+      visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
+      /**
+       * @description Visit Type
+       * @example SOCIAL
+       * @enum {string}
+       */
+      visitType: 'SOCIAL'
+      /** @description List of additional support associated with the visit */
+      visitorSupport: components['schemas']['VisitorSupportDto'][]
+      /** @description List of visitors associated with the visit */
+      visitors: components['schemas']['VisitorDto'][]
+    }
     BookingRequestDto: {
       /** @description Username for user who actioned this request */
       actionedBy: string
@@ -418,29 +497,25 @@ export interface components {
         | 'BY_PRISONER'
       cancelOutcome: components['schemas']['OutcomeDto']
     }
-    ChangeVisitSlotRequestDto: {
-      /**
-       * Format: date-time
-       * @description The finishing date and time of the visit
-       */
-      endTimestamp?: string
-      /**
-       * @description Session template reference
-       * @example v9d.7ed.7u
-       */
-      sessionTemplateReference: string
-      /**
-       * Format: date-time
-       * @description The date and time of the visit
-       */
-      startTimestamp?: string
-      visitContact?: components['schemas']['ContactDto']
+    ChangeApplicationDto: {
       /**
        * @description Visit Restriction
        * @example OPEN
        * @enum {string}
        */
-      visitRestriction?: 'OPEN' | 'CLOSED' | 'UNKNOWN'
+      applicationRestriction?: 'OPEN' | 'CLOSED'
+      /**
+       * Format: date
+       * @description The date for the visit
+       * @example 2018-12-01
+       */
+      sessionDate: string
+      /**
+       * @description Session template reference
+       * @example v9d.7ed.7u
+       */
+      sessionTemplateReference: string
+      visitContact?: components['schemas']['ContactDto']
       /** @description List of additional support associated with the visit */
       visitorSupport?: components['schemas']['VisitorSupportDto'][]
       /** @description List of visitors associated with the visit */
@@ -458,6 +533,37 @@ export interface components {
        * @example 01234 567890
        */
       telephone: string
+    }
+    CreateApplicationDto: {
+      /** @description Username for user who actioned this request */
+      actionedBy: string
+      /**
+       * @description Visit Restriction
+       * @example OPEN
+       * @enum {string}
+       */
+      applicationRestriction: 'OPEN' | 'CLOSED'
+      /**
+       * @description Prisoner Id
+       * @example AF34567G
+       */
+      prisonerId: string
+      /**
+       * Format: date
+       * @description The date for the visit
+       * @example 2018-12-01
+       */
+      sessionDate: string
+      /**
+       * @description Session template reference
+       * @example v9d.7ed.7u
+       */
+      sessionTemplateReference: string
+      visitContact?: components['schemas']['ContactDto']
+      /** @description List of additional support associated with the visit */
+      visitorSupport?: components['schemas']['VisitorSupportDto'][]
+      /** @description List of visitors associated with the visit */
+      visitors: components['schemas']['VisitorDto'][]
     }
     CreateCategoryGroupDto: {
       /** @description list of categories for group */
@@ -723,7 +829,7 @@ export interface components {
        * @example RESERVED
        * @enum {string}
        */
-      visitStatus: 'RESERVED' | 'CHANGING' | 'BOOKED' | 'CANCELLED'
+      visitStatus: 'BOOKED' | 'CANCELLED'
       /**
        * @description Visit Type
        * @example SOCIAL
@@ -978,41 +1084,6 @@ export interface components {
        * @example 2019-11-30
        */
       visitsToDate?: string
-    }
-    ReserveVisitSlotDto: {
-      /** @description Username for user who actioned this request */
-      actionedBy: string
-      /**
-       * Format: date-time
-       * @description The finishing date and time of the visit
-       */
-      endTimestamp: string
-      /**
-       * @description Prisoner Id
-       * @example AF34567G
-       */
-      prisonerId: string
-      /**
-       * @description Session template reference
-       * @example v9d.7ed.7u
-       */
-      sessionTemplateReference: string
-      /**
-       * Format: date-time
-       * @description The date and time of the visit
-       */
-      startTimestamp: string
-      visitContact?: components['schemas']['ContactDto']
-      /**
-       * @description Visit Restriction
-       * @example OPEN
-       * @enum {string}
-       */
-      visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
-      /** @description List of additional support associated with the visit */
-      visitorSupport?: components['schemas']['VisitorSupportDto'][]
-      /** @description List of visitors associated with the visit */
-      visitors: components['schemas']['VisitorDto'][]
     }
     RetryDlqResult: {
       messages: components['schemas']['DlqMessage'][]
@@ -1425,7 +1496,7 @@ export interface components {
        * @description The date and time of the visit
        */
       startTimestamp: string
-      visitContact?: components['schemas']['ContactDto']
+      visitContact: components['schemas']['ContactDto']
       /** @description Visit Notes */
       visitNotes: components['schemas']['VisitNoteDto'][]
       /**
@@ -1444,7 +1515,7 @@ export interface components {
        * @example RESERVED
        * @enum {string}
        */
-      visitStatus: 'RESERVED' | 'CHANGING' | 'BOOKED' | 'CANCELLED'
+      visitStatus: 'BOOKED' | 'CANCELLED'
       /**
        * @description Visit Type
        * @example SOCIAL
@@ -3285,6 +3356,132 @@ export interface operations {
       }
     }
   }
+  /** Create an initial application and reserve a slot */
+  createInitialApplication: {
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateApplicationDto']
+      }
+    }
+    responses: {
+      /** @description Visit slot reserved */
+      201: {
+        content: {
+          'application/json': components['schemas']['ApplicationDto']
+        }
+      }
+      /** @description Incorrect request to reserve a slot */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to reserve a slot */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /** Create an application for an existing visit */
+  createApplicationForAnExistingVisit: {
+    parameters: {
+      path: {
+        /**
+         * @description bookingReference
+         * @example v9-d7-ed-7u
+         */
+        bookingReference: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateApplicationDto']
+      }
+    }
+    responses: {
+      /** @description Visit created */
+      201: {
+        content: {
+          'application/json': components['schemas']['ApplicationDto']
+        }
+      }
+      /** @description Incorrect request to change a visit */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to change a visit */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /** Change an incomplete application */
+  changeIncompleteApplication: {
+    parameters: {
+      path: {
+        /**
+         * @description reference
+         * @example dfs-wjs-eqr
+         */
+        reference: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ChangeApplicationDto']
+      }
+    }
+    responses: {
+      /** @description Visit slot changed */
+      200: {
+        content: {
+          'application/json': components['schemas']['ApplicationDto']
+        }
+      }
+      /** @description Incorrect request to changed a visit slot */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to changed a visit slot */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Visit slot not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   /**
    * Get notification count
    * @description Retrieve notification count by visit reference
@@ -4058,24 +4255,19 @@ export interface operations {
         prisonId?: string
         /**
          * @description Filter results by visits that start on or after the given timestamp
-         * @example 2021-11-03T09:00:00
+         * @example 2021-11-03
          */
-        startDateTime?: string
+        visitStartDate?: string
         /**
-         * @description Filter results by visits that start on or before the given timestamp
-         * @example 2021-11-03T09:00:00
+         * @description Filter results by visits that end on or before the given timestamp
+         * @example 2021-11-03
          */
-        endDateTime?: string
-        /**
-         * @description Filter results by visitor (contact id)
-         * @example 12322
-         */
-        visitorId?: number
+        visitEndDate?: string
         /**
          * @description Filter results by visit status
          * @example BOOKED
          */
-        visitStatus: ('RESERVED' | 'CHANGING' | 'BOOKED' | 'CANCELLED')[]
+        visitStatus: ('BOOKED' | 'CANCELLED')[]
         /**
          * @description Pagination page number, starting at zero
          * @example 0
@@ -4116,6 +4308,43 @@ export interface operations {
     }
   }
   /**
+   * Get future (booked and cancelled) visits for a prisoner
+   * @description Get future visits for given prisoner number
+   */
+  getFutureVisitsBySessionPrisoner: {
+    parameters: {
+      path: {
+        prisonerNumber: string
+      }
+    }
+    responses: {
+      /** @description Returned future visits (booked and cancelled) for a prisoner */
+      200: {
+        content: {
+          'application/json': components['schemas']['VisitDto'][]
+        }
+      }
+      /** @description Incorrect request to get future (booked and cancelled) visits for a prisoner */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get future (booked and cancelled) visits for a prisoner */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
    * Get visits by session template reference for a date or a range of dates
    * @description Retrieve visits by session template reference for a date or a range of dates
    */
@@ -4141,7 +4370,7 @@ export interface operations {
          * @description Filter results by visit status
          * @example BOOKED
          */
-        visitStatus: ('RESERVED' | 'CHANGING' | 'BOOKED' | 'CANCELLED')[]
+        visitStatus: ('BOOKED' | 'CANCELLED')[]
         /**
          * @description Pagination page number, starting at zero
          * @example 0
@@ -4181,40 +4410,6 @@ export interface operations {
         }
       }
       /** @description Incorrect permissions to get visits by session template */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /** Reserve a slot (date/time slot) for a visit (a starting point) */
-  reserveVisitSlot: {
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ReserveVisitSlotDto']
-      }
-    }
-    responses: {
-      /** @description Visit slot reserved */
-      201: {
-        content: {
-          'application/json': components['schemas']['VisitDto']
-        }
-      }
-      /** @description Incorrect request to reserve a slot */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to reserve a slot */
       403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
@@ -4264,55 +4459,6 @@ export interface operations {
         }
       }
       /** @description Visit not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /** Change a reserved slot and associated details for a visit (before booking) */
-  changeReservedVisitSlot: {
-    parameters: {
-      path: {
-        /**
-         * @description applicationReference
-         * @example dfs-wjs-eqr
-         */
-        applicationReference: string
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ChangeVisitSlotRequestDto']
-      }
-    }
-    responses: {
-      /** @description Visit slot changed */
-      200: {
-        content: {
-          'application/json': components['schemas']['VisitDto']
-        }
-      }
-      /** @description Incorrect request to changed a visit slot */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to changed a visit slot */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Visit slot not found */
       404: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
@@ -4410,49 +4556,6 @@ export interface operations {
       }
       /** @description Visit not found */
       404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /** Change a booked visit, (a starting point) */
-  changeBookedVisit: {
-    parameters: {
-      path: {
-        /**
-         * @description reference
-         * @example v9-d7-ed-7u
-         */
-        reference: string
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ReserveVisitSlotDto']
-      }
-    }
-    responses: {
-      /** @description Visit created */
-      201: {
-        content: {
-          'application/json': components['schemas']['VisitDto']
-        }
-      }
-      /** @description Incorrect request to change a booked visit */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to change a booked visit */
-      403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
