@@ -363,6 +363,33 @@
         <h2 class="govuk-heading-m">Location groups</h2>
         {% if locationGroupsItems | length %}
           {%- set locationGroupsHtml %}
+            {{ govukRadios({
+              classes: "govuk-radios--inline",
+              name: "locationGroupBehaviour",
+              fieldset: {
+                legend: {
+                  text: "Location groups behaviour",
+                  classes: "govuk-fieldset__legend--s"
+                },
+                attributes: { "data-test": "location-group-behaviour" }
+              },
+              hint: {
+                text: "Include or exclude location groups from this session template?"
+              },
+              items: [
+                {
+                  value: "include",
+                  text: "Include"
+                },
+                {
+                  value: "exclude",
+                  text: "Exclude"
+                }
+              ],
+              value: formValues.locationGroupBehaviour or "include",
+              errorMessage: errors | findError('locationGroupBehaviour')
+            }) }}
+
             {{ govukCheckboxes({
               name: "locationGroupReferences",
               fieldset: {

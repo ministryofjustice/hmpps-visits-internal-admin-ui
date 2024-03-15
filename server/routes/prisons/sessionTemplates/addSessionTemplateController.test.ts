@@ -160,6 +160,7 @@ describe('Add a session template', () => {
       const createSessionTemplateDto = TestData.createSessionTemplateDto({
         incentiveLevelGroupReferences,
         categoryGroupReferences,
+        includeLocationGroupType: false,
         locationGroupReferences,
       })
 
@@ -206,6 +207,7 @@ describe('Add a session template', () => {
         .send(`categoryGroupReferences=${categoryGroupReferences[0]}`)
         .send(`categoryGroupReferences=${categoryGroupReferences[1]}`)
         .send('hasLocationGroups=yes')
+        .send('locationGroupBehaviour=exclude')
         .send(`locationGroupReferences=${locationGroupReferences[0]}`)
         .send(`locationGroupReferences=${locationGroupReferences[1]}`)
 
@@ -347,6 +349,7 @@ describe('Copy a session template', () => {
     hasCategoryGroups: 'yes',
     categoryGroupReferences: [sessionTemplateToCopy.prisonerCategoryGroups[0].reference],
     hasLocationGroups: 'yes',
+    locationGroupBehaviour: 'include',
     locationGroupReferences: [sessionTemplateToCopy.permittedLocationGroups[0].reference],
   }
 
