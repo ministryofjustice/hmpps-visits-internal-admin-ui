@@ -158,6 +158,7 @@ export default class AddSessionTemplateController {
         visitRoom: req.body.visitRoom,
         categoryGroupReferences: req.body.hasCategoryGroups === 'yes' ? req.body.categoryGroupReferences : [],
         incentiveLevelGroupReferences: req.body.hasIncentiveGroups === 'yes' ? req.body.incentiveGroupReferences : [],
+        includeLocationGroupType: true,
         locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
       }
 

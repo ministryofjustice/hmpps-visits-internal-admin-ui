@@ -110,6 +110,7 @@ export default {
               visitRoom: sessionTemplate.visitRoom,
               categoryGroupReferences: sessionTemplate.prisonerCategoryGroups.map(group => group.reference),
               incentiveLevelGroupReferences: sessionTemplate.prisonerIncentiveLevelGroups.map(group => group.reference),
+              includeLocationGroupType: sessionTemplate.includeLocationGroupType,
               locationGroupReferences: sessionTemplate.permittedLocationGroups.map(group => group.reference),
             },
           },

@@ -74,6 +74,7 @@ export default class TestData {
   static sessionTemplate = ({
     dayOfWeek = 'WEDNESDAY',
     name = 'WEDNESDAY, 2023-03-21, 13:45',
+    includeLocationGroupType = true,
     permittedLocationGroups = [],
     prisonId = 'HEI',
     prisonerCategoryGroups = [],
@@ -99,6 +100,7 @@ export default class TestData {
     ({
       dayOfWeek,
       name,
+      includeLocationGroupType,
       permittedLocationGroups,
       prisonId,
       prisonerCategoryGroups,
@@ -124,6 +126,7 @@ export default class TestData {
     visitRoom = 'visit room name',
     categoryGroupReferences = [],
     incentiveLevelGroupReferences = [],
+    includeLocationGroupType = true,
     locationGroupReferences = [],
   }: Partial<CreateSessionTemplateDto> = {}): CreateSessionTemplateDto =>
     ({
@@ -137,6 +140,7 @@ export default class TestData {
       visitRoom,
       categoryGroupReferences,
       incentiveLevelGroupReferences,
+      includeLocationGroupType,
       locationGroupReferences,
     }) as CreateSessionTemplateDto
 

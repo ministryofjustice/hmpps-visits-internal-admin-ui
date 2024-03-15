@@ -239,18 +239,6 @@ export interface paths {
     /** Migrate a canceled booked visit */
     put: operations['cancelVisit_1']
   }
-  '/queue-admin/get-dlq-messages/{dlqName}': {
-    get: operations['getDlqMessages']
-  }
-  '/queue-admin/purge-queue/{queueName}': {
-    put: operations['purgeQueue']
-  }
-  '/queue-admin/retry-all-dlqs': {
-    put: operations['retryAllDlqs']
-  }
-  '/queue-admin/retry-dlq/{dlqName}': {
-    put: operations['retryDlq']
-  }
   '/visit-sessions': {
     /**
      * Returns all visit sessions which are within the reservable time period - whether or not they are full
@@ -272,24 +260,17 @@ export interface paths {
      */
     get: operations['getSessionSchedule']
   }
-  '/visit-support': {
-    /**
-     * Available Support
-     * @description Retrieve all available support types
-     */
-    get: operations['getSupportTypes']
-  }
   '/visits/application/slot/reserve': {
     /** Create an initial application and reserve a slot */
     post: operations['createInitialApplication']
   }
+  '/visits/application/{applicationReference}/slot/change': {
+    /** Change an incomplete application */
+    put: operations['changeIncompleteApplication']
+  }
   '/visits/application/{bookingReference}/change': {
     /** Create an application for an existing visit */
     put: operations['createApplicationForAnExistingVisit']
-  }
-  '/visits/application/{reference}/slot/change': {
-    /** Change an incomplete application */
-    put: operations['changeIncompleteApplication']
   }
   '/visits/notification/count': {
     /**
@@ -357,12 +338,12 @@ export interface paths {
      */
     get: operations['getFutureVisitsBySessionPrisoner']
   }
-  '/visits/session-template/{sessionTemplateReference}': {
+  '/visits/session-template': {
     /**
-     * Get visits by session template reference for a date or a range of dates
-     * @description Retrieve visits by session template reference for a date or a range of dates
+     * Get visits for a date or a range of dates with / without a session template reference
+     * @description Get visits for a date or a range of dates with a session template reference or visits without a session template reference when session template reference is not passed
      */
-    get: operations['getVisitsBySessionTemplateReference']
+    get: operations['getVisitsBy']
   }
   '/visits/{applicationReference}/book': {
     /** Book a visit (end of flow) */
@@ -392,7 +373,7 @@ export type webhooks = Record<string, never>
 
 export interface components {
   schemas: {
-    /** @description Visit */
+    /** @description Application */
     ApplicationDto: {
       /**
        * @description Is the application complete
@@ -425,7 +406,7 @@ export interface components {
        */
       prisonerId: string
       /**
-       * @description reference
+       * @description application reference
        * @example v9-d7-ed-7u
        */
       reference: string
@@ -459,10 +440,17 @@ export interface components {
        * @enum {string}
        */
       visitType: 'SOCIAL'
-      /** @description List of additional support associated with the visit */
-      visitorSupport: components['schemas']['VisitorSupportDto'][]
-      /** @description List of visitors associated with the visit */
+      visitorSupport?: components['schemas']['VisitorSupportDto']
+      /** @description List of visitors associated with the application */
       visitors: components['schemas']['VisitorDto'][]
+    }
+    /** @description Visitor support */
+    ApplicationSupportDto: {
+      /**
+       * @description Support text description, if empty is given then existing support text will be removed
+       * @example visually impaired assistance
+       */
+      description: string
     }
     BookingRequestDto: {
       /** @description Username for user who actioned this request */
@@ -516,8 +504,7 @@ export interface components {
        */
       sessionTemplateReference: string
       visitContact?: components['schemas']['ContactDto']
-      /** @description List of additional support associated with the visit */
-      visitorSupport?: components['schemas']['VisitorSupportDto'][]
+      visitorSupport?: components['schemas']['ApplicationSupportDto']
       /** @description List of visitors associated with the visit */
       visitors?: components['schemas']['VisitorDto'][]
     }
@@ -532,7 +519,7 @@ export interface components {
        * @description Contact Phone Number
        * @example 01234 567890
        */
-      telephone: string
+      telephone?: string
     }
     CreateApplicationDto: {
       /** @description Username for user who actioned this request */
@@ -560,8 +547,7 @@ export interface components {
        */
       sessionTemplateReference: string
       visitContact?: components['schemas']['ContactDto']
-      /** @description List of additional support associated with the visit */
-      visitorSupport?: components['schemas']['VisitorSupportDto'][]
+      visitorSupport?: components['schemas']['ApplicationSupportDto']
       /** @description List of visitors associated with the visit */
       visitors: components['schemas']['VisitorDto'][]
     }
@@ -620,10 +606,9 @@ export interface components {
       name: string
       /**
        * @description Contact Phone Number
-       * @default UNKNOWN
        * @example 01234 567890
        */
-      telephone: string
+      telephone?: string
     }
     /** @description Create legacy data */
     CreateLegacyDataRequestDto: {
@@ -659,6 +644,8 @@ export interface components {
       dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
       /** @description list of group references for allowed prisoner incentive levels */
       incentiveLevelGroupReferences?: string[]
+      /** @description Determines behaviour of location groups. True will mean these location groups are included, false means they will be excluded. */
+      includeLocationGroupType: boolean
       /** @description list of group references for permitted session location groups */
       locationGroupReferences?: string[]
       /**
@@ -685,12 +672,6 @@ export interface components {
        * @example 1
        */
       weeklyFrequency: number
-    }
-    DlqMessage: {
-      body: {
-        [key: string]: Record<string, never>
-      }
-      messageId: string
     }
     ErrorResponse: {
       developerMessage?: string
@@ -741,13 +722,6 @@ export interface components {
         | 'PRISONER_RELEASED_EVENT'
         | 'PRISONER_RESTRICTION_CHANGE_EVENT'
         | 'PRISON_VISITS_BLOCKED_FOR_DATE'
-    }
-    GetDlqResult: {
-      messages: components['schemas']['DlqMessage'][]
-      /** Format: int32 */
-      messagesFoundCount: number
-      /** Format: int32 */
-      messagesReturnedCount: number
     }
     /** @description Migrate visit request */
     MigrateVisitRequestDto: {
@@ -1067,10 +1041,6 @@ export interface components {
        */
       visitDate: string
     }
-    PurgeQueueResult: {
-      /** Format: int32 */
-      messagesFoundCount: number
-    }
     RequestSessionTemplateVisitStatsDto: {
       /**
        * Format: date
@@ -1084,11 +1054,6 @@ export interface components {
        * @example 2019-11-30
        */
       visitsToDate?: string
-    }
-    RetryDlqResult: {
-      messages: components['schemas']['DlqMessage'][]
-      /** Format: int32 */
-      messagesFoundCount: number
     }
     /** @description Session Capacity */
     SessionCapacityDto: {
@@ -1184,6 +1149,8 @@ export interface components {
     }
     /** @description Session schedule */
     SessionScheduleDto: {
+      /** @description Determines behaviour of location groups. True will mean the location groups are inclusive, false means they are exclusive. */
+      areLocationGroupsInclusive: boolean
       capacity: components['schemas']['SessionCapacityDto']
       /**
        * @description prisoner category groups
@@ -1232,6 +1199,8 @@ export interface components {
        * @enum {string}
        */
       dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
+      /** @description Determines behaviour of location groups. True will mean these location groups are included, false means they will be excluded. */
+      includeLocationGroupType: boolean
       /**
        * @description name
        * @example Monday Session
@@ -1274,7 +1243,7 @@ export interface components {
        */
       weeklyFrequency: number
     }
-    /** @description count of visits by date */
+    /** @description count of cancelled visits by date */
     SessionTemplateVisitCountsDto: {
       visitCounts: components['schemas']['SessionCapacityDto']
       /**
@@ -1320,19 +1289,6 @@ export interface components {
       empty?: boolean
       sorted?: boolean
       unsorted?: boolean
-    }
-    /** @description Support Type */
-    SupportTypeDto: {
-      /**
-       * @description Support description
-       * @example Face covering exemption
-       */
-      description: string
-      /**
-       * @description Support type name
-       * @example MASK_EXEMPT
-       */
-      type: string
     }
     UpdateCategoryGroupDto: {
       /** @description list of category for group */
@@ -1522,8 +1478,7 @@ export interface components {
        * @enum {string}
        */
       visitType: 'SOCIAL'
-      /** @description List of additional support associated with the visit */
-      visitorSupport: components['schemas']['VisitorSupportDto'][]
+      visitorSupport?: components['schemas']['VisitorSupportDto']
       /** @description List of visitors associated with the visit */
       visitors: components['schemas']['VisitorDto'][]
     }
@@ -1578,7 +1533,7 @@ export interface components {
        */
       prisonId: string
       /** @description Session conflicts */
-      sessionConflicts?: ('NON_ASSOCIATION' | 'DOUBLE_BOOKED')[]
+      sessionConflicts: ('NON_ASSOCIATION' | 'DOUBLE_BOOKED')[]
       /**
        * @description Session Template Reference
        * @example v9d.7ed.7u
@@ -1628,12 +1583,7 @@ export interface components {
        * @description Support text description
        * @example visually impaired assistance
        */
-      text?: string
-      /**
-       * @description Support type
-       * @example OTHER
-       */
-      type: string
+      description: string
     }
   }
   responses: never
@@ -3126,64 +3076,6 @@ export interface operations {
       }
     }
   }
-  getDlqMessages: {
-    parameters: {
-      query?: {
-        maxMessages?: number
-      }
-      path: {
-        dlqName: string
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          '*/*': components['schemas']['GetDlqResult']
-        }
-      }
-    }
-  }
-  purgeQueue: {
-    parameters: {
-      path: {
-        queueName: string
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          '*/*': components['schemas']['PurgeQueueResult']
-        }
-      }
-    }
-  }
-  retryAllDlqs: {
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          '*/*': components['schemas']['RetryDlqResult'][]
-        }
-      }
-    }
-  }
-  retryDlq: {
-    parameters: {
-      path: {
-        dlqName: string
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          '*/*': components['schemas']['RetryDlqResult']
-        }
-      }
-    }
-  }
   /**
    * Returns all visit sessions which are within the reservable time period - whether or not they are full
    * @description Retrieve all visits for a specified prisoner
@@ -3330,32 +3222,6 @@ export interface operations {
       }
     }
   }
-  /**
-   * Available Support
-   * @description Retrieve all available support types
-   */
-  getSupportTypes: {
-    responses: {
-      /** @description Available Support information returned */
-      200: {
-        content: {
-          'application/json': components['schemas']['SupportTypeDto'][]
-        }
-      }
-      /** @description Incorrect request to Get Available Support */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
   /** Create an initial application and reserve a slot */
   createInitialApplication: {
     requestBody: {
@@ -3364,7 +3230,7 @@ export interface operations {
       }
     }
     responses: {
-      /** @description Visit slot reserved */
+      /** @description Application slot reserved */
       201: {
         content: {
           'application/json': components['schemas']['ApplicationDto']
@@ -3382,8 +3248,57 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Incorrect permissions to reserve a slot */
+      /** @description Incorrect permissions to reserve a slot for the application */
       403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /** Change an incomplete application */
+  changeIncompleteApplication: {
+    parameters: {
+      path: {
+        /**
+         * @description applicationReference
+         * @example dfs-wjs-eqr
+         */
+        applicationReference: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ChangeApplicationDto']
+      }
+    }
+    responses: {
+      /** @description Application slot changed */
+      200: {
+        content: {
+          'application/json': components['schemas']['ApplicationDto']
+        }
+      }
+      /** @description Incorrect request to change a application slot */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to change application slot */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Visit slot not found */
+      404: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
@@ -3407,13 +3322,13 @@ export interface operations {
       }
     }
     responses: {
-      /** @description Visit created */
+      /** @description Application created */
       201: {
         content: {
           'application/json': components['schemas']['ApplicationDto']
         }
       }
-      /** @description Incorrect request to change a visit */
+      /** @description Incorrect application details to change a visit */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
@@ -3425,57 +3340,8 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Incorrect permissions to change a visit */
+      /** @description Incorrect permissions for application to change a visit */
       403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /** Change an incomplete application */
-  changeIncompleteApplication: {
-    parameters: {
-      path: {
-        /**
-         * @description reference
-         * @example dfs-wjs-eqr
-         */
-        reference: string
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ChangeApplicationDto']
-      }
-    }
-    responses: {
-      /** @description Visit slot changed */
-      200: {
-        content: {
-          'application/json': components['schemas']['ApplicationDto']
-        }
-      }
-      /** @description Incorrect request to changed a visit slot */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to changed a visit slot */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Visit slot not found */
-      404: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
@@ -4345,12 +4211,17 @@ export interface operations {
     }
   }
   /**
-   * Get visits by session template reference for a date or a range of dates
-   * @description Retrieve visits by session template reference for a date or a range of dates
+   * Get visits for a date or a range of dates with / without a session template reference
+   * @description Get visits for a date or a range of dates with a session template reference or visits without a session template reference when session template reference is not passed
    */
-  getVisitsBySessionTemplateReference: {
+  getVisitsBy: {
     parameters: {
       query: {
+        /**
+         * @description Session template reference
+         * @example v9-d7-ed-7u
+         */
+        sessionTemplateReference?: string
         /**
          * @description Get visits from date
          * @example 2023-05-31
@@ -4372,6 +4243,11 @@ export interface operations {
          */
         visitStatus: ('BOOKED' | 'CANCELLED')[]
         /**
+         * @description Filter results by prison id/code
+         * @example MDI
+         */
+        prisonCode: string
+        /**
          * @description Pagination page number, starting at zero
          * @example 0
          */
@@ -4382,16 +4258,9 @@ export interface operations {
          */
         size: number
       }
-      path: {
-        /**
-         * @description Session template reference
-         * @example v9-d7-ed-7u
-         */
-        sessionTemplateReference: string
-      }
     }
     responses: {
-      /** @description Returns visits for a session template */
+      /** @description Returns visits for a session template or visits where session template reference is null if no session template reference parameter passed */
       200: {
         content: {
           'application/json': components['schemas']['PageVisitDto']
