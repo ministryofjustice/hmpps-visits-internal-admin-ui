@@ -52,6 +52,9 @@
 
       {%- set locationGroups -%}
         {%- if sessionTemplate.permittedLocationGroups.length -%}
+          <p>
+            <span data-test="location-group-behaviour">{% if sessionTemplate.includeLocationGroupType %}Includes{% else %}Excludes{% endif %}</span>:
+          </p>
           <ul class="govuk-list govuk-list--bullet">
             {%- for locationGroup in sessionTemplate.permittedLocationGroups -%}
               <li>

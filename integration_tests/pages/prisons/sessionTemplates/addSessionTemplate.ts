@@ -67,8 +67,9 @@ export default class AddSessionTemplatePage extends Page {
     })
   }
 
-  addLocationGroups = (locationGroups: LocationGroup[]): void => {
+  addLocationGroups = (locationGroups: LocationGroup[], behaviour: 'include' | 'exclude' = 'include'): void => {
     cy.get('#hasLocationGroups').check()
+    cy.get(`input[name=locationGroupBehaviour][value=${behaviour}]`).check()
     locationGroups.forEach(locationGroup => {
       cy.get('[data-test="location-groups"] label').contains(locationGroup.name).siblings('input').check()
     })

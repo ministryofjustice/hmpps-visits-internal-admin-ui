@@ -109,6 +109,24 @@ describe('Single session template page', () => {
             '/prisons/HEI/incentive-groups/inc-1-ref?sessionTemplateRef=-afe.dcc.0f',
           )
 
+          expect($('[data-test=location-group-behaviour]').text()).toBe('Includes')
+          expect($('.test-template-locationGroups li').eq(0).text().trim()).toBe('Location group 1')
+          expect($('.test-template-locationGroups li a').eq(0).attr('href')).toBe(
+            '/prisons/HEI/location-groups/loc-1-ref?sessionTemplateRef=-afe.dcc.0f',
+          )
+        })
+    })
+
+    it('should label location groups when set to exclude', () => {
+      sessionTemplate.includeLocationGroupType = false
+      sessionTemplate.permittedLocationGroups = [{ locations: [], name: 'Location group 1', reference: 'loc-1-ref' }]
+
+      return request(app)
+        .get('/prisons/HEI/session-templates/-afe.dcc.0f')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=location-group-behaviour]').text()).toBe('Excludes')
           expect($('.test-template-locationGroups li').eq(0).text().trim()).toBe('Location group 1')
           expect($('.test-template-locationGroups li a').eq(0).attr('href')).toBe(
             '/prisons/HEI/location-groups/loc-1-ref?sessionTemplateRef=-afe.dcc.0f',

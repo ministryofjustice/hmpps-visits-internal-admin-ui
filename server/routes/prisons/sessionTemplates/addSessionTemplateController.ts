@@ -109,6 +109,7 @@ export default class AddSessionTemplateController {
         hasCategoryGroups: categoryGroupReferences.length > 0 ? 'yes' : undefined,
         categoryGroupReferences,
         hasLocationGroups: locationGroupReferences.length > 0 ? 'yes' : undefined,
+        locationGroupBehaviour: sessionTemplate.includeLocationGroupType ? 'include' : 'exclude',
         locationGroupReferences,
       }
 
@@ -158,6 +159,7 @@ export default class AddSessionTemplateController {
         visitRoom: req.body.visitRoom,
         categoryGroupReferences: req.body.hasCategoryGroups === 'yes' ? req.body.categoryGroupReferences : [],
         incentiveLevelGroupReferences: req.body.hasIncentiveGroups === 'yes' ? req.body.incentiveGroupReferences : [],
+        includeLocationGroupType: req.body.locationGroupBehaviour !== 'exclude',
         locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
       }
 
@@ -266,6 +268,9 @@ export default class AddSessionTemplateController {
         .toArray()
         .if(body('hasCategoryGroups').equals('yes'))
         .isArray({ min: 1 }),
+      body('locationGroupBehaviour', 'You must specify location group behaviour')
+        .if(body('hasLocationGroups').equals('yes'))
+        .isIn(['include', 'exclude']),
       body('locationGroupReferences', 'You must select at least one location group')
         .toArray()
         .if(body('hasLocationGroups').equals('yes'))
