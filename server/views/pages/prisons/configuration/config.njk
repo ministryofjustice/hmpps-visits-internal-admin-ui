@@ -133,6 +133,60 @@
 
       <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
 
+      <h2 class="govuk-heading-m">Visitor configuration</h2>
+
+      {{ govukSummaryList({
+        classes: "govuk-!-width-two-thirds",
+        rows: [
+          {
+            key: {
+              text: "Max total visitors"
+            },
+            value: {
+              text: prison.maxTotalVisitors,
+              classes: "test-max-total-visitors"
+            }
+          },
+          {
+            key: {
+              text: "Max number of adults"
+            },
+            value: {
+              text: prison.maxAdultVisitors,
+              classes: "test-max-adult-visitors"
+            }
+          },
+          {
+            key: {
+              text: "Max number of children"
+            },
+            value: {
+              text: prison.maxChildVisitors,
+              classes: "test-max-child-visitors"
+            }
+          },
+          {
+            key: {
+              text: "Adult age threshold"
+            },
+            value: {
+              text: prison.adultAgeYears,
+              classes: "test-adult-age"
+            }
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+        text: "Edit visitor configuration",
+        classes: "govuk-!-margin-0",
+        href: "/prisons/" + prison.code + "/configuration/visitors/edit",
+        preventDoubleClick: true,
+        attributes: { "data-test": "visitor-config-edit" }
+      })}}
+
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
       <h2 class="govuk-heading-m">Change prison status</h2>
 
       <form action="/prisons/{{ prison.code }}/{{ changeStatusAction }}" data-test="prison-change-status-form" method="POST" novalidate>
