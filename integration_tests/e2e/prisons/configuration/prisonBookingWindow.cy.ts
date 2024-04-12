@@ -1,9 +1,9 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
 import PrisonConfigPage from '../../../pages/prisons/configuration/prisonConfig'
-import PrisonBookingWindowPage from '../../../pages/prisons/configuration/prisonBookingWindowForm'
+import PrisonBookingWindowPage from '../../../pages/prisons/configuration/prisonBookingWindow'
 
-context('Prison configuration', () => {
+context('Prison configuration - booking window', () => {
   const prisonCode = 'HEI'
 
   beforeEach(() => {
@@ -17,52 +17,32 @@ context('Prison configuration', () => {
     cy.task('stubGetPrisonContactDetails', { prisonCode })
   })
 
-  describe('Prison booking window displayed', () => {
-    const prisonDto = TestData.prisonDto()
+  const prisonDto = TestData.prisonDto()
 
-    it('should display prison booking window details', () => {
-      cy.task('stubGetPrison', prisonDto)
+  it('should should update prison booking window details', () => {
+    cy.task('stubGetPrison', prisonDto)
 
-      const prisonConfigPage = PrisonConfigPage.goTo(prisonCode)
+    // prison config page - should have current booking window values
+    const prisonConfigPage = PrisonConfigPage.goTo(prisonCode)
+    prisonConfigPage.getMinBookingWindow().contains(prisonDto.policyNoticeDaysMin)
+    prisonConfigPage.getMaxBookingWindow().contains(prisonDto.policyNoticeDaysMax)
 
-      prisonConfigPage.getMinBookingWindow().contains(prisonDto.policyNoticeDaysMin)
-      prisonConfigPage.getMaxBookingWindow().contains(prisonDto.policyNoticeDaysMax)
-    })
+    // edit booking window
+    prisonConfigPage.editBookingWindow()
+    const prisonBookingWindowPage = Page.verifyOnPage(PrisonBookingWindowPage)
+    prisonBookingWindowPage.getMinBookingWindow().should('have.value', prisonDto.policyNoticeDaysMin)
+    prisonBookingWindowPage.getMaxBookingWindow().should('have.value', prisonDto.policyNoticeDaysMax)
 
-    it('when edit prison booking window button is pressed we should be on the edit form', () => {
-      cy.task('stubGetPrison', prisonDto)
+    // update min / max values and submit
+    const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
+    cy.task('stubUpdatePrison', { prisonDto: { ...prisonDto, ...updatePrisonDto }, updatePrisonDto })
+    cy.task('stubGetPrison', { ...prisonDto, ...updatePrisonDto })
+    prisonBookingWindowPage.enterMinBookingWindow(updatePrisonDto.policyNoticeDaysMin.toString())
+    prisonBookingWindowPage.enterMaxBookingWindow(updatePrisonDto.policyNoticeDaysMax.toString())
+    prisonBookingWindowPage.submit()
 
-      const prisonConfigPage = PrisonConfigPage.goTo(prisonCode)
-      prisonConfigPage.pressPrisonBookingWindowEditButton()
-      prisonConfigPage.isAtPath('/prisons/HEI/configuration/booking-window/edit')
-    })
-  })
-
-  describe('Prison booking window update form', () => {
-    const prisonDto = TestData.prisonDto()
-
-    it('should display prison booking window details when on update form', () => {
-      cy.task('stubGetPrison', prisonDto)
-
-      const prisonBookingWindowPage = PrisonBookingWindowPage.goTo(prisonCode)
-      prisonBookingWindowPage.getMinBookingWindow().should('have.value', prisonDto.policyNoticeDaysMin)
-      prisonBookingWindowPage.getMaxBookingWindow().should('have.value', prisonDto.policyNoticeDaysMax)
-    })
-
-    it('should update min and max correctly when entered', () => {
-      const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
-
-      cy.task('stubGetPrison', prisonDto)
-      cy.task('stubUpdatePrison', { prisonDto: { ...prisonDto, ...updatePrisonDto }, updatePrisonDto })
-
-      const prisonBookingWindowPage = PrisonBookingWindowPage.goTo(prisonCode)
-      prisonBookingWindowPage.getMinBookingWindow().clear().type(String(updatePrisonDto.policyNoticeDaysMin))
-      prisonBookingWindowPage.getMaxBookingWindow().clear().type(String(updatePrisonDto.policyNoticeDaysMax))
-      cy.task('stubGetPrison', { ...prisonDto, ...updatePrisonDto })
-      prisonBookingWindowPage.submit()
-      const prisonConfigPage = Page.verifyOnPage(PrisonConfigPage)
-      prisonConfigPage.getMinBookingWindow().contains(10)
-      prisonConfigPage.getMaxBookingWindow().contains(20)
-    })
+    // new values should be on config page
+    prisonConfigPage.getMinBookingWindow().contains(updatePrisonDto.policyNoticeDaysMin)
+    prisonConfigPage.getMaxBookingWindow().contains(updatePrisonDto.policyNoticeDaysMax)
   })
 })

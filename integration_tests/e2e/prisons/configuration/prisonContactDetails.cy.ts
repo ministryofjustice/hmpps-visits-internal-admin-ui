@@ -1,7 +1,7 @@
 import TestData from '../../../../server/routes/testutils/testData'
 import PrisonConfigPage from '../../../pages/prisons/configuration/prisonConfig'
 
-context('Prison configuration', () => {
+context('Prison configuration - contact details', () => {
   const prisonCode = 'HEI'
 
   beforeEach(() => {

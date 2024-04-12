@@ -17,5 +17,5 @@ export default class ViewSessionTemplatesPage extends Page {
 
   getSessionTemplate = (index: number): PageElement => cy.get('[data-test="template-name"] a').eq(index)
 
-  getAddSessionTemplateButton = () => this.getByDataTest('add-session-template')
+  getAddSessionTemplateButton = () => cy.get('[data-test="add-session-template"]')
 }
