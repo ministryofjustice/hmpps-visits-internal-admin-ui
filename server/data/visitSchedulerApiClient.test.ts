@@ -10,6 +10,7 @@ import {
   PageVisitDto,
   PrisonDto,
   RequestSessionTemplateVisitStatsDto,
+  UpdatePrisonDto,
   UpdateSessionTemplateDto,
 } from './visitSchedulerApiTypes'
 
@@ -86,19 +87,17 @@ describe('visitSchedulerApiClient', () => {
 
   describe('createPrison', () => {
     it('should add prison to list of supported prisons', async () => {
-      const prison: PrisonDto = {
-        active: false,
-        code: 'BHI',
-        excludeDates: [],
-        policyNoticeDaysMin: 2,
-        policyNoticeDaysMax: 28,
-      }
+      const prison = TestData.prisonDto()
 
       fakeVisitSchedulerApi
         .post('/admin/prisons/prison', <PrisonDto>{
           active: prison.active,
+          adultAgeYears: prison.adultAgeYears,
           code: prison.code,
           excludeDates: prison.excludeDates,
+          maxAdultVisitors: prison.maxAdultVisitors,
+          maxChildVisitors: prison.maxChildVisitors,
+          maxTotalVisitors: prison.maxTotalVisitors,
           policyNoticeDaysMin: prison.policyNoticeDaysMin,
           policyNoticeDaysMax: prison.policyNoticeDaysMax,
         })
@@ -107,17 +106,28 @@ describe('visitSchedulerApiClient', () => {
 
       const output = await visitSchedulerApiClient.createPrison(prison)
 
-      expect(output).toEqual(prison)
+      expect(output).toStrictEqual(prison)
     })
   })
 
   describe('updatePrison', () => {
     it('should return updated prison', async () => {
       const prisonDto = TestData.prisonDto()
-      const updatePrisonDto = TestData.updatePrisonDto()
+      const updatePrisonDto = TestData.updatePrisonDto({
+        adultAgeYears: 18,
+        maxAdultVisitors: 2,
+        maxChildVisitors: 4,
+        maxTotalVisitors: 6,
+        policyNoticeDaysMax: 28,
+        policyNoticeDaysMin: 2,
+      })
 
       fakeVisitSchedulerApi
-        .put(`/admin/prisons/prison/${prisonDto.code}`, <PrisonDto>{
+        .put(`/admin/prisons/prison/${prisonDto.code}`, <UpdatePrisonDto>{
+          adultAgeYears: updatePrisonDto.adultAgeYears,
+          maxAdultVisitors: updatePrisonDto.maxAdultVisitors,
+          maxChildVisitors: updatePrisonDto.maxChildVisitors,
+          maxTotalVisitors: updatePrisonDto.maxTotalVisitors,
           policyNoticeDaysMin: updatePrisonDto.policyNoticeDaysMin,
           policyNoticeDaysMax: updatePrisonDto.policyNoticeDaysMax,
         })
@@ -126,7 +136,7 @@ describe('visitSchedulerApiClient', () => {
 
       const output = await visitSchedulerApiClient.updatePrison(prisonDto.code, updatePrisonDto)
 
-      expect(output).toEqual(prisonDto)
+      expect(output).toStrictEqual(prisonDto)
     })
   })
 

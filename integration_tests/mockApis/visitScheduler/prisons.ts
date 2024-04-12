@@ -1,7 +1,7 @@
 import { SuperAgentRequest } from 'superagent'
 import { stubFor } from '../wiremock'
 import TestData from '../../../server/routes/testutils/testData'
-import { PrisonDto } from '../../../server/data/visitSchedulerApiTypes'
+import { PrisonDto, UpdatePrisonDto } from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
   stubGetAllPrisons: (prisons: PrisonDto[] = TestData.prisonDtos()): SuperAgentRequest => {
@@ -39,8 +39,12 @@ export default {
           {
             equalToJson: {
               active: prison.active,
+              adultAgeYears: prison.adultAgeYears,
               code: prison.code,
               excludeDates: prison.excludeDates,
+              maxAdultVisitors: prison.maxAdultVisitors,
+              maxChildVisitors: prison.maxChildVisitors,
+              maxTotalVisitors: prison.maxTotalVisitors,
               policyNoticeDaysMin: prison.policyNoticeDaysMin,
               policyNoticeDaysMax: prison.policyNoticeDaysMax,
             },
@@ -54,16 +58,26 @@ export default {
       },
     })
   },
-  stubUpdatePrison: (prison: PrisonDto): SuperAgentRequest => {
+  stubUpdatePrison: ({
+    prisonDto,
+    updatePrisonDto,
+  }: {
+    prisonDto: PrisonDto
+    updatePrisonDto: UpdatePrisonDto
+  }): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'PUT',
-        url: `/visitScheduler/admin/prisons/prison/${prison.code}`,
+        url: `/visitScheduler/admin/prisons/prison/${prisonDto.code}`,
         bodyPatterns: [
           {
             equalToJson: {
-              policyNoticeDaysMin: prison.policyNoticeDaysMin,
-              policyNoticeDaysMax: prison.policyNoticeDaysMax,
+              adultAgeYears: updatePrisonDto.adultAgeYears,
+              maxAdultVisitors: updatePrisonDto.maxAdultVisitors,
+              maxChildVisitors: updatePrisonDto.maxChildVisitors,
+              maxTotalVisitors: updatePrisonDto.maxTotalVisitors,
+              policyNoticeDaysMin: updatePrisonDto.policyNoticeDaysMin,
+              policyNoticeDaysMax: updatePrisonDto.policyNoticeDaysMax,
             },
           },
         ],
@@ -71,7 +85,7 @@ export default {
       response: {
         status: 201,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: prison,
+        jsonBody: prisonDto,
       },
     })
   },

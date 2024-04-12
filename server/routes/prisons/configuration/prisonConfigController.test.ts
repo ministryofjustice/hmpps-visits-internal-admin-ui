@@ -61,35 +61,35 @@ describe('Prison booking window edit', () => {
     prisonService.getPrison.mockResolvedValue(activePrison)
 
     it('should send valid data to edit booking window and redirect to view template', () => {
-      const testUpdateData = { policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 }
+      const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
 
       return request(app)
         .post(editBookingWindowUrl)
-        .send(`policyNoticeDaysMin=${testUpdateData.policyNoticeDaysMin}`)
-        .send(`policyNoticeDaysMax=${testUpdateData.policyNoticeDaysMax}`)
+        .send(`policyNoticeDaysMin=${updatePrisonDto.policyNoticeDaysMin}`)
+        .send(`policyNoticeDaysMax=${updatePrisonDto.policyNoticeDaysMax}`)
         .expect(302)
         .expect('Location', `/prisons/${activePrison.code}/configuration`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(1)
           expect(flashProvider).toHaveBeenCalledWith('message', 'Booking window updated')
-          expect(prisonService.updatePrisonDetails).toHaveBeenCalledWith('user1', activePrison.code, testUpdateData)
+          expect(prisonService.updatePrisonDetails).toHaveBeenCalledWith('user1', activePrison.code, updatePrisonDto)
         })
     })
 
     it('should set validation errors when min and max are below 0 form data', () => {
-      const testUpdateData = { policyNoticeDaysMin: -1, policyNoticeDaysMax: -1 }
+      const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: -1, policyNoticeDaysMax: -1 })
 
       const expectedValidationErrors = [
         expect.objectContaining({ path: 'policyNoticeDaysMin', msg: 'Enter a min booking window value of at least 1' }),
         expect.objectContaining({ path: 'policyNoticeDaysMax', msg: 'Enter a max booking window value of at least 1' }),
       ]
 
-      const expectedFormValues = testUpdateData
+      const expectedFormValues = updatePrisonDto
 
       return request(app)
         .post(editBookingWindowUrl)
-        .send(`policyNoticeDaysMin=${testUpdateData.policyNoticeDaysMin}`)
-        .send(`policyNoticeDaysMax=${testUpdateData.policyNoticeDaysMax}`)
+        .send(`policyNoticeDaysMin=${updatePrisonDto.policyNoticeDaysMin}`)
+        .send(`policyNoticeDaysMax=${updatePrisonDto.policyNoticeDaysMax}`)
         .expect(302)
         .expect('Location', `/prisons/HEI/configuration/booking-window/edit`)
         .expect(() => {
@@ -101,7 +101,7 @@ describe('Prison booking window edit', () => {
     })
 
     it('should set validation errors when min is greater than max', () => {
-      const testUpdateData = { policyNoticeDaysMin: 10, policyNoticeDaysMax: 1 }
+      const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 1 })
 
       const expectedValidationErrors = [
         expect.objectContaining({
@@ -110,12 +110,12 @@ describe('Prison booking window edit', () => {
         }),
       ]
 
-      const expectedFormValues = testUpdateData
+      const expectedFormValues = updatePrisonDto
 
       return request(app)
         .post(editBookingWindowUrl)
-        .send(`policyNoticeDaysMin=${testUpdateData.policyNoticeDaysMin}`)
-        .send(`policyNoticeDaysMax=${testUpdateData.policyNoticeDaysMax}`)
+        .send(`policyNoticeDaysMin=${updatePrisonDto.policyNoticeDaysMin}`)
+        .send(`policyNoticeDaysMax=${updatePrisonDto.policyNoticeDaysMax}`)
         .expect(302)
         .expect('Location', `/prisons/HEI/configuration/booking-window/edit`)
         .expect(() => {
@@ -127,20 +127,20 @@ describe('Prison booking window edit', () => {
     })
 
     it('should handle API errors by setting flash errors and redirecting to same page', () => {
-      const testUpdateData = { policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 }
+      const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
       prisonService.updatePrisonDetails.mockRejectedValue(new BadRequest('API error!'))
 
       return request(app)
         .post(editBookingWindowUrl)
-        .send(`policyNoticeDaysMin=${testUpdateData.policyNoticeDaysMin}`)
-        .send(`policyNoticeDaysMax=${testUpdateData.policyNoticeDaysMax}`)
+        .send(`policyNoticeDaysMin=${updatePrisonDto.policyNoticeDaysMin}`)
+        .send(`policyNoticeDaysMax=${updatePrisonDto.policyNoticeDaysMax}`)
         .expect(302)
         .expect('Location', `/prisons/${activePrison.code}/configuration/booking-window/edit`)
         .expect(() => {
-          expect(prisonService.updatePrisonDetails).toHaveBeenCalledWith('user1', activePrison.code, testUpdateData)
+          expect(prisonService.updatePrisonDetails).toHaveBeenCalledWith('user1', activePrison.code, updatePrisonDto)
           expect(flashProvider.mock.calls.length).toBe(2)
           expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
-          expect(flashProvider).toHaveBeenCalledWith('formValues', testUpdateData)
+          expect(flashProvider).toHaveBeenCalledWith('formValues', updatePrisonDto)
         })
     })
   })
