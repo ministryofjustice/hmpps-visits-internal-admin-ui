@@ -23,7 +23,7 @@ export default function routes(services: Services): Router {
   get('/prisons/:prisonId([A-Z]{3})/configuration/booking-window/edit', editBookingWindowController.view())
   postWithValidation(
     '/prisons/:prisonId([A-Z]{3})/configuration/booking-window/edit',
-    editBookingWindowController.validateBookingWindow(),
+    editBookingWindowController.validate(),
     editBookingWindowController.submit(),
   )
 

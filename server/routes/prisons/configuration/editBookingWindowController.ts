@@ -17,7 +17,7 @@ export default class EditBookingWindowController {
         ...req.flash('formValues')?.[0],
       }
 
-      return res.render('pages/prisons/configuration/bookingWindowForm', {
+      return res.render('pages/prisons/configuration/editBookingWindow', {
         errors: req.flash('errors'),
         prison,
         formValues,
@@ -58,7 +58,7 @@ export default class EditBookingWindowController {
     }
   }
 
-  public validateBookingWindow(): ValidationChain[] {
+  public validate(): ValidationChain[] {
     return [
       body('policyNoticeDaysMin')
         .trim()

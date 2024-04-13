@@ -22,7 +22,7 @@ export default class AddEditContactDetailsController {
         ...req.flash('formValues')?.[0],
       }
 
-      return res.render('pages/prisons/configuration/contactDetailsForm', {
+      return res.render('pages/prisons/configuration/addEditContactDetails', {
         errors: req.flash('errors'),
         prison,
         action,

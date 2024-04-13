@@ -2,6 +2,7 @@
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {% from "components/subNavigation.njk" import subNavigation %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% set pageHeaderTitle = prison.name %}
 {% set pageTitle = applicationName + " - Configuration - " + pageHeaderTitle %}
@@ -31,76 +32,16 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-
       {{ subNavigation(prison.code, "config") }}
+    </div>
+  </div>
+  
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-      {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-      <div class="govuk-!-width-two-thirds">
-
-        <h2 class="govuk-heading-m">Contact details</h2>
-
-        {% if prisonContactDetails %}
-          {{ govukSummaryList({
-            rows: [
-              {
-                key: {
-                  text: "Social visits email"
-                },
-                value: {
-                  text: prisonContactDetails.emailAddress if prisonContactDetails.emailAddress else "Not set",
-                  classes: "test-contact-email"
-                }
-              },
-              {
-                key: {
-                  text: "Social visits telephone"
-                },
-                value: {
-                  text: prisonContactDetails.phoneNumber if prisonContactDetails.phoneNumber else "Not set",
-                  classes: "test-contact-phone"
-                }
-              },
-              {
-                key: {
-                  text: "Prison web address"
-                },
-                value: {
-                  html: '<a class="govuk-link--no-visited-state" href="' + prisonContactDetails.webAddress + '" target="_blank" rel="noopener noreferrer">' + prisonContactDetails.webAddress + "</a>"
-                    if prisonContactDetails.webAddress else "Not set",
-                    classes: "test-contact-web"
-                }
-              }
-            ]
-          }) }}
-
-          {{ govukButton({
-            text: "Edit contact details",
-            classes: "govuk-!-margin-0",
-            href: "/prisons/" + prison.code + "/configuration/contact-details/edit",
-            preventDoubleClick: true,
-            attributes: { "data-test": "contact-details-edit" }
-          })}}
-
-        {% else %}
-
-          <p>No contact details have been entered for this prison.</p>
-
-          {{ govukButton({
-            text: "Add contact details",
-            classes: "govuk-!-margin-0",
-            href: "/prisons/" + prison.code + "/configuration/contact-details/add",
-            preventDoubleClick: true,
-            attributes: { "data-test": "contact-details-add" }
-          })}}
-        {% endif %}
-      </div>
-
-      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-
-      <h2 class="govuk-heading-m">Change booking window</h2>
+      <h2 class="govuk-heading-m">Booking window</h2>
 
       {{ govukSummaryList({
-        classes: "govuk-!-width-two-thirds",
         rows: [
           {
             key: {
@@ -131,12 +72,68 @@
         attributes: { "data-test": "booking-window-edit" }
       })}}
 
-      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+      <hr class="govuk-section-break govuk-section-break--xl">
+      <h2 class="govuk-heading-m">Contact details</h2>
 
+      {% if prisonContactDetails %}
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: "Social visits email"
+              },
+              value: {
+                text: prisonContactDetails.emailAddress if prisonContactDetails.emailAddress else "Not set",
+                classes: "test-contact-email"
+              }
+            },
+            {
+              key: {
+                text: "Social visits telephone"
+              },
+              value: {
+                text: prisonContactDetails.phoneNumber if prisonContactDetails.phoneNumber else "Not set",
+                classes: "test-contact-phone"
+              }
+            },
+            {
+              key: {
+                text: "Prison web address"
+              },
+              value: {
+                html: '<a class="govuk-link--no-visited-state" href="' + prisonContactDetails.webAddress + '" target="_blank" rel="noopener noreferrer">' + prisonContactDetails.webAddress + "</a>"
+                  if prisonContactDetails.webAddress else "Not set",
+                  classes: "test-contact-web"
+              }
+            }
+          ]
+        }) }}
+
+        {{ govukButton({
+          text: "Edit contact details",
+          classes: "govuk-!-margin-0",
+          href: "/prisons/" + prison.code + "/configuration/contact-details/edit",
+          preventDoubleClick: true,
+          attributes: { "data-test": "contact-details-edit" }
+        })}}
+
+        {% else %}
+
+          <p>No contact details have been entered for this prison.</p>
+
+          {{ govukButton({
+            text: "Add contact details",
+            classes: "govuk-!-margin-0",
+            href: "/prisons/" + prison.code + "/configuration/contact-details/add",
+            preventDoubleClick: true,
+            attributes: { "data-test": "contact-details-add" }
+          })}}
+        {% endif %}
+
+      <hr class="govuk-section-break govuk-section-break--xl">
       <h2 class="govuk-heading-m">Visitor configuration</h2>
 
       {{ govukSummaryList({
-        classes: "govuk-!-width-two-thirds",
         rows: [
           {
             key: {
@@ -185,9 +182,8 @@
         attributes: { "data-test": "visitor-config-edit" }
       })}}
 
-      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-
-      <h2 class="govuk-heading-m">Change prison status</h2>
+      <hr class="govuk-section-break govuk-section-break--xl">
+      <h2 class="govuk-heading-m">Prison status</h2>
 
       <form action="/prisons/{{ prison.code }}/{{ changeStatusAction }}" data-test="prison-change-status-form" method="POST" novalidate>
 
