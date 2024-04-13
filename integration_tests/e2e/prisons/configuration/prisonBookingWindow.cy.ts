@@ -29,7 +29,7 @@ context('Prison configuration - booking window', () => {
 
     // edit booking window
     prisonConfigPage.editBookingWindow()
-    const prisonBookingWindowPage = Page.verifyOnPage(PrisonBookingWindowPage)
+    const prisonBookingWindowPage = Page.verifyOnPageTitle(PrisonBookingWindowPage, TestData.prison().name)
     prisonBookingWindowPage.getMinBookingWindow().should('have.value', prisonDto.policyNoticeDaysMin)
     prisonBookingWindowPage.getMaxBookingWindow().should('have.value', prisonDto.policyNoticeDaysMax)
 

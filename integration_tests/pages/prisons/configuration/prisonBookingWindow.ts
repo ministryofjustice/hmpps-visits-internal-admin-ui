@@ -1,8 +1,8 @@
 import Page, { PageElement } from '../../page'
 
 export default class PrisonBookingWindowPage extends Page {
-  constructor() {
-    super('Hewell (HMP)')
+  constructor(prisonName: string) {
+    super(`${prisonName} Edit prison booking window`)
   }
 
   getMinBookingWindow = (): PageElement => cy.get('#policyNoticeDaysMin')

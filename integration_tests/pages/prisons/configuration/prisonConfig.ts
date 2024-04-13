@@ -24,6 +24,15 @@ export default class PrisonConfigPage extends Page {
 
   getWebAddress = (): PageElement => cy.get('.test-contact-web')
 
+  addContactDetails = (): void => {
+    cy.get('[data-test="contact-details-add"]').click()
+  }
+
+  editContactDetails = (): void => {
+    cy.get('[data-test="contact-details-edit"]').click()
+  }
+
+  // Booking window
   getMinBookingWindow = (): PageElement => cy.get('.test-policy-notice-days-min')
 
   getMaxBookingWindow = (): PageElement => cy.get('.test-policy-notice-days-max')
