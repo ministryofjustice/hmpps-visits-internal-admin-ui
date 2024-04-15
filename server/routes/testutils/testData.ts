@@ -20,29 +20,69 @@ export default class TestData {
   // PrisonDto from Visit Scheduler
   static prisonDto = ({
     active = true,
+    adultAgeYears = 18,
     code = 'HEI',
     excludeDates = [],
+    maxAdultVisitors = 3,
+    maxChildVisitors = 3,
+    maxTotalVisitors = 6,
     policyNoticeDaysMin = 2,
     policyNoticeDaysMax = 28,
   }: Partial<PrisonDto> = {}): PrisonDto =>
-    ({ active, code, excludeDates, policyNoticeDaysMin, policyNoticeDaysMax }) as PrisonDto
+    ({
+      active,
+      adultAgeYears,
+      code,
+      excludeDates,
+      maxAdultVisitors,
+      maxChildVisitors,
+      maxTotalVisitors,
+      policyNoticeDaysMin,
+      policyNoticeDaysMax,
+    }) as PrisonDto
 
   static updatePrisonDto = ({
-    policyNoticeDaysMin = 2,
-    policyNoticeDaysMax = 28,
+    adultAgeYears,
+    maxAdultVisitors,
+    maxChildVisitors,
+    maxTotalVisitors,
+    policyNoticeDaysMin,
+    policyNoticeDaysMax,
   }: Partial<UpdatePrisonDto> = {}): UpdatePrisonDto =>
-    ({ policyNoticeDaysMin, policyNoticeDaysMax }) as UpdatePrisonDto
+    ({
+      adultAgeYears,
+      maxAdultVisitors,
+      maxChildVisitors,
+      maxTotalVisitors,
+      policyNoticeDaysMin,
+      policyNoticeDaysMax,
+    }) as UpdatePrisonDto
 
   // Prison (with name)
   static prison = ({
     active = true,
+    adultAgeYears = 18,
     code = 'HEI',
     excludeDates = [],
+    maxAdultVisitors = 3,
+    maxChildVisitors = 3,
+    maxTotalVisitors = 6,
     name = 'Hewell (HMP)',
     policyNoticeDaysMin = 2,
     policyNoticeDaysMax = 28,
   }: Partial<Prison> = {}): Prison =>
-    ({ active, code, excludeDates, name, policyNoticeDaysMin, policyNoticeDaysMax }) as Prison
+    ({
+      active,
+      adultAgeYears,
+      code,
+      excludeDates,
+      maxAdultVisitors,
+      maxChildVisitors,
+      maxTotalVisitors,
+      name,
+      policyNoticeDaysMin,
+      policyNoticeDaysMax,
+    }) as Prison
 
   // Array of Visit scheduler PrisonDto
   static prisonDtos = ({

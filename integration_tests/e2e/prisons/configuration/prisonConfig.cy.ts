@@ -5,9 +5,8 @@ import SupportedPrisonsPage from '../../../pages/prisons/SupportedPrisons'
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
 import PrisonConfigPage from '../../../pages/prisons/configuration/prisonConfig'
 import { SessionTemplatesRangeType } from '../../../../server/data/visitSchedulerApiTypes'
-import PrisonBookingWindowPage from '../../../pages/prisons/configuration/prisonBookingWindowForm'
 
-context('Prison configuration', () => {
+context('Prison configuration - prison status', () => {
   const prisonCode = 'HEI'
   const rangeType: SessionTemplatesRangeType = 'CURRENT_OR_FUTURE'
 
@@ -22,120 +21,54 @@ context('Prison configuration', () => {
     cy.task('stubGetPrisonContactDetails', { prisonCode })
   })
 
-  describe('Prison booking window displayed', () => {
-    const prison = TestData.prison()
+  const inactivePrison = TestData.prisonDto({ active: false })
+  const activePrison = TestData.prisonDto({ active: true })
 
-    it('should display prison contact details', () => {
-      cy.task('stubGetPrison', prison)
+  it('should activate a prison', () => {
+    const indexPage = Page.verifyOnPage(IndexPage)
+    indexPage.supportedPrisonsCard().contains('Supported prisons')
+    indexPage.supportedPrisonsCard().click()
+    const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
 
-      const prisonConfigPage = PrisonConfigPage.goTo(prisonCode)
+    cy.task('stubGetPrison', inactivePrison)
+    cy.task('stubGetSessionTemplates', { prisonCode, rangeType })
 
-      prisonConfigPage.getMinBookingWindow().contains(prison.policyNoticeDaysMin)
-      prisonConfigPage.getMaxBookingWindow().contains(prison.policyNoticeDaysMax)
-    })
+    supportedPrisonsPage.getPrisonNameByCode(prisonCode).click()
+    const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
-    it('when edit prison booking window button is pressed we should be on the edit form', () => {
-      cy.task('stubGetPrison', prison)
+    viewSessionTemplatePage.getConfigTab().click()
+    const prisonConfigPage = Page.verifyOnPage(PrisonConfigPage)
 
-      const prisonConfigPage = PrisonConfigPage.goTo(prisonCode)
-      prisonConfigPage.pressPrisonBookingWindowEditButton()
-      prisonConfigPage.isAtPath('/prisons/HEI/configuration/booking-window/edit')
-    })
+    prisonConfigPage.prisonStatusLabel().contains('Inactive')
+
+    cy.task('stubActivatePrison', prisonCode)
+    cy.task('stubGetPrison', activePrison)
+    prisonConfigPage.activatePrison()
+    prisonConfigPage.successMessage().contains('Hewell (HMP) has been activated')
+    prisonConfigPage.prisonStatusLabel().contains('Active')
   })
 
-  describe('Prison booking window update form', () => {
-    const prison = TestData.prison()
+  it('should deactivate a prison', () => {
+    const indexPage = Page.verifyOnPage(IndexPage)
+    indexPage.supportedPrisonsCard().contains('Supported prisons')
+    indexPage.supportedPrisonsCard().click()
+    const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
 
-    it('should display prison booking window details when on update form', () => {
-      cy.task('stubGetPrison', prison)
+    cy.task('stubGetPrison', activePrison)
+    cy.task('stubGetSessionTemplates', { prisonCode, rangeType })
 
-      const prisonBookingWindowPage = PrisonBookingWindowPage.goTo(prisonCode)
-      prisonBookingWindowPage.getMinBookingWindow().should('have.value', prison.policyNoticeDaysMin)
-      prisonBookingWindowPage.getMaxBookingWindow().should('have.value', prison.policyNoticeDaysMax)
-    })
+    supportedPrisonsPage.getPrisonNameByCode(prisonCode).click()
+    const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
-    it('should update min and max correctly when entered', () => {
-      const updatePrison = TestData.prison({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
+    viewSessionTemplatePage.getConfigTab().click()
+    const prisonConfigPage = Page.verifyOnPage(PrisonConfigPage)
 
-      cy.task('stubGetPrison', prison)
-      cy.task('stubUpdatePrison', updatePrison)
+    prisonConfigPage.prisonStatusLabel().contains('Active')
 
-      const prisonBookingWindowPage = PrisonBookingWindowPage.goTo(prisonCode)
-      prisonBookingWindowPage.getMinBookingWindow().clear().type(String(updatePrison.policyNoticeDaysMin))
-      prisonBookingWindowPage.getMaxBookingWindow().clear().type(String(updatePrison.policyNoticeDaysMax))
-      cy.task('stubGetPrison', updatePrison)
-      prisonBookingWindowPage.submit()
-      const prisonConfigPage = Page.verifyOnPage(PrisonConfigPage)
-      prisonConfigPage.getMinBookingWindow().contains(10)
-      prisonConfigPage.getMaxBookingWindow().contains(20)
-    })
-  })
-
-  describe('Prison contact details', () => {
-    const prison = TestData.prison()
-
-    it('should display prison booking window details', () => {
-      cy.task('stubGetPrison', prison)
-      const prisonContactDetails = TestData.prisonContactDetails()
-
-      const prisonConfigPage = PrisonConfigPage.goTo(prisonCode)
-
-      prisonConfigPage.getEmail().contains(prisonContactDetails.emailAddress)
-      prisonConfigPage.getPhone().contains(prisonContactDetails.phoneNumber)
-      prisonConfigPage.getWebAddress().contains(prisonContactDetails.webAddress)
-    })
-  })
-
-  describe('Prison status', () => {
-    const inactivePrison = TestData.prisonDto({ active: false })
-    const activePrison = TestData.prisonDto({ active: true })
-
-    it('should activate a prison', () => {
-      const indexPage = Page.verifyOnPage(IndexPage)
-      indexPage.supportedPrisonsCard().contains('Supported prisons')
-      indexPage.supportedPrisonsCard().click()
-      const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
-
-      cy.task('stubGetPrison', inactivePrison)
-      cy.task('stubGetSessionTemplates', { prisonCode, rangeType })
-
-      supportedPrisonsPage.getPrisonNameByCode(prisonCode).click()
-      const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
-
-      viewSessionTemplatePage.getConfigTab().click()
-      const prisonConfigPage = Page.verifyOnPage(PrisonConfigPage)
-
-      prisonConfigPage.prisonStatusLabel().contains('Inactive')
-
-      cy.task('stubActivatePrison', prisonCode)
-      cy.task('stubGetPrison', activePrison)
-      prisonConfigPage.activatePrison()
-      prisonConfigPage.successMessage().contains('Hewell (HMP) has been activated')
-      prisonConfigPage.prisonStatusLabel().contains('Active')
-    })
-
-    it('should deactivate a prison', () => {
-      const indexPage = Page.verifyOnPage(IndexPage)
-      indexPage.supportedPrisonsCard().contains('Supported prisons')
-      indexPage.supportedPrisonsCard().click()
-      const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
-
-      cy.task('stubGetPrison', activePrison)
-      cy.task('stubGetSessionTemplates', { prisonCode, rangeType })
-
-      supportedPrisonsPage.getPrisonNameByCode(prisonCode).click()
-      const viewSessionTemplatePage = Page.verifyOnPage(ViewSessionTemplatesPage)
-
-      viewSessionTemplatePage.getConfigTab().click()
-      const prisonConfigPage = Page.verifyOnPage(PrisonConfigPage)
-
-      prisonConfigPage.prisonStatusLabel().contains('Active')
-
-      cy.task('stubDeactivatePrison', prisonCode)
-      cy.task('stubGetPrison', inactivePrison)
-      prisonConfigPage.deactivatePrison()
-      prisonConfigPage.successMessage().contains('Hewell (HMP) has been deactivated')
-      prisonConfigPage.prisonStatusLabel().contains('Inactive')
-    })
+    cy.task('stubDeactivatePrison', prisonCode)
+    cy.task('stubGetPrison', inactivePrison)
+    prisonConfigPage.deactivatePrison()
+    prisonConfigPage.successMessage().contains('Hewell (HMP) has been deactivated')
+    prisonConfigPage.prisonStatusLabel().contains('Inactive')
   })
 })

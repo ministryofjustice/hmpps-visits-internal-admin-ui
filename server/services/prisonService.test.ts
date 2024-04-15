@@ -42,6 +42,7 @@ describe('Prisons service', () => {
       visitSchedulerApiClient.getPrison.mockResolvedValue(prisonDto)
       const results = await prisonService.getPrison('user', prisonDto.code)
 
+      expect(visitSchedulerApiClient.getPrison).toHaveBeenCalledWith(prisonDto.code)
       expect(results).toStrictEqual(prison)
     })
 
@@ -61,6 +62,7 @@ describe('Prisons service', () => {
       visitSchedulerApiClient.updatePrison.mockResolvedValue(prisonDto)
       const results = await prisonService.updatePrisonDetails('user', prisonDto.code, updatePrisonDto)
 
+      expect(visitSchedulerApiClient.updatePrison).toHaveBeenCalledWith(prisonDto.code, updatePrisonDto)
       expect(results).toStrictEqual(prisonDto)
     })
 
@@ -71,6 +73,7 @@ describe('Prisons service', () => {
       visitSchedulerApiClient.getPrison.mockResolvedValue(prisonDtoNotInRegister)
       const results = await prisonService.getPrison('user', prisonDtoNotInRegister.code)
 
+      expect(visitSchedulerApiClient.getPrison).toHaveBeenCalledWith('XYZ')
       expect(results).toStrictEqual(prisonNotInRegister)
     })
   })
@@ -182,7 +185,7 @@ describe('Prisons service', () => {
 
   describe('createPrison', () => {
     it('should add prison to supported prisons', async () => {
-      const newPrison = TestData.prisonDto({ active: false })
+      const newPrison = TestData.prisonDto({ active: false, maxAdultVisitors: 3, maxChildVisitors: 3 })
 
       await prisonService.createPrison('user', prisonDto.code)
       expect(visitSchedulerApiClient.createPrison).toHaveBeenCalledWith(newPrison)

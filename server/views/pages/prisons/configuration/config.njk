@@ -75,6 +75,7 @@
 
           {{ govukButton({
             text: "Edit contact details",
+            classes: "govuk-!-margin-0",
             href: "/prisons/" + prison.code + "/configuration/contact-details/edit",
             preventDoubleClick: true,
             attributes: { "data-test": "contact-details-edit" }
@@ -86,12 +87,16 @@
 
           {{ govukButton({
             text: "Add contact details",
+            classes: "govuk-!-margin-0",
             href: "/prisons/" + prison.code + "/configuration/contact-details/add",
             preventDoubleClick: true,
             attributes: { "data-test": "contact-details-add" }
           })}}
         {% endif %}
       </div>
+
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
       <h2 class="govuk-heading-m">Change booking window</h2>
 
       {{ govukSummaryList({
@@ -99,31 +104,88 @@
         rows: [
           {
             key: {
-            text: "Min booking window"
-          },
+              text: "Min booking window"
+            },
             value: {
-            text: prison.policyNoticeDaysMin + (" day" | pluralise(prison.policyNoticeDaysMin)),
-            classes: "test-policy-notice-days-min"
-          }
+              text: prison.policyNoticeDaysMin + (" day" | pluralise(prison.policyNoticeDaysMin)),
+              classes: "test-policy-notice-days-min"
+            }
           },
           {
             key: {
-            text: "Max booking window"
-          },
+              text: "Max booking window"
+            },
             value: {
-            text: prison.policyNoticeDaysMax + (" day" | pluralise(prison.policyNoticeDaysMin)),
-            classes: "test-policy-notice-days-max"
-          }
+              text: prison.policyNoticeDaysMax + (" day" | pluralise(prison.policyNoticeDaysMin)),
+              classes: "test-policy-notice-days-max"
+            }
           }
         ]
       }) }}
 
       {{ govukButton({
         text: "Edit booking window",
+        classes: "govuk-!-margin-0",
         href: "/prisons/" + prison.code + "/configuration/booking-window/edit",
         preventDoubleClick: true,
         attributes: { "data-test": "booking-window-edit" }
       })}}
+
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+      <h2 class="govuk-heading-m">Visitor configuration</h2>
+
+      {{ govukSummaryList({
+        classes: "govuk-!-width-two-thirds",
+        rows: [
+          {
+            key: {
+              text: "Max total visitors"
+            },
+            value: {
+              text: prison.maxTotalVisitors,
+              classes: "test-max-total-visitors"
+            }
+          },
+          {
+            key: {
+              text: "Max number of adults"
+            },
+            value: {
+              text: prison.maxAdultVisitors,
+              classes: "test-max-adult-visitors"
+            }
+          },
+          {
+            key: {
+              text: "Max number of children"
+            },
+            value: {
+              text: prison.maxChildVisitors,
+              classes: "test-max-child-visitors"
+            }
+          },
+          {
+            key: {
+              text: "Adult age threshold"
+            },
+            value: {
+              text: prison.adultAgeYears,
+              classes: "test-adult-age"
+            }
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+        text: "Edit visitor configuration",
+        classes: "govuk-!-margin-0",
+        href: "/prisons/" + prison.code + "/configuration/visitors/edit",
+        preventDoubleClick: true,
+        attributes: { "data-test": "visitor-config-edit" }
+      })}}
+
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
 
       <h2 class="govuk-heading-m">Change prison status</h2>
 

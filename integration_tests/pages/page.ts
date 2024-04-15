@@ -29,14 +29,6 @@ export default abstract class Page {
 
   errorSummary = (): PageElement => cy.get('.govuk-error-summary')
 
-  getByClass = (classValue: string): PageElement => cy.get(`.${classValue}`)
-
-  getById = (id: string): PageElement => cy.get(`#${id}`)
-
-  getByDataTest = (dataTest: string): PageElement => cy.get(`[data-test=${dataTest}]`)
-
-  getByName = (name: string): PageElement => cy.get(`[name=${name}]`)
-
   // Sub-navigation sections
   getSessionTemplatesTab = (): PageElement => cy.get('[data-test="tab-session-templates"]')
 

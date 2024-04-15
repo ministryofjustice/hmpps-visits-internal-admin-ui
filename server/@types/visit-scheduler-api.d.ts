@@ -239,6 +239,18 @@ export interface paths {
     /** Migrate a canceled booked visit */
     put: operations['cancelVisit_1']
   }
+  '/queue-admin/get-dlq-messages/{dlqName}': {
+    get: operations['getDlqMessages']
+  }
+  '/queue-admin/purge-queue/{queueName}': {
+    put: operations['purgeQueue']
+  }
+  '/queue-admin/retry-all-dlqs': {
+    put: operations['retryAllDlqs']
+  }
+  '/queue-admin/retry-dlq/{dlqName}': {
+    put: operations['retryDlq']
+  }
   '/visit-sessions': {
     /**
      * Returns all visit sessions which are within the reservable time period - whether or not they are full
@@ -298,6 +310,10 @@ export interface paths {
   '/visits/notification/prisoner/restriction/changed': {
     /** To notify VSiP that a change to prisoner restriction has taken place */
     post: operations['notifyVSiPThatPrisonerRestrictionChanged']
+  }
+  '/visits/notification/visit/{reference}/ignore': {
+    /** Do not change an existing booked visit and ignore all notifications */
+    put: operations['ignoreVisitNotifications']
   }
   '/visits/notification/visit/{reference}/types': {
     /**
@@ -673,6 +689,12 @@ export interface components {
        */
       weeklyFrequency: number
     }
+    DlqMessage: {
+      body: {
+        [key: string]: Record<string, never>
+      }
+      messageId: string
+    }
     ErrorResponse: {
       developerMessage?: string
       /** Format: int32 */
@@ -707,6 +729,8 @@ export interface components {
       createTimestamp: string
       /** @description Session template used for this event */
       sessionTemplateReference?: string
+      /** @description Notes added against the event */
+      text?: string
       /**
        * @description The type of event
        * @enum {string}
@@ -722,6 +746,20 @@ export interface components {
         | 'PRISONER_RELEASED_EVENT'
         | 'PRISONER_RESTRICTION_CHANGE_EVENT'
         | 'PRISON_VISITS_BLOCKED_FOR_DATE'
+        | 'IGNORE_VISIT_NOTIFICATIONS_EVENT'
+    }
+    GetDlqResult: {
+      messages: components['schemas']['DlqMessage'][]
+      /** Format: int32 */
+      messagesFoundCount: number
+      /** Format: int32 */
+      messagesReturnedCount: number
+    }
+    IgnoreVisitNotificationsDto: {
+      /** @description Username for user who actioned this request */
+      actionedBy: string
+      /** @description Reason why the visit's notifications can be ignored */
+      reason: string
     }
     /** @description Migrate visit request */
     MigrateVisitRequestDto: {
@@ -911,7 +949,7 @@ export interface components {
       pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       size?: number
-      sort?: components['schemas']['SortObject']
+      sort?: components['schemas']['SortObject'][]
       /** Format: int64 */
       totalElements?: number
       /** Format: int32 */
@@ -925,7 +963,7 @@ export interface components {
       /** Format: int32 */
       pageSize?: number
       paged?: boolean
-      sort?: components['schemas']['SortObject']
+      sort?: components['schemas']['SortObject'][]
       unpaged?: boolean
     }
     /** @description list of locations for group */
@@ -967,12 +1005,32 @@ export interface components {
        */
       active: boolean
       /**
+       * Format: int32
+       * @description Age of adults in years
+       */
+      adultAgeYears: number
+      /**
        * @description prison code
        * @example BHI
        */
       code: string
       /** @description exclude dates */
       excludeDates: string[]
+      /**
+       * Format: int32
+       * @description Max number of adults
+       */
+      maxAdultVisitors: number
+      /**
+       * Format: int32
+       * @description Max number of children, if -1 then no limit is applied
+       */
+      maxChildVisitors: number
+      /**
+       * Format: int32
+       * @description Max number of total visitors
+       */
+      maxTotalVisitors: number
       /**
        * Format: int32
        * @description maximum number of days notice from the current date to booked a visit
@@ -1041,6 +1099,10 @@ export interface components {
        */
       visitDate: string
     }
+    PurgeQueueResult: {
+      /** Format: int32 */
+      messagesFoundCount: number
+    }
     RequestSessionTemplateVisitStatsDto: {
       /**
        * Format: date
@@ -1054,6 +1116,11 @@ export interface components {
        * @example 2019-11-30
        */
       visitsToDate?: string
+    }
+    RetryDlqResult: {
+      messages: components['schemas']['DlqMessage'][]
+      /** Format: int32 */
+      messagesFoundCount: number
     }
     /** @description Session Capacity */
     SessionCapacityDto: {
@@ -1243,7 +1310,7 @@ export interface components {
        */
       weeklyFrequency: number
     }
-    /** @description count of cancelled visits by date */
+    /** @description count of visits by date */
     SessionTemplateVisitCountsDto: {
       visitCounts: components['schemas']['SessionCapacityDto']
       /**
@@ -1286,9 +1353,11 @@ export interface components {
       startTime: string
     }
     SortObject: {
-      empty?: boolean
-      sorted?: boolean
-      unsorted?: boolean
+      ascending?: boolean
+      direction?: string
+      ignoreCase?: boolean
+      nullHandling?: string
+      property?: string
     }
     UpdateCategoryGroupDto: {
       /** @description list of category for group */
@@ -1336,6 +1405,26 @@ export interface components {
     }
     /** @description Prison update dto */
     UpdatePrisonDto: {
+      /**
+       * Format: int32
+       * @description Age of adults in years
+       */
+      adultAgeYears?: number
+      /**
+       * Format: int32
+       * @description Max number of adults
+       */
+      maxAdultVisitors?: number
+      /**
+       * Format: int32
+       * @description Max number of children, if -1 then no limit is applied
+       */
+      maxChildVisitors?: number
+      /**
+       * Format: int32
+       * @description Max number of total visitors
+       */
+      maxTotalVisitors?: number
       /**
        * Format: int32
        * @description maximum number of days notice from the current date to booked a visit
@@ -3076,6 +3165,64 @@ export interface operations {
       }
     }
   }
+  getDlqMessages: {
+    parameters: {
+      query?: {
+        maxMessages?: number
+      }
+      path: {
+        dlqName: string
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['GetDlqResult']
+        }
+      }
+    }
+  }
+  purgeQueue: {
+    parameters: {
+      path: {
+        queueName: string
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['PurgeQueueResult']
+        }
+      }
+    }
+  }
+  retryAllDlqs: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['RetryDlqResult'][]
+        }
+      }
+    }
+  }
+  retryDlq: {
+    parameters: {
+      path: {
+        dlqName: string
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['RetryDlqResult']
+        }
+      }
+    }
+  }
   /**
    * Returns all visit sessions which are within the reservable time period - whether or not they are full
    * @description Retrieve all visits for a specified prisoner
@@ -3883,6 +4030,55 @@ export interface operations {
       }
       /** @description Incorrect permissions to notify VSiP of change */
       403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /** Do not change an existing booked visit and ignore all notifications */
+  ignoreVisitNotifications: {
+    parameters: {
+      path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
+        reference: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['IgnoreVisitNotificationsDto']
+      }
+    }
+    responses: {
+      /** @description Visit notifications cleared and reason noted. */
+      200: {
+        content: {
+          'application/json': components['schemas']['VisitDto']
+        }
+      }
+      /** @description Incorrect request to ignore visit notifications. */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to ignore visit notifications. */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Visit not found */
+      404: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }

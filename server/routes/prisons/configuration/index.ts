@@ -4,6 +4,7 @@ import { Services } from '../../../services'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import PrisonConfigController from './prisonConfigController'
 import AddEditContactDetailsController from './addEditContactDetailsController'
+import EditBookingWindowController from './editBookingWindowController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -15,14 +16,15 @@ export default function routes(services: Services): Router {
 
   const prisonConfig = new PrisonConfigController(services.prisonService)
   const addEditContactDetailsController = new AddEditContactDetailsController(services.prisonService)
+  const editBookingWindowController = new EditBookingWindowController(services.prisonService)
 
   get('/prisons/:prisonId([A-Z]{3})/configuration', prisonConfig.view())
 
-  get('/prisons/:prisonId([A-Z]{3})/configuration/booking-window/edit', prisonConfig.editBookingWindow())
+  get('/prisons/:prisonId([A-Z]{3})/configuration/booking-window/edit', editBookingWindowController.view())
   postWithValidation(
     '/prisons/:prisonId([A-Z]{3})/configuration/booking-window/edit',
-    prisonConfig.validateBookingWindow(),
-    prisonConfig.editBookingWindowSubmit(),
+    editBookingWindowController.validateBookingWindow(),
+    editBookingWindowController.submit(),
   )
 
   get(

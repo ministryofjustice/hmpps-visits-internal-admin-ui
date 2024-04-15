@@ -56,8 +56,12 @@ export default class VisitSchedulerApiClient {
       path: '/admin/prisons/prison',
       data: <PrisonDto>{
         active: prison.active,
+        adultAgeYears: prison.adultAgeYears,
         code: prison.code,
         excludeDates: prison.excludeDates,
+        maxAdultVisitors: prison.maxAdultVisitors,
+        maxChildVisitors: prison.maxChildVisitors,
+        maxTotalVisitors: prison.maxTotalVisitors,
         policyNoticeDaysMin: prison.policyNoticeDaysMin,
         policyNoticeDaysMax: prison.policyNoticeDaysMax,
       },
@@ -68,6 +72,10 @@ export default class VisitSchedulerApiClient {
     return this.restClient.put({
       path: `/admin/prisons/prison/${prisonCode}`,
       data: <UpdatePrisonDto>{
+        adultAgeYears: updatePrison.adultAgeYears,
+        maxAdultVisitors: updatePrison.maxAdultVisitors,
+        maxChildVisitors: updatePrison.maxChildVisitors,
+        maxTotalVisitors: updatePrison.maxTotalVisitors,
         policyNoticeDaysMin: updatePrison.policyNoticeDaysMin,
         policyNoticeDaysMax: updatePrison.policyNoticeDaysMax,
       },
