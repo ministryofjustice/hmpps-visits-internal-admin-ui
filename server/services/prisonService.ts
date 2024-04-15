@@ -108,7 +108,7 @@ export default class PrisonService {
     await visitSchedulerApiClient.createPrison(prison)
   }
 
-  async updatePrisonDetails(username: string, prisonCode: string, updatePrison: UpdatePrisonDto): Promise<PrisonDto> {
+  async updatePrison(username: string, prisonCode: string, updatePrison: UpdatePrisonDto): Promise<PrisonDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 

@@ -43,7 +43,7 @@ export default class EditBookingWindowController {
         req.body
 
       try {
-        await this.prisonService.updatePrisonDetails(res.locals.user.username, prisonId, {
+        await this.prisonService.updatePrison(res.locals.user.username, prisonId, {
           policyNoticeDaysMin,
           policyNoticeDaysMax,
         })
