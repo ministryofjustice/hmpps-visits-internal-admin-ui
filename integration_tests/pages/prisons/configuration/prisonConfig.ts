@@ -17,6 +17,15 @@ export default class PrisonConfigPage extends Page {
 
   prisonStatusLabel = (): PageElement => cy.get('[data-test=prison-status]')
 
+  // Booking window
+  getMinBookingWindow = (): PageElement => cy.get('.test-policy-notice-days-min')
+
+  getMaxBookingWindow = (): PageElement => cy.get('.test-policy-notice-days-max')
+
+  editBookingWindow = (): void => {
+    cy.get('[data-test="booking-window-edit"]').contains('Edit booking window').click()
+  }
+
   // Contact details
   getEmail = (): PageElement => cy.get('.test-contact-email')
 
@@ -32,13 +41,17 @@ export default class PrisonConfigPage extends Page {
     cy.get('[data-test="contact-details-edit"]').click()
   }
 
-  // Booking window
-  getMinBookingWindow = (): PageElement => cy.get('.test-policy-notice-days-min')
+  // Visitor configuration
+  getMaxTotalVisitors = (): PageElement => cy.get('.test-max-total-visitors')
 
-  getMaxBookingWindow = (): PageElement => cy.get('.test-policy-notice-days-max')
+  getMaxAdultVisitors = (): PageElement => cy.get('.test-max-adult-visitors')
 
-  editBookingWindow = (): void => {
-    cy.get('[data-test="booking-window-edit"]').contains('Edit booking window').click()
+  getMaxChildVisitors = (): PageElement => cy.get('.test-max-child-visitors')
+
+  getAdultAge = (): PageElement => cy.get('.test-adult-age')
+
+  editVisitorConfig = (): void => {
+    cy.get('[data-test="visitor-config-edit"]').click()
   }
 
   // Status

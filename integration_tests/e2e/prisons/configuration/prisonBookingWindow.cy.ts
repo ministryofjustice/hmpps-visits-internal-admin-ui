@@ -36,7 +36,11 @@ context('Prison configuration - booking window', () => {
     // update min / max values and submit
     const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
     cy.task('stubUpdatePrison', { prisonDto: { ...prisonDto, ...updatePrisonDto }, updatePrisonDto })
-    cy.task('stubGetPrison', { ...prisonDto, ...updatePrisonDto })
+    cy.task('stubGetPrison', {
+      ...prisonDto,
+      policyNoticeDaysMin: updatePrisonDto.policyNoticeDaysMin,
+      policyNoticeDaysMax: updatePrisonDto.policyNoticeDaysMax,
+    })
     prisonBookingWindowPage.enterMinBookingWindow(updatePrisonDto.policyNoticeDaysMin.toString())
     prisonBookingWindowPage.enterMaxBookingWindow(updatePrisonDto.policyNoticeDaysMax.toString())
     prisonBookingWindowPage.submit()
