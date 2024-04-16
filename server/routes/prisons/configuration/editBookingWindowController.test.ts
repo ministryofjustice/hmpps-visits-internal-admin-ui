@@ -66,7 +66,7 @@ describe('Prison booking window edit', () => {
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(1)
           expect(flashProvider).toHaveBeenCalledWith('message', 'Booking window updated')
-          expect(prisonService.updatePrisonDetails).toHaveBeenCalledWith('user1', prison.code, updatePrisonDto)
+          expect(prisonService.updatePrison).toHaveBeenCalledWith('user1', prison.code, updatePrisonDto)
         })
     })
 
@@ -90,7 +90,7 @@ describe('Prison booking window edit', () => {
           expect(flashProvider.mock.calls.length).toBe(2)
           expect(flashProvider).toHaveBeenCalledWith('errors', expect.arrayContaining(expectedValidationErrors))
           expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFormValues)
-          expect(prisonService.updatePrisonDetails).not.toHaveBeenCalled()
+          expect(prisonService.updatePrison).not.toHaveBeenCalled()
         })
     })
 
@@ -116,13 +116,13 @@ describe('Prison booking window edit', () => {
           expect(flashProvider.mock.calls.length).toBe(2)
           expect(flashProvider).toHaveBeenCalledWith('errors', expect.arrayContaining(expectedValidationErrors))
           expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFormValues)
-          expect(prisonService.updatePrisonDetails).not.toHaveBeenCalled()
+          expect(prisonService.updatePrison).not.toHaveBeenCalled()
         })
     })
 
     it('should handle API errors by setting flash errors and redirecting to same page', () => {
       const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
-      prisonService.updatePrisonDetails.mockRejectedValue(new BadRequest('API error!'))
+      prisonService.updatePrison.mockRejectedValue(new BadRequest('API error!'))
 
       return request(app)
         .post(baseUrl)
@@ -131,7 +131,7 @@ describe('Prison booking window edit', () => {
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration/booking-window/edit`)
         .expect(() => {
-          expect(prisonService.updatePrisonDetails).toHaveBeenCalledWith('user1', prison.code, updatePrisonDto)
+          expect(prisonService.updatePrison).toHaveBeenCalledWith('user1', prison.code, updatePrisonDto)
           expect(flashProvider.mock.calls.length).toBe(2)
           expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
           expect(flashProvider).toHaveBeenCalledWith('formValues', updatePrisonDto)

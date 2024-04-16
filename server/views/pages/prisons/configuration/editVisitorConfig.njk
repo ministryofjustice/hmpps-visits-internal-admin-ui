@@ -1,0 +1,110 @@
+{% extends "partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/input/macro.njk" import govukInput -%}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+
+{% set pageHeaderTitle = action | capitalize + " Edit visitor configuration" %}
+{% set pageTitle = applicationName + " - Edit visitor configuration - " + pageHeaderTitle %}
+{% set activePrimaryNav = "prisons" %}
+{% set backLinkHref = "/prisons/" + prison.code + "/configuration" %}
+
+{% block content %}
+  {{ super() }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prison.name }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <form action="/prisons/{{ prison.code }}/configuration/visitors/edit" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukInput({
+          label: {
+            html: 'Maximum total visitors',
+            classes: 'govuk-label--m'
+          },
+          hint: {
+            text: "Enter the maximum total number of visitors"
+          },
+          id: 'maxTotalVisitors',
+          name: 'maxTotalVisitors',
+          classes: 'govuk-input--width-20',
+          value: formValues.maxTotalVisitors,
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('maxTotalVisitors')
+        }) }}
+
+        {{ govukInput({
+          label: {
+            html: 'Maximum number of adults',
+            classes: 'govuk-label--m'
+          },
+          hint: {
+            text: "Enter the maximum number of adult visitors allowed"
+          },
+          id: 'maxAdultVisitors',
+          name: 'maxAdultVisitors',
+          classes: 'govuk-input--width-20',
+          value: formValues.maxAdultVisitors,
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('maxAdultVisitors')
+        }) }}
+
+        {{ govukInput({
+          label: {
+            html: 'Maximum number of children',
+            classes: 'govuk-label--m'
+          },
+          hint: {
+            text: "Enter the maximum number of child visitors allowed"
+          },
+          id: 'maxChildVisitors',
+          name: 'maxChildVisitors',
+          classes: 'govuk-input--width-20',
+          value: formValues.maxChildVisitors,
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('maxChildVisitors')
+        }) }}
+
+        {{ govukInput({
+          label: {
+            html: 'Adult age threshold',
+            classes: 'govuk-label--m'
+          },
+          hint: {
+            text: "Enter the age at which someone should be counted as an adult visitor"
+          },
+          id: 'adultAgeYears',
+          name: 'adultAgeYears',
+          classes: 'govuk-input--width-20',
+          value: formValues.adultAgeYears,
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('adultAgeYears')
+        }) }}
+
+
+        {{ govukButton({
+          text: "Update",
+          attributes: { "data-test": "submit" },
+          preventDoubleClick: true
+        }) }}
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

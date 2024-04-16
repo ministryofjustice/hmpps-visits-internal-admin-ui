@@ -57,10 +57,10 @@ describe('Prisons service', () => {
     })
   })
 
-  describe('updatePrisonDetails', () => {
+  describe('updatePrison', () => {
     it('should return a Prison', async () => {
       visitSchedulerApiClient.updatePrison.mockResolvedValue(prisonDto)
-      const results = await prisonService.updatePrisonDetails('user', prisonDto.code, updatePrisonDto)
+      const results = await prisonService.updatePrison('user', prisonDto.code, updatePrisonDto)
 
       expect(visitSchedulerApiClient.updatePrison).toHaveBeenCalledWith(prisonDto.code, updatePrisonDto)
       expect(results).toStrictEqual(prisonDto)

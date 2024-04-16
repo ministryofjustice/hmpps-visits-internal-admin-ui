@@ -55,10 +55,10 @@ describe('Prison configuration', () => {
             expect($('.moj-sub-navigation__link[aria-current]').text()).toBe('Configuration')
             expect($('.moj-sub-navigation__link[aria-current]').attr('href')).toBe('/prisons/HEI/configuration')
 
-            expect($('h2').eq(0).text().trim()).toContain('Contact details')
-            expect($('h2').eq(1).text().trim()).toContain('Change booking window')
+            expect($('h2').eq(0).text().trim()).toContain('Booking window')
+            expect($('h2').eq(1).text().trim()).toContain('Contact details')
             expect($('h2').eq(2).text().trim()).toContain('Visitor configuration')
-            expect($('h2').eq(3).text().trim()).toContain('Change prison status')
+            expect($('h2').eq(3).text().trim()).toContain('Prison status')
           })
       })
 
@@ -88,6 +88,20 @@ describe('Prison configuration', () => {
             const $ = cheerio.load(res.text)
             expect($('h1').text().trim()).toBe(activePrison.name)
             expect($('.govuk-error-summary').text()).toContain(error.msg)
+          })
+      })
+    })
+
+    describe('Prison booking window', () => {
+      it('should display prison booking window information and edit action', () => {
+        return request(app)
+          .get('/prisons/HEI/configuration')
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('.test-policy-notice-days-min').text().trim()).toBe('2 days')
+            expect($('.test-policy-notice-days-max').text().trim()).toBe('28 days')
+            expect($('[data-test="booking-window-edit"]').length).toBe(1)
           })
       })
     })
@@ -144,6 +158,22 @@ describe('Prison configuration', () => {
       })
     })
 
+    describe('Prison visitor configuration', () => {
+      it('should display prison visitor configuration information and edit action', () => {
+        return request(app)
+          .get('/prisons/HEI/configuration')
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('.test-max-total-visitors').text().trim()).toBe('6')
+            expect($('.test-max-adult-visitors').text().trim()).toBe('3')
+            expect($('.test-max-child-visitors').text().trim()).toBe('3')
+            expect($('.test-adult-age').text().trim()).toBe('18')
+            expect($('[data-test="visitor-config-edit"]').length).toBe(1)
+          })
+      })
+    })
+
     describe('Prison status', () => {
       it('should display prison status information and offer correct action (active prison)', () => {
         return request(app)
@@ -171,24 +201,11 @@ describe('Prison configuration', () => {
           })
       })
     })
-
-    describe('Prison booking window', () => {
-      it('should display prison booking window information and offer correct action (active prison)', () => {
-        return request(app)
-          .get('/prisons/HEI/configuration')
-          .expect('Content-Type', /html/)
-          .expect(res => {
-            const $ = cheerio.load(res.text)
-            expect($('.test-policy-notice-days-min').text().trim()).toBe('2 days')
-            expect($('.test-policy-notice-days-max').text().trim()).toBe('28 days')
-          })
-      })
-    })
   })
 
-  describe('POST requests', () => {
-    describe('POST /prisons/{:prisonId}/activate', () => {
-      it('should change prison status and set flash message', () => {
+  describe('Change prison status', () => {
+    describe('Activate a prison', () => {
+      it('should activate prison and set flash message', () => {
         prisonService.activatePrison.mockResolvedValue(activePrison)
         prisonService.getPrisonName.mockResolvedValue(activePrison.name)
 
@@ -222,8 +239,8 @@ describe('Prison configuration', () => {
       })
     })
 
-    describe('POST /prisons/{:prisonId}/deactivate', () => {
-      it('should change prison status and set flash message', () => {
+    describe('Deactivate a prison', () => {
+      it('should deactivate prison and set flash message', () => {
         prisonService.deactivatePrison.mockResolvedValue(inactivePrison)
         prisonService.getPrisonName.mockResolvedValue(activePrison.name)
 
@@ -239,7 +256,7 @@ describe('Prison configuration', () => {
           })
       })
 
-      it('should set error in flash if API error when deactivatinig prison', () => {
+      it('should set error in flash if API error when deactivating a prison', () => {
         prisonService.deactivatePrison.mockRejectedValue(new BadRequest())
         prisonService.getPrisonName.mockResolvedValue(activePrison.name)
 
