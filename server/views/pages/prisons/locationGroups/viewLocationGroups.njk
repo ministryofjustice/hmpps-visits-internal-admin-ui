@@ -18,13 +18,7 @@
         <span>{{ pageHeaderTitle }}</span>
       </h1>
 
-      <p>This prison is currently
-        {{ govukTag({
-          text: "Active" if prison.active else "Inactive",
-          classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
-          attributes: { "data-test": "prison-status" }
-        }) }}
-      </p>
+      {% include "partials/prisonStatusAndClients.njk" %}
     </div>
   </div>
 

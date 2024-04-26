@@ -2,7 +2,9 @@
 
 {% macro prisonClientTags(clients) -%}
   {% set activeClients = (clients | groupby("active"))["true"] %}
-  {{- "None" if not activeClients | length -}}
+
+  {{- govukTag({ text: "None", classes: "govuk-tag--grey" }) if not activeClients | length -}}
+
   {%- for client in activeClients %}
   {{- govukTag({
     text: client.userType | capitalize,

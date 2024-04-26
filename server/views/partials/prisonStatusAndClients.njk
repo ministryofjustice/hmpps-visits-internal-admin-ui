@@ -1,0 +1,10 @@
+{% from "partials/prisonClientTags.njk" import prisonClientTags %}
+
+<p>This prison is currently
+  {{ govukTag({
+    text: "Active" if prison.active else "Inactive",
+    classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
+    attributes: { "data-test": "prison-status" }
+  }) }}
+  and enabled for <span data-test="prison-clients">{{ prisonClientTags(prison.clients) }}</span>
+</p>

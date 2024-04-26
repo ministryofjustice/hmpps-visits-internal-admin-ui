@@ -17,6 +17,8 @@ export default class PrisonConfigPage extends Page {
 
   prisonStatusLabel = (): PageElement => cy.get('[data-test=prison-status]')
 
+  prisonClientsLabel = (): PageElement => cy.get('[data-test=prison-clients]')
+
   // Booking window
   getMinBookingWindow = (): PageElement => cy.get('.test-policy-notice-days-min')
 

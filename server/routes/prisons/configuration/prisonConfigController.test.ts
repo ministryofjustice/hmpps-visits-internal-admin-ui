@@ -50,6 +50,7 @@ describe('Prison configuration', () => {
             expect($('.govuk-error-summary').length).toBe(0)
 
             expect($('[data-test="prison-status"]').text().trim()).toBe('Active')
+            expect($('[data-test="prison-clients"]').text().trim()).toBe('Staff')
 
             expect($('.moj-sub-navigation__item').length).toBe(6)
             expect($('.moj-sub-navigation__link[aria-current]').text()).toBe('Configuration')
@@ -182,6 +183,7 @@ describe('Prison configuration', () => {
           .expect(res => {
             const $ = cheerio.load(res.text)
             expect($('[data-test="prison-status"]').text().trim()).toBe('Active')
+            expect($('[data-test="prison-clients"]').text().trim()).toBe('Staff')
             expect($('[data-test="prison-change-status-form"]').attr('action').trim()).toBe('/prisons/HEI/deactivate')
             expect($('[data-test="prison-change-status"]').text().trim()).toBe('Deactivate')
           })
@@ -196,6 +198,7 @@ describe('Prison configuration', () => {
           .expect(res => {
             const $ = cheerio.load(res.text)
             expect($('[data-test="prison-status"]').text().trim()).toBe('Inactive')
+            expect($('[data-test="prison-clients"]').text().trim()).toBe('Staff')
             expect($('[data-test="prison-change-status-form"]').attr('action').trim()).toBe('/prisons/HEI/activate')
             expect($('[data-test="prison-change-status"]').text().trim()).toBe('Activate')
           })

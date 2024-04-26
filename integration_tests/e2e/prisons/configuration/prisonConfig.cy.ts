@@ -40,12 +40,14 @@ context('Prison configuration - prison status', () => {
     const prisonConfigPage = Page.verifyOnPage(PrisonConfigPage)
 
     prisonConfigPage.prisonStatusLabel().contains('Inactive')
+    prisonConfigPage.prisonClientsLabel().contains('Staff')
 
     cy.task('stubActivatePrison', prisonCode)
     cy.task('stubGetPrison', activePrison)
     prisonConfigPage.activatePrison()
     prisonConfigPage.successMessage().contains('Hewell (HMP) has been activated')
     prisonConfigPage.prisonStatusLabel().contains('Active')
+    prisonConfigPage.prisonClientsLabel().contains('Staff')
   })
 
   it('should deactivate a prison', () => {
@@ -64,11 +66,13 @@ context('Prison configuration - prison status', () => {
     const prisonConfigPage = Page.verifyOnPage(PrisonConfigPage)
 
     prisonConfigPage.prisonStatusLabel().contains('Active')
+    prisonConfigPage.prisonClientsLabel().contains('Staff')
 
     cy.task('stubDeactivatePrison', prisonCode)
     cy.task('stubGetPrison', inactivePrison)
     prisonConfigPage.deactivatePrison()
     prisonConfigPage.successMessage().contains('Hewell (HMP) has been deactivated')
     prisonConfigPage.prisonStatusLabel().contains('Inactive')
+    prisonConfigPage.prisonClientsLabel().contains('Staff')
   })
 })
