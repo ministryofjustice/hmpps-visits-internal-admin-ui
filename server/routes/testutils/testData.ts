@@ -21,6 +21,7 @@ export default class TestData {
   static prisonDto = ({
     active = true,
     adultAgeYears = 18,
+    clients = [{ active: true, userType: 'STAFF' }],
     code = 'HEI',
     excludeDates = [],
     maxAdultVisitors = 3,
@@ -32,6 +33,7 @@ export default class TestData {
     ({
       active,
       adultAgeYears,
+      clients,
       code,
       excludeDates,
       maxAdultVisitors,
@@ -62,6 +64,7 @@ export default class TestData {
   static prison = ({
     active = true,
     adultAgeYears = 18,
+    clients = [{ active: true, userType: 'STAFF' }],
     code = 'HEI',
     excludeDates = [],
     maxAdultVisitors = 3,
@@ -74,6 +77,7 @@ export default class TestData {
     ({
       active,
       adultAgeYears,
+      clients,
       code,
       excludeDates,
       maxAdultVisitors,

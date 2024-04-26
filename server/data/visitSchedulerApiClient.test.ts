@@ -93,6 +93,7 @@ describe('visitSchedulerApiClient', () => {
         .post('/admin/prisons/prison', <PrisonDto>{
           active: prison.active,
           adultAgeYears: prison.adultAgeYears,
+          clients: prison.clients,
           code: prison.code,
           excludeDates: prison.excludeDates,
           maxAdultVisitors: prison.maxAdultVisitors,

@@ -184,8 +184,8 @@ describe('Prisons service', () => {
   })
 
   describe('createPrison', () => {
-    it('should add prison to supported prisons', async () => {
-      const newPrison = TestData.prisonDto({ active: false, maxAdultVisitors: 3, maxChildVisitors: 3 })
+    it('should add prison that is inactive and with default data to supported prisons', async () => {
+      const newPrison = TestData.prisonDto({ active: false })
 
       await prisonService.createPrison('user', prisonDto.code)
       expect(visitSchedulerApiClient.createPrison).toHaveBeenCalledWith(newPrison)

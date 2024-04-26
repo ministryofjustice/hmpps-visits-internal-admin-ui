@@ -57,6 +57,7 @@ export default class VisitSchedulerApiClient {
       data: <PrisonDto>{
         active: prison.active,
         adultAgeYears: prison.adultAgeYears,
+        clients: prison.clients,
         code: prison.code,
         excludeDates: prison.excludeDates,
         maxAdultVisitors: prison.maxAdultVisitors,

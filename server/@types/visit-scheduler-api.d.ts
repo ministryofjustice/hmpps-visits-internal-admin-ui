@@ -130,6 +130,20 @@ export interface paths {
      */
     put: operations['activatePrison']
   }
+  '/admin/prisons/prison/{prisonCode}/client/{type}/activate': {
+    /**
+     * Activate prison client using given prison id/code and client type
+     * @description Activate prison client using given prison id/code and client type
+     */
+    put: operations['activatePrisonForClient']
+  }
+  '/admin/prisons/prison/{prisonCode}/client/{type}/deactivate': {
+    /**
+     * Deactivate prison client using given prison id/code and client type
+     * @description Deactivate prison client using given prison id/code and client type
+     */
+    put: operations['deActivatePrisonClient']
+  }
   '/admin/prisons/prison/{prisonCode}/deactivate': {
     /**
      * Deactivate prison using given prison id/code
@@ -224,12 +238,12 @@ export interface paths {
      */
     post: operations['getSessionTemplateVisitStats']
   }
-  '/config/prisons/supported': {
+  '/config/prisons/user-type/{type}/supported': {
     /**
      * Get supported prisons
      * @description Get all supported prisons id's
      */
-    get: operations['getSupportedPrisons']
+    get: operations['getSupportedPrisonCodes']
   }
   '/migrate-visits': {
     /** Migrate a visit */
@@ -257,6 +271,13 @@ export interface paths {
      * @description Retrieve all visits for a specified prisoner
      */
     get: operations['getVisitBookingSessions']
+  }
+  '/visit-sessions/available': {
+    /**
+     * Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period
+     * @description Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period
+     */
+    get: operations['getAvailableVisitBookingSessions']
   }
   '/visit-sessions/capacity': {
     /**
@@ -468,9 +489,27 @@ export interface components {
        */
       description: string
     }
+    /** @description Visit Session */
+    AvailableVisitSessionDto: {
+      /**
+       * Format: date
+       * @description Session date
+       * @example 2020-11-01
+       */
+      sessionDate: string
+      sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
+      /**
+       * @description Visit Restriction
+       * @example OPEN
+       * @enum {string}
+       */
+      visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
+    }
     BookingRequestDto: {
       /** @description Username for user who actioned this request */
       actionedBy: string
+      /** @description allow over booking method */
+      allowOverBooking: boolean
       /**
        * @description application method
        * @enum {string}
@@ -1009,6 +1048,8 @@ export interface components {
        * @description Age of adults in years
        */
       adultAgeYears: number
+      /** @description prison user client */
+      clients: components['schemas']['PrisonUserClientDto'][]
       /**
        * @description prison code
        * @example BHI
@@ -1023,7 +1064,7 @@ export interface components {
       maxAdultVisitors: number
       /**
        * Format: int32
-       * @description Max number of children, if -1 then no limit is applied
+       * @description Max number of children
        */
       maxChildVisitors: number
       /**
@@ -1051,6 +1092,20 @@ export interface components {
        * @description exclude date
        */
       excludeDate: string
+    }
+    /** @description Prison user client dto */
+    PrisonUserClientDto: {
+      /**
+       * @description is prison user client active
+       * @example true
+       */
+      active: boolean
+      /**
+       * @description User type
+       * @example STAFF
+       * @enum {string}
+       */
+      userType: 'STAFF' | 'PUBLIC'
     }
     PrisonerReceivedNotificationDto: {
       prisonCode: string
@@ -1310,7 +1365,7 @@ export interface components {
        */
       weeklyFrequency: number
     }
-    /** @description count of visits by date */
+    /** @description count of cancelled visits by date */
     SessionTemplateVisitCountsDto: {
       visitCounts: components['schemas']['SessionCapacityDto']
       /**
@@ -2461,6 +2516,98 @@ export interface operations {
     }
   }
   /**
+   * Activate prison client using given prison id/code and client type
+   * @description Activate prison client using given prison id/code and client type
+   */
+  activatePrisonForClient: {
+    parameters: {
+      path: {
+        /**
+         * @description prison id
+         * @example BHI
+         */
+        prisonCode: string
+        /**
+         * @description type
+         * @example STAFF
+         */
+        type: string
+      }
+    }
+    responses: {
+      /** @description prison client activated */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonUserClientDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to activate prison client */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description prison cant be found to activate prison client */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Deactivate prison client using given prison id/code and client type
+   * @description Deactivate prison client using given prison id/code and client type
+   */
+  deActivatePrisonClient: {
+    parameters: {
+      path: {
+        /**
+         * @description prison id
+         * @example BHI
+         */
+        prisonCode: string
+        /**
+         * @description type
+         * @example STAFF
+         */
+        type: string
+      }
+    }
+    responses: {
+      /** @description prison client activated */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonUserClientDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to activate prison client */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description prison cant be found to activate prison client */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
    * Deactivate prison using given prison id/code
    * @description Deactivate prison using given prison id/code
    */
@@ -3060,7 +3207,16 @@ export interface operations {
    * Get supported prisons
    * @description Get all supported prisons id's
    */
-  getSupportedPrisons: {
+  getSupportedPrisonCodes: {
+    parameters: {
+      path: {
+        /**
+         * @description type
+         * @example STAFF
+         */
+        type: string
+      }
+    }
     responses: {
       /** @description Supported prisons returned */
       200: {
@@ -3260,6 +3416,61 @@ export interface operations {
         }
       }
       /** @description Incorrect request to Get visit sessions */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period
+   * @description Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period
+   */
+  getAvailableVisitBookingSessions: {
+    parameters: {
+      query: {
+        /**
+         * @description Query by NOMIS Prison Identifier
+         * @example MDI
+         */
+        prisonId: string
+        /**
+         * @description Filter results by prisoner id
+         * @example A12345DC
+         */
+        prisonerId: string
+        /**
+         * @description Filter results by visitRestriction
+         * @example CLOSED
+         */
+        visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
+        /**
+         * @description Override the default minimum number of days notice from the current date
+         * @example 2
+         */
+        min?: number
+        /**
+         * @description Override the default maximum number of days to book-ahead from the current date
+         * @example 28
+         */
+        max?: number
+      }
+    }
+    responses: {
+      /** @description Available visit session details returned */
+      200: {
+        content: {
+          'application/json': components['schemas']['AvailableVisitSessionDto'][]
+        }
+      }
+      /** @description Incorrect request to GET available visit sessions */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse']

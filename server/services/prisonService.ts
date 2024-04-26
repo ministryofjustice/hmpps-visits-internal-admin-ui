@@ -95,6 +95,7 @@ export default class PrisonService {
     const prison: PrisonDto = {
       active: false,
       adultAgeYears: 18,
+      clients: [{ active: true, userType: 'STAFF' }],
       code: prisonCode,
       excludeDates: [],
       maxAdultVisitors: 3,

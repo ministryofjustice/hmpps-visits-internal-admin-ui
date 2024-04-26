@@ -40,6 +40,7 @@ export default {
             equalToJson: {
               active: prison.active,
               adultAgeYears: prison.adultAgeYears,
+              clients: prison.clients,
               code: prison.code,
               excludeDates: prison.excludeDates,
               maxAdultVisitors: prison.maxAdultVisitors,
