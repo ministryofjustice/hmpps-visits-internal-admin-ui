@@ -92,8 +92,14 @@ export default class TestData {
   static prisonDtos = ({
     prisons = [
       this.prisonDto(),
-      this.prisonDto({ code: 'PNI' }),
-      this.prisonDto({ active: false, code: 'WWI' }),
+      this.prisonDto({
+        code: 'PNI',
+        clients: [
+          { active: true, userType: 'PUBLIC' },
+          { active: true, userType: 'STAFF' },
+        ],
+      }),
+      this.prisonDto({ active: false, code: 'WWI', clients: [] }),
     ] as PrisonDto[],
   } = {}): PrisonDto[] => prisons
 
@@ -101,8 +107,15 @@ export default class TestData {
   static prisons = ({
     prisons = [
       this.prison(),
-      this.prison({ code: 'PNI', name: 'Preston (HMP & YOI)' }),
-      this.prison({ active: false, code: 'WWI', name: 'Wandsworth (HMP & YOI)' }),
+      this.prison({
+        code: 'PNI',
+        name: 'Preston (HMP & YOI)',
+        clients: [
+          { active: true, userType: 'PUBLIC' },
+          { active: true, userType: 'STAFF' },
+        ],
+      }),
+      this.prison({ active: false, code: 'WWI', name: 'Wandsworth (HMP & YOI)', clients: [] }),
     ] as Prison[],
   } = {}): Prison[] => prisons
 

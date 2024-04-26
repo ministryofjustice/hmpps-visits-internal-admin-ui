@@ -46,15 +46,23 @@ describe('Supported prisons', () => {
           expect($('.govuk-error-summary').length).toBe(0)
 
           expect($('[data-test="prison-code"]').eq(0).text()).toBe('HEI')
+          expect($('[data-test="prison-code"]').eq(1).text()).toBe('PNI')
           expect($('[data-test="prison-code"]').eq(2).text()).toBe('WWI')
 
           expect($('[data-test="prison-name"]').eq(0).text()).toContain('Hewell')
           expect($('[data-test="prison-name"] a').eq(0).attr('href')).toBe('/prisons/HEI/session-templates')
+          expect($('[data-test="prison-name"]').eq(1).text()).toContain('Preston')
+          expect($('[data-test="prison-name"] a').eq(1).attr('href')).toBe('/prisons/PNI/session-templates')
           expect($('[data-test="prison-name"]').eq(2).text()).toContain('Wandsworth')
           expect($('[data-test="prison-name"] a').eq(2).attr('href')).toBe('/prisons/WWI/session-templates')
 
           expect($('[data-test="prison-status"]').eq(0).text().trim()).toBe('Active')
+          expect($('[data-test="prison-status"]').eq(1).text().trim()).toBe('Active')
           expect($('[data-test="prison-status"]').eq(2).text().trim()).toBe('Inactive')
+
+          expect($('[data-test="prison-clients"]').eq(0).text().trim()).toBe('Staff')
+          expect($('[data-test="prison-clients"]').eq(1).text().trim()).toMatch(/Public\s+Staff/)
+          expect($('[data-test="prison-clients"]').eq(2).text().trim()).toBe('None')
         })
     })
 

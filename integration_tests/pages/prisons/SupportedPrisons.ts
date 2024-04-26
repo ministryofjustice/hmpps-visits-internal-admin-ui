@@ -11,6 +11,9 @@ export default class SupportedPrisonsPage extends Page {
   getPrisonStatusByCode = (prisonCode: string): PageElement =>
     cy.get('[data-test="prison-code"]').contains(prisonCode).nextAll('[data-test="prison-status"]')
 
+  getPrisonClientsByCode = (prisonCode: string): PageElement =>
+    cy.get('[data-test="prison-code"]').contains(prisonCode).nextAll('[data-test="prison-clients"]')
+
   enterPrisonCode = (prisonCode: string): PageElement => cy.get('.govuk-input').type(prisonCode)
 
   createPrison = (): PageElement => cy.get('[data-test="submit"]')
