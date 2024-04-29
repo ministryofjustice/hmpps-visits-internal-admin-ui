@@ -9,6 +9,8 @@ import {
   CreateSessionTemplateDto,
   PageVisitDto,
   PrisonDto,
+  PrisonUserClientDto,
+  PrisonUserClientType,
   RequestSessionTemplateVisitStatsDto,
   UpdatePrisonDto,
   UpdateSessionTemplateDto,
@@ -168,6 +170,42 @@ describe('visitSchedulerApiClient', () => {
       const output = await visitSchedulerApiClient.deactivatePrison(prison.code)
 
       expect(output).toEqual(prison)
+    })
+  })
+
+  describe('activatePrisonClientType', () => {
+    it('should make call to activate the given client type for the given prison', async () => {
+      const prisonCode = 'HEI'
+      const prisonUserClientType: PrisonUserClientType = 'STAFF'
+
+      const response: PrisonUserClientDto = { active: true, userType: 'STAFF' }
+
+      fakeVisitSchedulerApi
+        .put(`/admin/prisons/prison/${prisonCode}/client/${prisonUserClientType}/activate`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, response)
+
+      const output = await visitSchedulerApiClient.activatePrisonClientType(prisonCode, prisonUserClientType)
+
+      expect(output).toStrictEqual(response)
+    })
+  })
+
+  describe('deactivatePrisonClientType', () => {
+    it('should make call to deactivate the given client type for the given prison', async () => {
+      const prisonCode = 'HEI'
+      const prisonUserClientType: PrisonUserClientType = 'STAFF'
+
+      const response: PrisonUserClientDto = { active: false, userType: 'STAFF' }
+
+      fakeVisitSchedulerApi
+        .put(`/admin/prisons/prison/${prisonCode}/client/${prisonUserClientType}/deactivate`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, response)
+
+      const output = await visitSchedulerApiClient.deactivatePrisonClientType(prisonCode, prisonUserClientType)
+
+      expect(output).toStrictEqual(response)
     })
   })
 

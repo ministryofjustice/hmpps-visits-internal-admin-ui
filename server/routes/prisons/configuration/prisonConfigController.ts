@@ -1,8 +1,12 @@
 import { RequestHandler } from 'express'
+import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService } from '../../../services'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { PrisonUserClientType } from '../../../data/visitSchedulerApiTypes'
 
 export default class PrisonConfigController {
+  private prisonUserClientTypes = ['PUBLIC', 'STAFF'] as const
+
   public constructor(private readonly prisonService: PrisonService) {}
 
   public view(): RequestHandler {
@@ -22,6 +26,46 @@ export default class PrisonConfigController {
         message: req.flash('message'),
       })
     }
+  }
+
+  public updateEnabledServices(): RequestHandler {
+    return async (req, res) => {
+      const { prisonId } = req.params
+
+      const originalUrl = `/prisons/${prisonId}/configuration`
+
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array())
+        req.flash('formValues', req.body)
+        return res.redirect(originalUrl)
+      }
+
+      const { enabledServices }: { enabledServices: PrisonUserClientType } = req.body
+
+      try {
+        if (enabledServices.includes('PUBLIC')) {
+          await this.prisonService.activatePrisonClientType(res.locals.user.username, prisonId, 'PUBLIC')
+        } else {
+          await this.prisonService.deactivatePrisonClientType(res.locals.user.username, prisonId, 'PUBLIC')
+        }
+
+        if (enabledServices.includes('STAFF')) {
+          await this.prisonService.activatePrisonClientType(res.locals.user.username, prisonId, 'STAFF')
+        } else {
+          await this.prisonService.deactivatePrisonClientType(res.locals.user.username, prisonId, 'STAFF')
+        }
+        req.flash('message', 'Enabled services have been updated')
+      } catch (error) {
+        req.flash('errors', responseErrorToFlashMessage(error))
+      }
+
+      return res.redirect(originalUrl)
+    }
+  }
+
+  public validateEnabledServices(): ValidationChain[] {
+    return [body('enabledServices').toArray().isArray({ max: 2 }).isIn(this.prisonUserClientTypes)]
   }
 
   public activate(): RequestHandler {

@@ -16,6 +16,8 @@ import {
   SessionTemplateVisitStatsDto,
   PageVisitDto,
   UpdatePrisonDto,
+  PrisonUserClientType,
+  PrisonUserClientDto,
 } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
@@ -92,6 +94,18 @@ export default class VisitSchedulerApiClient {
   async deactivatePrison(prisonCode: string): Promise<PrisonDto> {
     return this.restClient.put({
       path: `/admin/prisons/prison/${prisonCode}/deactivate`,
+    })
+  }
+
+  async activatePrisonClientType(prisonCode: string, type: PrisonUserClientType): Promise<PrisonUserClientDto> {
+    return this.restClient.put({
+      path: `/admin/prisons/prison/${prisonCode}/client/${type}/activate`,
+    })
+  }
+
+  async deactivatePrisonClientType(prisonCode: string, type: PrisonUserClientType): Promise<PrisonUserClientDto> {
+    return this.restClient.put({
+      path: `/admin/prisons/prison/${prisonCode}/client/${type}/deactivate`,
     })
   }
 

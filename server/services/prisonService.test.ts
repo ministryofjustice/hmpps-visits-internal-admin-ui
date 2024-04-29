@@ -217,6 +217,20 @@ describe('Prisons service', () => {
     })
   })
 
+  describe('activatePrisonClientType', () => {
+    it('should activate the given client type for the prison', async () => {
+      await prisonService.activatePrisonClientType('user', prisonDto.code, 'STAFF')
+      expect(visitSchedulerApiClient.activatePrisonClientType).toHaveBeenCalledWith('HEI', 'STAFF')
+    })
+  })
+
+  describe('deactivatePrisonClientType', () => {
+    it('should deactivate the given client type for the prison', async () => {
+      await prisonService.deactivatePrisonClientType('user', prisonDto.code, 'STAFF')
+      expect(visitSchedulerApiClient.deactivatePrisonClientType).toHaveBeenCalledWith('HEI', 'STAFF')
+    })
+  })
+
   describe('addExcludeDate', () => {
     it('should add an exclude date to a prison', async () => {
       const excludeDate = '2023-07-06'

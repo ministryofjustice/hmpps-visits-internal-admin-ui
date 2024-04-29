@@ -6,6 +6,7 @@ import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockSessionTemplateService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import { FlashErrorMessage } from '../../../@types/visits-admin'
+import { PrisonUserClientDto } from '../../../data/visitSchedulerApiTypes'
 
 let app: Express
 let flashData: Record<string, string | FlashErrorMessage>
@@ -58,8 +59,9 @@ describe('Prison configuration', () => {
 
             expect($('h2').eq(0).text().trim()).toContain('Booking window')
             expect($('h2').eq(1).text().trim()).toContain('Contact details')
-            expect($('h2').eq(2).text().trim()).toContain('Visitor configuration')
-            expect($('h2').eq(3).text().trim()).toContain('Prison status')
+            expect($('h2').eq(2).text().trim()).toContain('Enabled services')
+            expect($('h2').eq(3).text().trim()).toContain('Visitor configuration')
+            expect($('h2').eq(4).text().trim()).toContain('Prison status')
           })
       })
 
@@ -159,6 +161,21 @@ describe('Prison configuration', () => {
       })
     })
 
+    describe('Enabled services', () => {
+      it('should display services this prison has enabled', () => {
+        return request(app)
+          .get('/prisons/HEI/configuration')
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('input[name=enabledServices]').length).toBe(2)
+            expect($('input[name=enabledServices][value=STAFF]').prop('checked')).toBe(true)
+            expect($('input[name=enabledServices][value=PUBLIC]').prop('checked')).toBe(false)
+            expect($('[data-test="update-enabled-services"]').length).toBe(1)
+          })
+      })
+    })
+
     describe('Prison visitor configuration', () => {
       it('should display prison visitor configuration information and edit action', () => {
         return request(app)
@@ -203,6 +220,90 @@ describe('Prison configuration', () => {
             expect($('[data-test="prison-change-status"]').text().trim()).toBe('Activate')
           })
       })
+    })
+  })
+
+  describe('Change enabled services', () => {
+    beforeEach(() => {
+      prisonService.activatePrisonClientType.mockResolvedValue({} as PrisonUserClientDto)
+      prisonService.deactivatePrisonClientType.mockResolvedValue({} as PrisonUserClientDto)
+    })
+
+    it('should deactivate STAFF and PUBLIC services', () => {
+      return request(app)
+        .post('/prisons/HEI/update-enabled-services')
+        .expect(302)
+        .expect('location', `/prisons/HEI/configuration`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Enabled services have been updated')
+          expect(prisonService.deactivatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'PUBLIC')
+          expect(prisonService.deactivatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'STAFF')
+          expect(prisonService.activatePrisonClientType).not.toHaveBeenCalled()
+        })
+    })
+
+    it('should activate STAFF and PUBLIC services', () => {
+      return request(app)
+        .post('/prisons/HEI/update-enabled-services')
+        .send({ enabledServices: ['STAFF', 'PUBLIC'] })
+        .expect(302)
+        .expect('location', `/prisons/HEI/configuration`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Enabled services have been updated')
+          expect(prisonService.activatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'PUBLIC')
+          expect(prisonService.activatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'STAFF')
+          expect(prisonService.deactivatePrisonClientType).not.toHaveBeenCalled()
+        })
+    })
+
+    it('should activate a single service', () => {
+      return request(app)
+        .post('/prisons/HEI/update-enabled-services')
+        .send({ enabledServices: 'STAFF' })
+        .expect(302)
+        .expect('location', `/prisons/HEI/configuration`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('message', 'Enabled services have been updated')
+          expect(prisonService.activatePrisonClientType).toHaveBeenCalledTimes(1)
+          expect(prisonService.activatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'STAFF')
+          expect(prisonService.deactivatePrisonClientType).toHaveBeenCalledTimes(1)
+          expect(prisonService.deactivatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'PUBLIC')
+        })
+    })
+
+    it('should validate data', () => {
+      return request(app)
+        .post('/prisons/HEI/update-enabled-services')
+        .send({ enabledServices: 'XYZ' })
+        .expect(302)
+        .expect('location', `/prisons/HEI/configuration`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('errors', <FlashErrorMessage>[
+            {
+              location: 'body',
+              msg: 'Invalid value',
+              path: 'enabledServices',
+              type: 'field',
+              value: 'XYZ',
+            },
+          ])
+          expect(prisonService.activatePrisonClientType).not.toHaveBeenCalled()
+          expect(prisonService.deactivatePrisonClientType).not.toHaveBeenCalled()
+        })
+    })
+
+    it('should handle API errors', () => {
+      prisonService.deactivatePrisonClientType.mockRejectedValue(new BadRequest())
+      const error = { msg: '400 Bad Request' }
+      return request(app)
+        .post('/prisons/HEI/update-enabled-services')
+        .expect(302)
+        .expect('location', `/prisons/HEI/configuration`)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('errors', [error])
+          expect(prisonService.activatePrisonClientType).not.toHaveBeenCalled()
+          expect(prisonService.deactivatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'PUBLIC')
+        })
     })
   })
 

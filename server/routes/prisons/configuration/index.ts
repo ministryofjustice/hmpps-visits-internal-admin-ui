@@ -44,6 +44,12 @@ export default function routes(services: Services): Router {
     addEditContactDetailsController.editSubmit(),
   )
 
+  postWithValidation(
+    '/prisons/:prisonId([A-Z]{3})/update-enabled-services',
+    prisonConfig.validateEnabledServices(),
+    prisonConfig.updateEnabledServices(),
+  )
+
   get('/prisons/:prisonId([A-Z]{3})/configuration/visitors/edit', editVisitorConfigController.view())
   postWithValidation(
     '/prisons/:prisonId([A-Z]{3})/configuration/visitors/edit',
