@@ -1,7 +1,12 @@
 import { SuperAgentRequest } from 'superagent'
 import { stubFor } from '../wiremock'
 import TestData from '../../../server/routes/testutils/testData'
-import { PrisonDto, UpdatePrisonDto } from '../../../server/data/visitSchedulerApiTypes'
+import {
+  PrisonDto,
+  PrisonUserClientDto,
+  PrisonUserClientType,
+  UpdatePrisonDto,
+} from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
   stubGetAllPrisons: (prisons: PrisonDto[] = TestData.prisonDtos()): SuperAgentRequest => {
@@ -87,6 +92,44 @@ export default {
         status: 201,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: prisonDto,
+      },
+    })
+  },
+  stubActivatePrisonClientType: ({
+    prisonCode,
+    type,
+  }: {
+    prisonCode: string
+    type: PrisonUserClientType
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/visitScheduler/admin/prisons/prison/${prisonCode}/client/${type}/activate`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: <PrisonUserClientDto>{ active: true, userType: type },
+      },
+    })
+  },
+  stubDeactivatePrisonClientType: ({
+    prisonCode,
+    type,
+  }: {
+    prisonCode: string
+    type: PrisonUserClientType
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/visitScheduler/admin/prisons/prison/${prisonCode}/client/${type}/deactivate`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: <PrisonUserClientDto>{ active: false, userType: type },
       },
     })
   },
