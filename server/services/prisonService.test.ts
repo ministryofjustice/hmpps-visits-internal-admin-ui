@@ -184,8 +184,8 @@ describe('Prisons service', () => {
   })
 
   describe('createPrison', () => {
-    it('should add prison to supported prisons', async () => {
-      const newPrison = TestData.prisonDto({ active: false, maxAdultVisitors: 3, maxChildVisitors: 3 })
+    it('should add prison that is inactive and with default data to supported prisons', async () => {
+      const newPrison = TestData.prisonDto({ active: false })
 
       await prisonService.createPrison('user', prisonDto.code)
       expect(visitSchedulerApiClient.createPrison).toHaveBeenCalledWith(newPrison)
@@ -214,6 +214,20 @@ describe('Prisons service', () => {
     it('should change prison to inactive', async () => {
       await prisonService.deactivatePrison('user', prisonDto.code)
       expect(visitSchedulerApiClient.deactivatePrison).toHaveBeenCalledWith('HEI')
+    })
+  })
+
+  describe('activatePrisonClientType', () => {
+    it('should activate the given client type for the prison', async () => {
+      await prisonService.activatePrisonClientType('user', prisonDto.code, 'STAFF')
+      expect(visitSchedulerApiClient.activatePrisonClientType).toHaveBeenCalledWith('HEI', 'STAFF')
+    })
+  })
+
+  describe('deactivatePrisonClientType', () => {
+    it('should deactivate the given client type for the prison', async () => {
+      await prisonService.deactivatePrisonClientType('user', prisonDto.code, 'STAFF')
+      expect(visitSchedulerApiClient.deactivatePrisonClientType).toHaveBeenCalledWith('HEI', 'STAFF')
     })
   })
 

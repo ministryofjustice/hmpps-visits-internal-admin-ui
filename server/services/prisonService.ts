@@ -1,6 +1,6 @@
 import { NotFound } from 'http-errors'
 import { HmppsAuthClient, PrisonRegisterApiClient, RestClientBuilder, VisitSchedulerApiClient } from '../data'
-import { PrisonDto, UpdatePrisonDto } from '../data/visitSchedulerApiTypes'
+import { PrisonDto, PrisonUserClientDto, PrisonUserClientType, UpdatePrisonDto } from '../data/visitSchedulerApiTypes'
 import logger from '../../logger'
 import { Prison } from '../@types/visits-admin'
 import { PrisonContactDetails } from '../data/prisonRegisterApiTypes'
@@ -95,6 +95,7 @@ export default class PrisonService {
     const prison: PrisonDto = {
       active: false,
       adultAgeYears: 18,
+      clients: [{ active: true, userType: 'STAFF' }],
       code: prisonCode,
       excludeDates: [],
       maxAdultVisitors: 3,
@@ -130,6 +131,30 @@ export default class PrisonService {
 
     logger.info(`Prison ${prisonCode} deactivated by ${username}`)
     return visitSchedulerApiClient.deactivatePrison(prisonCode)
+  }
+
+  async activatePrisonClientType(
+    username: string,
+    prisonCode: string,
+    type: PrisonUserClientType,
+  ): Promise<PrisonUserClientDto> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    logger.info(`Prison client type ${type} activated for ${prisonCode} by ${username}`)
+    return visitSchedulerApiClient.activatePrisonClientType(prisonCode, type)
+  }
+
+  async deactivatePrisonClientType(
+    username: string,
+    prisonCode: string,
+    type: PrisonUserClientType,
+  ): Promise<PrisonUserClientDto> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    logger.info(`Prison client type ${type} deactivated for ${prisonCode} by ${username}`)
+    return visitSchedulerApiClient.deactivatePrisonClientType(prisonCode, type)
   }
 
   async addExcludeDate(username: string, prisonCode: string, excludeDate: string): Promise<PrisonDto> {

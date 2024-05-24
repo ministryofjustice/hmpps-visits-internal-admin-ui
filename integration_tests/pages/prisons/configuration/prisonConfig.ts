@@ -1,3 +1,4 @@
+import { PrisonUserClientType } from '../../../../server/data/visitSchedulerApiTypes'
 import Page, { PageElement } from '../../page'
 
 export default class PrisonConfigPage extends Page {
@@ -16,6 +17,8 @@ export default class PrisonConfigPage extends Page {
   }
 
   prisonStatusLabel = (): PageElement => cy.get('[data-test=prison-status]')
+
+  prisonClientsLabel = (): PageElement => cy.get('[data-test=prison-clients]')
 
   // Booking window
   getMinBookingWindow = (): PageElement => cy.get('.test-policy-notice-days-min')
@@ -39,6 +42,21 @@ export default class PrisonConfigPage extends Page {
 
   editContactDetails = (): void => {
     cy.get('[data-test="contact-details-edit"]').click()
+  }
+
+  // Enabled services
+  getService = (service: PrisonUserClientType): PageElement => cy.get(`input[name=enabledServices][value=${service}]`)
+
+  activateService = (service: PrisonUserClientType): void => {
+    cy.get(`input[name=enabledServices][value=${service}]`).check()
+  }
+
+  deactivateService = (service: PrisonUserClientType): void => {
+    cy.get(`input[name=enabledServices][value=${service}]`).uncheck()
+  }
+
+  updateEnabledServices = (): void => {
+    cy.get('[data-test="update-enabled-services"]').click()
   }
 
   // Visitor configuration

@@ -1,0 +1,16 @@
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% macro prisonClientTags(clients) -%}
+  {% set activeClients = (clients | groupby("active"))["true"] %}
+
+  {{- govukTag({ text: "None", classes: "govuk-tag--grey" }) if not activeClients | length -}}
+
+  {%- for client in activeClients %}
+  {{- govukTag({
+    text: client.userType | capitalize,
+    classes:
+      ("govuk-!-margin-left-2 " if not loop.first) +
+      ("govuk-tag--green" if client.userType == "STAFF" else "govuk-tag--purple")
+  }) if client.active -}}
+  {%- endfor %}
+{%- endmacro %}

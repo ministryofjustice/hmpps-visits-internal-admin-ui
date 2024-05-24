@@ -51,6 +51,7 @@ describe('Incentive level groups listing page', () => {
           expect($('h1').text().trim()).toBe(prison.name)
 
           expect($('[data-test="prison-status"]').text().trim()).toBe('Active')
+          expect($('[data-test="prison-clients"]').text().trim()).toBe('Staff')
 
           expect($('.moj-sub-navigation__item').length).toBe(6)
           expect($('.moj-sub-navigation__link[aria-current]').text()).toBe('Incentive level groups')

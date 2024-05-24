@@ -23,12 +23,15 @@ context('Supported prisons', () => {
     const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
     supportedPrisonsPage.getPrisonNameByCode('HEI').contains('Hewell')
     supportedPrisonsPage.getPrisonStatusByCode('HEI').contains('Active')
+    supportedPrisonsPage.getPrisonClientsByCode('HEI').contains('Staff')
 
     supportedPrisonsPage.getPrisonNameByCode('PNI').contains('Preston')
     supportedPrisonsPage.getPrisonStatusByCode('PNI').contains('Active')
+    supportedPrisonsPage.getPrisonClientsByCode('PNI').contains('Public Staff')
 
     supportedPrisonsPage.getPrisonNameByCode('WWI').contains('Wandsworth')
     supportedPrisonsPage.getPrisonStatusByCode('WWI').contains('Inactive')
+    supportedPrisonsPage.getPrisonClientsByCode('WWI').contains('None')
   })
 
   it('should create a Prison', () => {
@@ -47,5 +50,6 @@ context('Supported prisons', () => {
     supportedPrisonsPage.successMessage().contains('Hewell (HMP) has been successfully added')
     supportedPrisonsPage.getPrisonNameByCode('HEI').contains('Hewell')
     supportedPrisonsPage.getPrisonStatusByCode('HEI').contains('Inactive')
+    supportedPrisonsPage.getPrisonClientsByCode('HEI').contains('Staff')
   })
 })

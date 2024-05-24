@@ -3,6 +3,7 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {% from "components/subNavigation.njk" import subNavigation %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% set pageHeaderTitle = prison.name %}
 {% set pageTitle = applicationName + " - Configuration - " + pageHeaderTitle %}
@@ -20,13 +21,7 @@
         <span>{{ pageHeaderTitle }}</span>
       </h1>
 
-      <p>This prison is currently
-        {{ govukTag({
-          text: "Active" if prison.active else "Inactive",
-          classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
-          attributes: { "data-test": "prison-status" }
-        }) }}
-      </p>
+      {% include "partials/prisonStatusAndClients.njk" %}
     </div>
   </div>
 
@@ -117,18 +112,53 @@
           attributes: { "data-test": "contact-details-edit" }
         })}}
 
-        {% else %}
+      {% else %}
 
-          <p>No contact details have been entered for this prison.</p>
+        <p>No contact details have been entered for this prison.</p>
 
-          {{ govukButton({
-            text: "Add contact details",
-            classes: "govuk-!-margin-0",
-            href: "/prisons/" + prison.code + "/configuration/contact-details/add",
-            preventDoubleClick: true,
-            attributes: { "data-test": "contact-details-add" }
-          })}}
-        {% endif %}
+        {{ govukButton({
+          text: "Add contact details",
+          classes: "govuk-!-margin-0",
+          href: "/prisons/" + prison.code + "/configuration/contact-details/add",
+          preventDoubleClick: true,
+          attributes: { "data-test": "contact-details-add" }
+        })}}
+      {% endif %}
+
+      <hr class="govuk-section-break govuk-section-break--xl">
+      <h2 class="govuk-heading-m">Enabled services</h2>
+
+      <form action="/prisons/{{ prison.code }}/update-enabled-services" data-test="prison-enabled-services-form" method="POST" novalidate>
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {% set prisonClientsByType = prison.clients | groupby("userType") %}
+        {{ govukCheckboxes({
+          name: "enabledServices",
+          hint: {
+            text: "Select which services this prison should have enabled"
+          },
+          items: [
+            {
+              value: "STAFF",
+              text: "Staff",
+              checked: prisonClientsByType["STAFF"][0]["active"]
+            },
+            {
+              value: "PUBLIC",
+              text: "Public",
+              checked: prisonClientsByType["PUBLIC"][0]["active"]
+            }
+          ]
+        }) }}
+
+        {{ govukButton({
+          text: "Update enabled services",
+          classes: "govuk-!-margin-0",
+          preventDoubleClick: true,
+          attributes: { "data-test": "update-enabled-services" }
+        })}}
+      </form>
 
       <hr class="govuk-section-break govuk-section-break--xl">
       <h2 class="govuk-heading-m">Visitor configuration</h2>
