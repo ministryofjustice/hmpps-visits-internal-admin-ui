@@ -16,5 +16,7 @@ generic-service:
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler-dev.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: DEV
 
+    FEATURE_BOOKERS_ENABLED: true
+
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
