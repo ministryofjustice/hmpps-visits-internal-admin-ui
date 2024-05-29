@@ -6,6 +6,10 @@
 APIS='{
   "apis": [
     {
+      "api": "booker-registry-api",
+      "url": "https://hmpps-prison-visit-booker-registry-dev.prison.service.justice.gov.uk/v3/api-docs"
+    },
+    {
       "api": "prison-register-api",
       "url": "https://prison-register-dev.hmpps.service.justice.gov.uk/v3/api-docs"
     },

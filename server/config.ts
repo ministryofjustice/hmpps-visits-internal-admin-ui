@@ -84,13 +84,21 @@ export default {
       agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
+    bookerRegistry: {
+      url: get('BOOKER_REGISTRY_API_URL', 'http://localhost:8080', requiredInProduction),
+      timeout: {
+        response: Number(get('BOOKER_REGISTRY_API_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('BOOKER_REGISTRY_API_TIMEOUT_DEADLINE', 10000)),
+      },
+      agent: new AgentConfig(Number(get('BOOKER_REGISTRY_API_TIMEOUT_RESPONSE', 10000))),
+    },
     prisonRegister: {
       url: get('PRISON_REGISTER_API_URL', 'http://localhost:8080', requiredInProduction),
       timeout: {
-        response: Number(get('PRISON_REGISTER_API_URL_TIMEOUT_RESPONSE', 10000)),
-        deadline: Number(get('PRISON_REGISTER_API_URL_TIMEOUT_DEADLINE', 10000)),
+        response: Number(get('PRISON_REGISTER_API_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('PRISON_REGISTER_API_TIMEOUT_DEADLINE', 10000)),
       },
-      agent: new AgentConfig(Number(get('PRISON_REGISTER_API_URL_TIMEOUT_RESPONSE', 10000))),
+      agent: new AgentConfig(Number(get('PRISON_REGISTER_API_TIMEOUT_RESPONSE', 10000))),
     },
     visitScheduler: {
       url: get('VISIT_SCHEDULER_API_URL', 'http://localhost:8080', requiredInProduction),
