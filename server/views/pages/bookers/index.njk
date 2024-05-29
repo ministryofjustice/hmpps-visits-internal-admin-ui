@@ -1,4 +1,7 @@
 {% extends "partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/input/macro.njk" import govukInput -%}
+{%- from "govuk/components/textarea/macro.njk" import govukTextarea -%}
 
 {% set pageHeaderTitle = "Manage bookers" %}
 {% set pageTitle = applicationName + " - " + pageHeaderTitle %}
@@ -8,13 +11,95 @@
 {{ super() }}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
+  <div class="govuk-grid-column-two-thirds">
 
     <h1 class="govuk-heading-l">
       <span>{{ pageHeaderTitle }}</span>
     </h1>
 
 
+    <h2 class="govuk-heading-m">Add or update booker details</h2>
+    <p>Add or update the prisoner and associated visitors for the booker. This will overwrite any existing data.</p>
+
+    <form action="/bookers/booker/update" method="POST" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+
+      {{ govukInput({
+        label: {
+          html: "Booker's email address",
+          classes: "govuk-label--s"
+        },
+        id: "bookerEmail",
+        name: "bookerEmail",
+        classes: "govuk-input--width-30",
+        autocomplete: "off",
+        spellcheck: false,
+        errorMessage: errors | findError('bookerEmail')
+      }) }}
+
+      {{ govukInput({
+        label: {
+          html: "Prisoner number",
+          classes: "govuk-label--s"
+        },
+        id: "prisonerId",
+        name: "prisonerId",
+        classes: "govuk-input--width-10",
+        autocomplete: "off",
+        spellcheck: false,
+        errorMessage: errors | findError('prisonerId')
+      }) }}
+
+      {{ govukTextarea({
+        label: {
+          html: "Visitor IDs",
+          classes: "govuk-label--s"
+        },
+        hint: {
+          text: "Enter visitor IDs with each on a new line."
+        },
+        id: "visitorIds",
+        name: "visitorIds",
+        classes: "govuk-!-width-one-quarter",
+        autocomplete: "off",
+        spellcheck: false,
+        errorMessage: errors | findError('visitorIds')
+      }) }}
+
+      {{ govukButton({
+        text: "Add / update booker details",
+        preventDoubleClick: true
+      })}}
+    </form>
+
+    <hr class="govuk-section-break govuk-section-break--l">
+
+    <h2 class="govuk-heading-m">Clear booker details</h2>
+    <p>Remove details of the prisoner and visitors for this booker. The booker's reference will be kept.</p>
+
+    <form action="/bookers/booker/clear" method="POST" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+      {{ govukInput({
+        label: {
+          html: "Booker reference",
+          classes: "govuk-label--s"
+        },
+        id: "bookerReference",
+        name: "bookerReference",
+        classes: "govuk-input--width-20",
+        autocomplete: "off",
+        spellcheck: false,
+        errorMessage: errors | findError('bookerReference')
+      }) }}
+
+      {{ govukButton({
+        text: "Clear booker details",
+        classes: "govuk-!-margin-0",
+        preventDoubleClick: true
+      })}}
+    </form>
   </div>
 </div>
 
