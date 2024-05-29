@@ -1,9 +1,10 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { responseErrorToFlashMessage } from '../../utils/utils'
+import { BookerService } from '../../services'
 
-export default class BookersController {
-  public constructor() {}
+export default class BookerController {
+  public constructor(private readonly bookerService: BookerService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
@@ -23,12 +24,21 @@ export default class BookersController {
         return res.redirect('/bookers')
       }
 
-      const { bookerEmail, prisonerId, visitorId } = req.body
-      // visitorIds.split(/\s+/)
-
       try {
-        // TODO call API
-        req.flash('message', `UPDATED!!! `)
+        const {
+          bookerEmail,
+          prisonerId,
+          visitorIds,
+        }: { bookerEmail: string; prisonerId: string; visitorIds: number[] } = req.body
+
+        const booker = await this.bookerService.updateBookerDetails(
+          res.locals.user.username,
+          bookerEmail,
+          prisonerId,
+          visitorIds,
+        )
+
+        req.flash('message', `Details updated. Booker reference: ${booker.reference}`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
       }
@@ -45,11 +55,11 @@ export default class BookersController {
         return res.redirect('/bookers')
       }
 
-      const { bookerReference } = req.body
-
       try {
-        // TODO call API
-        req.flash('message', `Details cleared for booker '${bookerReference}'`)
+        const { bookerReference } = req.body
+        const booker = await this.bookerService.clearBookerDetails(res.locals.user.username, bookerReference)
+
+        req.flash('message', `Details cleared. Booker reference: ${bookerReference} (${booker.email})`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
       }
@@ -65,7 +75,12 @@ export default class BookersController {
     return [
       body('bookerEmail', 'Invalid booker email').isEmail(),
       body('prisonerId', 'Invalid prisoner number').isLength({ min: 5, max: 10 }),
-      body('visitorIds', 'Invalid visitor IDs').trim().whitelist('\\d').isLength({ min: 4, max: 100 }),
+      body('visitorIds', 'Invalid visitor IDs')
+        .trim()
+        .whitelist('\\d\\s')
+        .isLength({ min: 4, max: 100 })
+        .customSanitizer(visitorIds => visitorIds.split(/\s+/))
+        .toInt(),
     ]
   }
 }
