@@ -74,7 +74,7 @@ export default class BookerController {
   public validateUpdateBookerDetails(): ValidationChain[] {
     return [
       body('bookerEmail', 'Invalid booker email').isEmail(),
-      body('prisonerId', 'Invalid prisoner number').isLength({ min: 5, max: 10 }),
+      body('prisonerId', 'Invalid prisoner number').trim().isLength({ min: 5, max: 10 }),
       body('visitorIds', 'Invalid visitor IDs')
         .trim()
         .whitelist('\\d\\s')
