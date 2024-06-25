@@ -143,6 +143,7 @@ workflows:
             - unit_test
             - integration_test
             - build_docker
+
       - hmpps/deploy_env:
           <<: *feature_branch
           name: deploy_dev_preview
@@ -152,11 +153,13 @@ workflows:
             - hmpps-common-vars
           requires:
             - request-dev-preview-approval
+
       - request-staging-preview-approval:
           <<: *feature_branch
           type: approval
           requires:
             - deploy_dev_preview
+
       - hmpps/deploy_env:
           name: deploy_staging_preview
           env: "staging"
@@ -180,11 +183,7 @@ workflows:
             - unit_test
             - integration_test
             - build_docker
-      - request-staging-approval:
-          <<: *main_branch
-          type: approval
-          requires:
-            - deploy_dev
+
       - hmpps/deploy_env:
           name: deploy_staging
           env: "staging"
@@ -194,11 +193,13 @@ workflows:
             - hmpps-common-vars
             - hmpps-visits-internal-admin-ui-stage
           requires:
-            - request-staging-approval
+            - deploy_dev
+
       - request-preprod-approval:
           type: approval
           requires:
             - deploy_staging
+
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
@@ -209,6 +210,7 @@ workflows:
             - hmpps-visits-internal-admin-ui-preprod
           requires:
             - request-preprod-approval
+
       - request-prod-approval:
           type: approval
           requires:
