@@ -13,24 +13,32 @@
   {% if errors.length %}Error: {% endif %}{{pageTitle | default(applicationName)}}
 {% endblock %}
 
-{% block header %}
+{% set primaryNavItems = [
+  {
+    text: "Home",
+    href: "/",
+    active: activePrimaryNav === "home"
+  },
+  {
+    text: "Prisons",
+    href: "/prisons",
+    active: activePrimaryNav === "prisons"
+  }
+  ] %}
+
+  {% set primaryNavItems = ((primaryNavItems.push({
+    text: "Bookers",
+    href: "/bookers",
+    active: activePrimaryNav === "bookers"
+  }), primaryNavItems) if featureBookersEnabled else primaryNavItems) %}
+
+  {% block header %}
   {% include "./header.njk" %}
 
   {% if activePrimaryNav %}
     {{ mojPrimaryNavigation({
       label: 'Primary navigation',
-      items: [
-      {
-        text: "Home",
-        href: "/",
-        active: activePrimaryNav === "home"
-      },
-      {
-        text: "Prisons",
-        href: "/prisons",
-        active: activePrimaryNav === "prisons"
-      }
-      ]
+      items: primaryNavItems
     }) }}
   {% endif %}
 {% endblock %}

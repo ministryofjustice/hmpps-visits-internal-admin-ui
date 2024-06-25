@@ -40,9 +40,9 @@ API_CLIENT_SECRET=clientsecret
 SYSTEM_CLIENT_ID=clientid
 SYSTEM_CLIENT_SECRET=clientsecret
 
+BOOKER_REGISTRY_API_URL="https://hmpps-prison-visit-booker-registry-dev.prison.service.justice.gov.uk"
+
 PRISON_REGISTER_API_URL="https://prison-register-dev.hmpps.service.justice.gov.uk"
-# If running prison register locally:
-# PRISON_REGISTER_API_URL: "http://localhost:8082"
 
 VISIT_SCHEDULER_API_URL="https://visit-scheduler-dev.prison.service.justice.gov.uk"
 ```
@@ -80,7 +80,7 @@ Or run tests with the cypress UI:
 
 ## Imported types
 
-Some TypeScript types are imported via the Open API (Swagger) docs, e.g. from the Visit Scheduler, Prisoner Contact Registry, Prison API, etc.
+Some TypeScript types are imported via the Open API (Swagger) docs, e.g. from the Visit Scheduler, etc.
 
 These are stored in [`./server/@types/`](./server/@types/), for example [`./server/@types/visit-scheduler-api.d.ts`](./server/@types/visit-scheduler-api.d.ts). There are also some corresponding files such as [`./server/data/visitSchedulerApiTypes.ts`](./server/data/visitSchedulerApiTypes.ts) that contain the particular imported types that are actually used in the project.
 

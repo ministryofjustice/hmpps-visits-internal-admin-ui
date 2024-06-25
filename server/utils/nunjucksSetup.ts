@@ -16,6 +16,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.locals.applicationName = 'Visits internal admin'
   app.locals.environmentName = config.environmentName
   app.locals.environmentNameColour = config.environmentName === 'PRE-PRODUCTION' ? 'govuk-tag--green' : ''
+  app.locals.featureBookersEnabled = config.features.bookers.enabled
 
   // Cachebusting version string
   if (production) {
