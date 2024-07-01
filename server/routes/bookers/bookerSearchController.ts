@@ -29,7 +29,7 @@ export default class BookerSearchController {
       try {
         const booker = await this.bookerService.getBookerByEmail(res.locals.user.username, email)
         req.session.booker = booker
-        return res.redirect('/bookers/booker-details')
+        return res.redirect('/bookers/booker/details')
       } catch (error) {
         req.flash('formValues', req.body)
 

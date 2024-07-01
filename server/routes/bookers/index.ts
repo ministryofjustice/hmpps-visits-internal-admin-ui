@@ -3,8 +3,7 @@ import { ValidationChain } from 'express-validator'
 import BookerSearchController from './bookerSearchController'
 import asyncMiddleware from '../../middleware/asyncMiddleware'
 import { Services } from '../../services'
-import AddBookerController from './booker/addBookerController'
-import BookerDetailsController from './booker/bookerDetailsController'
+import bookerRoutes from './booker'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -14,16 +13,11 @@ export default function routes(services: Services): Router {
     router.post(path, ...validationChain, asyncMiddleware(handler))
 
   const bookerSearch = new BookerSearchController(services.bookerService)
-  const addBooker = new AddBookerController(services.bookerService)
-  const bookerDetails = new BookerDetailsController(services.bookerService)
 
   get('/bookers', bookerSearch.view())
   postWithValidation('/bookers/search', bookerSearch.validate(), bookerSearch.submit())
 
-  get('/bookers/booker/add', addBooker.view())
-  postWithValidation('/bookers/booker/add', addBooker.validate(), addBooker.submit())
-
-  get('/bookers/booker-details', bookerDetails.view())
+  router.use('/bookers/booker', bookerRoutes(services))
 
   return router
 }

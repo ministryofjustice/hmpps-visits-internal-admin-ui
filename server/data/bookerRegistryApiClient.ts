@@ -1,6 +1,6 @@
 import RestClient from './restClient'
 import config from '../config'
-import { BookerDto, CreateBookerDto } from './bookerRegistryApiTypes'
+import { BookerDto, CreateBookerDto, CreatePermittedPrisonerDto, PermittedPrisonerDto } from './bookerRegistryApiTypes'
 
 export default class BookerRegistryApiClient {
   private restClient: RestClient
@@ -13,7 +13,18 @@ export default class BookerRegistryApiClient {
     return this.restClient.put({ path: '/public/booker/config', data: <CreateBookerDto>{ email } })
   }
 
+  async addPrisoner(bookerReference: string, prisonerId: string): Promise<PermittedPrisonerDto> {
+    return this.restClient.put({
+      path: `/public/booker/config/${bookerReference}/prisoner`,
+      data: <CreatePermittedPrisonerDto>{ prisonerId, active: true },
+    })
+  }
+
   async getBookerByEmail(email: string): Promise<BookerDto> {
     return this.restClient.get({ path: `/public/booker/config/email/${email}` })
+  }
+
+  async clearBookerDetails(bookerReference: string): Promise<BookerDto> {
+    return this.restClient.delete({ path: `/public/booker/config/${bookerReference}` })
   }
 }

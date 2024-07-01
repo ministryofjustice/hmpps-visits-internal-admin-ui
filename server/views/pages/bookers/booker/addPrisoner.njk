@@ -1,0 +1,50 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageHeaderTitle = "Manage bookers" %}
+{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+{% set activePrimaryNav = "bookers" %}
+
+{% block content %}
+{{ super() }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
+
+    <h2 class="govuk-heading-m">Add a prisoner to a booker</h2>
+
+    <p>Add a prisoner to booker: {{ booker.email }}.</p>
+
+    <form action="/bookers/booker/add-prisoner" method="POST" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+      {{ govukInput({
+          label: {
+            text: "Enter prisoner number"
+          },
+          hint: {
+            text: "E.g. A1234BC"
+          },
+          id: "prisonerId",
+          name: "prisonerId",
+          classes: "govuk-input--width-10",
+          value: formValues.prisonerId,
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('prisonerId')
+        }) }}
+
+        {{ govukButton({
+          text: "Add prisoner",
+          attributes: { "data-test": "add-prisoner" },
+          preventDoubleClick: true
+        }) }}
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

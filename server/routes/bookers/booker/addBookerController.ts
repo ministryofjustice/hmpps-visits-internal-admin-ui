@@ -31,7 +31,7 @@ export default class AddBookerController {
         req.session.booker = booker
         req.flash('message', { text: `Booker record created`, type: 'success' })
 
-        return res.redirect('/bookers/booker-details')
+        return res.redirect('/bookers/booker/details')
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
         req.flash('formValues', req.body)
