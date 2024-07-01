@@ -7,6 +7,13 @@ export default class BookerService {
     private readonly hmppsAuthClient: HmppsAuthClient,
   ) {}
 
+  async createBooker(username: string, email: string): Promise<BookerDto> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
+
+    return bookerRegistryApiClient.createBooker(email)
+  }
+
   async getBookerByEmail(username: string, email: string): Promise<BookerDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
