@@ -1,14 +1,14 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { BookerService } from '../../services'
-import { responseErrorToFlashMessage } from '../../utils/utils'
+import { BookerService } from '../../../services'
+import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class AddBookerController {
   public constructor(private readonly bookerService: BookerService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      return res.render('pages/bookers/addBooker', {
+      return res.render('pages/bookers/booker/addBooker', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
         message: req.flash('message')?.[0] || {},
@@ -29,6 +29,7 @@ export default class AddBookerController {
       try {
         const booker = await this.bookerService.createBooker(res.locals.user.username, email)
         req.session.booker = booker
+        req.flash('message', { text: `Booker record created`, type: 'success' })
 
         return res.redirect('/bookers/booker-details')
       } catch (error) {

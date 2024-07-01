@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express'
-import { BookerService } from '../../services'
+import { BookerService } from '../../../services'
 
 export default class BookerDetailsController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -12,7 +12,7 @@ export default class BookerDetailsController {
         return res.redirect('/bookers')
       }
 
-      return res.render('pages/bookers/bookerDetails', { booker })
+      return res.render('pages/bookers/bookerDetails', { message: req.flash('message')?.[0] || {}, booker })
     }
   }
 }

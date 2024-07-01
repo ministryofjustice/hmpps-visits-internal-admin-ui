@@ -3,14 +3,14 @@ import { ValidationChain, body, validationResult } from 'express-validator'
 import { BookerService } from '../../services'
 import { responseErrorToFlashMessage } from '../../utils/utils'
 
-export default class BookersController {
+export default class BookerSearchController {
   public constructor(private readonly bookerService: BookerService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
       const formValues = req.flash('formValues')?.[0] || {}
 
-      return res.render('pages/bookers/index', { errors: req.flash('errors'), formValues })
+      return res.render('pages/bookers/search', { errors: req.flash('errors'), formValues })
     }
   }
 
