@@ -19,7 +19,7 @@ export default function routes(services: Services): Router {
   router.use(prisonsRoutes(services))
 
   if (config.features.bookers.enabled) {
-    router.use(bookersRoutes())
+    router.use(bookersRoutes(services))
   }
 
   return router

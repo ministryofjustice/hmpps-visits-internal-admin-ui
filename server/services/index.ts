@@ -6,15 +6,19 @@ import LocationGroupService from './locationGroupService'
 import CategoryGroupService from './categoryGroupService'
 import IncentiveGroupService from './incentiveGroupService'
 import VisitService from './visitService'
+import BookerService from './bookerService'
 
 export const services = () => {
   const {
     hmppsAuthClient,
     applicationInfo,
     manageUsersApiClient,
+    bookerRegistryApiClientBuilder,
     prisonRegisterApiClientBuilder,
     visitSchedulerApiClientBuilder,
   } = dataAccess()
+
+  const bookerService = new BookerService(bookerRegistryApiClientBuilder, hmppsAuthClient)
 
   const categoryGroupService = new CategoryGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
 
@@ -36,6 +40,7 @@ export const services = () => {
 
   return {
     applicationInfo,
+    bookerService,
     categoryGroupService,
     incentiveGroupService,
     locationGroupService,
@@ -49,6 +54,7 @@ export const services = () => {
 export type Services = ReturnType<typeof services>
 
 export {
+  BookerService,
   CategoryGroupService,
   IncentiveGroupService,
   LocationGroupService,

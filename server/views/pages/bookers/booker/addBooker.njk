@@ -1,0 +1,45 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageHeaderTitle = "Manage bookers" %}
+{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+{% set activePrimaryNav = "bookers" %}
+
+{% block content %}
+{{ super() }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
+
+    <h2 class="govuk-heading-m">Add a booker</h2>
+
+    <form action="/bookers/booker/add" method="POST" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+      {{ govukInput({
+          label: {
+            text: "Enter booker's email address"
+          },
+          id: "email",
+          name: "email",
+          classes: "govuk-input--width-20",
+          value: formValues.email,
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: errors | findError('email')
+        }) }}
+
+        {{ govukButton({
+          text: "Add booker",
+          attributes: { "data-test": "add-booker" },
+          preventDoubleClick: true
+        }) }}
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

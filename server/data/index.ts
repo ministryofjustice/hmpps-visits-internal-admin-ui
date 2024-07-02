@@ -18,6 +18,7 @@ import InMemoryTokenStore from './tokenStore/inMemoryTokenStore'
 import PrisonRegisterApiClient from './prisonRegisterApiClient'
 import VisitSchedulerApiClient from './visitSchedulerApiClient'
 import config from '../config'
+import BookerRegistryApiClient from './bookerRegistryApiClient'
 
 type RestClientBuilder<T> = (token: string) => T
 
@@ -27,6 +28,8 @@ export const dataAccess = () => ({
     config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore(),
   ),
   manageUsersApiClient: new ManageUsersApiClient(),
+  bookerRegistryApiClientBuilder: ((token: string) =>
+    new BookerRegistryApiClient(token)) as RestClientBuilder<BookerRegistryApiClient>,
   prisonRegisterApiClientBuilder: ((token: string) =>
     new PrisonRegisterApiClient(token)) as RestClientBuilder<PrisonRegisterApiClient>,
   visitSchedulerApiClientBuilder: ((token: string) =>
@@ -35,4 +38,11 @@ export const dataAccess = () => ({
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { HmppsAuthClient, ManageUsersApiClient, PrisonRegisterApiClient, RestClientBuilder, VisitSchedulerApiClient }
+export {
+  HmppsAuthClient,
+  ManageUsersApiClient,
+  BookerRegistryApiClient,
+  PrisonRegisterApiClient,
+  RestClientBuilder,
+  VisitSchedulerApiClient,
+}

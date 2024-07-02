@@ -13,10 +13,24 @@ export interface paths {
   }
   '/public/booker/config': {
     /**
-     * Create or Update bookers details
-     * @description Create or Update bookers details
+     * Create bookers details
+     * @description Create bookers details
      */
-    put: operations['createOrUpdateBookerDetails']
+    put: operations['create']
+  }
+  '/public/booker/config/{bookerReference}/prisoner': {
+    /**
+     * Create booker prisoner details
+     * @description Create booker prisoner details
+     */
+    put: operations['createBookerPrisoner']
+  }
+  '/public/booker/config/{bookerReference}/prisoner/{prisonerId}/visitor': {
+    /**
+     * Create booker prisoner visitor details
+     * @description Create booker prisoner visitor details
+     */
+    put: operations['createBookerPrisonerVisitor']
   }
   '/public/booker/config/{bookerReference}/prisoner/{prisonerId}/visitor/{visitorId}/deactivate': {
     /**
@@ -116,18 +130,6 @@ export interface components {
     CreateBookerDto: {
       /** @description auth email */
       email: string
-      /** @description details of permitted prisoners to visit */
-      permittedPrisoners: components['schemas']['CreatePermittedPrisonerDto'][]
-    }
-    /** @description Create permitted prisoner with permitted visitors associated with the booker. */
-    CreatePermittedPrisonerDto: {
-      /**
-       * @description prisoner Id
-       * @example A1234AA
-       */
-      prisonerId: string
-      /** @description list of permitted visitors for permitted prisoner */
-      visitorIds: number[]
     }
     /** @description Booker of visits. */
     BookerDto: {
@@ -157,6 +159,33 @@ export interface components {
     }
     /** @description Permitted visitor associated with the permitted prisoner. */
     PermittedVisitorDto: {
+      /**
+       * Format: int64
+       * @description Identifier for this contact (Person in NOMIS)
+       * @example 5871791
+       */
+      visitorId: number
+      /**
+       * @description Active / Inactive permitted visitor
+       * @example true
+       */
+      active: boolean
+    }
+    /** @description Create permitted prisoner with permitted visitors associated with the booker. */
+    CreatePermittedPrisonerDto: {
+      /**
+       * @description prisoner Id
+       * @example A1234AA
+       */
+      prisonerId: string
+      /**
+       * @description Active / Inactive permitted prisoner
+       * @example true
+       */
+      active: boolean
+    }
+    /** @description Create permitted prisoner with permitted visitors associated with the booker. */
+    CreatePermittedVisitorDto: {
       /**
        * Format: int64
        * @description Identifier for this contact (Person in NOMIS)
@@ -214,18 +243,24 @@ export interface operations {
     }
   }
   /**
-   * Create or Update bookers details
-   * @description Create or Update bookers details
+   * Create bookers details
+   * @description Create bookers details
    */
-  createOrUpdateBookerDetails: {
+  create: {
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateBookerDto']
       }
     }
     responses: {
-      /** @description Have created or updated correctly */
+      /** @description Have created booker correctly */
       200: {
+        content: {
+          '*/*': components['schemas']['BookerDto']
+        }
+      }
+      /** @description Created */
+      201: {
         content: {
           '*/*': components['schemas']['BookerDto']
         }
@@ -244,6 +279,115 @@ export interface operations {
       }
       /** @description Incorrect permissions for this action */
       403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  /**
+   * Create booker prisoner details
+   * @description Create booker prisoner details
+   */
+  createBookerPrisoner: {
+    parameters: {
+      path: {
+        bookerReference: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreatePermittedPrisonerDto']
+      }
+    }
+    responses: {
+      /** @description Have created booker prisoner correctly */
+      200: {
+        content: {
+          '*/*': components['schemas']['PermittedPrisonerDto']
+        }
+      }
+      /** @description Created */
+      201: {
+        content: {
+          '*/*': components['schemas']['PermittedPrisonerDto']
+        }
+      }
+      /** @description Incorrect request to access this endpoint */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Incorrect permissions for this action */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description The booker does not exist */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  /**
+   * Create booker prisoner visitor details
+   * @description Create booker prisoner visitor details
+   */
+  createBookerPrisonerVisitor: {
+    parameters: {
+      path: {
+        prisonerId: string
+        bookerReference: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreatePermittedVisitorDto']
+      }
+    }
+    responses: {
+      /** @description Have created booker prisoner visitor correctly */
+      200: {
+        content: {
+          '*/*': components['schemas']['PermittedVisitorDto']
+        }
+      }
+      /** @description Created */
+      201: {
+        content: {
+          '*/*': components['schemas']['PermittedVisitorDto']
+        }
+      }
+      /** @description Incorrect request to access this endpoint */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Incorrect permissions for this action */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description The booker or the booker prisoner does not exist */
+      404: {
         content: {
           'application/json': components['schemas']['ErrorResponseDto']
         }
