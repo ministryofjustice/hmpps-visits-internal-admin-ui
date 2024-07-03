@@ -40,10 +40,10 @@ export default class AddPrisonerController {
       if (!booker) {
         return res.redirect('/bookers')
       }
-      const { prisonerId }: { prisonerId: string } = req.body
+      const { prisonerNumber }: { prisonerNumber: string } = req.body
 
       try {
-        await this.bookerService.addPrisoner(res.locals.user.username, booker.reference, prisonerId)
+        await this.bookerService.addPrisoner(res.locals.user.username, booker.reference, prisonerNumber)
         req.flash('message', { text: `Prisoner added`, type: 'success' })
 
         req.session.booker = await this.bookerService.getBookerByEmail(res.locals.user.username, booker.email)
@@ -58,7 +58,7 @@ export default class AddPrisonerController {
 
   public validate(): ValidationChain[] {
     return [
-      body('prisonerId', 'Enter a valid prisoner number')
+      body('prisonerNumber', 'Enter a valid prisoner number')
         .trim()
         .matches(/^[A-Z][0-9]{4}[A-Z]{2}$/),
     ]
