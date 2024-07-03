@@ -24,7 +24,7 @@ export default class AddBookerController {
         req.flash('formValues', req.body)
         return res.redirect('/bookers')
       }
-      const { email }: { email: string } = req.body
+      const { booker: email }: { booker: string } = req.body
 
       try {
         const booker = await this.bookerService.createBooker(res.locals.user.username, email)

@@ -24,7 +24,7 @@ export default class BookerSearchController {
         req.flash('formValues', req.body)
         return res.redirect('/bookers')
       }
-      const { email }: { email: string } = req.body
+      const { booker: email }: { booker: string } = req.body
 
       try {
         const booker = await this.bookerService.getBookerByEmail(res.locals.user.username, email)
@@ -45,6 +45,6 @@ export default class BookerSearchController {
   }
 
   public validate(): ValidationChain[] {
-    return [body('email', 'Enter a valid email address').trim().isEmail()]
+    return [body('booker', 'Enter a valid email address').trim().isEmail()]
   }
 }
