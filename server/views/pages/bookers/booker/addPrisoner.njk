@@ -2,9 +2,10 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageHeaderTitle = "Manage bookers" %}
-{% set pageTitle = applicationName + " - " + pageHeaderTitle %}
+{% set pageHeaderTitle = "Add a prisoner" %}
+{% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
 {% set activePrimaryNav = "bookers" %}
+{% set backLinkHref = "/bookers/booker/details" %}
 
 {% block content %}
 {{ super() }}
@@ -14,9 +15,7 @@
 
     <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
 
-    <h2 class="govuk-heading-m">Add a prisoner to a booker</h2>
-
-    <p>Add a prisoner to booker: {{ booker.email }}.</p>
+    <p>Add a prisoner to booker <strong>{{ booker.email }}</strong>.</p>
 
     <form action="/bookers/booker/add-prisoner" method="POST" novalidate>
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">

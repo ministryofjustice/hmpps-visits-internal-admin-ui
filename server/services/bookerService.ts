@@ -21,6 +21,20 @@ export default class BookerService {
     return bookerRegistryApiClient.addPrisoner(bookerReference, prisonerId)
   }
 
+  async activatePrisoner(username: string, bookerReference: string, prisonerId: string): Promise<void> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
+
+    await bookerRegistryApiClient.activatePrisoner(bookerReference, prisonerId)
+  }
+
+  async deactivatePrisoner(username: string, bookerReference: string, prisonerId: string): Promise<void> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
+
+    await bookerRegistryApiClient.deactivatePrisoner(bookerReference, prisonerId)
+  }
+
   async getBookerByEmail(username: string, email: string): Promise<BookerDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)

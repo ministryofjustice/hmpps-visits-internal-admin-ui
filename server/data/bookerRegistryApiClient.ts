@@ -20,6 +20,14 @@ export default class BookerRegistryApiClient {
     })
   }
 
+  async activatePrisoner(bookerReference: string, prisonerId: string): Promise<void> {
+    await this.restClient.put({ path: `/public/booker/config/${bookerReference}/prisoner/${prisonerId}/activate` })
+  }
+
+  async deactivatePrisoner(bookerReference: string, prisonerId: string): Promise<void> {
+    await this.restClient.put({ path: `/public/booker/config/${bookerReference}/prisoner/${prisonerId}/deactivate` })
+  }
+
   async getBookerByEmail(email: string): Promise<BookerDto> {
     return this.restClient.get({ path: `/public/booker/config/email/${email}` })
   }

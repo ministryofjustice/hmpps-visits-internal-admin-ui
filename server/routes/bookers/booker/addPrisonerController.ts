@@ -10,10 +10,6 @@ export default class AddPrisonerController {
     return async (req, res) => {
       const { booker } = req.session
 
-      if (!booker) {
-        return res.redirect('/bookers')
-      }
-
       if (booker.permittedPrisoners.length >= 1) {
         req.flash('message', { text: 'This booker already has a prisoner - cannot add another', type: 'information' })
         return res.redirect('/bookers/booker/details')
@@ -37,9 +33,7 @@ export default class AddPrisonerController {
       }
 
       const { booker } = req.session
-      if (!booker) {
-        return res.redirect('/bookers')
-      }
+
       const { prisonerNumber }: { prisonerNumber: string } = req.body
 
       try {
