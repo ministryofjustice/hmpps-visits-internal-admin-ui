@@ -15,7 +15,7 @@
 
     <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
 
-    <p>Add a prisoner to booker <strong>{{ booker.email }}</strong>.</p>
+    <p>Add a prisoner to booker <strong>{{ booker.email }}</strong></p>
 
     <form action="/bookers/booker/add-prisoner" method="POST" novalidate>
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
