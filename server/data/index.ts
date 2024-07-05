@@ -19,6 +19,7 @@ import PrisonRegisterApiClient from './prisonRegisterApiClient'
 import VisitSchedulerApiClient from './visitSchedulerApiClient'
 import config from '../config'
 import BookerRegistryApiClient from './bookerRegistryApiClient'
+import PrisonerContactRegistryApiClient from './prisonerContactRegistryApiClient'
 
 type RestClientBuilder<T> = (token: string) => T
 
@@ -30,6 +31,8 @@ export const dataAccess = () => ({
   manageUsersApiClient: new ManageUsersApiClient(),
   bookerRegistryApiClientBuilder: ((token: string) =>
     new BookerRegistryApiClient(token)) as RestClientBuilder<BookerRegistryApiClient>,
+  prisonerContactRegistryApiClientBuilder: ((token: string) =>
+    new PrisonerContactRegistryApiClient(token)) as RestClientBuilder<PrisonerContactRegistryApiClient>,
   prisonRegisterApiClientBuilder: ((token: string) =>
     new PrisonRegisterApiClient(token)) as RestClientBuilder<PrisonRegisterApiClient>,
   visitSchedulerApiClientBuilder: ((token: string) =>
@@ -42,6 +45,7 @@ export {
   HmppsAuthClient,
   ManageUsersApiClient,
   BookerRegistryApiClient,
+  PrisonerContactRegistryApiClient,
   PrisonRegisterApiClient,
   RestClientBuilder,
   VisitSchedulerApiClient,

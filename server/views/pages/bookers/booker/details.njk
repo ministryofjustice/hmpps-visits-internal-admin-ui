@@ -2,6 +2,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {%- from "partials/activeOrInactiveTag.njk" import activeOrInactiveTag -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set pageHeaderTitle = "Booker details" %}
 {% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
@@ -47,11 +48,73 @@
         }) }}
       </form>
 
-    {% endif %}
+      <h2 class="govuk-heading-m">Visitors</h2>
+      {% if not visitors | length %}
+        <p>No visitors set</p>
+      {% else %}
+
+        {% set visitorRows = [] %}
+        {% for visitor in visitors %}
+          {% set visitorAction = "deactivate" if visitor.active else "activate" %}
+          {% set visitorRows = (visitorRows.push([
+            {
+              text: visitor.name
+            },
+            {
+              text: visitor.dateOfBirth | formatDate
+            },
+            {
+              text: visitor.approved
+            },
+            {
+              html: activeOrInactiveTag(visitor.active) 
+            },
+            {
+              html: '<form action="/bookers/booker/' + visitorAction + '-visitor" method="POST" novalidate>' +
+                      '<input type="hidden" name="_csrf" value="' + csrfToken + '">' +
+                      govukButton({
+                        text: visitorAction | capitalize + " visitor",
+                        name: 'visitorId',
+                        value: visitor.visitorId,
+                        classes: "govuk-button--secondary",
+                        preventDoubleClick: true
+                      }) +
+                    '</form>'
+            }
+            ]), visitorRows) %}
+        {% endfor %}
+
+        {{ govukTable({
+          head: [
+            {
+              text: "Name"
+            },
+            {
+              text: "Date of birth"
+            },
+            {
+              text: "Approved visitor"
+            },
+            {
+              text: "Status"
+            },
+            {
+              text: "Action"
+            }
+          ],
+          rows: visitorRows
+        }) }}
+      {% endif %}
+
+      {{ govukButton({
+        href: "/bookers/booker/add-visitor",
+        classes: "govuk-button--secondary" if visitors | length,
+        text: "Add a visitor",
+        preventDoubleClick: true
+      }) }}
 
 
-    {% if booker.permittedPrisoners | length %}
-      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+      <hr class="govuk-section-break govuk-section-break--l">
       <h2 class="govuk-heading-m">Clear booker details</h2>
       <p>This will remove prisoner and visitor records for this booker.</p>
       <p>The email, booker reference and GOV.UK One Login identifier will be kept.</p>

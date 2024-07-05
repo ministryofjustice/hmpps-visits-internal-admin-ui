@@ -5,6 +5,8 @@ import { Services } from '../../../services'
 import BookerDetailsController from './bookerDetailsController'
 import AddPrisonerController from './addPrisonerController'
 import PrisonerStatusController from './prisonerStatusController'
+import AddVisitorController from './addVisitorController'
+import VisitorStatusController from './visitorStatusController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -14,9 +16,11 @@ export default function routes(services: Services): Router {
   const postWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
     router.post(path, ...validationChain, asyncMiddleware(handler))
 
-  const bookerDetails = new BookerDetailsController(services.bookerService)
+  const bookerDetails = new BookerDetailsController(services.bookerService, services.prisonerContactsService)
   const addPrisoner = new AddPrisonerController(services.bookerService)
   const prisonerStatus = new PrisonerStatusController(services.bookerService)
+  const addVisitor = new AddVisitorController(services.bookerService, services.prisonerContactsService)
+  const visitorStatus = new VisitorStatusController(services.bookerService)
 
   // middleware to ensure booker in session for all /bookers/booker routes
   router.use((req, res, next) => {
@@ -35,6 +39,12 @@ export default function routes(services: Services): Router {
 
   post('/activate-prisoner', prisonerStatus.setStatus('inactive'))
   post('/deactivate-prisoner', prisonerStatus.setStatus('active'))
+
+  get('/add-visitor', addVisitor.view())
+  postWithValidation('/add-visitor', addVisitor.validate(), addVisitor.submit())
+
+  post('/activate-visitor', visitorStatus.setStatus('inactive'))
+  post('/deactivate-visitor', visitorStatus.setStatus('active'))
 
   return router
 }

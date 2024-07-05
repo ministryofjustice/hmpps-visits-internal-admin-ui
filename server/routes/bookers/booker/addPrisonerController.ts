@@ -39,8 +39,6 @@ export default class AddPrisonerController {
       try {
         await this.bookerService.addPrisoner(res.locals.user.username, booker.reference, prisonerNumber)
         req.flash('message', { text: `Prisoner added`, type: 'success' })
-
-        req.session.booker = await this.bookerService.getBookerByEmail(res.locals.user.username, booker.email)
         return res.redirect('/bookers/booker/details')
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))

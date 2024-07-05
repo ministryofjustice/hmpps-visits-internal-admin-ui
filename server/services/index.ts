@@ -7,6 +7,7 @@ import CategoryGroupService from './categoryGroupService'
 import IncentiveGroupService from './incentiveGroupService'
 import VisitService from './visitService'
 import BookerService from './bookerService'
+import PrisonerContactsService from './prisonerContactsService'
 
 export const services = () => {
   const {
@@ -14,6 +15,7 @@ export const services = () => {
     applicationInfo,
     manageUsersApiClient,
     bookerRegistryApiClientBuilder,
+    prisonerContactRegistryApiClientBuilder,
     prisonRegisterApiClientBuilder,
     visitSchedulerApiClientBuilder,
   } = dataAccess()
@@ -25,6 +27,8 @@ export const services = () => {
   const incentiveGroupService = new IncentiveGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
 
   const locationGroupService = new LocationGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
+
+  const prisonerContactsService = new PrisonerContactsService(prisonerContactRegistryApiClientBuilder, hmppsAuthClient)
 
   const prisonService = new PrisonService(
     visitSchedulerApiClientBuilder,
@@ -44,6 +48,7 @@ export const services = () => {
     categoryGroupService,
     incentiveGroupService,
     locationGroupService,
+    prisonerContactsService,
     prisonService,
     sessionTemplateService,
     userService,
@@ -58,6 +63,7 @@ export {
   CategoryGroupService,
   IncentiveGroupService,
   LocationGroupService,
+  PrisonerContactsService,
   PrisonService,
   SessionTemplateService,
   UserService,

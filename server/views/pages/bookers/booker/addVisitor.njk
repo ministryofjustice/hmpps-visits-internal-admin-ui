@@ -1,0 +1,66 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageHeaderTitle = "Add a visitor" %}
+{% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
+{% set activePrimaryNav = "bookers" %}
+{% set backLinkHref = "/bookers/booker/details" %}
+
+{% block content %}
+{{ super() }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
+
+    <p>
+      Add a visitor for prisoner
+      <strong>{{ booker.permittedPrisoners[0].prisonerId}}</strong>
+      and booker <strong>{{ booker.email }}</strong>.
+    </p>
+
+    {% if contacts | length %}
+
+      <form action="/bookers/booker/add-visitor" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {% set contactRadios = [] %}
+        {% for contact in contacts %}
+          {% set contactRadios = (contactRadios.push({
+            value: contact.personId,
+            text: contact.firstName + " " + contact.lastName +
+              " (" +  contact.dateOfBirth | formatDate + ")"
+          }), contactRadios)%}
+        {% endfor %}
+
+        {{ govukRadios({
+          name: "visitorId",
+          fieldset: {
+            legend: {
+              text: "Choose visitor",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          hint: {
+            text: "Showing prisoner's social contacts that are approved, have a date of birth and have not already been added. Any restrictions are not shown."
+          },
+          items: contactRadios,
+          errorMessage: errors | findError('visitorId')
+        }) }}
+
+        {{ govukButton({
+          text: "Add visitor",
+          attributes: { "data-test": "add-visitor" },
+          preventDoubleClick: true
+        }) }}
+      </form>
+    {% else %}
+      <p>No social contacts are available to add for this prisoner.</p>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

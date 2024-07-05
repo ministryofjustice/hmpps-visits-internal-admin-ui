@@ -1,14 +1,55 @@
 import { RequestHandler } from 'express'
-import { BookerService } from '../../../services'
+import { BookerService, PrisonerContactsService } from '../../../services'
 
 export default class BookerDetailsController {
-  public constructor(private readonly bookerService: BookerService) {}
+  public constructor(
+    private readonly bookerService: BookerService,
+    private readonly prisonerContactsService: PrisonerContactsService,
+  ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { booker } = req.session
+      const { email } = req.session.booker
 
-      return res.render('pages/bookers/booker/details', { message: req.flash('message')?.[0] || {}, booker })
+      const booker = await this.bookerService.getBookerByEmail(res.locals.user.username, email)
+      req.session.booker = booker
+
+      const prisoner = booker.permittedPrisoners[0] ?? undefined
+
+      const contacts = prisoner
+        ? await this.prisonerContactsService.getSocialContacts({
+            username: res.locals.user.username,
+            prisonerId: prisoner.prisonerId,
+            approvedOnly: false,
+          })
+        : []
+
+      const visitors: { visitorId: number; name: string; dateOfBirth: string; approved: string; active: boolean }[] =
+        prisoner?.permittedVisitors.map(visitor => {
+          const matchedContact = contacts.find(contact => contact.personId === visitor.visitorId)
+
+          return matchedContact
+            ? {
+                visitorId: visitor.visitorId,
+                name: `${matchedContact.firstName} ${matchedContact.lastName}`,
+                dateOfBirth: matchedContact.dateOfBirth,
+                approved: matchedContact.approvedVisitor ? 'Yes' : 'No',
+                active: visitor.active,
+              }
+            : {
+                visitorId: visitor.visitorId,
+                name: `UNKNOWN (visitor ID: ${visitor.visitorId})`,
+                dateOfBirth: '',
+                approved: '',
+                active: visitor.active,
+              }
+        })
+
+      return res.render('pages/bookers/booker/details', {
+        message: req.flash('message')?.[0] || {},
+        booker,
+        visitors,
+      })
     }
   }
 
