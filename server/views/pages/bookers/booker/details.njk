@@ -15,7 +15,7 @@
 {{ super() }}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-full-width">
 
     <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
 
@@ -61,6 +61,9 @@
               text: visitor.name
             },
             {
+              text: visitor.visitorId
+            },
+            {
               text: visitor.dateOfBirth | formatDate
             },
             {
@@ -88,6 +91,9 @@
           head: [
             {
               text: "Name"
+            },
+            {
+              text: "Visitor ID"
             },
             {
               text: "Date of birth"

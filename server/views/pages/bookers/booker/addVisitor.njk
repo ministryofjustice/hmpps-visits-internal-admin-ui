@@ -1,6 +1,6 @@
 {% extends "partials/layout.njk" %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set pageHeaderTitle = "Add a visitor" %}
 {% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
@@ -23,31 +23,51 @@
 
     {% if contacts | length %}
 
+    <p>Showing prisoner's social contacts that are approved, have a date of birth and have not already been added. Any restrictions are not shown.</p>
+
       <form action="/bookers/booker/add-visitor" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-        {% set contactRadios = [] %}
+        {% set contactRows = [] %}
         {% for contact in contacts %}
-          {% set contactRadios = (contactRadios.push({
-            value: contact.personId,
-            text: contact.firstName + " " + contact.lastName +
-              " (" +  contact.dateOfBirth | formatDate + ")"
-          }), contactRadios)%}
+          {% set contactRows = (contactRows.push([
+            {
+              html:
+                '<div class="govuk-radios__item">' +
+                  '<input class="govuk-radios__input" id="visitor-' + contact.personId + '" name="visitorId" type="radio" value="' + contact.personId + '">' +
+                  '<label class="govuk-label govuk-radios__label" for="visitor-' + contact.personId + '">' +
+                    '<span class="govuk-visually-hidden">Select contact ' + contact.personId + '</span>' +
+                  '</label>' +
+                '</div>'
+            },
+            {
+              text: contact.firstName + " " + contact.lastName
+            },
+            {
+              text: contact.personId
+            },
+            {
+              text: contact.dateOfBirth | formatDate
+            }
+          ]), contactRows)%}
         {% endfor %}
 
-        {{ govukRadios({
-          name: "visitorId",
-          fieldset: {
-            legend: {
-              text: "Choose visitor",
-              classes: "govuk-fieldset__legend--m"
+        {{ govukTable({
+          head: [
+            {
+              text: "Select"
+            },
+            {
+              text: "Name"
+            },
+            {
+              text: "Visitor ID"
+            },
+            {
+              text: "Date of birth"
             }
-          },
-          hint: {
-            text: "Showing prisoner's social contacts that are approved, have a date of birth and have not already been added. Any restrictions are not shown."
-          },
-          items: contactRadios,
-          errorMessage: errors | findError('visitorId')
+          ],
+          rows: contactRows
         }) }}
 
         {{ govukButton({
