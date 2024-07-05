@@ -64,7 +64,8 @@
               text: visitor.visitorId
             },
             {
-              text: visitor.dateOfBirth | formatDate
+              html: visitor.dateOfBirth | formatDate +
+                '<br>(' + visitor.dateOfBirth | displayAge + ')'
             },
             {
               text: visitor.approved

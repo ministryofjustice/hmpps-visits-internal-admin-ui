@@ -47,7 +47,8 @@
               text: contact.personId
             },
             {
-              text: contact.dateOfBirth | formatDate
+              html: contact.dateOfBirth | formatDate +
+                '<br>(' + contact.dateOfBirth | displayAge + ')'
             }
           ]), contactRows)%}
         {% endfor %}
