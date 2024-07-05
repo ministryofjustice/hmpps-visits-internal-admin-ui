@@ -1,6 +1,15 @@
 import { RequestHandler } from 'express'
 import { BookerService, PrisonerContactsService } from '../../../services'
+import { ContactDto } from '../../../data/prisonerContactRegistryApiTypes'
 
+type Visitor = {
+  visitorId: number
+  name: string
+  dateOfBirth: string
+  approved: string
+  restrictions: ContactDto['restrictions']
+  active: boolean
+}
 export default class BookerDetailsController {
   public constructor(
     private readonly bookerService: BookerService,
@@ -24,26 +33,27 @@ export default class BookerDetailsController {
           })
         : []
 
-      const visitors: { visitorId: number; name: string; dateOfBirth: string; approved: string; active: boolean }[] =
-        prisoner?.permittedVisitors.map(visitor => {
-          const matchedContact = contacts.find(contact => contact.personId === visitor.visitorId)
+      const visitors: Visitor[] = prisoner?.permittedVisitors.map(visitor => {
+        const matchedContact = contacts.find(contact => contact.personId === visitor.visitorId)
 
-          return matchedContact
-            ? {
-                visitorId: visitor.visitorId,
-                name: `${matchedContact.firstName} ${matchedContact.lastName}`,
-                dateOfBirth: matchedContact.dateOfBirth,
-                approved: matchedContact.approvedVisitor ? 'Yes' : 'No',
-                active: visitor.active,
-              }
-            : {
-                visitorId: visitor.visitorId,
-                name: `UNKNOWN (visitor ID: ${visitor.visitorId})`,
-                dateOfBirth: '',
-                approved: '',
-                active: visitor.active,
-              }
-        })
+        return matchedContact
+          ? {
+              visitorId: visitor.visitorId,
+              name: `${matchedContact.firstName} ${matchedContact.lastName}`,
+              dateOfBirth: matchedContact.dateOfBirth,
+              approved: matchedContact.approvedVisitor ? 'Yes' : 'No',
+              restrictions: matchedContact.restrictions,
+              active: visitor.active,
+            }
+          : {
+              visitorId: visitor.visitorId,
+              name: `UNKNOWN (visitor ID: ${visitor.visitorId})`,
+              dateOfBirth: '',
+              approved: '',
+              restrictions: [],
+              active: visitor.active,
+            }
+      })
 
       return res.render('pages/bookers/booker/details', {
         message: req.flash('message')?.[0] || {},

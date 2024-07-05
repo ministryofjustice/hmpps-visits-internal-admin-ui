@@ -1,6 +1,7 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "partials/visitorRestrictions.njk" import visitorRestrictions -%}
 
 {% set pageHeaderTitle = "Add a visitor" %}
 {% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
@@ -23,7 +24,7 @@
 
     {% if contacts | length %}
 
-    <p>Showing prisoner's social contacts that are approved, have a date of birth and have not already been added. Any restrictions are not shown.</p>
+    <p>Showing prisoner's social contacts that are approved, have a date of birth and have not already been added.</p>
 
       <form action="/bookers/booker/add-visitor" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -49,6 +50,9 @@
             {
               html: contact.dateOfBirth | formatDate +
                 '<br>(' + contact.dateOfBirth | displayAge + ')'
+            },
+            {
+              html: visitorRestrictions(contact)
             }
           ]), contactRows)%}
         {% endfor %}
@@ -66,6 +70,9 @@
             },
             {
               text: "Date of birth"
+            },
+            {
+              text: "Restrictions"
             }
           ],
           rows: contactRows

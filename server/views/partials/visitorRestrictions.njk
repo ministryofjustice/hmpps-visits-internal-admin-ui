@@ -1,0 +1,20 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% macro visitorRestrictions(visitor) %}
+  {%- if visitor.restrictions | length %}
+    {%- for restriction in visitor.restrictions -%}
+      <div class="visitor-restriction">
+        <span class="govuk-tag restriction-tag restriction-tag--{{ restriction.restrictionType }}">{{- restriction.restrictionTypeDescription }}</span>
+      {%- if restriction.expiryDate %} until {{ restriction.expiryDate | formatDate }}{% else %} End date not entered{% endif %}
+      {% if restriction.comment %}
+        {{- govukDetails({
+          summaryText: "See comment",
+          text: restriction.comment
+        }) }}
+      {% endif %}
+      </div>
+    {%- endfor %}
+  {%- else -%}
+    None
+  {%- endif %}
+{% endmacro %}
