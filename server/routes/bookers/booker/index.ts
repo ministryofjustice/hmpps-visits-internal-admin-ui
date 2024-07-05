@@ -43,8 +43,8 @@ export default function routes(services: Services): Router {
   get('/add-visitor', addVisitor.view())
   postWithValidation('/add-visitor', addVisitor.validate(), addVisitor.submit())
 
-  post('/activate-visitor', visitorStatus.setStatus('inactive'))
-  post('/deactivate-visitor', visitorStatus.setStatus('active'))
+  postWithValidation('/activate-visitor', visitorStatus.validate(), visitorStatus.setStatus('inactive'))
+  postWithValidation('/deactivate-visitor', visitorStatus.validate(), visitorStatus.setStatus('active'))
 
   return router
 }
