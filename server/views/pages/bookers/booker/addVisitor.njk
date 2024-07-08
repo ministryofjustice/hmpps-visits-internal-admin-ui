@@ -1,0 +1,94 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "partials/visitorRestrictions.njk" import visitorRestrictions -%}
+
+{% set pageHeaderTitle = "Add a visitor" %}
+{% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
+{% set activePrimaryNav = "bookers" %}
+{% set backLinkHref = "/bookers/booker/details" %}
+
+{% block content %}
+{{ super() }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
+
+    <p>
+      Add a visitor for prisoner
+      <strong>{{ booker.permittedPrisoners[0].prisonerId}}</strong>
+      and booker <strong>{{ booker.email }}</strong>.
+    </p>
+
+    {% if contacts | length %}
+
+    <p>Showing prisoner's social contacts that are approved, have a date of birth and have not already been added.</p>
+
+      <form action="/bookers/booker/add-visitor" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {% set contactRows = [] %}
+        {% for contact in contacts %}
+          {% set contactRows = (contactRows.push([
+            {
+              html:
+                '<div class="govuk-radios__item">' +
+                  '<input class="govuk-radios__input" id="visitor-' + contact.personId + '" name="visitorId" type="radio" value="' + contact.personId + '">' +
+                  '<label class="govuk-label govuk-radios__label" for="visitor-' + contact.personId + '">' +
+                    '<span class="govuk-visually-hidden">Select contact ' + contact.personId + '</span>' +
+                  '</label>' +
+                '</div>'
+            },
+            {
+              text: contact.firstName + " " + contact.lastName
+            },
+            {
+              text: contact.personId
+            },
+            {
+              html: contact.dateOfBirth | formatDate +
+                '<br>(' + contact.dateOfBirth | displayAge + ')'
+            },
+            {
+              html: visitorRestrictions(contact)
+            }
+          ]), contactRows)%}
+        {% endfor %}
+
+        {{ govukTable({
+          head: [
+            {
+              text: "Select"
+            },
+            {
+              text: "Name"
+            },
+            {
+              text: "Visitor ID"
+            },
+            {
+              text: "Date of birth"
+            },
+            {
+              text: "Restrictions"
+            }
+          ],
+          rows: contactRows
+        }) }}
+
+        {{ govukButton({
+          text: "Add visitor",
+          attributes: { "data-test": "add-visitor" },
+          preventDoubleClick: true
+        }) }}
+      </form>
+    {% else %}
+      <p>No social contacts are available to add for this prisoner.</p>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

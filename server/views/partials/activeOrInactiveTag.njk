@@ -1,0 +1,9 @@
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{# TODO - refactor existing active/inactive tags to use this macro  #}
+{% macro activeOrInactiveTag(active) -%}
+{{ govukTag({
+  text: "Active" if active == true else "Inactive",
+  classes: "govuk-tag--blue" if active else "govuk-tag--grey"
+}) }}
+{%- endmacro %}

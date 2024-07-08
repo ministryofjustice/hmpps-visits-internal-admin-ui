@@ -1,0 +1,148 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{%- from "partials/activeOrInactiveTag.njk" import activeOrInactiveTag -%}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "partials/visitorRestrictions.njk" import visitorRestrictions -%}
+
+{% set pageHeaderTitle = "Booker details" %}
+{% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
+{% set activePrimaryNav = "bookers" %}
+{% set backLinkHref = "/bookers" %}
+
+{% set prisoner = booker.permittedPrisoners[0] %}
+
+{% block content %}
+{{ super() }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full-width">
+
+    <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
+
+    <h2 class="govuk-heading-m">Email and reference</h2>
+    <p>Email: <strong>{{ booker.email }}</strong></p>
+    <p>Reference: <strong>{{ booker.reference }}</strong></p>
+
+    <h2 class="govuk-heading-m">Prisoner</h2>
+    {% if not prisoner %}
+      <p>Not set</p>
+
+      {{ govukButton({
+        href: "/bookers/booker/add-prisoner",
+        text: "Add a prisoner",
+        preventDoubleClick: true
+      }) }}
+
+    {% else %}
+      <p>
+        Prisoner number: <strong>{{ prisoner.prisonerId }}</strong>
+        <span class="govuk-!-margin-left-3">{{ activeOrInactiveTag(prisoner.active) }}</span>
+      </p>
+      {% set prisonerAction = "deactivate" if prisoner.active else "activate" %}
+      <form action="/bookers/booker/{{ prisonerAction }}-prisoner" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukButton({
+          text: prisonerAction | capitalize + " prisoner",
+          classes: "govuk-button--secondary",
+          preventDoubleClick: true
+        }) }}
+      </form>
+
+      <h2 class="govuk-heading-m">Visitors</h2>
+      {% if not visitors | length %}
+        <p>No visitors set</p>
+      {% else %}
+
+        {% set visitorRows = [] %}
+        {% for visitor in visitors %}
+          {% set visitorAction = "deactivate" if visitor.active else "activate" %}
+          {% set visitorRows = (visitorRows.push([
+            {
+              text: visitor.name
+            },
+            {
+              text: visitor.visitorId
+            },
+            {
+              html: visitor.dateOfBirth | formatDate +
+                '<br>(' + visitor.dateOfBirth | displayAge + ')'
+            },
+            {
+              text: visitor.approved
+            },
+            {
+              html: visitorRestrictions(visitor)
+            },
+            {
+              html: activeOrInactiveTag(visitor.active) 
+            },
+            {
+              html: '<form action="/bookers/booker/' + visitorAction + '-visitor" method="POST" novalidate>' +
+                      '<input type="hidden" name="_csrf" value="' + csrfToken + '">' +
+                      govukButton({
+                        text: visitorAction | capitalize,
+                        name: 'visitorId',
+                        value: visitor.visitorId,
+                        classes: "govuk-button--secondary",
+                        preventDoubleClick: true
+                      }) +
+                    '</form>'
+            }
+            ]), visitorRows) %}
+        {% endfor %}
+
+        {{ govukTable({
+          head: [
+            {
+              text: "Name"
+            },
+            {
+              text: "Visitor ID"
+            },
+            {
+              text: "Date of birth"
+            },
+            {
+              text: "Approved visitor"
+            },
+            {
+              text: "Restrictions"
+            },
+            {
+              text: "Status"
+            },
+            {
+              text: "Action"
+            }
+          ],
+          rows: visitorRows
+        }) }}
+      {% endif %}
+
+      {{ govukButton({
+        href: "/bookers/booker/add-visitor",
+        classes: "govuk-button--secondary" if visitors | length,
+        text: "Add a visitor",
+        preventDoubleClick: true
+      }) }}
+
+
+      <hr class="govuk-section-break govuk-section-break--l">
+      <h2 class="govuk-heading-m">Clear booker details</h2>
+      <p>This will remove prisoner and visitor records for this booker.</p>
+      <p>The email, booker reference and GOV.UK One Login identifier will be kept.</p>
+
+      <form action="/bookers/booker/clear-details" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukButton({
+          text: "Clear booker details",
+          classes: "govuk-button--warning",
+          preventDoubleClick: true
+        }) }}
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
