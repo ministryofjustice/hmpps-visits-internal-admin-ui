@@ -14,7 +14,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-dev.prison.service.justice.gov.uk"
     BOOKER_REGISTRY_API_URL: "https://hmpps-prison-visit-booker-registry-staging.prison.service.justice.gov.uk"
     PRISONER_CONTACT_REGISTRY_API_URL: "https://prisoner-contact-registry-staging.prison.service.justice.gov.uk"
-    PRISON_REGISTER_API_URL: "https://prison-register-staging.hmpps.service.justice.gov.uk"
+    PRISON_REGISTER_API_URL: "https://prison-register-dev.hmpps.service.justice.gov.uk"
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler-staging.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: STAGING
     APPLICATIONINSIGHTS_CONNECTION_STRING: null # disable App Insights for staging
