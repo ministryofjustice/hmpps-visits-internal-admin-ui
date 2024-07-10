@@ -17,5 +17,7 @@ generic-service:
     PRISON_REGISTER_API_URL: "https://prison-register.hmpps.service.justice.gov.uk"
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler.prison.service.justice.gov.uk"
 
+    FEATURE_BOOKERS_ENABLED: true
+
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service
