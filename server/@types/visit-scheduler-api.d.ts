@@ -5,13 +5,32 @@
 
 export interface paths {
   '/admin/category-groups/group': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Create category group
      * @description Create category group
      */
     post: operations['createCategoryGroup']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/category-groups/group/{reference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get category group
      * @description Get category group by reference
@@ -22,27 +41,64 @@ export interface paths {
      * @description Update existing category group by reference
      */
     put: operations['updateCategoryGroup']
+    post?: never
     /**
      * Delete category group
      * @description Delete category group by reference
      */
     delete: operations['deleteSessionCategoryGroup']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/category-groups/{prisonCode}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get category groups
      * @description Get all category groups for given prison
      */
     get: operations['getCategoryGroups']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/incentive-groups/group': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Create incentive group
      * @description Create incentive group
      */
     post: operations['createIncentiveGroup']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/incentive-groups/group/{reference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get incentive group
      * @description Get incentive group by reference
@@ -53,27 +109,64 @@ export interface paths {
      * @description Update existing incentive group by reference
      */
     put: operations['updateIncentiveGroup']
+    post?: never
     /**
      * Delete incentive group
      * @description Delete incentive group by reference
      */
     delete: operations['deleteSessionIncentiveGroup']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/incentive-groups/{prisonCode}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get incentive groups
      * @description Get all incentive groups for given prison
      */
     get: operations['getIncentiveGroups']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/location-groups/group': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Create location group
      * @description Create location group
      */
     post: operations['createLocationGroup']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/location-groups/group/{reference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get location group
      * @description Get location group by reference
@@ -84,34 +177,84 @@ export interface paths {
      * @description Update existing location group by reference
      */
     put: operations['updateLocationGroup']
+    post?: never
     /**
      * Delete location group
      * @description Delete location group by reference
      */
     delete: operations['deleteSessionLocationGroup']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/location-groups/{prisonCode}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get location groups
      * @description Get all location groups for given prison
      */
     get: operations['getLocationGroups']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/prisons': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get all prisons
      * @description Get all prisons
      */
     get: operations['getPrisons']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/prisons/prison': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Create a prison
      * @description Create a prison
      */
     post: operations['createPrison']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/prisons/prison/{prisonCode}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Gets prison by given prison id/code
      * @description Gets prison by given prison id/code
@@ -122,78 +265,220 @@ export interface paths {
      * @description Update a prison
      */
     put: operations['updatePrison']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/prisons/prison/{prisonCode}/activate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Activate prison using given prison id/code
      * @description Activate prison using given prison id/code
      */
     put: operations['activatePrison']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/prisons/prison/{prisonCode}/client/{type}/activate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Activate prison client using given prison id/code and client type
      * @description Activate prison client using given prison id/code and client type
      */
     put: operations['activatePrisonForClient']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/prisons/prison/{prisonCode}/client/{type}/deactivate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Deactivate prison client using given prison id/code and client type
      * @description Deactivate prison client using given prison id/code and client type
      */
     put: operations['deActivatePrisonClient']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/prisons/prison/{prisonCode}/deactivate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Deactivate prison using given prison id/code
      * @description Deactivate prison using given prison id/code
      */
     put: operations['deActivatePrison']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/prisons/prison/{prisonCode}/exclude-date/add': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Add exclude date to a prison.
      * @description Add exclude date to a prison.
      */
     put: operations['addPrisonExcludeDate']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/prisons/prison/{prisonCode}/exclude-date/remove': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Remove exclude date from a prison.
      * @description Remove exclude date from a prison.
      */
     put: operations['removePrisonExcludeDate']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/session-templates': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get session templates
      * @description Get session templates by given parameters
      */
     get: operations['getSessionTemplates']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/session-templates/move/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Move visits from 1 session template to another.
      * @description Move visits from 1 session template to another if the new session template has same details as the current one.
      */
     post: operations['moveVisits']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/session-templates/template': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Create a session template
      * @description Create a session templates
      */
     post: operations['createSessionTemplate']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/session-templates/template/matching/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Get matching session templates
      * @description Get matching session templates
      */
     post: operations['getMatchingSessionTemplatesOnCreate']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/session-templates/template/{reference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get session template
      * @description Get session template by reference
@@ -204,212 +489,715 @@ export interface paths {
      * @description Update a session templates
      */
     put: operations['updateSessionTemplate']
+    post?: never
     /**
      * Delete session template by reference
      * @description Delete session template by reference
      */
     delete: operations['deleteSessionTemplate']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/session-templates/template/{reference}/activate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Activate session template using given session template reference
      * @description Activate session template using given session template reference
      */
     put: operations['activateSessionTemplate']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/session-templates/template/{reference}/deactivate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Deactivate session template using given session template reference
      * @description Deactivate session template using given session template reference
      */
     put: operations['deActivateSessionTemplate']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/session-templates/template/{reference}/matching/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Get matching session templates
      * @description Get matching session templates
      */
     post: operations['getMatchingSessionTemplatesOnUpdate']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/admin/session-templates/template/{reference}/stats': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Get session template visits stats using given session template reference
      * @description Session template visits stats using given session template reference
      */
     post: operations['getSessionTemplateVisitStats']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/config/prisons/user-type/{type}/supported': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get supported prisons
      * @description Get all supported prisons id's
      */
     get: operations['getSupportedPrisonCodes']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/migrate-visits': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** Migrate a visit */
     post: operations['migrateVisit']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/migrate-visits/{reference}/cancel': {
-    /** Migrate a canceled booked visit */
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /** Migrate a cancelled booked visit */
     put: operations['cancelVisit_1']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
-  '/queue-admin/get-dlq-messages/{dlqName}': {
-    get: operations['getDlqMessages']
+  '/public/booker/{bookerReference}/visits/booked/future': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get future public booked visits by booker reference
+     * @description Get future public booked visits by booker reference
+     */
+    get: operations['getFuturePublicBookedVisitsByBookerReference']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
-  '/queue-admin/purge-queue/{queueName}': {
-    put: operations['purgeQueue']
+  '/public/booker/{bookerReference}/visits/booked/past': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get public past visits by booker reference
+     * @description Get public past visits by booker reference
+     */
+    get: operations['getPublicPastVisitsByBookerReference']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
-  '/queue-admin/retry-all-dlqs': {
-    put: operations['retryAllDlqs']
-  }
-  '/queue-admin/retry-dlq/{dlqName}': {
-    put: operations['retryDlq']
+  '/public/booker/{bookerReference}/visits/cancelled': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get public cancelled visits by booker reference
+     * @description Get public cancelled visits by booker reference
+     */
+    get: operations['getPublicCanceledVisitsByBookerReference']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visit-sessions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Returns all visit sessions which are within the reservable time period - whether or not they are full
      * @description Retrieve all visits for a specified prisoner
      */
     get: operations['getVisitBookingSessions']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visit-sessions/available': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period
      * @description Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period
      */
     get: operations['getAvailableVisitBookingSessions']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visit-sessions/capacity': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Returns the session capacity for the given sessions
      * @description Returns the session capacity for the given sessions
      */
     get: operations['getSessionCapacity']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visit-sessions/schedule': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Returns session scheduled for given prison and date
      * @description Returns session scheduled for given prison and date
      */
     get: operations['getSessionSchedule']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/application/slot/reserve': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** Create an initial application and reserve a slot */
     post: operations['createInitialApplication']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/application/{applicationReference}/slot/change': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /** Change an incomplete application */
     put: operations['changeIncompleteApplication']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/application/{bookingReference}/change': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /** Create an application for an existing visit */
     put: operations['createApplicationForAnExistingVisit']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/notification/count': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get notification count
      * @description Retrieve notification count by visit reference
      */
     get: operations['getNotificationCount']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/notification/non-association/changed': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** To notify VSiP that non association between two prisoners has changed */
     post: operations['notifyVSiPThatNonAssociationHasChanged']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/notification/person/restriction/changed': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** To notify VSiP that a change to person/visitor restriction has taken place */
     post: operations['notifyVSiPThatPersonRestrictionChanged']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/notification/prisoner/alerts/updated': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** To notify VSiP that a prisoner alert has been created or updated */
+    post: operations['notifyVSiPThatPrisonerAlertCreatedUpdated']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/notification/prisoner/received': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** To notify VSiP that a prisoner has been received */
     post: operations['notifyVSiPThatPrisonerReceivedChanged']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/notification/prisoner/released': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** To notify VSiP that a prisoner has been released */
     post: operations['notifyVSiPThatPrisonerReleasedChanged']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/notification/prisoner/restriction/changed': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** To notify VSiP that a change to prisoner restriction has taken place */
     post: operations['notifyVSiPThatPrisonerRestrictionChanged']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/notification/visit/{reference}/ignore': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /** Do not change an existing booked visit and ignore all notifications */
     put: operations['ignoreVisitNotifications']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/notification/visit/{reference}/types': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * get visit notification types by booking reference
      * @description Retrieve visit  notification types by booking reference
      */
     get: operations['getNotificationTypesForBookingReference']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/notification/visitor/restriction/changed': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** To notify VSiP that a change to a visitor restriction has taken place */
     post: operations['notifyVSiPThatVisitorRestrictionChanged']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/notification/{prisonCode}/count': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get notification count for a prison
      * @description Retrieve notification count by prison code
      */
     get: operations['getNotificationCountForPrison']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/notification/{prisonCode}/groups': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * get future notification visit groups by prison code
      * @description Retrieve future notification visit groups by prison code
      */
     get: operations['getFutureNotificationVisitGroups']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/search': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get visits
      * @description Retrieve visits with optional filters, sorted by start timestamp descending
      */
     get: operations['getVisitsByFilterPageable']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/search/future/{prisonerNumber}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get future (booked and cancelled) visits for a prisoner
      * @description Get future visits for given prisoner number
      */
     get: operations['getFutureVisitsBySessionPrisoner']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/session-template': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get visits for a date or a range of dates with / without a session template reference
      * @description Get visits for a date or a range of dates with a session template reference or visits without a session template reference when session template reference is not passed
      */
     get: operations['getVisitsBy']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/{applicationReference}/book': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /** Book a visit (end of flow) */
     put: operations['bookVisit']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/{reference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get a visit
-     * @description Retrieve visit by visit reference (excludes Reserved and CHANGING)
+     * @description Retrieve visit by visit reference
      */
     get: operations['getVisitByReference']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/{reference}/cancel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /** Cancel an existing booked visit */
     put: operations['cancelVisit']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/visits/{reference}/history': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get visit history
      * @description Retrieve visit history by visit reference
      */
     get: operations['getVisitHistoryByReference']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
 }
-
 export type webhooks = Record<string, never>
-
 export interface components {
   schemas: {
+    /** @description Actioned By */
+    ActionedByDto: {
+      /**
+       * @description booker reference
+       * @example asd-aed-vhj
+       */
+      bookerReference?: string
+      /**
+       * @description User Name
+       * @example AS/ALED
+       */
+      userName?: string
+      /**
+       * @description User type
+       * @example STAFF
+       * @enum {string}
+       */
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
+    }
     /** @description Application */
     ApplicationDto: {
       /**
@@ -462,6 +1250,12 @@ export interface components {
        * @description The date and time of the visit
        */
       startTimestamp: string
+      /**
+       * @description User type
+       * @example STAFF
+       * @enum {string}
+       */
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
       visitContact?: components['schemas']['ContactDto']
       /** @description Visit Notes */
       visitNotes: components['schemas']['VisitNoteDto'][]
@@ -489,6 +1283,24 @@ export interface components {
        */
       description: string
     }
+    ApplicationValidationErrorResponse: {
+      developerMessage?: string
+      /** Format: int32 */
+      errorCode?: number
+      /** Format: int32 */
+      status: number
+      userMessage?: string
+      validationErrors: (
+        | 'APPLICATION_INVALID_PRISONER_NOT_FOUND'
+        | 'APPLICATION_INVALID_PRISON_PRISONER_MISMATCH'
+        | 'APPLICATION_INVALID_SESSION_NOT_AVAILABLE'
+        | 'APPLICATION_INVALID_SESSION_TEMPLATE_NOT_FOUND'
+        | 'APPLICATION_INVALID_NON_ASSOCIATION_VISITS'
+        | 'APPLICATION_INVALID_VISIT_ALREADY_BOOKED'
+        | 'APPLICATION_INVALID_NO_VO_BALANCE'
+        | 'APPLICATION_INVALID_NO_SLOT_CAPACITY'
+      )[]
+    }
     /** @description Visit Session */
     AvailableVisitSessionDto: {
       /**
@@ -497,13 +1309,18 @@ export interface components {
        * @example 2020-11-01
        */
       sessionDate: string
-      sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
-       * @description Visit Restriction
+       * @description Session Restriction
        * @example OPEN
        * @enum {string}
        */
-      visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
+      sessionRestriction: 'OPEN' | 'CLOSED'
+      /**
+       * @description sessionTemplateReference
+       * @example v9d.7ed.7u
+       */
+      sessionTemplateReference: string
+      sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
     }
     BookingRequestDto: {
       /** @description Username for user who actioned this request */
@@ -541,8 +1358,10 @@ export interface components {
       cancelOutcome: components['schemas']['OutcomeDto']
     }
     ChangeApplicationDto: {
+      /** @description allow over booking */
+      allowOverBooking: boolean
       /**
-       * @description Visit Restriction
+       * @description Session Restriction
        * @example OPEN
        * @enum {string}
        */
@@ -579,6 +1398,8 @@ export interface components {
     CreateApplicationDto: {
       /** @description Username for user who actioned this request */
       actionedBy: string
+      /** @description allow over booking */
+      allowOverBooking: boolean
       /**
        * @description Visit Restriction
        * @example OPEN
@@ -601,6 +1422,12 @@ export interface components {
        * @example v9d.7ed.7u
        */
       sessionTemplateReference: string
+      /**
+       * @description User type
+       * @example STAFF
+       * @enum {string}
+       */
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
       visitContact?: components['schemas']['ContactDto']
       visitorSupport?: components['schemas']['ApplicationSupportDto']
       /** @description List of visitors associated with the visit */
@@ -728,12 +1555,6 @@ export interface components {
        */
       weeklyFrequency: number
     }
-    DlqMessage: {
-      body: {
-        [key: string]: Record<string, never>
-      }
-      messageId: string
-    }
     ErrorResponse: {
       developerMessage?: string
       /** Format: int32 */
@@ -744,11 +1565,7 @@ export interface components {
     }
     /** @description Event Audit */
     EventAuditDto: {
-      /**
-       * @description Event actioned by - user id
-       * @example AB12345A
-       */
-      actionedBy: string
+      actionedBy: components['schemas']['ActionedByDto']
       /**
        * @description What was the application method for this event
        * @enum {string}
@@ -783,16 +1600,11 @@ export interface components {
         | 'CANCELLED_VISIT'
         | 'NON_ASSOCIATION_EVENT'
         | 'PRISONER_RELEASED_EVENT'
+        | 'PRISONER_RECEIVED_EVENT'
         | 'PRISONER_RESTRICTION_CHANGE_EVENT'
+        | 'PRISONER_ALERTS_UPDATED_EVENT'
         | 'PRISON_VISITS_BLOCKED_FOR_DATE'
         | 'IGNORE_VISIT_NOTIFICATIONS_EVENT'
-    }
-    GetDlqResult: {
-      messages: components['schemas']['DlqMessage'][]
-      /** Format: int32 */
-      messagesFoundCount: number
-      /** Format: int32 */
-      messagesReturnedCount: number
     }
     IgnoreVisitNotificationsDto: {
       /** @description Username for user who actioned this request */
@@ -825,7 +1637,7 @@ export interface components {
        * @default NOT_RECORDED
        * @enum {string}
        */
-      outcomeStatus?:
+      outcomeStatus:
         | 'ADMINISTRATIVE_CANCELLATION'
         | 'ADMINISTRATIVE_ERROR'
         | 'BATCH_CANCELLATION'
@@ -941,6 +1753,8 @@ export interface components {
         | 'PRISONER_RELEASED_EVENT'
         | 'PRISONER_RESTRICTION_CHANGE_EVENT'
         | 'PRISON_VISITS_BLOCKED_FOR_DATE'
+        | 'PRISONER_RECEIVED_EVENT'
+        | 'PRISONER_ALERTS_UPDATED_EVENT'
     }
     /** @description Visit Outcome */
     OutcomeDto: {
@@ -1105,11 +1919,19 @@ export interface components {
        * @example STAFF
        * @enum {string}
        */
-      userType: 'STAFF' | 'PUBLIC'
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
+    }
+    PrisonerAlertCreatedUpdatedNotificationDto: {
+      alertsAdded: string[]
+      alertsRemoved: string[]
+      description: string
+      prisonerNumber: string
     }
     PrisonerReceivedNotificationDto: {
       prisonCode: string
       prisonerNumber: string
+      /** @enum {string} */
+      reason: 'ADMISSION' | 'TEMPORARY_ABSENCE_RETURN' | 'RETURN_FROM_COURT' | 'TRANSFERRED'
     }
     PrisonerReleasedNotificationDto: {
       prisonCode: string
@@ -1154,10 +1976,6 @@ export interface components {
        */
       visitDate: string
     }
-    PurgeQueueResult: {
-      /** Format: int32 */
-      messagesFoundCount: number
-    }
     RequestSessionTemplateVisitStatsDto: {
       /**
        * Format: date
@@ -1171,11 +1989,6 @@ export interface components {
        * @example 2019-11-30
        */
       visitsToDate?: string
-    }
-    RetryDlqResult: {
-      messages: components['schemas']['DlqMessage'][]
-      /** Format: int32 */
-      messagesFoundCount: number
     }
     /** @description Session Capacity */
     SessionCapacityDto: {
@@ -1378,7 +2191,7 @@ export interface components {
     SessionTemplateVisitStatsDto: {
       /**
        * Format: int32
-       * @description canceled visit counts
+       * @description cancelled visit counts
        * @example 10
        */
       cancelCount: number
@@ -1596,6 +2409,12 @@ export interface components {
        * @description The date and time of the visit
        */
       startTimestamp: string
+      /**
+       * @description User type
+       * @example STAFF
+       * @enum {string}
+       */
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
       visitContact: components['schemas']['ContactDto']
       /** @description Visit Notes */
       visitNotes: components['schemas']['VisitNoteDto'][]
@@ -1677,7 +2496,7 @@ export interface components {
        */
       prisonId: string
       /** @description Session conflicts */
-      sessionConflicts: ('NON_ASSOCIATION' | 'DOUBLE_BOOKED')[]
+      sessionConflicts: ('NON_ASSOCIATION' | 'DOUBLE_BOOKING_OR_RESERVATION')[]
       /**
        * @description Session Template Reference
        * @example v9d.7ed.7u
@@ -1736,17 +2555,15 @@ export interface components {
   headers: never
   pathItems: never
 }
-
 export type $defs = Record<string, never>
-
-export type external = Record<string, never>
-
 export interface operations {
-  /**
-   * Create category group
-   * @description Create category group
-   */
   createCategoryGroup: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateCategoryGroupDto']
@@ -1755,30 +2572,37 @@ export interface operations {
     responses: {
       /** @description Created category group */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionCategoryGroupDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to create category group */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get category group
-   * @description Get category group by reference
-   */
   getCategoryGroup: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -1786,40 +2610,52 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Category groups returned for given prison */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionCategoryGroupDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to view category group */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Category group not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Update category group
-   * @description Update existing category group by reference
-   */
   updateCategoryGroup: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -1827,6 +2663,7 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -1836,36 +2673,46 @@ export interface operations {
     responses: {
       /** @description Updated category group */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionCategoryGroupDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to update category group */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Category group not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Delete category group
-   * @description Delete category group by reference
-   */
   deleteSessionCategoryGroup: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -1873,46 +2720,61 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Category group deleted */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': string
         }
       }
       /** @description Category group delete validation errorsvalidation errors */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ValidationErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to view category group */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Session category group not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get category groups
-   * @description Get all category groups for given prison
-   */
   getCategoryGroups: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prisonCode
@@ -1920,33 +2782,46 @@ export interface operations {
          */
         prisonCode: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Category groups returned for given prison */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionCategoryGroupDto'][]
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to view category groups */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Create incentive group
-   * @description Create incentive group
-   */
   createIncentiveGroup: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateIncentiveGroupDto']
@@ -1955,30 +2830,37 @@ export interface operations {
     responses: {
       /** @description Created incentive group */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionIncentiveLevelGroupDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to create incentive group */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get incentive group
-   * @description Get incentive group by reference
-   */
   getIncentiveGroup: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -1986,40 +2868,52 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Incentive group returned for given reference */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionIncentiveLevelGroupDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to view incentive group */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incentive group not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Update incentive group
-   * @description Update existing incentive group by reference
-   */
   updateIncentiveGroup: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -2027,6 +2921,7 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -2036,36 +2931,46 @@ export interface operations {
     responses: {
       /** @description Updated incentive group */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionIncentiveLevelGroupDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to update incentive group */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incentive group not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Delete incentive group
-   * @description Delete incentive group by reference
-   */
   deleteSessionIncentiveGroup: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -2073,46 +2978,61 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Incentive group deleted */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': string
         }
       }
       /** @description Incentive group delete validation errors */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ValidationErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to view  incentive group */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Session incentive group not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get incentive groups
-   * @description Get all incentive groups for given prison
-   */
   getIncentiveGroups: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prisonCode
@@ -2120,33 +3040,46 @@ export interface operations {
          */
         prisonCode: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Incentive groups returned for given prison */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionIncentiveLevelGroupDto'][]
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to view incentive groups */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Create location group
-   * @description Create location group
-   */
   createLocationGroup: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateLocationGroupDto']
@@ -2155,30 +3088,37 @@ export interface operations {
     responses: {
       /** @description Created location group */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionLocationGroupDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to create location group */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get location group
-   * @description Get location group by reference
-   */
   getLocationGroup: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -2186,40 +3126,52 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Location groups returned for given prison */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionLocationGroupDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to view session templates */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Location group not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Update location group
-   * @description Update existing location group by reference
-   */
   updateLocationGroup: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -2227,6 +3179,7 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -2236,36 +3189,46 @@ export interface operations {
     responses: {
       /** @description Updated location group */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionLocationGroupDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to update location group */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Location group not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Delete location group
-   * @description Delete location group by reference
-   */
   deleteSessionLocationGroup: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -2273,46 +3236,61 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Session templates deleted */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': string
         }
       }
       /** @description Location group delete validation errors */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ValidationErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to view session templates */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Session location group not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get location groups
-   * @description Get all location groups for given prison
-   */
   getLocationGroups: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prisonCode
@@ -2320,59 +3298,84 @@ export interface operations {
          */
         prisonCode: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Location groups returned for given prison */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionLocationGroupDto'][]
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to view session templates */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get all prisons
-   * @description Get all prisons
-   */
   getPrisons: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description prison returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonDto'][]
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to get all prisons */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Create a prison
-   * @description Create a prison
-   */
   createPrison: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['PrisonDto']
@@ -2381,30 +3384,37 @@ export interface operations {
     responses: {
       /** @description Prison created */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to create prison */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Gets prison by given prison id/code
-   * @description Gets prison by given prison id/code
-   */
   getPrison: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prison id
@@ -2412,34 +3422,43 @@ export interface operations {
          */
         prisonCode: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description prison returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to get prison */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Update a prison
-   * @description Update a prison
-   */
   updatePrison: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prison id
@@ -2447,6 +3466,7 @@ export interface operations {
          */
         prisonCode: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -2456,30 +3476,37 @@ export interface operations {
     responses: {
       /** @description Prison created */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to update prison */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Activate prison using given prison id/code
-   * @description Activate prison using given prison id/code
-   */
   activatePrison: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prison id
@@ -2487,40 +3514,52 @@ export interface operations {
          */
         prisonCode: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description prison activated */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to activate prison */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description prison cant be found to activate */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Activate prison client using given prison id/code and client type
-   * @description Activate prison client using given prison id/code and client type
-   */
   activatePrisonForClient: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prison id
@@ -2533,40 +3572,52 @@ export interface operations {
          */
         type: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description prison client activated */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonUserClientDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to activate prison client */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description prison cant be found to activate prison client */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Deactivate prison client using given prison id/code and client type
-   * @description Deactivate prison client using given prison id/code and client type
-   */
   deActivatePrisonClient: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prison id
@@ -2579,40 +3630,52 @@ export interface operations {
          */
         type: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description prison client activated */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonUserClientDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to activate prison client */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description prison cant be found to activate prison client */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Deactivate prison using given prison id/code
-   * @description Deactivate prison using given prison id/code
-   */
   deActivatePrison: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prison id
@@ -2620,40 +3683,52 @@ export interface operations {
          */
         prisonCode: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description prison deactivated */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to deactivate prison */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description prison cant be found to deactivate */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Add exclude date to a prison.
-   * @description Add exclude date to a prison.
-   */
   addPrisonExcludeDate: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prison id
@@ -2661,6 +3736,7 @@ export interface operations {
          */
         prisonCode: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -2670,36 +3746,46 @@ export interface operations {
     responses: {
       /** @description successfully added exclude date to a prison */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonDto']
         }
       }
       /** @description exclude date  provided already exists for prison or prison can't be found */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to add exclude dates to a prison */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Remove exclude date from a prison.
-   * @description Remove exclude date from a prison.
-   */
   removePrisonExcludeDate: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prison id
@@ -2707,6 +3793,7 @@ export interface operations {
          */
         prisonCode: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -2716,32 +3803,40 @@ export interface operations {
     responses: {
       /** @description successfully removed exclude date from a prison */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description exclude date does not exist for prison or prison can't be found */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to add exclude dates to a prison */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get session templates
-   * @description Get session templates by given parameters
-   */
   getSessionTemplates: {
     parameters: {
       query: {
@@ -2756,33 +3851,48 @@ export interface operations {
          */
         rangeType: 'CURRENT_OR_FUTURE' | 'HISTORIC' | 'ALL'
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Session templates returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionTemplateDto'][]
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to view session templates */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Move visits from 1 session template to another.
-   * @description Move visits from 1 session template to another if the new session template has same details as the current one.
-   */
   moveVisits: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['MoveVisitsDto']
@@ -2791,41 +3901,58 @@ export interface operations {
     responses: {
       /** @description Number of visits migrated on successful switching of session template. */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': number
         }
       }
       /** @description Invalid session reference passed. */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': number
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to get matching session templates */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unable to move visits to session template for reasons detailed */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ValidationErrorResponse']
         }
       }
     }
   }
-  /**
-   * Create a session template
-   * @description Create a session templates
-   */
   createSessionTemplate: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateSessionTemplateDto']
@@ -2834,29 +3961,40 @@ export interface operations {
     responses: {
       /** @description Session templates created */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionTemplateDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to create session templates */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get matching session templates
-   * @description Get matching session templates
-   */
   getMatchingSessionTemplatesOnCreate: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateSessionTemplateDto']
@@ -2865,36 +4003,46 @@ export interface operations {
     responses: {
       /** @description List of clashing session templates or empty list if no matches found */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': string[]
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to get matching session templates */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Invalid request */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get session template
-   * @description Get session template by reference
-   */
   getSessionTemplate: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -2902,40 +4050,52 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Session templates returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionTemplateDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to view session templates */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Session Template not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Update a session template
-   * @description Update a session templates
-   */
   updateSessionTemplate: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -2943,6 +4103,7 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -2952,42 +4113,55 @@ export interface operations {
     responses: {
       /** @description Session templates updated */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionTemplateDto']
         }
       }
       /** @description Session Template update validation errors */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ValidationErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to update session templates */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Session Template not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Delete session template by reference
-   * @description Delete session template by reference
-   */
   deleteSessionTemplate: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -2995,46 +4169,61 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Session templates deleted */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': string
         }
       }
       /** @description Session Template delete validation errors */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ValidationErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to delete session templates */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Session Template not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Activate session template using given session template reference
-   * @description Activate session template using given session template reference
-   */
   activateSessionTemplate: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -3042,40 +4231,52 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description session template activated */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionTemplateDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to activate session template */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description session template can't be found to activate */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Deactivate session template using given session template reference
-   * @description Deactivate session template using given session template reference
-   */
   deActivateSessionTemplate: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -3083,40 +4284,52 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Session template deactivated */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionTemplateDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to deactivate session template */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description session template can't be found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get matching session templates
-   * @description Get matching session templates
-   */
   getMatchingSessionTemplatesOnUpdate: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -3124,6 +4337,7 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -3133,36 +4347,46 @@ export interface operations {
     responses: {
       /** @description List of clashing session templates or empty list if no matches found */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': string[]
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to get matching session templates */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Invalid request */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get session template visits stats using given session template reference
-   * @description Session template visits stats using given session template reference
-   */
   getSessionTemplateVisitStats: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -3170,6 +4394,7 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -3179,36 +4404,46 @@ export interface operations {
     responses: {
       /** @description Session template visits stats */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionTemplateVisitStatsDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to get Session template visits stats */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description session template can't be found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get supported prisons
-   * @description Get all supported prisons id's
-   */
   getSupportedPrisonCodes: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description type
@@ -3216,30 +4451,46 @@ export interface operations {
          */
         type: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Supported prisons returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': string[]
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to get supported prisons */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** Migrate a visit */
   migrateVisit: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['MigrateVisitRequestDto']
@@ -3248,33 +4499,46 @@ export interface operations {
     responses: {
       /** @description Visit migrated */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': string
         }
       }
       /** @description Incorrect request to migrate a visit */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to migrate a visit */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** Migrate a canceled booked visit */
   cancelVisit_1: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -3282,6 +4546,7 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -3291,98 +4556,210 @@ export interface operations {
     responses: {
       /** @description Cancelled visit migrated */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['VisitDto']
         }
       }
       /** @description Incorrect request to cancelled visit migrated */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to cancelled visit migrated */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Visit not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  getDlqMessages: {
+  getFuturePublicBookedVisitsByBookerReference: {
     parameters: {
-      query?: {
-        maxMessages?: number
-      }
+      query?: never
+      header?: never
       path: {
-        dlqName: string
+        /**
+         * @description bookerReference
+         * @example asd-aed-vhj
+         */
+        bookerReference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
-      /** @description OK */
+      /** @description Future public booked visits returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
-          '*/*': components['schemas']['GetDlqResult']
+          'application/json': components['schemas']['VisitDto'][]
+        }
+      }
+      /** @description Incorrect request to get future booked visits by booker reference */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  purgeQueue: {
+  getPublicPastVisitsByBookerReference: {
     parameters: {
+      query?: never
+      header?: never
       path: {
-        queueName: string
+        /**
+         * @description bookerReference
+         * @example asd-aed-vhj
+         */
+        bookerReference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
-      /** @description OK */
+      /** @description past public visits returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
-          '*/*': components['schemas']['PurgeQueueResult']
+          'application/json': components['schemas']['VisitDto'][]
+        }
+      }
+      /** @description Incorrect request to get past public visits by booker reference */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  retryAllDlqs: {
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          '*/*': components['schemas']['RetryDlqResult'][]
-        }
-      }
-    }
-  }
-  retryDlq: {
+  getPublicCanceledVisitsByBookerReference: {
     parameters: {
+      query?: never
+      header?: never
       path: {
-        dlqName: string
+        /**
+         * @description bookerReference
+         * @example asd-aed-vhj
+         */
+        bookerReference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
-      /** @description OK */
+      /** @description cancelled public visits returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
-          '*/*': components['schemas']['RetryDlqResult']
+          'application/json': components['schemas']['VisitDto'][]
+        }
+      }
+      /** @description Incorrect request to get cancelled public visits by booker reference */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Returns all visit sessions which are within the reservable time period - whether or not they are full
-   * @description Retrieve all visits for a specified prisoner
-   */
   getVisitBookingSessions: {
     parameters: {
       query: {
@@ -3407,32 +4784,41 @@ export interface operations {
          */
         max?: number
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Visit session information returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['VisitSessionDto'][]
         }
       }
-      /** @description Incorrect request to Get visit sessions */
+      /** @description Incorrect request to Get visit sessions  */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period
-   * @description Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period
-   */
   getAvailableVisitBookingSessions: {
     parameters: {
       query: {
@@ -3447,47 +4833,61 @@ export interface operations {
          */
         prisonerId: string
         /**
-         * @description Filter results by visitRestriction
+         * @description Filter results by session restriction - OPEN or CLOSED
          * @example CLOSED
          */
-        visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
+        sessionRestriction: 'OPEN' | 'CLOSED'
         /**
-         * @description Override the default minimum number of days notice from the current date
-         * @example 2
+         * @description Session slot from date
+         * @example 2024-12-03
          */
-        min?: number
+        fromDate: string
         /**
-         * @description Override the default maximum number of days to book-ahead from the current date
-         * @example 28
+         * @description Session slot to date
+         * @example 2024-12-20
          */
-        max?: number
+        toDate: string
+        /**
+         * @description The current application reference to be excluded from capacity count and double booking
+         * @example dfs-wjs-eqr
+         */
+        excludedApplicationReference?: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Available visit session details returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['AvailableVisitSessionDto'][]
         }
       }
       /** @description Incorrect request to GET available visit sessions */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Returns the session capacity for the given sessions
-   * @description Returns the session capacity for the given sessions
-   */
   getSessionCapacity: {
     parameters: {
       query: {
@@ -3512,38 +4912,50 @@ export interface operations {
          */
         sessionEndTime: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description the session capacity for the given sessions */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionCapacityDto']
         }
       }
-      /** @description Incorrect request */
+      /** @description Incorrect request  */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Capacity not found */
+      /** @description Capacity not found  */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Returns session scheduled for given prison and date
-   * @description Returns session scheduled for given prison and date
-   */
   getSessionSchedule: {
     parameters: {
       query: {
@@ -3558,30 +4970,48 @@ export interface operations {
          */
         date: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Session scheduled information returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['SessionScheduleDto'][]
         }
       }
       /** @description Incorrect request to get session scheduled */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** Create an initial application and reserve a slot */
   createInitialApplication: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateApplicationDto']
@@ -3590,33 +5020,46 @@ export interface operations {
     responses: {
       /** @description Application slot reserved */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ApplicationDto']
         }
       }
       /** @description Incorrect request to reserve a slot */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to reserve a slot for the application */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** Change an incomplete application */
   changeIncompleteApplication: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description applicationReference
@@ -3624,6 +5067,7 @@ export interface operations {
          */
         applicationReference: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -3633,39 +5077,55 @@ export interface operations {
     responses: {
       /** @description Application slot changed */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ApplicationDto']
         }
       }
       /** @description Incorrect request to change a application slot */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to change application slot */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Visit slot not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** Create an application for an existing visit */
   createApplicationForAnExistingVisit: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description bookingReference
@@ -3673,6 +5133,7 @@ export interface operations {
          */
         bookingReference: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -3682,58 +5143,87 @@ export interface operations {
     responses: {
       /** @description Application created */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ApplicationDto']
         }
       }
       /** @description Incorrect application details to change a visit */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions for application to change a visit */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get notification count
-   * @description Retrieve notification count by visit reference
-   */
   getNotificationCount: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description Retrieve notification count */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['NotificationCountDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to access this endpoint */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** To notify VSiP that non association between two prisoners has changed */
   notifyVSiPThatNonAssociationHasChanged: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['NonAssociationChangedNotificationDto']
@@ -3742,6 +5232,9 @@ export interface operations {
     responses: {
       /** @description notification has completed successfully */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json':
             | '100 CONTINUE'
@@ -3817,26 +5310,40 @@ export interface operations {
       }
       /** @description Incorrect request to notify VSiP of change */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to notify VSiP of change */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** To notify VSiP that a change to person/visitor restriction has taken place */
   notifyVSiPThatPersonRestrictionChanged: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['PersonRestrictionChangeNotificationDto']
@@ -3845,6 +5352,9 @@ export interface operations {
     responses: {
       /** @description notification has completed successfully */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json':
             | '100 CONTINUE'
@@ -3920,26 +5430,160 @@ export interface operations {
       }
       /** @description Incorrect request to notify VSiP of change */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to notify VSiP of change */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** To notify VSiP that a prisoner has been received */
+  notifyVSiPThatPrisonerAlertCreatedUpdated: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerAlertCreatedUpdatedNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '103 CHECKPOINT'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '302 MOVED_TEMPORARILY'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '305 USE_PROXY'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '413 REQUEST_ENTITY_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '414 REQUEST_URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+            | '420 METHOD_FAILURE'
+            | '421 DESTINATION_LOCKED'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of alert */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of alert */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   notifyVSiPThatPrisonerReceivedChanged: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['PrisonerReceivedNotificationDto']
@@ -3948,6 +5592,9 @@ export interface operations {
     responses: {
       /** @description notification has completed successfully */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json':
             | '100 CONTINUE'
@@ -4023,26 +5670,40 @@ export interface operations {
       }
       /** @description Incorrect request to notify VSiP of change */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to notify VSiP of change */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** To notify VSiP that a prisoner has been released */
   notifyVSiPThatPrisonerReleasedChanged: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['PrisonerReleasedNotificationDto']
@@ -4051,6 +5712,9 @@ export interface operations {
     responses: {
       /** @description notification has completed successfully */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json':
             | '100 CONTINUE'
@@ -4126,26 +5790,40 @@ export interface operations {
       }
       /** @description Incorrect request to notify VSiP of change */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to notify VSiP of change */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** To notify VSiP that a change to prisoner restriction has taken place */
   notifyVSiPThatPrisonerRestrictionChanged: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['PrisonerRestrictionChangeNotificationDto']
@@ -4154,6 +5832,9 @@ export interface operations {
     responses: {
       /** @description notification has completed successfully */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json':
             | '100 CONTINUE'
@@ -4229,27 +5910,37 @@ export interface operations {
       }
       /** @description Incorrect request to notify VSiP of change */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to notify VSiP of change */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** Do not change an existing booked visit and ignore all notifications */
   ignoreVisitNotifications: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -4257,6 +5948,7 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -4266,42 +5958,55 @@ export interface operations {
     responses: {
       /** @description Visit notifications cleared and reason noted. */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['VisitDto']
         }
       }
       /** @description Incorrect request to ignore visit notifications. */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to ignore visit notifications. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Visit not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * get visit notification types by booking reference
-   * @description Retrieve visit  notification types by booking reference
-   */
   getNotificationTypesForBookingReference: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description bookingReference
@@ -4309,35 +6014,53 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Retrieved visit  notification types by booking reference */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': (
             | 'NON_ASSOCIATION_EVENT'
             | 'PRISONER_RELEASED_EVENT'
             | 'PRISONER_RESTRICTION_CHANGE_EVENT'
             | 'PRISON_VISITS_BLOCKED_FOR_DATE'
+            | 'PRISONER_RECEIVED_EVENT'
+            | 'PRISONER_ALERTS_UPDATED_EVENT'
           )[]
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to access this endpoint */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** To notify VSiP that a change to a visitor restriction has taken place */
   notifyVSiPThatVisitorRestrictionChanged: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['VisitorRestrictionChangeNotificationDto']
@@ -4346,6 +6069,9 @@ export interface operations {
     responses: {
       /** @description notification has completed successfully */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json':
             | '100 CONTINUE'
@@ -4421,30 +6147,37 @@ export interface operations {
       }
       /** @description Incorrect request to notify VSiP of change */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to notify VSiP of change */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get notification count for a prison
-   * @description Retrieve notification count by prison code
-   */
   getNotificationCountForPrison: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prisonCode
@@ -4452,34 +6185,43 @@ export interface operations {
          */
         prisonCode: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Retrieve notification count for a prison */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['NotificationCountDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to access this endpoint */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * get future notification visit groups by prison code
-   * @description Retrieve future notification visit groups by prison code
-   */
   getFutureNotificationVisitGroups: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description prisonCode
@@ -4487,32 +6229,39 @@ export interface operations {
          */
         prisonCode: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Retrieved future notification visit groups by prison code */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['NotificationGroupDto'][]
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to access this endpoint */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get visits
-   * @description Retrieve visits with optional filters, sorted by start timestamp descending
-   */
   getVisitsByFilterPageable: {
     parameters: {
       query: {
@@ -4552,75 +6301,99 @@ export interface operations {
          */
         size: number
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Visit Information Returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PageVisitDto']
         }
       }
       /** @description Incorrect request to Get visits for prisoner */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to retrieve visits */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get future (booked and cancelled) visits for a prisoner
-   * @description Get future visits for given prisoner number
-   */
   getFutureVisitsBySessionPrisoner: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         prisonerNumber: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Returned future visits (booked and cancelled) for a prisoner */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['VisitDto'][]
         }
       }
       /** @description Incorrect request to get future (booked and cancelled) visits for a prisoner */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to get future (booked and cancelled) visits for a prisoner */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get visits for a date or a range of dates with / without a session template reference
-   * @description Get visits for a date or a range of dates with a session template reference or visits without a session template reference when session template reference is not passed
-   */
   getVisitsBy: {
     parameters: {
       query: {
@@ -4665,37 +6438,54 @@ export interface operations {
          */
         size: number
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Returns visits for a session template or visits where session template reference is null if no session template reference parameter passed */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PageVisitDto']
         }
       }
       /** @description Incorrect request to get visits by session template */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to get visits by session template */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** Book a visit (end of flow) */
   bookVisit: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description applicationReference
@@ -4703,6 +6493,7 @@ export interface operations {
          */
         applicationReference: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -4712,42 +6503,64 @@ export interface operations {
     responses: {
       /** @description Visit updated */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['VisitDto']
         }
       }
       /** @description Incorrect request to book a visit */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to book a visit */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Visit not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
+      /** @description Application validation failed */
+      422: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApplicationValidationErrorResponse']
+        }
+      }
     }
   }
-  /**
-   * Get a visit
-   * @description Retrieve visit by visit reference (excludes Reserved and CHANGING)
-   */
   getVisitByReference: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -4755,43 +6568,61 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Visit Information Returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['VisitDto']
         }
       }
       /** @description Incorrect request to Get visits for prisoner */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions retrieve a visit */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Visit not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** Cancel an existing booked visit */
   cancelVisit: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -4799,6 +6630,7 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -4808,42 +6640,55 @@ export interface operations {
     responses: {
       /** @description Visit cancelled */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['VisitDto']
         }
       }
       /** @description Incorrect request to cancel a visit */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to cancel a visit */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Visit not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get visit history
-   * @description Retrieve visit history by visit reference
-   */
   getVisitHistoryByReference: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description reference
@@ -4851,34 +6696,51 @@ export interface operations {
          */
         reference: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Visit History Information Returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['EventAuditDto'][]
         }
       }
       /** @description Incorrect request to Get visit history */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions retrieve visit history */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Visit not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
