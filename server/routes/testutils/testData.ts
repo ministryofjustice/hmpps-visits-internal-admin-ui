@@ -1,4 +1,5 @@
 import { Prison, VisitStatsSummary } from '../../@types/visits-admin'
+import { BookerDto, PermittedPrisonerDto } from '../../data/bookerRegistryApiTypes'
 import { PrisonContactDetails, PrisonName } from '../../data/prisonRegisterApiTypes'
 import {
   CategoryGroup,
@@ -326,5 +327,27 @@ export default class TestData {
     emailAddress,
     phoneNumber,
     webAddress,
+  })
+
+  static bookerDto = ({
+    reference = 'aaaa-bbbb-cccc',
+    oneLoginSub = 'one-login-user',
+    email = 'user@example.com',
+    permittedPrisoners = [],
+  }: Partial<BookerDto> = {}): BookerDto => ({
+    reference,
+    oneLoginSub,
+    email,
+    permittedPrisoners,
+  })
+
+  static permittedPrisonerDto = ({
+    prisonerId = 'A1234BC',
+    active = true,
+    permittedVisitors = [],
+  }: Partial<PermittedPrisonerDto> = {}): PermittedPrisonerDto => ({
+    prisonerId,
+    active,
+    permittedVisitors,
   })
 }
