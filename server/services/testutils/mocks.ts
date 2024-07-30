@@ -1,7 +1,9 @@
 import {
+  BookerService,
   CategoryGroupService,
   IncentiveGroupService,
   LocationGroupService,
+  PrisonerContactsService,
   PrisonService,
   SessionTemplateService,
   UserService,
@@ -9,6 +11,8 @@ import {
 } from '..'
 
 jest.mock('..')
+
+export const createMockBookerService = () => new BookerService(null, null) as jest.Mocked<BookerService>
 
 export const createMockCategoryGroupService = () =>
   new CategoryGroupService(null, null) as jest.Mocked<CategoryGroupService>
@@ -18,6 +22,9 @@ export const createMockIncentiveGroupService = () =>
 
 export const createMockLocationGroupService = () =>
   new LocationGroupService(null, null) as jest.Mocked<LocationGroupService>
+
+export const createMockPrisonerContactsService = () =>
+  new PrisonerContactsService(null, null) as jest.Mocked<PrisonerContactsService>
 
 export const createMockPrisonService = () => new PrisonService(null, null, null) as jest.Mocked<PrisonService>
 
