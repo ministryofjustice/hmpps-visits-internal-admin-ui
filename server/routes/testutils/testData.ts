@@ -359,12 +359,13 @@ export default class TestData {
     dateOfBirth = '1986-07-28',
     approvedVisitor = true,
     restrictions = [],
-  }: Partial<ContactDto> = {}): Partial<ContactDto> => ({
-    personId,
-    firstName,
-    lastName,
-    dateOfBirth,
-    approvedVisitor,
-    restrictions,
-  })
+  }: Partial<ContactDto> = {}): ContactDto =>
+    ({
+      personId,
+      firstName,
+      lastName,
+      dateOfBirth,
+      approvedVisitor,
+      restrictions,
+    }) as ContactDto
 }
