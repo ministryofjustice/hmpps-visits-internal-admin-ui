@@ -45,7 +45,7 @@ describe('Category groups listing page', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
 
-          expect($('.moj-primary-navigation__item').length).toBe(2)
+          expect($('.moj-primary-navigation__item').length).toBe(3)
           expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/prisons')
 
           expect($('h1').text().trim()).toBe(prison.name)

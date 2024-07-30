@@ -39,7 +39,7 @@ describe('Show excluded dates', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('.moj-primary-navigation__item').length).toBe(2)
+        expect($('.moj-primary-navigation__item').length).toBe(3)
         expect($('h2').text().trim()).toBe('Excluded dates')
         expect($('.moj-banner__message').length).toBe(0)
         expect($('.govuk-error-summary').length).toBe(0)
@@ -56,7 +56,7 @@ describe('Show excluded dates', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('.moj-primary-navigation__item').length).toBe(2)
+        expect($('.moj-primary-navigation__item').length).toBe(3)
         expect($('h2').text().trim()).toBe('Excluded dates')
         expect($('.moj-banner__message').length).toBe(0)
         expect($('.govuk-error-summary').length).toBe(0)

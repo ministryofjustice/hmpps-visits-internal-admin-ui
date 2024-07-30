@@ -117,9 +117,6 @@ export default {
       agent: new AgentConfig(Number(get('VISIT_SCHEDULER_API_TIMEOUT_RESPONSE', 10000))),
     },
   },
-  features: {
-    bookers: { enabled: get('FEATURE_BOOKERS_ENABLED', false) === 'true' },
-  },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
 }
