@@ -2,6 +2,7 @@ import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { BookerService, PrisonerContactsService } from '../../../services'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { ContactDto } from '../../../data/prisonerContactRegistryApiTypes'
 
 export default class AddVisitorController {
   public constructor(
@@ -18,11 +19,17 @@ export default class AddVisitorController {
         return res.redirect('/bookers/booker/details')
       }
 
-      const allContacts = await this.prisonerContactsService.getSocialContacts({
-        username: res.locals.user.username,
-        prisonerId: booker.permittedPrisoners[0].prisonerId,
-        approvedOnly: true,
-      })
+      let allContacts: ContactDto[]
+      try {
+        allContacts = await this.prisonerContactsService.getSocialContacts({
+          username: res.locals.user.username,
+          prisonerId: booker.permittedPrisoners[0].prisonerId,
+          approvedOnly: true,
+        })
+      } catch (error) {
+        req.flash('errors', responseErrorToFlashMessage(error))
+        allContacts = []
+      }
 
       const existingVisitorIds = booker.permittedPrisoners[0].permittedVisitors.map(visitor => visitor.visitorId)
       const filteredContacts = allContacts.filter(contact => !existingVisitorIds.includes(contact.personId))

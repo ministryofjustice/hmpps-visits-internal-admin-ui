@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { BookerService, PrisonerContactsService } from '../../../services'
 import { ContactDto } from '../../../data/prisonerContactRegistryApiTypes'
+import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 type Visitor = {
   visitorId: number
@@ -25,13 +26,19 @@ export default class BookerDetailsController {
 
       const prisoner = booker.permittedPrisoners[0] ?? undefined
 
-      const contacts = prisoner
-        ? await this.prisonerContactsService.getSocialContacts({
-            username: res.locals.user.username,
-            prisonerId: prisoner.prisonerId,
-            approvedOnly: false,
-          })
-        : []
+      let contacts: ContactDto[]
+      try {
+        contacts = prisoner
+          ? await this.prisonerContactsService.getSocialContacts({
+              username: res.locals.user.username,
+              prisonerId: prisoner.prisonerId,
+              approvedOnly: false,
+            })
+          : []
+      } catch (error) {
+        req.flash('errors', responseErrorToFlashMessage(error))
+        contacts = []
+      }
 
       const visitors: Visitor[] = prisoner?.permittedVisitors.map(visitor => {
         const matchedContact = contacts.find(contact => contact.personId === visitor.visitorId)
@@ -47,7 +54,7 @@ export default class BookerDetailsController {
             }
           : {
               visitorId: visitor.visitorId,
-              name: `UNKNOWN (visitor ID: ${visitor.visitorId})`,
+              name: 'UNKNOWN',
               dateOfBirth: '',
               approved: '',
               restrictions: [],
@@ -56,6 +63,7 @@ export default class BookerDetailsController {
       })
 
       return res.render('pages/bookers/booker/details', {
+        errors: req.flash('errors'),
         message: req.flash('message')?.[0] || {},
         booker,
         visitors,
