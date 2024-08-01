@@ -21,12 +21,12 @@
     <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
 
     <h2 class="govuk-heading-m">Email and reference</h2>
-    <p>Email: <strong>{{ booker.email }}</strong></p>
-    <p>Reference: <strong>{{ booker.reference }}</strong></p>
+    <p>Email: <strong data-test="booker-email">{{ booker.email }}</strong></p>
+    <p>Reference: <strong data-test="booker-reference">{{ booker.reference }}</strong></p>
 
     <h2 class="govuk-heading-m">Prisoner</h2>
     {% if not prisoner %}
-      <p>Not set</p>
+      <p data-test="prisoner-number">Not set</p>
 
       {{ govukButton({
         href: "/bookers/booker/add-prisoner",
@@ -36,8 +36,8 @@
 
     {% else %}
       <p>
-        Prisoner number: <strong>{{ prisoner.prisonerId }}</strong>
-        <span class="govuk-!-margin-left-3">{{ activeOrInactiveTag(prisoner.active) }}</span>
+        Prisoner number: <strong data-test="prisoner-number">{{ prisoner.prisonerId }}</strong>
+        <span data-test="prisoner-status" class="govuk-!-margin-left-3">{{ activeOrInactiveTag(prisoner.active) }}</span>
       </p>
       {% set prisonerAction = "deactivate" if prisoner.active else "activate" %}
       <form action="/bookers/booker/{{ prisonerAction }}-prisoner" method="POST" novalidate>
@@ -59,23 +59,29 @@
           {% set visitorAction = "deactivate" if visitor.active else "activate" %}
           {% set visitorRows = (visitorRows.push([
             {
-              text: visitor.name
+              text: visitor.name,
+              attributes: { "data-test": "visitor-name-" + loop.index }
             },
             {
-              text: visitor.visitorId
+              text: visitor.visitorId,
+              attributes: { "data-test": "visitor-id-" + loop.index }
             },
             {
               html: (visitor.dateOfBirth | formatDate +
-                '<br>(' + visitor.dateOfBirth | displayAge + ')') if visitor.dateOfBirth
+                '<br>(' + visitor.dateOfBirth | displayAge + ')') if visitor.dateOfBirth,
+                attributes: { "data-test": "visitor-dob-" + loop.index }
             },
             {
-              text: visitor.approved
+              text: visitor.approved,
+              attributes: { "data-test": "visitor-approved-" + loop.index }
             },
             {
-              html: visitorRestrictions(visitor)
+              html: visitorRestrictions(visitor),
+              attributes: { "data-test": "visitor-restrictions-" + loop.index }
             },
             {
-              html: activeOrInactiveTag(visitor.active) 
+              html: activeOrInactiveTag(visitor.active),
+              attributes: { "data-test": "visitor-status-" + loop.index }
             },
             {
               html: '<form action="/bookers/booker/' + visitorAction + '-visitor" method="POST" novalidate>' +
