@@ -31,7 +31,8 @@
       {{ govukButton({
         href: "/bookers/booker/add-prisoner",
         text: "Add a prisoner",
-        preventDoubleClick: true
+        preventDoubleClick: true,
+        attributes: { "data-test": "add-prisoner" }
       }) }}
 
     {% else %}
@@ -130,7 +131,8 @@
         href: "/bookers/booker/add-visitor",
         classes: "govuk-button--secondary" if visitors | length,
         text: "Add a visitor",
-        preventDoubleClick: true
+        preventDoubleClick: true,
+        attributes: { "data-test": "add-visitor" }
       }) }}
 
 
@@ -144,7 +146,8 @@
         {{ govukButton({
           text: "Clear booker details",
           classes: "govuk-button--warning",
-          preventDoubleClick: true
+          preventDoubleClick: true,
+          attributes: { "data-test": "clear-booker-details" }
         }) }}
       </form>
     {% endif %}

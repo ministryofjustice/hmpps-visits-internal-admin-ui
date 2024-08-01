@@ -10,4 +10,6 @@ export default class IndexPage extends Page {
   headerPhaseBanner = (): PageElement => cy.get('[data-qa=header-phase-banner]')
 
   supportedPrisonsCard = (): PageElement => cy.get('[data-test="administer-prisons"]')
+
+  bookersCard = (): PageElement => cy.get('[data-test="administer-bookers"]')
 }

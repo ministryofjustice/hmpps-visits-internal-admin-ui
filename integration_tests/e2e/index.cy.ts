@@ -13,5 +13,7 @@ context('Home page', () => {
     const indexPage = Page.verifyOnPage(IndexPage)
 
     indexPage.supportedPrisonsCard().contains('Supported prisons')
+
+    indexPage.bookersCard().contains('Bookers')
   })
 })

@@ -3,6 +3,8 @@ import { resetStubs } from './integration_tests/mockApis/wiremock'
 import auth from './integration_tests/mockApis/auth'
 import manageUsersApi from './integration_tests/mockApis/manageUsersApi'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
+import bookerRegistry from './integration_tests/mockApis/bookerRegistry'
+import prisonerContactRegistry from './integration_tests/mockApis/prisonerContactRegistry'
 import prisonRegister from './integration_tests/mockApis/prisonRegister'
 import categoryGroups from './integration_tests/mockApis/visitScheduler/categoryGroups'
 import incentiveGroups from './integration_tests/mockApis/visitScheduler/incentiveGroups'
@@ -32,6 +34,8 @@ export default defineConfig({
         ...manageUsersApi,
         ...tokenVerification,
 
+        ...bookerRegistry,
+        ...prisonerContactRegistry,
         ...prisonRegister,
 
         // visit scheduler mock APIs
