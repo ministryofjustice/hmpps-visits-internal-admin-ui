@@ -15,8 +15,8 @@ jest.mock('../../applicationInfo', () => {
 })
 
 import express, { Express } from 'express'
-import cookieSession from 'cookie-session'
 import { NotFound } from 'http-errors'
+import { Session, SessionData } from 'express-session'
 
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
@@ -37,14 +37,19 @@ export const user: Express.User = {
 
 export const flashProvider = jest.fn()
 
-function appSetup(services: Services, production: boolean, userSupplier: () => Express.User): Express {
+function appSetup(
+  services: Services,
+  production: boolean,
+  userSupplier: () => Express.User,
+  sessionData: SessionData,
+): Express {
   const app = express()
 
   app.set('view engine', 'njk')
 
   nunjucksSetup(app, testAppInfo)
-  app.use(cookieSession({ keys: [''] }))
   app.use((req, res, next) => {
+    req.session = sessionData as Session & Partial<SessionData>
     req.user = userSupplier()
     req.flash = flashProvider
     res.locals = {
@@ -65,11 +70,13 @@ export function appWithAllRoutes({
   production = false,
   services = {},
   userSupplier = () => user,
+  sessionData = {} as SessionData,
 }: {
   production?: boolean
   services?: Partial<Services>
   userSupplier?: () => Express.User
+  sessionData?: SessionData
 }): Express {
   auth.default.authenticationMiddleware = () => (req, res, next) => next()
-  return appSetup(services as Services, production, userSupplier)
+  return appSetup(services as Services, production, userSupplier, sessionData)
 }
