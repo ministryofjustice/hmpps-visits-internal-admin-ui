@@ -30,7 +30,7 @@ export const formatDate = (dateToFormat: string, dateFormat = 'd MMMM yyyy'): st
   if (typeof dateFormat !== 'string') return null
   try {
     return dateToFormat ? format(parseISO(dateToFormat), dateFormat) : null
-  } catch (error) {
+  } catch {
     return null
   }
 }

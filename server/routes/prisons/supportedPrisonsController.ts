@@ -31,7 +31,7 @@ export default class SupportedPrisonsController {
         .custom(async prisonId => {
           try {
             newPrisonName = await this.prisonService.getPrisonName(res.locals.user.username, prisonId)
-          } catch (error) {
+          } catch {
             throw new Error(`Prison '${prisonId}' is not in the prison register`)
           }
           return true
