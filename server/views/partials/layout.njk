@@ -23,14 +23,13 @@
     text: "Prisons",
     href: "/prisons",
     active: activePrimaryNav === "prisons"
-  }
-  ] %}
-
-  {% set primaryNavItems = ((primaryNavItems.push({
+  },
+  {
     text: "Bookers",
     href: "/bookers",
     active: activePrimaryNav === "bookers"
-  }), primaryNavItems) if featureBookersEnabled else primaryNavItems) %}
+  }
+  ] %}
 
   {% block header %}
   {% include "./header.njk" %}

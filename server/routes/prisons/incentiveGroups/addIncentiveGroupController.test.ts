@@ -49,7 +49,7 @@ describe('Add an incentive group', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('.govuk-back-link').eq(0).attr('href')).toBe('/prisons/HEI/incentive-groups')
-          expect($('.moj-primary-navigation__item').length).toBe(2)
+          expect($('.moj-primary-navigation__item').length).toBe(3)
           expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/prisons')
 
           expect($('h1 span').text().trim()).toBe(prison.name)

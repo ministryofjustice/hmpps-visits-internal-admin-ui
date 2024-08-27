@@ -37,7 +37,8 @@
 
         {{ govukButton({
           text: "Search" if action == "search" else "Add new booker",
-          preventDoubleClick: true
+          preventDoubleClick: true,
+          attributes: { "data-test": "submit" }
         }) }}
     </form>
 
