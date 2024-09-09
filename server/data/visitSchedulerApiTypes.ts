@@ -5,6 +5,9 @@ export type CategoryGroup = components['schemas']['SessionCategoryGroupDto']
 export type CreateCategoryGroupDto = components['schemas']['CreateCategoryGroupDto']
 export type PrisonerCategories = CategoryGroup['categories'][number]
 
+// Exclude dates
+export type PrisonExcludeDateDto = components['schemas']['PrisonExcludeDateDto']
+
 // Incentive groups
 export type IncentiveGroup = components['schemas']['SessionIncentiveLevelGroupDto']
 export type CreateIncentiveGroupDto = components['schemas']['CreateIncentiveGroupDto']

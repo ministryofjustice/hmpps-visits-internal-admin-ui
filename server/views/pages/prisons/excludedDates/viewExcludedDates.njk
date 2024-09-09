@@ -32,25 +32,25 @@
       <h2 class="govuk-heading-m">Excluded dates</h2>
 
       {# Build rows for excluded dates #}
-      {% if prison.excludeDates | length %}
-        {% set excludeDateRows = [] %}
-        {% for excludeDate in prison.excludeDates -%}
-          {% set excludeDateRows = (excludeDateRows.push([
+      {% if blockedDates | length %}
+        {% set blockedDateRows = [] %}
+        {% for blockedDate in blockedDates -%}
+          {% set blockedDateRows = (blockedDateRows.push([
             {
-              text: excludeDate | formatDate,
+              text: blockedDate.excludeDate | formatDate,
               attributes: { "data-test": "excluded-date" }
             },
             {
               html: govukButton({
                 text: 'Remove',
-                value: excludeDate,
+                value: blockedDate.excludeDate,
                 name: 'excludeDate',
                 classes: "govuk-button--secondary govuk-!-margin-bottom-0",
                 attributes: { "data-test": "remove-date-button" }
               }),
               attributes: { "data-test": "exclude-date-row" }
             }
-          ]), excludeDateRows) %}
+          ]), blockedDateRows) %}
         {%- endfor %}
 
         <form action="/prisons/{{ prison.code }}/excluded-dates/remove" method="POST" novalidate>
@@ -66,7 +66,7 @@
                   classes: "govuk-!-width-one-quarter"
                 }
               ],
-              rows: excludeDateRows
+              rows: blockedDateRows
             }) }}
         </form>
 
