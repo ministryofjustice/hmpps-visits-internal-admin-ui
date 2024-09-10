@@ -3,7 +3,7 @@ import ExcludeDateService from './excludeDateService'
 
 const token = 'some token'
 
-describe('Category group service', () => {
+describe('Exclude date service', () => {
   const hmppsAuthClient = createMockHmppsAuthClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()
 
