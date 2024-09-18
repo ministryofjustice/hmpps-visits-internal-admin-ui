@@ -157,22 +157,6 @@ export default class PrisonService {
     return visitSchedulerApiClient.deactivatePrisonClientType(prisonCode, type)
   }
 
-  async addExcludeDate(username: string, prisonCode: string, excludeDate: string): Promise<PrisonDto> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    logger.info(`Exclude date ${excludeDate} added to prison ${prisonCode} by ${username}`)
-    return visitSchedulerApiClient.addExcludeDate(prisonCode, excludeDate)
-  }
-
-  async removeExcludeDate(username: string, prisonCode: string, excludeDate: string): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    logger.info(`Exclude date ${excludeDate} removed from prison ${prisonCode} by ${username}`)
-    await visitSchedulerApiClient.removeExcludeDate(prisonCode, excludeDate)
-  }
-
   async getPrisonName(username: string, prisonId: string): Promise<string> {
     await this.refreshPrisonNames(username)
     const prisonName = this.prisonNames[prisonId]

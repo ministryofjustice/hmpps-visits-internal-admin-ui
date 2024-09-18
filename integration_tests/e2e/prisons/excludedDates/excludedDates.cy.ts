@@ -17,6 +17,7 @@ context('Excluded dates', () => {
     cy.task('stubPrisonNames')
     cy.task('stubGetAllPrisons')
     cy.signIn()
+    cy.task('stubGetPrison', prisonDto)
   })
 
   it('should navigate to the list of excluded dates for a prison', () => {
@@ -28,12 +29,19 @@ context('Excluded dates', () => {
     const supportedPrisonsPage = Page.verifyOnPage(SupportedPrisonsPage)
 
     // select Hewell
-    cy.task('stubGetPrison', prisonDto)
     cy.task('stubGetSessionTemplates', { prisonCode: prisonDto.code })
     supportedPrisonsPage.getPrisonNameByCode(prisonDto.code).click()
     const viewSessionTemplatesPage = Page.verifyOnPage(ViewSessionTemplatesPage)
 
     // Go to excluded dates page
+    const excludeDates = [
+      TestData.prisonExcludeDateDto({ excludeDate: '2023-02-01' }),
+      TestData.prisonExcludeDateDto({ excludeDate: '2023-03-02' }),
+    ]
+    cy.task('stubGetExcludeDates', {
+      prisonCode: prisonDto.code,
+      excludeDates,
+    })
     viewSessionTemplatesPage.getExcludedDatesTab().click()
     const excludedDatesPage = Page.verifyOnPage(ExcludedDatesPage)
 
@@ -44,7 +52,11 @@ context('Excluded dates', () => {
 
   it('should add an excluded date for a prison', () => {
     // start on excluded dates page
-    cy.task('stubGetPrison', prisonDto)
+    let excludeDates = [TestData.prisonExcludeDateDto()]
+    cy.task('stubGetExcludeDates', {
+      prisonCode: prisonDto.code,
+      excludeDates,
+    })
     const excludedDatesPage = ExcludedDatesPage.goTo(prisonDto.code)
 
     // enter new date and check this date for existing visits
@@ -56,25 +68,49 @@ context('Excluded dates', () => {
     // Check visit count & date and add the excluded date
     excludedDatesPage.getVisitCount().contains('1')
     excludedDatesPage.getCheckedDate().contains('3 April 2023')
-    cy.task('stubAddExcludeDate', { excludeDate: '2023-04-03', prisonDto })
-    cy.task('stubGetPrison', { ...prisonDto, excludeDates: [...prisonDto.excludeDates, '2023-04-03'] })
+    cy.task('stubAddExcludeDate', { prisonCode: prisonDto.code, excludeDate: '2023-04-03', actionedBy: 'USER1' })
+
+    excludeDates = [
+      TestData.prisonExcludeDateDto(),
+      TestData.prisonExcludeDateDto({ excludeDate: '2023-04-03', actionedBy: 'USER1' }),
+    ]
+    cy.task('stubGetExcludeDates', {
+      prisonCode: prisonDto.code,
+      excludeDates,
+    })
     excludedDatesPage.addExcludedDate()
 
     // Check status message and new date
     excludedDatesPage.successMessage().contains('3 April 2023 has been successfully added')
-    excludedDatesPage.getExcludedDate(2).contains('3 April 2023')
+    excludedDatesPage.getExcludedDate(1).contains('3 April 2023')
   })
 
   it('should remove an excluded date for a prison', () => {
     // start on excluded dates page
-    cy.task('stubGetPrison', prisonDto)
+    // start on excluded dates page
+    let excludeDates = [
+      TestData.prisonExcludeDateDto({ excludeDate: '2023-02-01', actionedBy: 'USER1' }),
+      TestData.prisonExcludeDateDto({ excludeDate: '2023-03-02', actionedBy: 'USER1' }),
+    ]
+    cy.task('stubGetExcludeDates', {
+      prisonCode: prisonDto.code,
+      excludeDates,
+    })
     const excludedDatesPage = ExcludedDatesPage.goTo(prisonDto.code)
 
     // Check listed dates and remove the first
     excludedDatesPage.getExcludedDate(0).contains('1 February 2023')
     excludedDatesPage.getExcludedDate(1).contains('2 March 2023')
-    cy.task('stubRemoveExcludeDate', { prisonCode: prisonDto.code, excludeDate: '2023-02-01' })
-    cy.task('stubGetPrison', { ...prisonDto, excludeDates: [prisonDto.excludeDates[1]] })
+
+    cy.task('stubRemoveExcludeDate', {
+      prisonCode: prisonDto.code,
+      excludeDate: excludeDates[0].excludeDate,
+      actionedBy: 'USER1',
+    })
+
+    excludeDates = [TestData.prisonExcludeDateDto({ excludeDate: '2023-03-02', actionedBy: 'USER1' })]
+
+    cy.task('stubGetExcludeDates', { prisonCode: prisonDto.code, excludeDates })
     excludedDatesPage.removeExcludedDate(0)
 
     // check status message and that date is removed

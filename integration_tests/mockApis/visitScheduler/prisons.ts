@@ -3,6 +3,7 @@ import { stubFor } from '../wiremock'
 import TestData from '../../../server/routes/testutils/testData'
 import {
   PrisonDto,
+  PrisonExcludeDateDto,
   PrisonUserClientDto,
   PrisonUserClientType,
   UpdatePrisonDto,
@@ -159,44 +160,66 @@ export default {
       },
     })
   },
-  stubAddExcludeDate: ({
-    excludeDate,
-    prisonDto,
+  stubGetExcludeDates: ({
+    prisonCode,
+    excludeDates,
   }: {
+    prisonCode: string
+    excludeDates: PrisonExcludeDateDto
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/visitScheduler/prisons/prison/${prisonCode}/exclude-date`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: excludeDates,
+      },
+    })
+  },
+  stubAddExcludeDate: ({
+    prisonCode,
+    excludeDate,
+    actionedBy = 'user1',
+  }: {
+    prisonCode: string
     excludeDate: string
-    prisonDto: PrisonDto
+    actionedBy: string
   }): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'PUT',
-        url: `/visitScheduler/admin/prisons/prison/${prisonDto.code}/exclude-date/add`,
+        url: `/visitScheduler/prisons/prison/${prisonCode}/exclude-date/add`,
         bodyPatterns: [
           {
-            equalToJson: { excludeDate },
+            equalToJson: { excludeDate, actionedBy },
           },
         ],
       },
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: { ...prisonDto, excludeDates: [...prisonDto.excludeDates, excludeDate] },
       },
     })
   },
   stubRemoveExcludeDate: ({
     prisonCode,
     excludeDate,
+    actionedBy = 'user1',
   }: {
     prisonCode: string
     excludeDate: string
+    actionedBy: string
   }): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'PUT',
-        url: `/visitScheduler/admin/prisons/prison/${prisonCode}/exclude-date/remove`,
+        url: `/visitScheduler/prisons/prison/${prisonCode}/exclude-date/remove`,
         bodyPatterns: [
           {
-            equalToJson: { excludeDate },
+            equalToJson: { excludeDate, actionedBy },
           },
         ],
       },

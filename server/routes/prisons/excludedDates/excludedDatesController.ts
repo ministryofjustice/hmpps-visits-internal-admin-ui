@@ -1,21 +1,26 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { PrisonService, VisitService } from '../../../services'
+import { ExcludeDateService, PrisonService, VisitService } from '../../../services'
 import { formatDate, responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class ExcludedDatesController {
   public constructor(
     private readonly prisonService: PrisonService,
     private readonly visitService: VisitService,
+    private readonly excludeDateService: ExcludeDateService,
   ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const { username } = res.locals.user
+
+      const prison = await this.prisonService.getPrison(username, prisonId)
+      const blockedDates = await this.excludeDateService.getExcludeDates(username, prisonId)
 
       res.render('pages/prisons/excludedDates/viewExcludedDates', {
         errors: req.flash('errors'),
+        blockedDates,
         prison,
         message: req.flash('message'),
       })
@@ -50,6 +55,8 @@ export default class ExcludedDatesController {
     return async (req, res) => {
       const { prisonId } = req.params
       const originalUrl = `/prisons/${prisonId}/excluded-dates`
+      const { username } = res.locals.user
+
       const errors = validationResult(req)
 
       if (!errors.isEmpty()) {
@@ -61,12 +68,11 @@ export default class ExcludedDatesController {
       const excludeDateFormatted = formatDate(excludeDate)
 
       try {
-        await this.prisonService.addExcludeDate(res.locals.user.username, prisonId, excludeDate)
-        req.flash('message', `${excludeDateFormatted} has been successfully added`)
+        await this.excludeDateService.addExcludeDate(username, prisonId, excludeDate)
+        req.flash('message', `${excludeDateFormatted} has been successfully added by ${username}`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
       }
-
       return res.redirect(originalUrl)
     }
   }
@@ -75,12 +81,13 @@ export default class ExcludedDatesController {
     return async (req, res) => {
       const { prisonId } = req.params
       const { excludeDate } = req.body
+      const { username } = res.locals.user
 
       const excludeDateFormatted = formatDate(excludeDate)
 
       try {
-        await this.prisonService.removeExcludeDate(res.locals.user.username, prisonId, excludeDate)
-        req.flash('message', `${excludeDateFormatted} has been successfully removed`)
+        await this.excludeDateService.removeExcludeDate(username, prisonId, excludeDate)
+        req.flash('message', `${excludeDateFormatted} has been successfully removed by ${username}`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessage(error))
       }

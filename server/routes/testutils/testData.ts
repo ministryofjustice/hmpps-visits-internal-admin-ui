@@ -16,6 +16,7 @@ import {
   RequestSessionTemplateVisitStatsDto,
   SessionTemplateVisitStatsDto,
   UpdatePrisonDto,
+  PrisonExcludeDateDto,
 } from '../../data/visitSchedulerApiTypes'
 
 export default class TestData {
@@ -368,4 +369,12 @@ export default class TestData {
       approvedVisitor,
       restrictions,
     }) as ContactDto
+
+  static prisonExcludeDateDto = ({
+    excludeDate = '2024-12-12',
+    actionedBy = 'User one',
+  }: Partial<PrisonExcludeDateDto> = {}): PrisonExcludeDateDto => ({
+    excludeDate,
+    actionedBy,
+  })
 }

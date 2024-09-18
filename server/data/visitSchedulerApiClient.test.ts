@@ -209,34 +209,48 @@ describe('visitSchedulerApiClient', () => {
     })
   })
 
+  describe('getExcludeDates', () => {
+    it('should make call to get exclude dates for a prison', async () => {
+      const prisonExcludeDateDto = [TestData.prisonExcludeDateDto()]
+      const prisonCode = 'HEI'
+      fakeVisitSchedulerApi
+        .get(`/prisons/prison/${prisonCode}/exclude-date`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, prisonExcludeDateDto)
+
+      const output = await visitSchedulerApiClient.getExcludeDates(prisonCode)
+
+      expect(output).toEqual(prisonExcludeDateDto)
+    })
+  })
+
   describe('addExcludedDate', () => {
     it('should make call to add exclude date to a prison and return the PrisonDto', async () => {
       const excludeDate = '2023-12-26'
-      const prison = TestData.prisonDto()
-      const prisonWithExcludeDates = TestData.prisonDto({ excludeDates: [excludeDate] })
+      const prisonCode = 'HEI'
 
       fakeVisitSchedulerApi
-        .put(`/admin/prisons/prison/${prison.code}/exclude-date/add`, { excludeDate })
+        .put(`/prisons/prison/${prisonCode}/exclude-date/add`, { excludeDate, actionedBy: 'user1' })
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, prisonWithExcludeDates)
+        .reply(200, null)
 
-      const output = await visitSchedulerApiClient.addExcludeDate(prison.code, '2023-12-26')
+      const output = await visitSchedulerApiClient.addExcludeDate(prisonCode, '2023-12-26', 'user1')
 
-      expect(output).toEqual(prisonWithExcludeDates)
+      expect(output).toEqual(null)
     })
   })
 
   describe('removeExcludedDate', () => {
     it('should make call to remove exclude date from a prison', async () => {
       const excludeDate = '2023-12-26'
-      const prison = TestData.prisonDto({ excludeDates: [excludeDate] })
+      const prisonCode = 'HEI'
 
       fakeVisitSchedulerApi
-        .put(`/admin/prisons/prison/${prison.code}/exclude-date/remove`, { excludeDate })
+        .put(`/prisons/prison/${prisonCode}/exclude-date/remove`, { excludeDate, actionedBy: 'user1' })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200)
 
-      await visitSchedulerApiClient.removeExcludeDate(prison.code, excludeDate)
+      await visitSchedulerApiClient.removeExcludeDate(prisonCode, excludeDate, 'user1')
       expect(fakeVisitSchedulerApi.isDone()).toBe(true)
     })
   })

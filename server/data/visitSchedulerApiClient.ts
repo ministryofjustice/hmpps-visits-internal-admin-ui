@@ -18,6 +18,7 @@ import {
   UpdatePrisonDto,
   PrisonUserClientType,
   PrisonUserClientDto,
+  PrisonExcludeDateDto,
 } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
@@ -109,20 +110,28 @@ export default class VisitSchedulerApiClient {
     })
   }
 
-  async addExcludeDate(prisonCode: string, excludeDate: string): Promise<PrisonDto> {
+  async getExcludeDates(prisonCode: string): Promise<PrisonExcludeDateDto[]> {
+    return this.restClient.get({
+      path: `/prisons/prison/${prisonCode}/exclude-date`,
+    })
+  }
+
+  async addExcludeDate(prisonCode: string, excludeDate: string, username: string): Promise<void> {
     return this.restClient.put({
-      path: `/admin/prisons/prison/${prisonCode}/exclude-date/add`,
+      path: `/prisons/prison/${prisonCode}/exclude-date/add`,
       data: {
         excludeDate,
+        actionedBy: username,
       },
     })
   }
 
-  async removeExcludeDate(prisonCode: string, excludeDate: string): Promise<void> {
+  async removeExcludeDate(prisonCode: string, excludeDate: string, username: string): Promise<void> {
     await this.restClient.put({
-      path: `/admin/prisons/prison/${prisonCode}/exclude-date/remove`,
+      path: `/prisons/prison/${prisonCode}/exclude-date/remove`,
       data: {
         excludeDate,
+        actionedBy: username,
       },
     })
   }
