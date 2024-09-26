@@ -97,7 +97,6 @@ export default class PrisonService {
       adultAgeYears: 18,
       clients: [{ active: true, userType: 'STAFF' }],
       code: prisonCode,
-      excludeDates: [],
       maxAdultVisitors: 3,
       maxChildVisitors: 3,
       maxTotalVisitors: 6,

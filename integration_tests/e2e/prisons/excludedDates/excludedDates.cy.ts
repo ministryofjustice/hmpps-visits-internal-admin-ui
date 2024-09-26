@@ -7,8 +7,7 @@ import ExcludedDatesPage from '../../../pages/prisons/excludedDates/excludedDate
 import ViewSessionTemplatesPage from '../../../pages/prisons/sessionTemplates/viewSessionTemplates'
 
 context('Excluded dates', () => {
-  const excludedDates = ['2023-02-01', '2023-03-02']
-  const prisonDto = TestData.prisonDto({ excludeDates: excludedDates })
+  const prisonDto = TestData.prisonDto()
 
   beforeEach(() => {
     cy.task('reset')
