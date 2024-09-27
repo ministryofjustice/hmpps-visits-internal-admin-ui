@@ -2047,8 +2047,6 @@ export interface components {
        * @example BHI
        */
       code: string
-      /** @description exclude dates */
-      excludeDates: string[]
       /**
        * Format: int32
        * @description Max number of adults

@@ -48,7 +48,6 @@ export default {
               adultAgeYears: prison.adultAgeYears,
               clients: prison.clients,
               code: prison.code,
-              excludeDates: prison.excludeDates,
               maxAdultVisitors: prison.maxAdultVisitors,
               maxChildVisitors: prison.maxChildVisitors,
               maxTotalVisitors: prison.maxTotalVisitors,
