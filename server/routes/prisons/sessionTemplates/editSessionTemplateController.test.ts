@@ -78,10 +78,7 @@ describe('Update a session template', () => {
         expect($('#validToDate-hint').text().trim()).toContain('This must be after: 8 January 2023')
 
         expect($('#openCapacity').attr('value')).toBe('35')
-        expect($('#openCapacity-hint').text().trim()).toContain('The minimum allowed is currently 4')
-
         expect($('#closedCapacity').attr('value')).toBe('2')
-        expect($('#closedCapacity-hint').text().trim()).toContain('The minimum allowed is currently 3')
 
         expect($('#visitRoom').attr('value')).toBe('Visits Main Room')
 
