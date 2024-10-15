@@ -91,7 +91,7 @@
     ]
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^2.2.2",
+    "@ministryofjustice/frontend": "^2.2.4",
     "agentkeepalive": "^4.5.0",
     "applicationinsights": "^2.9.6",
     "bunyan": "^1.8.15",
@@ -101,11 +101,11 @@
     "connect-redis": "^7.1.1",
     "csurf": "^1.11.0",
     "date-fns": "^4.1.0",
-    "express": "^4.21.0",
-    "express-prom-bundle": "^7.0.0",
-    "express-session": "^1.18.0",
+    "express": "^4.21.1",
+    "express-prom-bundle": "^8.0.0",
+    "express-session": "^1.18.1",
     "express-validator": "^7.2.0",
-    "govuk-frontend": "^5.6.0",
+    "govuk-frontend": "^5.7.1",
     "helmet": "^8.0.0",
     "http-errors": "^2.0.0",
     "jquery": "^3.7.1",
@@ -136,12 +136,12 @@
     "@types/passport-oauth2": "^1.4.17",
     "@types/superagent": "^8.1.9",
     "@types/supertest": "^6.0.2",
-    "@typescript-eslint/eslint-plugin": "^8.6.0",
-    "@typescript-eslint/parser": "^8.6.0",
+    "@typescript-eslint/eslint-plugin": "^8.9.0",
+    "@typescript-eslint/parser": "^8.9.0",
     "audit-ci": "^7.1.0",
     "cheerio": "^1.0.0",
     "concurrently": "^9.0.1",
-    "cypress": "^13.14.2",
+    "cypress": "^13.15.0",
     "cypress-multi-reporters": "^1.6.4",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.1",
@@ -149,7 +149,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-cypress": "^3.5.0",
-    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-no-only-tests": "^3.3.0",
     "eslint-plugin-prettier": "^5.2.1",
     "husky": "^9.1.6",
@@ -164,9 +164,14 @@
     "openapi-typescript": "^7.4.1",
     "prettier": "^3.3.3",
     "prettier-plugin-jinja-template": "^2.0.0",
-    "sass": "^1.79.3",
+    "sass": "^1.79.5",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.3"
+  },
+  "overrides": {
+    "csurf": {
+      "cookie": "0.7.2"
+    }
   }
 }
