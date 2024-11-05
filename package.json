@@ -91,7 +91,7 @@
     ]
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^2.2.4",
+    "@ministryofjustice/frontend": "^3.0.2",
     "agentkeepalive": "^4.5.0",
     "applicationinsights": "^2.9.6",
     "bunyan": "^1.8.15",
