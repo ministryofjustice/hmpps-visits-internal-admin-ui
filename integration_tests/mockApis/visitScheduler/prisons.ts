@@ -2,8 +2,8 @@ import { SuperAgentRequest } from 'superagent'
 import { stubFor } from '../wiremock'
 import TestData from '../../../server/routes/testutils/testData'
 import {
+  ExcludeDateDto,
   PrisonDto,
-  PrisonExcludeDateDto,
   PrisonUserClientDto,
   PrisonUserClientType,
   UpdatePrisonDto,
@@ -164,7 +164,7 @@ export default {
     excludeDates,
   }: {
     prisonCode: string
-    excludeDates: PrisonExcludeDateDto
+    excludeDates: ExcludeDateDto
   }): SuperAgentRequest => {
     return stubFor({
       request: {

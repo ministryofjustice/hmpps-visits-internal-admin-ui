@@ -34,8 +34,8 @@ context('Excluded dates', () => {
 
     // Go to excluded dates page
     const excludeDates = [
-      TestData.prisonExcludeDateDto({ excludeDate: '2023-02-01' }),
-      TestData.prisonExcludeDateDto({ excludeDate: '2023-03-02' }),
+      TestData.excludeDateDto({ excludeDate: '2023-02-01' }),
+      TestData.excludeDateDto({ excludeDate: '2023-03-02' }),
     ]
     cy.task('stubGetExcludeDates', {
       prisonCode: prisonDto.code,
@@ -51,7 +51,7 @@ context('Excluded dates', () => {
 
   it('should add an excluded date for a prison', () => {
     // start on excluded dates page
-    let excludeDates = [TestData.prisonExcludeDateDto()]
+    let excludeDates = [TestData.excludeDateDto()]
     cy.task('stubGetExcludeDates', {
       prisonCode: prisonDto.code,
       excludeDates,
@@ -70,8 +70,8 @@ context('Excluded dates', () => {
     cy.task('stubAddExcludeDate', { prisonCode: prisonDto.code, excludeDate: '2023-04-03', actionedBy: 'USER1' })
 
     excludeDates = [
-      TestData.prisonExcludeDateDto(),
-      TestData.prisonExcludeDateDto({ excludeDate: '2023-04-03', actionedBy: 'USER1' }),
+      TestData.excludeDateDto(),
+      TestData.excludeDateDto({ excludeDate: '2023-04-03', actionedBy: 'USER1' }),
     ]
     cy.task('stubGetExcludeDates', {
       prisonCode: prisonDto.code,
@@ -88,8 +88,8 @@ context('Excluded dates', () => {
     // start on excluded dates page
     // start on excluded dates page
     let excludeDates = [
-      TestData.prisonExcludeDateDto({ excludeDate: '2023-02-01', actionedBy: 'USER1' }),
-      TestData.prisonExcludeDateDto({ excludeDate: '2023-03-02', actionedBy: 'USER1' }),
+      TestData.excludeDateDto({ excludeDate: '2023-02-01', actionedBy: 'USER1' }),
+      TestData.excludeDateDto({ excludeDate: '2023-03-02', actionedBy: 'USER1' }),
     ]
     cy.task('stubGetExcludeDates', {
       prisonCode: prisonDto.code,
@@ -107,7 +107,7 @@ context('Excluded dates', () => {
       actionedBy: 'USER1',
     })
 
-    excludeDates = [TestData.prisonExcludeDateDto({ excludeDate: '2023-03-02', actionedBy: 'USER1' })]
+    excludeDates = [TestData.excludeDateDto({ excludeDate: '2023-03-02', actionedBy: 'USER1' })]
 
     cy.task('stubGetExcludeDates', { prisonCode: prisonDto.code, excludeDates })
     excludedDatesPage.removeExcludedDate(0)
