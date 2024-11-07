@@ -41,7 +41,6 @@
       {% for rangeKey, description in sessionTemplatesFilterRanges %}
         {% set filterMenuItems = (filterMenuItems.push({
           text: description | capitalize,
-          classes: "govuk-button--secondary",
           href: "/prisons/" + prison.code + "/session-templates?rangeType=" + rangeKey
         }), filterMenuItems)%}
       {% endfor %}
@@ -60,6 +59,11 @@
             attributes: { "data-test": "add-session-template" }
           }]
         }, {
+          button: {
+            text: "Filter templates",
+            classes: "govuk-button--secondary"
+           },
+          alignMenu: "right",
           items: filterMenuItems
         }]
       }) }}
@@ -178,17 +182,4 @@
         
     </div>
   </div>
-{% endblock %}
-
-{% block pageScripts %}
-  <script nonce="{{ cspNonce }}">
-    new MOJFrontend.ButtonMenu({
-      container: document.querySelectorAll(".moj-button-menu")[1],
-      mq: "(min-width: 1000em)",
-      buttonText: "Filter templates",
-      buttonClasses:
-        "govuk-button--secondary moj-button-menu__toggle-button--secondary",
-      menuClasses: "moj-button-menu__wrapper--right",
-    });
-  </script>
 {% endblock %}
