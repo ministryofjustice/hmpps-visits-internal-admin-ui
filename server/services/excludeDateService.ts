@@ -1,6 +1,6 @@
 import { HmppsAuthClient, RestClientBuilder, VisitSchedulerApiClient } from '../data'
 import logger from '../../logger'
-import { PrisonExcludeDateDto } from '../data/visitSchedulerApiTypes'
+import { ExcludeDateDto } from '../data/visitSchedulerApiTypes'
 
 export default class ExcludeDateService {
   constructor(
@@ -8,7 +8,7 @@ export default class ExcludeDateService {
     private readonly hmppsAuthClient: HmppsAuthClient,
   ) {}
 
-  async getExcludeDates(username: string, prisonCode: string): Promise<PrisonExcludeDateDto[]> {
+  async getExcludeDates(username: string, prisonCode: string): Promise<ExcludeDateDto[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 

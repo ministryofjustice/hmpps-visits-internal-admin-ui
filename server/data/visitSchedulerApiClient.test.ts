@@ -210,16 +210,16 @@ describe('visitSchedulerApiClient', () => {
 
   describe('getExcludeDates', () => {
     it('should make call to get exclude dates for a prison', async () => {
-      const prisonExcludeDateDto = [TestData.prisonExcludeDateDto()]
+      const excludeDateDto = [TestData.excludeDateDto()]
       const prisonCode = 'HEI'
       fakeVisitSchedulerApi
         .get(`/prisons/prison/${prisonCode}/exclude-date`)
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, prisonExcludeDateDto)
+        .reply(200, excludeDateDto)
 
       const output = await visitSchedulerApiClient.getExcludeDates(prisonCode)
 
-      expect(output).toEqual(prisonExcludeDateDto)
+      expect(output).toEqual(excludeDateDto)
     })
   })
 

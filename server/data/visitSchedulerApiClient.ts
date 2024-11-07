@@ -18,7 +18,7 @@ import {
   UpdatePrisonDto,
   PrisonUserClientType,
   PrisonUserClientDto,
-  PrisonExcludeDateDto,
+  ExcludeDateDto,
 } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
@@ -109,7 +109,7 @@ export default class VisitSchedulerApiClient {
     })
   }
 
-  async getExcludeDates(prisonCode: string): Promise<PrisonExcludeDateDto[]> {
+  async getExcludeDates(prisonCode: string): Promise<ExcludeDateDto[]> {
     return this.restClient.get({
       path: `/prisons/prison/${prisonCode}/exclude-date`,
     })

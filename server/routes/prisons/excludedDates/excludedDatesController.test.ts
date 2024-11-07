@@ -21,13 +21,13 @@ const excludeDateService = createMockExcludeDateService()
 
 const prison = TestData.prison()
 const prisonCode = 'HEI'
-const prisonExcludeDateDto = [TestData.prisonExcludeDateDto()]
+const excludeDateDto = [TestData.excludeDateDto()]
 
 beforeEach(() => {
   flashData = {}
   flashProvider.mockImplementation(key => flashData[key])
   prisonService.getPrison.mockResolvedValue(prison)
-  excludeDateService.getExcludeDates.mockResolvedValue(prisonExcludeDateDto)
+  excludeDateService.getExcludeDates.mockResolvedValue(excludeDateDto)
   excludeDateService.addExcludeDate.mockResolvedValue()
   excludeDateService.removeExcludeDate.mockResolvedValue()
   visitService.getVisitCountByDate.mockResolvedValue(1)
