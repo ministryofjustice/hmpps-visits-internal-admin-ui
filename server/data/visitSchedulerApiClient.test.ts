@@ -457,7 +457,7 @@ describe('visitSchedulerApiClient', () => {
       const singleLocationGroup = TestData.locationGroup()
 
       fakeVisitSchedulerApi
-        .post(`/admin/location-groups/group/${singleLocationGroup.reference}`, <UpdateLocationGroupDto>{
+        .put(`/admin/location-groups/group/${singleLocationGroup.reference}`, <UpdateLocationGroupDto>{
           name: updateLocationGroupDto.name,
           locations: updateLocationGroupDto.locations,
         })

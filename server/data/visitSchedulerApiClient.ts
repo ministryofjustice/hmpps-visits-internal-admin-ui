@@ -219,7 +219,7 @@ export default class VisitSchedulerApiClient {
   }
 
   async updateLocationGroup(reference: string, updateLocationGroupDto: UpdateLocationGroupDto): Promise<LocationGroup> {
-    return this.restClient.post({
+    return this.restClient.put({
       path: `/admin/location-groups/group/${reference}`,
       data: updateLocationGroupDto,
     })
