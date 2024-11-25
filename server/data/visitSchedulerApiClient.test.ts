@@ -462,7 +462,7 @@ describe('visitSchedulerApiClient', () => {
           locations: updateLocationGroupDto.locations,
         })
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(201, singleLocationGroup)
+        .reply(200, singleLocationGroup)
 
       const output = await visitSchedulerApiClient.updateLocationGroup(
         singleLocationGroup.reference,
