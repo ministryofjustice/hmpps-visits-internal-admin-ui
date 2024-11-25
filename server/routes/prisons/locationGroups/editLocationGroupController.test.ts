@@ -48,6 +48,8 @@ describe('Update a location group', () => {
         expect($('.moj-primary-navigation__item').length).toBe(3)
         expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/prisons')
 
+        expect($('.govuk-back-link').eq(0).attr('href')).toBe(`/prisons/${prison.code}/location-groups/${reference}`)
+
         expect($('h1 span').text().trim()).toBe(prison.name)
         expect($('h1').text().trim()).toContain('Update location group')
 

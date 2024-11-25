@@ -7,7 +7,7 @@
 {% set pageHeaderTitle = 'Update location group' %}
 {% set pageTitle = applicationName + " - Location groups - " + pageHeaderTitle %}
 {% set activePrimaryNav = "prisons" %}
-{% set backLinkHref = "/prisons/" + prison.code + "/location-groups" %}
+{% set backLinkHref = "/prisons/" + prison.code + "/location-groups/" + locationGroup.reference %}
 
 {% block content %}
   {{ super() }}
