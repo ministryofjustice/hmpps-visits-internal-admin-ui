@@ -1,6 +1,6 @@
 import logger from '../../logger'
 import { RestClientBuilder, VisitSchedulerApiClient, HmppsAuthClient } from '../data'
-import { LocationGroup, CreateLocationGroupDto } from '../data/visitSchedulerApiTypes'
+import { LocationGroup, CreateLocationGroupDto, UpdateLocationGroupDto } from '../data/visitSchedulerApiTypes'
 
 export default class LocationGroupService {
   constructor(
@@ -30,6 +30,19 @@ export default class LocationGroupService {
     logger.info(
       `Location group '${locationGroup.reference}' created for prison '${createLocationGroupDto.prisonId}' by ${username}`,
     )
+    return locationGroup
+  }
+
+  async updateLocationGroup(
+    username: string,
+    reference: string,
+    updateLocationGroupDto: UpdateLocationGroupDto,
+  ): Promise<LocationGroup> {
+    const token = await this.hmppsAuthClient.getSystemClientToken(username)
+    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
+
+    const locationGroup = await visitSchedulerApiClient.updateLocationGroup(reference, updateLocationGroupDto)
+    logger.info(`Location group '${locationGroup.reference}' updated by ${username}`)
     return locationGroup
   }
 

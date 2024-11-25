@@ -1,0 +1,169 @@
+{% extends "partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/fieldset/macro.njk" import govukFieldset -%}
+{%- from "govuk/components/input/macro.njk" import govukInput -%}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+
+{% set pageHeaderTitle = 'Update location group' %}
+{% set pageTitle = applicationName + " - Location groups - " + pageHeaderTitle %}
+{% set activePrimaryNav = "prisons" %}
+{% set backLinkHref = "/prisons/" + prison.code + "/location-groups" %}
+
+{% block content %}
+  {{ super() }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prison.name }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+      <div class="vsip-add-location-group" data-module="moj-add-another">
+
+        <form action="/prisons/{{prison.code}}/location-groups/{{locationGroup.reference}}/edit" method="POST" novalidate>
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+          {{ govukInput({
+            label: {
+              html: "Location group name",
+              classes: "govuk-label--m"
+            },
+            id: "name",
+            name: "name",
+            classes: "govuk-!-width-two-thirds govuk-!-margin-bottom-4",
+            value: locationGroup.name,
+            autocomplete: "off",
+            errorMessage: errors | findError("name")
+          }) }}
+
+          <h2 class="govuk-heading-m">Location level codes</h2>
+
+          {% for locationRow in range(0, locationGroup.locations.length or 1) %}
+
+            {% set levelOneError = errors | findError("location[" + locationRow + "].levelOneCode") %}
+            {% set levelTwoError = errors | findError("location[" + locationRow + "].levelTwoCode") %}
+            {% set levelThreeError = errors | findError("location[" + locationRow + "].levelThreeCode") %}
+            {% set levelFourError = errors | findError("location[" + locationRow + "].levelFourCode") %}
+
+            {% call govukFieldset({
+              classes: "moj-add-another__item"
+            }) %}
+
+            <div class="govuk-form-group{{ ' govuk-form-group--error' if levelOneError or levelTwoError or levelThreeError or levelFourError }}">
+
+              {{ govukErrorMessage({
+                id: "location[" + locationRow + "].levelOneCode-error",
+                text: levelOneError.text
+              }) if levelOneError }}
+              {{ govukErrorMessage({
+                id: "location[" + locationRow + "].levelTwoCode-error",
+                text: levelTwoError.text
+              }) if levelTwoError }}
+              {{ govukErrorMessage({
+                id: "location[" + locationRow + "].levelThreeCode-error",
+                text: levelThreeError.text
+              }) if levelThreeError }}
+              {{ govukErrorMessage({
+                id: "location[" + locationRow + "].levelFourCode-error",
+                text: levelFourError.text
+              }) if levelFourError }}
+
+              {{ govukInput({
+                label: {
+                  text: "One"
+                },
+                id: "location[" + locationRow + "][levelOneCode]",
+                name: "location[" + locationRow + "][levelOneCode]",
+                value: locationGroup.locations[locationRow].levelOneCode,
+                classes: "govuk-input--error" if levelOneError,
+                autocomplete: "off",
+                attributes: {
+                  "data-name": "location[%index%][levelOneCode]",
+                  "data-id": "location[%index%][levelOneCode]"
+                }
+              }) }}
+
+              {{ govukInput({
+                label: {
+                  text: "Two"
+                },
+                id: "location[" + locationRow + "][levelTwoCode]",
+                name: "location[" + locationRow + "][levelTwoCode]",
+                value: locationGroup.locations[locationRow].levelTwoCode,
+                classes: "govuk-input--error" if levelTwoError,
+                autocomplete: "off",
+                attributes: {
+                  "data-name": "location[%index%][levelTwoCode]",
+                  "data-id": "location[%index%][levelTwoCode]"
+                }
+              }) }}
+
+              {{ govukInput({
+                label: {
+                  text: "Three"
+                },
+                id: "location[" + locationRow + "][levelThreeCode]",
+                name: "location[" + locationRow + "][levelThreeCode]",
+                value: locationGroup.locations[locationRow].levelThreeCode,
+                classes: "govuk-input--error" if levelThreeError,
+                autocomplete: "off",
+                attributes: {
+                  "data-name": "location[%index%][levelThreeCode]",
+                  "data-id": "location[%index%][levelThreeCode]"
+                }
+              }) }}
+
+              {{ govukInput({
+                label: {
+                  text: "Four"
+                },
+                id: "location[" + locationRow + "][levelFourCode]",
+                name: "location[" + locationRow + "][levelFourCode]",
+                value: locationGroup.locations[locationRow].levelFourCode,
+                classes: "govuk-input--error" if levelFourError,
+                autocomplete: "off",
+                attributes: {
+                  "data-name": "location[%index%][levelFourCode]",
+                  "data-id": "location[%index%][levelFourCode]"
+                }
+              }) }}
+            </div>
+
+            {% endcall %}
+          {% endfor %}
+
+          {{ govukButton({
+            text: "Add another location",
+            classes: "govuk-button--secondary moj-add-another__add-button",
+            attributes: { "data-test": "add-location-level" }
+          }) }}
+
+          {{ govukButton({
+            text: "Update",
+            attributes: { "data-test": "submit" },
+            preventDoubleClick: true
+          }) }}
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block pageScripts %}
+  <script nonce="{{ cspNonce }}">
+    const addAnotherItems = document.querySelectorAll('.moj-add-another__item')
+
+    if (addAnotherItems.length > 1) {
+      addAnotherItems.forEach(item => {
+        item.insertAdjacentHTML(
+          'beforeend',
+          '<button type="button" class="govuk-button govuk-button--secondary moj-add-another__remove-button">Remove</button>'
+          )
+      })
+    }
+  </script>
+{% endblock %}

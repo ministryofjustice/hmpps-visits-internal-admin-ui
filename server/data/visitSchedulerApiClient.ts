@@ -19,6 +19,7 @@ import {
   PrisonUserClientType,
   PrisonUserClientDto,
   ExcludeDateDto,
+  UpdateLocationGroupDto,
 } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient {
@@ -214,6 +215,13 @@ export default class VisitSchedulerApiClient {
     return this.restClient.post({
       path: `/admin/location-groups/group`,
       data: createLocationGroupDto,
+    })
+  }
+
+  async updateLocationGroup(reference: string, updateLocationGroupDto: UpdateLocationGroupDto): Promise<LocationGroup> {
+    return this.restClient.post({
+      path: `/admin/location-groups/group/${reference}`,
+      data: updateLocationGroupDto,
     })
   }
 

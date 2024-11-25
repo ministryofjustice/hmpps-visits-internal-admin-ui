@@ -17,6 +17,7 @@ import {
   SessionTemplateVisitStatsDto,
   UpdatePrisonDto,
   ExcludeDateDto,
+  UpdateLocationGroupDto,
 } from '../../data/visitSchedulerApiTypes'
 
 export default class TestData {
@@ -238,6 +239,18 @@ export default class TestData {
       },
     ],
   }: Partial<CreateLocationGroupDto> = {}): CreateLocationGroupDto => ({ name, prisonId, locations })
+
+  static updateLocationGroupDto = ({
+    name = 'Wing A',
+    locations = [
+      {
+        levelOneCode: 'A',
+        levelTwoCode: undefined,
+        levelThreeCode: undefined,
+        levelFourCode: undefined,
+      },
+    ],
+  }: Partial<UpdateLocationGroupDto> = {}): UpdateLocationGroupDto => ({ name, locations })
 
   static createCategoryGroupDto = ({
     name = 'Category A (High Risk) prisoners',
