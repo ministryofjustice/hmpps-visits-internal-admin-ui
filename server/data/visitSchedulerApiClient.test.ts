@@ -452,7 +452,7 @@ describe('visitSchedulerApiClient', () => {
   })
 
   describe('updateLocationGroup', () => {
-    it('should add a new location group', async () => {
+    it('should update location group', async () => {
       const updateLocationGroupDto = TestData.updateLocationGroupDto()
       const singleLocationGroup = TestData.locationGroup()
 

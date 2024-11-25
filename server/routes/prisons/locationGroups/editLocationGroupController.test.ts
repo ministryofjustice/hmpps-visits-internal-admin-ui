@@ -71,7 +71,6 @@ describe('Update a location group', () => {
       const locationGroupDto = TestData.locationGroup({
         locations: [{ levelOneCode: 'A', levelTwoCode: '02', levelThreeCode: '03' }],
       })
-
       const updateLocationGroupDto = TestData.updateLocationGroupDto({
         name: locationGroupDto.name,
         locations: locationGroupDto.locations,
