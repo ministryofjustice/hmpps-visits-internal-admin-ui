@@ -15,6 +15,7 @@ describe('Location group service', () => {
   const locationGroups = [TestData.locationGroup()]
   const singleLocationGroup = TestData.locationGroup()
   const createLocationGroupDto = TestData.createLocationGroupDto()
+  const updateLocationGroupDto = TestData.updateLocationGroupDto()
 
   beforeEach(() => {
     VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
@@ -54,6 +55,20 @@ describe('Location group service', () => {
       visitSchedulerApiClient.createLocationGroup.mockResolvedValue(singleLocationGroup)
 
       const results = await locationGroupService.createLocationGroup('user', createLocationGroupDto)
+
+      expect(results).toEqual(singleLocationGroup)
+    })
+  })
+
+  describe('updateLocationGroup', () => {
+    it('should update a location group', async () => {
+      visitSchedulerApiClient.updateLocationGroup.mockResolvedValue(singleLocationGroup)
+
+      const results = await locationGroupService.updateLocationGroup(
+        'user',
+        singleLocationGroup.reference,
+        updateLocationGroupDto,
+      )
 
       expect(results).toEqual(singleLocationGroup)
     })

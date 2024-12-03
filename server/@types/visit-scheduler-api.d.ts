@@ -1559,6 +1559,11 @@ export interface components {
     /** @description Contact */
     ContactDto: {
       /**
+       * @description Contact Email Address
+       * @example email@example.com
+       */
+      email?: string
+      /**
        * @description Contact Name
        * @example John Smith
        */

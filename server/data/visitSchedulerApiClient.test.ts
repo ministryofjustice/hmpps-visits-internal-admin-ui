@@ -12,6 +12,7 @@ import {
   PrisonUserClientDto,
   PrisonUserClientType,
   RequestSessionTemplateVisitStatsDto,
+  UpdateLocationGroupDto,
   UpdatePrisonDto,
   UpdateSessionTemplateDto,
 } from './visitSchedulerApiTypes'
@@ -445,6 +446,28 @@ describe('visitSchedulerApiClient', () => {
         .reply(201, singleLocationGroup)
 
       const output = await visitSchedulerApiClient.createLocationGroup(createLocationGroupDto)
+
+      expect(output).toEqual(singleLocationGroup)
+    })
+  })
+
+  describe('updateLocationGroup', () => {
+    it('should update location group', async () => {
+      const updateLocationGroupDto = TestData.updateLocationGroupDto()
+      const singleLocationGroup = TestData.locationGroup()
+
+      fakeVisitSchedulerApi
+        .put(`/admin/location-groups/group/${singleLocationGroup.reference}`, <UpdateLocationGroupDto>{
+          name: updateLocationGroupDto.name,
+          locations: updateLocationGroupDto.locations,
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, singleLocationGroup)
+
+      const output = await visitSchedulerApiClient.updateLocationGroup(
+        singleLocationGroup.reference,
+        updateLocationGroupDto,
+      )
 
       expect(output).toEqual(singleLocationGroup)
     })
