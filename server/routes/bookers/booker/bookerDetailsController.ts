@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express'
-import { BookerService, PrisonerContactsService } from '../../../services'
+import { BookerService, PrisonerContactsService, PrisonService } from '../../../services'
 import { ContactDto } from '../../../data/prisonerContactRegistryApiTypes'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
 
@@ -15,6 +15,7 @@ export default class BookerDetailsController {
   public constructor(
     private readonly bookerService: BookerService,
     private readonly prisonerContactsService: PrisonerContactsService,
+    private readonly prisonService: PrisonService,
   ) {}
 
   public view(): RequestHandler {
@@ -25,6 +26,8 @@ export default class BookerDetailsController {
       req.session.booker = booker
 
       const prisoner = booker.permittedPrisoners[0] ?? undefined
+      const prisonName =
+        prisoner && (await this.prisonService.getPrisonName(res.locals.user.username, prisoner.prisonCode))
 
       let contacts: ContactDto[]
       try {
@@ -66,6 +69,7 @@ export default class BookerDetailsController {
         errors: req.flash('errors'),
         message: req.flash('message')?.[0] || {},
         booker,
+        prisonName,
         visitors,
       })
     }
