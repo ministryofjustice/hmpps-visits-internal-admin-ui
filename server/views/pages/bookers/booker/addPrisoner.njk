@@ -1,6 +1,7 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% set pageHeaderTitle = "Add a prisoner" %}
 {% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
@@ -22,7 +23,8 @@
 
       {{ govukInput({
           label: {
-            text: "Enter prisoner number"
+            text: "Prisoner number",
+            classes: "govuk-label--s"
           },
           hint: {
             text: "E.g. A1234BC"
@@ -33,7 +35,22 @@
           value: formValues.prisonerNumber,
           autocomplete: "off",
           spellcheck: false,
-          errorMessage: errors | findError('prisonerNumber')
+          errorMessage: errors | findError("prisonerNumber")
+        }) }}
+
+        {{ govukSelect({
+          id: "prisonCode",
+          name: "prisonCode",
+          label: {
+            text: "Prison",
+            classes: "govuk-label--s"
+          },
+          hint: {
+            html: "Select the prisoner's current prison"
+          },
+          items: [{ value: "", text: "Select a prison" }].concat(prisonSelectItems),
+          value: formValues.prisonCode,
+          errorMessage: errors | findError("prisonCode")
         }) }}
 
         {{ govukButton({
