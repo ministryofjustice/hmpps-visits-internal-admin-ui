@@ -41,7 +41,7 @@
         <span data-test="prisoner-status" class="govuk-!-margin-left-3">{{ activeOrInactiveTag(prisoner.active) }}</span>
       </p>
       <p>
-        Prison: <strong data-test="prison-name">{{ prisonName }}</strong>
+        Registered prison: <strong data-test="registered-prison-name">{{ prisonName }}</strong>
       </p>
       {% set prisonerAction = "deactivate" if prisoner.active else "activate" %}
       <form action="/bookers/booker/{{ prisonerAction }}-prisoner" method="POST" novalidate>
