@@ -47,7 +47,7 @@ export default class BookerService {
     const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
 
     const permittedPrisonerDto = await bookerRegistryApiClient.addPrisoner(bookerReference, prisonerId, prisonCode)
-    logger.info(`Prisoner ${prisonerId} added to booker ${bookerReference} by ${username}`)
+    logger.info(`Prisoner ${prisonerId} with prison ${prisonCode} added to booker ${bookerReference} by ${username}`)
     return permittedPrisonerDto
   }
 
