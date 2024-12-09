@@ -1,0 +1,51 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% set pageHeaderTitle = "Change prisoner’s registered prison" %}
+{% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
+{% set activePrimaryNav = "bookers" %}
+{% set backLinkHref = "/bookers/booker/details" %}
+
+{% block content %}
+{{ super() }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
+
+    <p>Booker: <strong>{{ booker.email }}</strong></p>
+    <p>Prisoner: <strong>{{ prisoner.prisonerId }}</strong></p>
+    <p>Currently registered prison: <strong>{{ currentPrisonName }}</strong></p>
+
+    <form action="/bookers/booker/edit-prisoner" method="POST" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukSelect({
+          id: "prisonCode",
+          name: "prisonCode",
+          label: {
+            text: "Change registered prison",
+            classes: "govuk-label--m"
+          },
+          hint: {
+            text: "Select the prisoner's new prison"
+          },
+          items: [{ value: "", text: "Select a prison" }].concat(prisonSelectItems),
+          value: formValues.prisonCode,
+          errorMessage: errors | findError("prisonCode")
+        }) }}
+
+        {{ govukButton({
+          text: "Change prison",
+          attributes: { "data-test": "add-prisoner" },
+          preventDoubleClick: true
+        }) }}
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -7,6 +7,7 @@ import AddPrisonerController from './addPrisonerController'
 import PrisonerStatusController from './prisonerStatusController'
 import AddVisitorController from './addVisitorController'
 import VisitorStatusController from './visitorStatusController'
+import EditPrisonerController from './editPrisonerController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -22,6 +23,7 @@ export default function routes(services: Services): Router {
     services.prisonService,
   )
   const addPrisoner = new AddPrisonerController(services.bookerService, services.prisonService)
+  const editPrisoner = new EditPrisonerController(services.bookerService, services.prisonService)
   const prisonerStatus = new PrisonerStatusController(services.bookerService)
   const addVisitor = new AddVisitorController(services.bookerService, services.prisonerContactsService)
   const visitorStatus = new VisitorStatusController(services.bookerService)
@@ -40,6 +42,9 @@ export default function routes(services: Services): Router {
 
   get('/add-prisoner', addPrisoner.view())
   postWithValidation('/add-prisoner', addPrisoner.validate(), addPrisoner.submit())
+
+  get('/edit-prisoner', editPrisoner.view())
+  postWithValidation('/edit-prisoner', editPrisoner.validate(), editPrisoner.submit())
 
   post('/activate-prisoner', prisonerStatus.setStatus('inactive'))
   post('/deactivate-prisoner', prisonerStatus.setStatus('active'))
