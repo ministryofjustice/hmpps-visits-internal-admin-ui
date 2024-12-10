@@ -63,9 +63,18 @@ describe('Booker service', () => {
     describe('addPrisoner', () => {
       it('should add prisoner to booker', async () => {
         bookerRegistryApiClient.addPrisoner.mockResolvedValue(prisoner)
-        const results = await bookerService.addPrisoner('user', booker.reference, prisoner.prisonerId)
+        const results = await bookerService.addPrisoner(
+          'user',
+          booker.reference,
+          prisoner.prisonerId,
+          prisoner.prisonCode,
+        )
 
-        expect(bookerRegistryApiClient.addPrisoner).toHaveBeenCalledWith(booker.reference, prisoner.prisonerId)
+        expect(bookerRegistryApiClient.addPrisoner).toHaveBeenCalledWith(
+          booker.reference,
+          prisoner.prisonerId,
+          prisoner.prisonCode,
+        )
         expect(results).toStrictEqual(prisoner)
       })
     })

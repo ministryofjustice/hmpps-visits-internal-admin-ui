@@ -31,10 +31,10 @@ export default class BookerRegistryApiClient {
 
   // Prisoner
 
-  async addPrisoner(bookerReference: string, prisonerId: string): Promise<PermittedPrisonerDto> {
+  async addPrisoner(bookerReference: string, prisonerId: string, prisonCode: string): Promise<PermittedPrisonerDto> {
     return this.restClient.put({
       path: `/public/booker/config/${bookerReference}/prisoner`,
-      data: <CreatePermittedPrisonerDto>{ prisonerId, active: true },
+      data: <CreatePermittedPrisonerDto>{ prisonerId, active: true, prisonCode },
     })
   }
 

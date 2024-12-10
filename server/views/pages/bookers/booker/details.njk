@@ -36,19 +36,33 @@
       }) }}
 
     {% else %}
-      <p>
+      <p class="govuk-!-margin-bottom-1">
         Prisoner number: <strong data-test="prisoner-number">{{ prisoner.prisonerId }}</strong>
         <span data-test="prisoner-status" class="govuk-!-margin-left-3">{{ activeOrInactiveTag(prisoner.active) }}</span>
       </p>
-      {% set prisonerAction = "deactivate" if prisoner.active else "activate" %}
-      <form action="/bookers/booker/{{ prisonerAction }}-prisoner" method="POST" novalidate>
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        {{ govukButton({
-          text: prisonerAction | capitalize + " prisoner",
-          classes: "govuk-button--secondary",
-          preventDoubleClick: true
-        }) }}
-      </form>
+      <p>
+        Registered prison: <strong data-test="registered-prison-name">{{ prisonName }}</strong>
+      </p>
+
+      <div class="govuk-button-group">
+        {% set prisonerAction = "deactivate" if prisoner.active else "activate" %}
+        <form action="/bookers/booker/{{ prisonerAction }}-prisoner" method="POST" novalidate>
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+          {{ govukButton({
+            text: "Change registered prison",
+            classes: "govuk-button--secondary",
+            href: "/bookers/booker/edit-prisoner",
+            preventDoubleClick: true
+          }) }}
+
+          {{ govukButton({
+            text: prisonerAction | capitalize + " prisoner",
+            classes: "govuk-button--secondary",
+            preventDoubleClick: true
+          }) }}
+        </form>
+      </div>
 
       <h2 class="govuk-heading-m">Visitors</h2>
       {% if not visitors | length %}

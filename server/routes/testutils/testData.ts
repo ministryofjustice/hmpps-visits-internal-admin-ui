@@ -355,10 +355,12 @@ export default class TestData {
   static permittedPrisonerDto = ({
     prisonerId = 'A1234BC',
     active = true,
+    prisonCode = 'HEI',
     permittedVisitors = [],
   }: Partial<PermittedPrisonerDto> = {}): PermittedPrisonerDto => ({
     prisonerId,
     active,
+    prisonCode,
     permittedVisitors,
   })
 

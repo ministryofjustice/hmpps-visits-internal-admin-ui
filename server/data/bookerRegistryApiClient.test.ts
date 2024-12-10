@@ -71,11 +71,16 @@ describe('bookerRegistryApiClient', () => {
           .put(`/public/booker/config/${booker.reference}/prisoner`, <CreatePermittedPrisonerDto>{
             prisonerId: prisoner.prisonerId,
             active: true,
+            prisonCode: prisoner.prisonCode,
           })
           .matchHeader('authorization', `Bearer ${token}`)
           .reply(201, prisoner)
 
-        const output = await bookerRegistryApiClient.addPrisoner(booker.reference, prisoner.prisonerId)
+        const output = await bookerRegistryApiClient.addPrisoner(
+          booker.reference,
+          prisoner.prisonerId,
+          prisoner.prisonCode,
+        )
         expect(output).toStrictEqual(prisoner)
       })
     })

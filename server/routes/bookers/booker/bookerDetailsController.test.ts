@@ -3,7 +3,11 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
-import { createMockBookerService, createMockPrisonerContactsService } from '../../../services/testutils/mocks'
+import {
+  createMockBookerService,
+  createMockPrisonerContactsService,
+  createMockPrisonService,
+} from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import { FlashErrorMessage } from '../../../@types/visits-admin'
 
@@ -12,6 +16,7 @@ let flashData: Record<string, string | Record<string, string>[] | FlashErrorMess
 
 const bookerService = createMockBookerService()
 const prisonerContactsService = createMockPrisonerContactsService()
+const prisonService = createMockPrisonService()
 let sessionData: SessionData
 
 beforeEach(() => {
@@ -19,7 +24,9 @@ beforeEach(() => {
   flashProvider.mockImplementation(key => flashData[key])
   sessionData = {} as SessionData
 
-  app = appWithAllRoutes({ services: { bookerService, prisonerContactsService }, sessionData })
+  prisonService.getPrisonName.mockResolvedValue('Hewell (HMP)')
+
+  app = appWithAllRoutes({ services: { bookerService, prisonerContactsService, prisonService }, sessionData })
 })
 
 afterEach(() => {
@@ -55,6 +62,7 @@ describe('Booker details', () => {
           expect($('[data-test=booker-reference]').text()).toBe(booker.reference)
 
           expect($('[data-test=prisoner-number]').text()).toBe(prisoner.prisonerId)
+          expect($('[data-test=registered-prison-name]').text()).toBe('Hewell (HMP)')
           expect($('[data-test=prisoner-status]').text().trim()).toBe('Active')
 
           expect($('[data-test=visitor-name-1]').text()).toBe(`${contact.firstName} ${contact.lastName}`)
@@ -70,6 +78,7 @@ describe('Booker details', () => {
             prisonerId: prisoner.prisonerId,
             approvedOnly: false,
           })
+          expect(prisonService.getPrisonName).toHaveBeenCalledWith('user1', prisoner.prisonCode)
         })
     })
 

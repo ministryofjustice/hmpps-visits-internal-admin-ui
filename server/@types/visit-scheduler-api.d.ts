@@ -2001,7 +2001,7 @@ export interface components {
       pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       size?: number
-      sort?: components['schemas']['SortObject'][]
+      sort?: components['schemas']['SortObject']
       /** Format: int64 */
       totalElements?: number
       /** Format: int32 */
@@ -2015,7 +2015,7 @@ export interface components {
       /** Format: int32 */
       pageSize?: number
       paged?: boolean
-      sort?: components['schemas']['SortObject'][]
+      sort?: components['schemas']['SortObject']
       unpaged?: boolean
     }
     /** @description list of locations for group */
@@ -2425,11 +2425,9 @@ export interface components {
       startTime: string
     }
     SortObject: {
-      ascending?: boolean
-      direction?: string
-      ignoreCase?: boolean
-      nullHandling?: string
-      property?: string
+      empty?: boolean
+      sorted?: boolean
+      unsorted?: boolean
     }
     UpdateCategoryGroupDto: {
       /** @description list of category for group */
@@ -2763,6 +2761,11 @@ export interface components {
        */
       description: string
     }
+    /**
+     * @description Visit Restriction - OPEN / CLOSED / UNKNOWN
+     * @example OPEN
+     */
+    visitRestrictions: ('OPEN' | 'CLOSED' | 'UNKNOWN')[]
   }
   responses: never
   parameters: never
@@ -3785,7 +3788,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: string
+        type: 'STAFF' | 'PUBLIC' | 'SYSTEM'
       }
       cookie?: never
     }
@@ -3843,7 +3846,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: string
+        type: 'STAFF' | 'PUBLIC' | 'SYSTEM'
       }
       cookie?: never
     }
@@ -4710,7 +4713,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: string
+        type: 'STAFF' | 'PUBLIC' | 'SYSTEM'
       }
       cookie?: never
     }
@@ -7161,7 +7164,7 @@ export interface operations {
          * @description Visit Restriction - OPEN / CLOSED / UNKNOWN
          * @example OPEN
          */
-        visitRestrictions?: string
+        visitRestrictions?: components['schemas']['visitRestrictions']
         /**
          * @description Filter results by visit status
          * @example BOOKED
