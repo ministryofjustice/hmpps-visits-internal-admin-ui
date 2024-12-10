@@ -62,7 +62,7 @@ describe('Booker details', () => {
           expect($('[data-test=booker-reference]').text()).toBe(booker.reference)
 
           expect($('[data-test=prisoner-number]').text()).toBe(prisoner.prisonerId)
-          expect($('[data-test=prison-name]').text()).toBe('Hewell (HMP)')
+          expect($('[data-test=registered-prison-name]').text()).toBe('Hewell (HMP)')
           expect($('[data-test=prisoner-status]').text().trim()).toBe('Active')
 
           expect($('[data-test=visitor-name-1]').text()).toBe(`${contact.firstName} ${contact.lastName}`)
