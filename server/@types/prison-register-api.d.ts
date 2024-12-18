@@ -232,7 +232,7 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Get prison names
+     * Get prison name(s)
      * @description prison id and full name
      */
     get: operations['getPrisonNames']
@@ -370,6 +370,8 @@ export interface components {
       female: boolean
       /** @description If this is a contracted prison */
       contracted: boolean
+      /** @description If this prison is part of the long term high security estate */
+      lthse: boolean
       /** @description Set of types for this prison */
       prisonTypes: ('HMP' | 'YOI' | 'IRC' | 'STC' | 'YCS')[]
       /** @description Set of categories for this prison */
@@ -434,6 +436,8 @@ export interface components {
       female: boolean
       /** @description Whether the prison is contracted */
       contracted: boolean
+      /** @description Whether the prison is part of long term high security estate */
+      lthse: boolean
       /** @description List of types for this prison */
       types: components['schemas']['PrisonTypeDto'][]
       /** @description List of the categories for this prison */
@@ -522,6 +526,8 @@ export interface components {
       female: boolean
       /** @description If this is a contracted prison */
       contracted: boolean
+      /** @description If this prison is part of the long term high security estate */
+      lthse: boolean
       /**
        * @description Set of types for this prison
        * @example HMP
@@ -1436,6 +1442,11 @@ export interface operations {
          */
         active?: boolean
         /**
+         * @description Long Term High Security Estate
+         * @example true
+         */
+        lthse?: boolean
+        /**
          * @description Text search
          * @example Sheffield
          */
@@ -1470,7 +1481,18 @@ export interface operations {
   }
   getPrisonNames: {
     parameters: {
-      query?: never
+      query?: {
+        /**
+         * @description If active is not set, return all prisons, otherwise return only the active or inactive ones based on the value
+         * @example true
+         */
+        active?: boolean
+        /**
+         * @description If parameter prisonId is not set, return the names of all prisons, otherwise return only the one corresponding to the prisonId code.  Filtering on active still applies
+         * @example WDI
+         */
+        prison_id?: string
+      }
       header?: never
       path?: never
       cookie?: never

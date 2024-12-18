@@ -24,6 +24,8 @@ context('Booker management', () => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubManageUser')
+    cy.task('stubGetAllPrisons')
+    cy.task('stubPrisonNames')
     cy.signIn()
   })
 
@@ -55,6 +57,7 @@ context('Booker management', () => {
     bookerDetailsPage.addPrisoner()
     const addPrisonerPage = Page.verifyOnPage(AddPrisonerPage)
     addPrisonerPage.enterPrisonerNumber(prisoner.prisonerId)
+    addPrisonerPage.selectPrison(prisoner.prisonCode)
     cy.task('stubCreateBookerPrisoner', { booker, prisoner })
     cy.task('stubGetBookerByEmail', bookerWithPrisoner)
     cy.task('stubGetSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [contact], approvedOnly: false })
@@ -63,6 +66,7 @@ context('Booker management', () => {
     // Booker details - prisoner added
     bookerDetailsPage.checkOnPage()
     bookerDetailsPage.prisonerNumber().contains(prisoner.prisonerId)
+    bookerDetailsPage.prisonName().contains('Hewell (HMP)')
 
     // Add visitor
     cy.task('stubGetSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [contact], approvedOnly: true })

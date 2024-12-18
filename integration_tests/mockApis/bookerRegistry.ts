@@ -68,6 +68,7 @@ export default {
             equalToJson: {
               prisonerId: prisoner.prisonerId,
               active: true,
+              prisonCode: prisoner.prisonCode,
             },
           },
         ],

@@ -1,10 +1,13 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { BookerService } from '../../../services'
+import { BookerService, PrisonService } from '../../../services'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
 
 export default class AddPrisonerController {
-  public constructor(private readonly bookerService: BookerService) {}
+  public constructor(
+    private readonly bookerService: BookerService,
+    private readonly prisonService: PrisonService,
+  ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
@@ -15,10 +18,14 @@ export default class AddPrisonerController {
         return res.redirect('/bookers/booker/details')
       }
 
+      const prisons = await this.prisonService.getAllPrisons(res.locals.user.username)
+      const prisonSelectItems = prisons.map(prison => ({ value: prison.code, text: prison.name }))
+
       return res.render('pages/bookers/booker/addPrisoner', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
         booker,
+        prisonSelectItems,
       })
     }
   }
@@ -34,10 +41,10 @@ export default class AddPrisonerController {
 
       const { booker } = req.session
 
-      const { prisonerNumber }: { prisonerNumber: string } = req.body
+      const { prisonerNumber, prisonCode }: { prisonerNumber: string; prisonCode: string } = req.body
 
       try {
-        await this.bookerService.addPrisoner(res.locals.user.username, booker.reference, prisonerNumber)
+        await this.bookerService.addPrisoner(res.locals.user.username, booker.reference, prisonerNumber, prisonCode)
         req.flash('message', { text: `Prisoner added`, type: 'success' })
         return res.redirect('/bookers/booker/details')
       } catch (error) {
@@ -53,6 +60,7 @@ export default class AddPrisonerController {
       body('prisonerNumber', 'Enter a valid prisoner number')
         .trim()
         .matches(/^[A-Z][0-9]{4}[A-Z]{2}$/),
+      body('prisonCode', 'Select a prison').matches(/^[A-Z]{3}$/),
     ]
   }
 }

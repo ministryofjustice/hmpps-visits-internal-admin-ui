@@ -37,12 +37,17 @@ export default class BookerService {
 
   // Prisoner
 
-  async addPrisoner(username: string, bookerReference: string, prisonerId: string): Promise<PermittedPrisonerDto> {
+  async addPrisoner(
+    username: string,
+    bookerReference: string,
+    prisonerId: string,
+    prisonCode: string,
+  ): Promise<PermittedPrisonerDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
 
-    const permittedPrisonerDto = await bookerRegistryApiClient.addPrisoner(bookerReference, prisonerId)
-    logger.info(`Prisoner ${prisonerId} added to booker ${bookerReference} by ${username}`)
+    const permittedPrisonerDto = await bookerRegistryApiClient.addPrisoner(bookerReference, prisonerId, prisonCode)
+    logger.info(`Prisoner ${prisonerId} with prison ${prisonCode} added to booker ${bookerReference} by ${username}`)
     return permittedPrisonerDto
   }
 
