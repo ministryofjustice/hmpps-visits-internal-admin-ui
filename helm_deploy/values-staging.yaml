@@ -24,4 +24,4 @@ generic-service:
       APPINSIGHTS_INSTRUMENTATIONKEY: null # disable App Insights for staging
 
 generic-prometheus-alerts:
-  alertSeverity: digital-prison-service-dev
+  alertSeverity: visits-alerts-nonprod

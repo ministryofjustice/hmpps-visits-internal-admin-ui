@@ -19,4 +19,4 @@ generic-service:
     ENVIRONMENT_NAME: DEV
 
 generic-prometheus-alerts:
-  alertSeverity: digital-prison-service-dev
+  alertSeverity: visits-alerts-nonprod
