@@ -18,4 +18,4 @@ generic-service:
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler.prison.service.justice.gov.uk"
 
 generic-prometheus-alerts:
-  alertSeverity: digital-prison-service
+  alertSeverity: visits-alerts
