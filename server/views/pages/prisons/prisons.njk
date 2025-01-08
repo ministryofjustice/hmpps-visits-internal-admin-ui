@@ -28,7 +28,7 @@
           attributes: { "data-test": "prison-code" }
         },
         {
-          html: '<a class="govuk-link--no-visited-state" href="/prisons/' + prison.code + '/session-templates">' + prison.name + "</a>",
+          html: '<a class="govuk-link--no-visited-state" href="/prisons/' + prison.code + '/session-templates">' + prison.name | escape + "</a>",
           attributes: { "data-test": "prison-name" }
         },
         {

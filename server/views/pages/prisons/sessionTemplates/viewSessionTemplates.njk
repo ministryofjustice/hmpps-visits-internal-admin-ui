@@ -97,7 +97,7 @@
               {%- set rows = (rows.push([
                 {
                   html: '<a class="govuk-link--no-visited-state" href="/prisons/' + prison.code + '/session-templates/' + sessionTemplate.reference + '">'
-                    + sessionTemplate.name + "</a>",
+                    + sessionTemplate.name | escape + "</a>",
                   attributes: { "data-test": "template-name" }
                 },
                 {

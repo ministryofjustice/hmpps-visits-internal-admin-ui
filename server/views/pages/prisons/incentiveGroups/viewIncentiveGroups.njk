@@ -45,7 +45,7 @@
       {% for incentiveLevelGroup in incentiveGroups %}
         {% set rows = (rows.push([
         {
-          html: '<a class="govuk-link--no-visited-state" href="/prisons/' + prison.code + '/incentive-groups/' + incentiveLevelGroup.reference + '">' + incentiveLevelGroup.name + "</a>",
+          html: '<a class="govuk-link--no-visited-state" href="/prisons/' + prison.code + '/incentive-groups/' + incentiveLevelGroup.reference + '">' + incentiveLevelGroup.name | escape + "</a>",
           attributes: { "data-test": "incentive-group-name" }
         },
         {
