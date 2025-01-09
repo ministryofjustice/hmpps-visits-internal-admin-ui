@@ -45,7 +45,7 @@
       {% for locationGroup in locationGroups %}
         {% set rows = (rows.push([
         {
-          html: '<a class="govuk-link--no-visited-state" href="/prisons/' + prison.code + '/location-groups/' + locationGroup.reference + '">' + locationGroup.name + "</a>",
+          html: '<a class="govuk-link--no-visited-state" href="/prisons/' + prison.code + '/location-groups/' + locationGroup.reference + '">' + locationGroup.name | escape + "</a>",
           attributes: { "data-test": "location-group-name" }
         },
         {

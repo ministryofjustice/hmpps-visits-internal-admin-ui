@@ -46,7 +46,7 @@
       {% for categoryGroup in categoryGroups %}
         {% set rows = (rows.push([
         {
-          html: '<a class="govuk-link--no-visited-state" href="/prisons/' + prison.code + '/category-groups/' + categoryGroup.reference + '">' + categoryGroup.name + "</a>",
+          html: '<a class="govuk-link--no-visited-state" href="/prisons/' + prison.code + '/category-groups/' + categoryGroup.reference + '">' + categoryGroup.name | escape + "</a>",
           attributes: { "data-test": "category-group-name" }
 
         },

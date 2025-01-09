@@ -96,7 +96,7 @@
                 text: "Prison web address"
               },
               value: {
-                html: '<a class="govuk-link--no-visited-state" href="' + prisonContactDetails.webAddress + '" target="_blank" rel="noopener noreferrer">' + prisonContactDetails.webAddress + "</a>"
+                html: '<a class="govuk-link--no-visited-state" href="' + prisonContactDetails.webAddress + '" target="_blank" rel="noopener noreferrer">' + prisonContactDetails.webAddress | escape + "</a>"
                   if prisonContactDetails.webAddress else "Not set",
                   classes: "test-contact-web"
               }
