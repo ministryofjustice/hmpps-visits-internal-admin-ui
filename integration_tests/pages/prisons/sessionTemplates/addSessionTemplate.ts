@@ -50,7 +50,10 @@ export default class AddSessionTemplatePage extends Page {
   }
 
   enterVisitRoom = (room: string): void => {
-    cy.get('#visitRoom').type(room)
+    cy.get('#visitRoom').then(input => {
+      cy.wrap(input).clear()
+      cy.wrap(input).type(room)
+    })
   }
 
   addCategoryGroups = (categoryGroups: CategoryGroup[]): void => {

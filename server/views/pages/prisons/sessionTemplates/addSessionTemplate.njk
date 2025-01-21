@@ -277,7 +277,7 @@
           classes: "govuk-!-width-one-third",
           id: "visitRoom",
           name: "visitRoom",
-          value: formValues.visitRoom,
+          value: formValues.visitRoom | default("Visits Hall"),
           autocomplete: "off",
           errorMessage: errors | findError('visitRoom')
         }) }}
