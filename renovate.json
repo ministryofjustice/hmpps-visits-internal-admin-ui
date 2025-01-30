@@ -13,7 +13,7 @@
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non major NPM dependencies",
       "groupSlug": "all-npm-minor-patch",
-      "stabilityDays": 5
+      "minimumReleaseAge": "5 days"
     },
     {
       "matchDepTypes": ["engines"],
@@ -22,7 +22,7 @@
     {
       "matchPackageNames": ["typescript", "govuk-frontend"],
       "rangeStrategy": "bump",
-      "stabilityDays": 0
+      "minimumReleaseAge": null
     },
     {
       "matchManagers": ["npm"],
@@ -42,6 +42,6 @@
     }
   ],
   "vulnerabilityAlerts": {
-    "stabilityDays": 0
+    "minimumReleaseAge": null
   }
 }
