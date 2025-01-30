@@ -36,10 +36,6 @@
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
-    {
-      "matchManagers": ["github-actions"],
-      "fileMatch": ["^\\.github/workflows/.*\\.yml$"]
-    }
   ],
   "vulnerabilityAlerts": {
     "minimumReleaseAge": null
