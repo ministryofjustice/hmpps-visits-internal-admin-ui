@@ -35,7 +35,7 @@
       "matchPackageNames": ["node"],
       "matchUpdateTypes": ["major"],
       "enabled": false
-    },
+    }
   ],
   "vulnerabilityAlerts": {
     "minimumReleaseAge": null
