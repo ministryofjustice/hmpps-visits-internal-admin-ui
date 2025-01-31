@@ -74,12 +74,11 @@
         rows: locationRows
       }) }}
 
-      <h2 class="govuk-heading-m">Delete location group</h2>
       <form action="/prisons/{{ prison.code }}/location-groups/{{ locationGroup.reference }}/delete" data-test="location-delete-form" method="POST" novalidate>
 
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-        <h2 class="govuk-heading-m">Delete this location group</h2>
+        <h2 class="govuk-heading-s">Delete this location group</h2>
         {{ govukButton({
           text: "Delete" | capitalize,
           classes: "govuk-button--warning",
@@ -89,7 +88,7 @@
         })}}
       </form>
 
-      <h2 class="govuk-heading-m">Update this location group</h2>
+      <h2 class="govuk-heading-s">Update this location group</h2>
       {{ govukButton({
         text: "Update",
         classes: "govuk-button--warning",
