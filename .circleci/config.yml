@@ -158,7 +158,10 @@ workflows:
           <<: *feature_branch
           type: approval
           requires:
-            - deploy_dev_preview
+            - helm_lint
+            - unit_test
+            - integration_test
+            - build_docker
 
       - hmpps/deploy_env:
           name: deploy_staging_preview
@@ -185,6 +188,7 @@ workflows:
             - build_docker
 
       - hmpps/deploy_env:
+          <<: *main_branch
           name: deploy_staging
           env: "staging"
           jira_update: true
@@ -193,11 +197,15 @@ workflows:
             - hmpps-common-vars
             - hmpps-visits-internal-admin-ui-stage
           requires:
-            - deploy_dev
+            - helm_lint
+            - unit_test
+            - integration_test
+            - build_docker
 
       - request-preprod-approval:
           type: approval
           requires:
+            - deploy_dev
             - deploy_staging
 
       - hmpps/deploy_env:
