@@ -25,7 +25,7 @@ describe('GET / - Home page', () => {
         expect($('.moj-primary-navigation__item').length).toBe(3)
         expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/')
 
-        expect($('h1').text().trim()).toBe('Visits internal admin')
+        expect($('h1').text().trim()).toBe('Administer visits')
 
         expect($('.card').length).toBe(2)
         expect($('[data-test="administer-prisons"] .card__link').text()).toBe('Supported prisons')
