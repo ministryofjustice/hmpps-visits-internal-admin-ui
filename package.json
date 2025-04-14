@@ -91,7 +91,7 @@
     ]
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^4.0.2",
+    "@ministryofjustice/frontend": "^5.1.2",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.6",
     "bunyan": "^1.8.15",
@@ -107,7 +107,6 @@
     "govuk-frontend": "^5.9.0",
     "helmet": "^8.1.0",
     "http-errors": "^2.0.0",
-    "jquery": "^3.7.1",
     "jwt-decode": "^4.0.0",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
