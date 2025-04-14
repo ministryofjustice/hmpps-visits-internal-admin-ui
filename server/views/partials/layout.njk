@@ -4,8 +4,6 @@
 
 {% block head %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
-
-  <script src="/assets/js/jquery.min.js"></script> 
 {% endblock %}
 
 
@@ -60,9 +58,8 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script type="module" src="/assets/govukFrontendInit.js"></script>
-  <script src="/assets/moj/all.js"></script>
-  <script src="/assets/mojFrontendInit.js"></script>
+  <script type="module" src="/assets/index.js"></script>
+
   {% block pageScripts %}
   {% endblock %}
 {% endblock %}
