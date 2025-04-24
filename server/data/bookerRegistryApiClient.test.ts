@@ -39,15 +39,15 @@ describe('bookerRegistryApiClient', () => {
       })
     })
 
-    describe('getBookerByEmail', () => {
+    describe('getBookersByEmail', () => {
       it('should get booker details for given email', async () => {
         fakeBookerRegistryApi
           .get(`/public/booker/config/email/${booker.email}`)
           .matchHeader('authorization', `Bearer ${token}`)
-          .reply(200, booker)
+          .reply(200, [booker])
 
-        const output = await bookerRegistryApiClient.getBookerByEmail(booker.email)
-        expect(output).toStrictEqual(booker)
+        const output = await bookerRegistryApiClient.getBookersByEmail(booker.email)
+        expect(output).toStrictEqual([booker])
       })
     })
 

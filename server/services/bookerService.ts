@@ -19,11 +19,23 @@ export default class BookerService {
     return booker
   }
 
-  async getBookerByEmail(username: string, email: string): Promise<BookerDto> {
+  async getBookersByEmail(username: string, email: string): Promise<BookerDto[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
 
-    return bookerRegistryApiClient.getBookerByEmail(email)
+    const bookers = await bookerRegistryApiClient.getBookersByEmail(email)
+
+    // TODO remove when API change for return array of bookers is in prod
+    if (!Array.isArray(bookers)) {
+      return [bookers]
+    }
+
+    // TODO Handle more than one booker record for an email
+    if (bookers.length > 1) {
+      throw new Error('More than one booker record for this email address!')
+    }
+
+    return bookers
   }
 
   async clearBookerDetails(username: string, bookerReference: string): Promise<BookerDto> {

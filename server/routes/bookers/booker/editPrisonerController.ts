@@ -89,7 +89,8 @@ export default class EditPrisonerController {
 
         // clear session and re-load data
         delete req.session.booker
-        req.session.booker = await this.bookerService.getBookerByEmail(res.locals.user.username, booker.email)
+        // TODO handle more than one booker record for an email address
+        req.session.booker = (await this.bookerService.getBookersByEmail(res.locals.user.username, booker.email)).at(0)
 
         req.flash('message', { text: `Prison updated`, type: 'success' })
         return res.redirect('/bookers/booker/details')

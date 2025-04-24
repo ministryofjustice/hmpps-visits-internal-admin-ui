@@ -13,10 +13,30 @@ export interface paths {
     }
     get?: never
     /**
-     * Authenticate one login details against pre populated bookers
-     * @description Authenticate one login details against pre populated bookers and return BookerReference object to be used for all other api calls for booker information
+     * Adds a booker entry for a user authorised on GOV.UK one login if it does not exist and / or returns the booker reference for the booker.
+     * @description Creates a booker to allow access to public visits  if it does not exist and / or returns the booker reference for the given auth details.
      */
     put: operations['bookerAuthorisation']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/public/booker/{bookerReference}/permitted/prisoners/register': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Validates a prisoner's details against prisoner search and adds the prisoner against the prisoner if valid
+     * @description Validates a prisoner's details against prisoner search and adds the prisoner against the prisoner if valid
+     */
+    put: operations['registerPrisoner']
     post?: never
     delete?: never
     options?: never
@@ -195,7 +215,7 @@ export interface paths {
      * Validates a prisoner for whom the booker is about to book a visit
      * @description Validates a prisoner for whom the booker is about to book a visit
      */
-    get: operations['validatePrisoner']
+    get: operations['validatePrisonerBeforeBooking']
     put?: never
     post?: never
     delete?: never
@@ -224,6 +244,30 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/public/booker/config/{bookerReference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get bookers details using reference
+     * @description gets bookers details
+     */
+    get: operations['getBookerDetailsUsingReference']
+    put?: never
+    post?: never
+    /**
+     * Clear bookers details
+     * @description Clear bookers details, keeps booker reference and email
+     */
+    delete: operations['clearBookerDetails']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/public/booker/config/email/{emailAddress}': {
     parameters: {
       query?: never
@@ -239,26 +283,6 @@ export interface paths {
     put?: never
     post?: never
     delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/public/booker/config/{bookerReference}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post?: never
-    /**
-     * Clear bookers details
-     * @description Clear bookers details, keeps booker reference and email
-     */
-    delete: operations['clearBookerDetails']
     options?: never
     head?: never
     patch?: never
@@ -299,6 +323,35 @@ export interface components {
       userMessage?: string
       developerMessage?: string
       moreInfo?: string
+    }
+    /** @description Details to register a prisoner to a booker. */
+    RegisterPrisonerRequestDto: {
+      /**
+       * @description Prisoner Id
+       * @example A1234AA
+       */
+      prisonerId: string
+      /**
+       * @description Prisoner first name
+       * @example James
+       */
+      prisonerFirstName: string
+      /**
+       * @description Prisoner last name
+       * @example Smith
+       */
+      prisonerLastName: string
+      /**
+       * Format: date
+       * @description Prisoner date of birth
+       * @example 1960-01-30
+       */
+      prisonerDateOfBirth: string
+      /**
+       * @description Prison Id
+       * @example MDI
+       */
+      prisonId: string
     }
     /** @description Create booker with associated permitted prisoner data. */
     CreateBookerDto: {
@@ -414,13 +467,22 @@ export interface operations {
       }
     }
     responses: {
-      /** @description One login details matched with pre populated booker */
+      /** @description Booker successfully added and / or booker reference returned. */
       200: {
         headers: {
           [name: string]: unknown
         }
         content: {
           'application/json': components['schemas']['BookerReference']
+        }
+      }
+      /** @description An error occurred whilst adding the booker. */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -439,6 +501,57 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  registerPrisoner: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        bookerReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RegisterPrisonerRequestDto']
+      }
+    }
+    responses: {
+      /** @description Prisoner added against booker for booking visits. */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Incorrect request to register a prisoner against a booker */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions for this action */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Register prisoner validation failed */
+      422: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
@@ -907,7 +1020,7 @@ export interface operations {
       }
     }
   }
-  validatePrisoner: {
+  validatePrisonerBeforeBooking: {
     parameters: {
       query?: never
       header?: never
@@ -1019,18 +1132,18 @@ export interface operations {
       }
     }
   }
-  getBookerByEmail: {
+  getBookerDetailsUsingReference: {
     parameters: {
       query?: never
       header?: never
       path: {
-        emailAddress: string
+        bookerReference: string
       }
       cookie?: never
     }
     requestBody?: never
     responses: {
-      /** @description has got booker by email */
+      /** @description Booker details found and returned */
       200: {
         headers: {
           [name: string]: unknown
@@ -1057,7 +1170,7 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponseDto']
         }
       }
-      /** @description booker not found */
+      /** @description Booker not found */
       404: {
         headers: {
           [name: string]: unknown
@@ -1107,6 +1220,55 @@ export interface operations {
         }
       }
       /** @description Booker not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  getBookerByEmail: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        emailAddress: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description has got booker by email */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['BookerDto'][]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Incorrect permissions for this action */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description booker not found */
       404: {
         headers: {
           [name: string]: unknown
