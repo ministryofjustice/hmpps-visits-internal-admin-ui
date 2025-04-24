@@ -98,7 +98,7 @@ describe('Search for a booker', () => {
     const booker = TestData.bookerDto()
 
     it('should search for booker by email using BookerService and redirect to booker details', () => {
-      bookerService.getBookerByEmail.mockResolvedValue(booker)
+      bookerService.getBookersByEmail.mockResolvedValue([booker])
 
       return request(app)
         .post('/bookers/search')
@@ -107,12 +107,12 @@ describe('Search for a booker', () => {
         .expect('location', '/bookers/booker/details')
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(bookerService.getBookerByEmail).toHaveBeenCalledWith('user1', booker.email)
+          expect(bookerService.getBookersByEmail).toHaveBeenCalledWith('user1', booker.email)
         })
     })
 
     it('should search for booker by email and redirect to Add booker when not found', () => {
-      bookerService.getBookerByEmail.mockRejectedValue(new NotFound())
+      bookerService.getBookersByEmail.mockRejectedValue(new NotFound())
 
       return request(app)
         .post('/bookers/search')
@@ -126,7 +126,7 @@ describe('Search for a booker', () => {
             text: 'No existing booker found with email: user@example.com',
             type: 'information',
           })
-          expect(bookerService.getBookerByEmail).toHaveBeenCalledWith('user1', booker.email)
+          expect(bookerService.getBookersByEmail).toHaveBeenCalledWith('user1', booker.email)
         })
     })
 
@@ -148,7 +148,7 @@ describe('Search for a booker', () => {
           expect(flashProvider).toHaveBeenCalledTimes(2)
           expect(flashProvider).toHaveBeenCalledWith('formValues', { booker: 'INVALID' })
           expect(flashProvider).toHaveBeenCalledWith('errors', [expectedError])
-          expect(bookerService.getBookerByEmail).not.toHaveBeenCalled()
+          expect(bookerService.getBookersByEmail).not.toHaveBeenCalled()
         })
     })
   })

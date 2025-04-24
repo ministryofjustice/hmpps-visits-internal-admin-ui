@@ -4,25 +4,25 @@ import { BookerDto, PermittedPrisonerDto } from '../../server/data/bookerRegistr
 import { ContactDto } from '../../server/data/prisonerContactRegistryApiTypes'
 
 export default {
-  stubGetBookerByEmail: (booker: BookerDto): SuperAgentRequest => {
+  stubGetBookersByEmail: ({ email, bookers }: { email: string; bookers: BookerDto[] }): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/bookerRegistry/public/booker/config/email/${booker.email}`,
+        url: `/bookerRegistry/public/booker/config/email/${email}`,
       },
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: booker,
+        jsonBody: bookers,
       },
     })
   },
 
-  stubGetBookerByEmailNotFound: (booker: BookerDto): SuperAgentRequest => {
+  stubGetBookersByEmailNotFound: (email: string): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/bookerRegistry/public/booker/config/email/${booker.email}`,
+        url: `/bookerRegistry/public/booker/config/email/${email}`,
       },
       response: {
         status: 404,

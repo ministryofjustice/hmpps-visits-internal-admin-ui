@@ -30,8 +30,10 @@ export default class BookersController {
       const { booker: email }: { booker: string } = req.body
 
       try {
-        const booker = await this.bookerService.getBookerByEmail(res.locals.user.username, email)
+        // TODO handle more than one booker record for an email address
+        const booker = (await this.bookerService.getBookersByEmail(res.locals.user.username, email))[0]
         req.session.booker = booker
+
         return res.redirect('/bookers/booker/details')
       } catch (error) {
         req.flash('formValues', req.body)
