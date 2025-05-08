@@ -30,7 +30,6 @@ Using credentials from the dev namespace, create a `.env` local settings file
 ```bash
 HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
 HMPPS_AUTH_EXTERNAL_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-NOMIS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
 MANAGE_USERS_API_URL=https://manage-users-api-dev.hmpps.service.justice.gov.uk
 NODE_ENV=development
 
