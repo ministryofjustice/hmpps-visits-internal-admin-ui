@@ -3,17 +3,17 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { FieldValidationError } from 'express-validator'
 
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import {
   createMockExcludeDateService,
   createMockPrisonService,
   createMockVisitService,
 } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
+import { MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 const visitService = createMockVisitService()
@@ -25,7 +25,7 @@ const excludeDateDto = [TestData.excludeDateDto()]
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
   prisonService.getPrison.mockResolvedValue(prison)
   excludeDateService.getExcludeDates.mockResolvedValue(excludeDateDto)
   excludeDateService.addExcludeDate.mockResolvedValue()
@@ -49,7 +49,7 @@ describe('Show excluded dates', () => {
         const $ = cheerio.load(res.text)
         expect($('.moj-primary-navigation__item').length).toBe(3)
         expect($('h2').text().trim()).toBe('Excluded dates')
-        expect($('.moj-banner__message').length).toBe(0)
+        expect($('.moj-alert').length).toBe(0)
         expect($('.govuk-error-summary').length).toBe(0)
         expect($('[data-test="remove-date-button"]').length).toBe(0)
         expect($('.govuk-body').text()).toContain('There are no excluded dates for this prison.')
@@ -64,7 +64,7 @@ describe('Show excluded dates', () => {
         const $ = cheerio.load(res.text)
         expect($('.moj-primary-navigation__item').length).toBe(3)
         expect($('h2').text().trim()).toBe('Excluded dates')
-        expect($('.moj-banner__message').length).toBe(0)
+        expect($('.moj-alert').length).toBe(0)
         expect($('.govuk-error-summary').length).toBe(0)
 
         expect($('[data-test="excluded-date"]').eq(0).text()).toBe('12 December 2024')
@@ -76,7 +76,7 @@ describe('Show excluded dates', () => {
 describe('Add / Remove excluded date', () => {
   it('should render date added status message set in flash', () => {
     flashData = {
-      message: `2024-12-25 has been successfully added`,
+      messages: [{ variant: 'success', title: 'Date added', text: `2024-12-25 has been successfully added` }],
     }
 
     return request(app)
@@ -85,7 +85,7 @@ describe('Add / Remove excluded date', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('h2').text().trim()).toBe('Excluded dates')
-        expect($('.moj-banner__message').text()).toBe(`2024-12-25 has been successfully added`)
+        expect($('.moj-alert__content').text()).toBe(`2024-12-25 has been successfully added`)
       })
   })
 
@@ -140,7 +140,11 @@ describe('Add / Remove excluded date', () => {
         .expect(302)
         .expect('location', `/prisons/${prisonCode}/excluded-dates`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', `26 December 2023 has been successfully added by user1`)
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Date added',
+            text: '26 December 2023 has been successfully added by user1',
+          })
           expect(excludeDateService.addExcludeDate).toHaveBeenCalledTimes(1)
           expect(excludeDateService.addExcludeDate).toHaveBeenCalledWith('user1', prisonCode, date)
         })
@@ -157,10 +161,11 @@ describe('Add / Remove excluded date', () => {
         .expect(302)
         .expect('location', `/prisons/${prisonCode}/excluded-dates`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith(
-            'message',
-            `26 December 2023 has been successfully removed by user1`,
-          )
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Date removed',
+            text: '26 December 2023 has been successfully removed by user1',
+          })
           expect(excludeDateService.removeExcludeDate).toHaveBeenCalledTimes(1)
           expect(excludeDateService.removeExcludeDate).toHaveBeenCalledWith('user1', prisonCode, date)
         })

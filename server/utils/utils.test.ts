@@ -1,5 +1,5 @@
 import { SanitisedError } from '../sanitisedError'
-import { convertToTitleCase, formatDate, initialiseName, responseErrorToFlashMessage } from './utils'
+import { convertToTitleCase, formatDate, initialiseName, responseErrorToFlashMessages } from './utils'
 
 describe('convert to title case', () => {
   it.each([
@@ -49,7 +49,7 @@ describe('format a sanitised response error as a flash error message', () => {
       message: 'Bad Request',
     }
 
-    const flashMessage = responseErrorToFlashMessage(error)
+    const flashMessage = responseErrorToFlashMessages(error)
 
     expect(flashMessage.length).toBe(1)
     expect(flashMessage[0]).toStrictEqual({ msg: '400 Bad Request' })
@@ -64,7 +64,7 @@ describe('format a sanitised response error as a flash error message', () => {
       },
     }
 
-    const flashMessage = responseErrorToFlashMessage(error)
+    const flashMessage = responseErrorToFlashMessages(error)
 
     expect(flashMessage.length).toBe(2)
     expect(flashMessage[0]).toStrictEqual({ msg: '400 Bad Request' })
@@ -80,7 +80,7 @@ describe('format a sanitised response error as a flash error message', () => {
       },
     }
 
-    const flashMessage = responseErrorToFlashMessage(error)
+    const flashMessage = responseErrorToFlashMessages(error)
 
     expect(flashMessage.length).toBe(3)
     expect(flashMessage[0]).toStrictEqual({ msg: '400 Bad Request' })

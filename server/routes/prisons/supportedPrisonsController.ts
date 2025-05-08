@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { body, validationResult } from 'express-validator'
 import { PrisonService } from '../../services'
-import { responseErrorToFlashMessage } from '../../utils/utils'
+import { responseErrorToFlashMessages } from '../../utils/utils'
 
 export default class SupportedPrisonsController {
   public constructor(private readonly prisonService: PrisonService) {}
@@ -13,7 +13,7 @@ export default class SupportedPrisonsController {
       return res.render('pages/prisons/prisons', {
         errors: req.flash('errors'),
         prisons,
-        message: req.flash('message'),
+        messages: req.flash('messages'),
       })
     }
   }
@@ -48,9 +48,13 @@ export default class SupportedPrisonsController {
 
       try {
         await this.prisonService.createPrison(res.locals.user.username, prisonId)
-        req.flash('message', `${newPrisonName} has been successfully added`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Prison added',
+          text: `${newPrisonName} has been successfully added`,
+        })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
       }
 
       return res.redirect(`/prisons`)

@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { PrisonService, CategoryGroupService } from '../../../services'
 import prisonerCategories from '../../../constants/prisonerCategories'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class SingleCategoryGroupController {
   public constructor(
@@ -25,7 +25,7 @@ export default class SingleCategoryGroupController {
         categoryGroup,
         categoryGroupValues,
         sessionTemplateRef,
-        message: req.flash('message'),
+        messages: req.flash('messages'),
       })
     }
   }
@@ -37,9 +37,13 @@ export default class SingleCategoryGroupController {
       try {
         const { name } = await this.categoryGroupService.getSingleCategoryGroup(res.locals.user.username, reference)
         await this.categoryGroupService.deleteCategoryGroup(res.locals.user.username, reference)
-        req.flash('message', `Category group '${name}' has been deleted`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Category group deleted',
+          text: `Category group '${name}' has been deleted`,
+        })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         return res.redirect(`/prisons/${prisonId}/category-groups/${reference}`)
       }
 

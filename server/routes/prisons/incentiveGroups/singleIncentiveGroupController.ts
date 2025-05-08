@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { PrisonService, IncentiveGroupService } from '../../../services'
 import incentiveLevels from '../../../constants/incentiveLevels'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class SingleIncentiveGroupController {
   public constructor(
@@ -28,7 +28,7 @@ export default class SingleIncentiveGroupController {
         incentiveGroup,
         incentiveLevelValues,
         sessionTemplateRef,
-        message: req.flash('message'),
+        messages: req.flash('messages'),
       })
     }
   }
@@ -40,9 +40,13 @@ export default class SingleIncentiveGroupController {
       try {
         const { name } = await this.incentiveGroupService.getSingleIncentiveGroup(res.locals.user.username, reference)
         await this.incentiveGroupService.deleteIncentiveGroup(res.locals.user.username, reference)
-        req.flash('message', `Incentive group '${name}' has been deleted`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Incentive group deleted',
+          text: `Incentive group '${name}' has been deleted`,
+        })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         return res.redirect(`/prisons/${prisonId}/incentive-groups/${reference}`)
       }
 

@@ -2,17 +2,16 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import {
   createMockBookerService,
   createMockPrisonerContactsService,
   createMockPrisonService,
 } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | Record<string, string>[] | FlashErrorMessage>
+let flashData: FlashData
 
 const bookerService = createMockBookerService()
 const prisonerContactsService = createMockPrisonerContactsService()
@@ -21,7 +20,7 @@ let sessionData: SessionData
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
   sessionData = {} as SessionData
 
   prisonService.getPrisonName.mockResolvedValue('Hewell (HMP)')
@@ -55,7 +54,7 @@ describe('Booker details', () => {
 
           expect($('h1').text().trim()).toBe('Booker details')
 
-          expect($('.moj-banner__message').length).toBe(0)
+          expect($('.moj-alert').length).toBe(0)
           expect($('.govuk-error-summary').length).toBe(0)
 
           expect($('[data-test=booker-email]').text()).toBe(booker.email)

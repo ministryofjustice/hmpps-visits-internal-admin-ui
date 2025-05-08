@@ -2,13 +2,14 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { BadRequest } from 'http-errors'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { FieldValidationError } from 'express-validator'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
+import { MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage | Record<string, string | Record<string, string>[]>[]>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 
@@ -16,7 +17,7 @@ const prison = TestData.prison()
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getPrison.mockResolvedValue(prison)
 
@@ -38,7 +39,7 @@ describe('Edit visitor configuration', () => {
         maxChildVisitors: '4',
         adultAgeYears: '16',
       }
-      const errors = [
+      const errors = <FieldValidationError[]>[
         { path: 'maxTotalVisitors', msg: 'total visitors error' },
         { path: 'maxAdultVisitors', msg: 'max adults error' },
         { path: 'maxChildVisitors', msg: 'max children error' },
@@ -97,7 +98,11 @@ describe('Edit visitor configuration', () => {
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(1)
-          expect(flashProvider).toHaveBeenCalledWith('message', 'Visitor configuration updated')
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Visitor configuration updated',
+            text: 'Visitor configuration updated',
+          })
 
           expect(prisonService.updatePrison).toHaveBeenCalledWith('user1', prison.code, updatePrisonDto)
         })

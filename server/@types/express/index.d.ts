@@ -1,4 +1,5 @@
-import { FlashErrorMessage } from '../visits-admin'
+import { FieldValidationError } from 'express-validator'
+import { FlashErrorMessage, MoJAlert } from '../visits-admin'
 import type { UserDetails } from '../../services/userService'
 import { BookerDto } from '../../data/bookerRegistryApiTypes'
 
@@ -25,12 +26,15 @@ export declare global {
     interface Request {
       verified?: boolean
       id: string
-      flash(type: 'errors', message: FlashErrorMessage): number
+      flash(type: 'errors', message: FieldValidationError[] | FlashErrorMessage[]): number
+      flash(type: 'errors'): FieldValidationError[] | FlashErrorMessage[]
 
       flash(type: 'formValues', message: Record<string, string | string[]>): number
-      flash(type: 'formValues'): [Record<string, string | string[]>]
+      flash(type: 'formValues'): Record<string, string | string[]>[]
 
-      flash(type: 'message', message: Record<string, string | string[]>): number
+      flash(type: 'messages', message: MoJAlert): number
+      flash(type: 'messages'): MoJAlert[]
+
       logout(done: (err: unknown) => void): void
     }
 

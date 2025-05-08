@@ -2,7 +2,7 @@ import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService, LocationGroupService } from '../../../services'
 import { LocationGroup, UpdateLocationGroupDto } from '../../../data/visitSchedulerApiTypes'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class EditLocationGroupController {
   public constructor(
@@ -19,7 +19,7 @@ export default class EditLocationGroupController {
 
       res.render('pages/prisons/locationGroups/editLocationGroup', {
         errors: req.flash('errors'),
-        message: req.flash('message'),
+        messages: req.flash('messages'),
         locationGroup,
         prison,
       })
@@ -60,10 +60,14 @@ export default class EditLocationGroupController {
           reference,
           updateLocationGroupDto,
         )
-        req.flash('message', `Location group '${name}' has been updated`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Location group updated',
+          text: `Location group '${name}' has been updated`,
+        })
         return res.redirect(`/prisons/${prisonId}/location-groups/${reference}`)
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }

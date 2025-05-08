@@ -17,6 +17,4 @@ export default class SupportedPrisonsPage extends Page {
   enterPrisonCode = (prisonCode: string): PageElement => cy.get('.govuk-input').type(prisonCode)
 
   createPrison = (): PageElement => cy.get('[data-test="submit"]')
-
-  successMessage = (): PageElement => cy.get('.moj-banner--success')
 }

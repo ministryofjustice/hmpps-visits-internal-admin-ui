@@ -9,7 +9,7 @@ import {
   LocationGroupService,
 } from '../../../services'
 import { UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class EditSessionTemplateController {
   public constructor(
@@ -91,7 +91,7 @@ export default class EditSessionTemplateController {
       req.flash('formValues', formValues)
       return res.render('pages/prisons/sessionTemplates/editSingleSessionTemplate', {
         errors: req.flash('errors'),
-        message: req.flash('message'),
+        messages: req.flash('messages'),
         formValues,
         // incentiveGroups,
         // categoryGroups,
@@ -148,10 +148,14 @@ export default class EditSessionTemplateController {
           reference,
           updateSessionTemplateDto,
         )
-        req.flash('message', `Session template '${name}' has been updated`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Session template updated',
+          text: `Session template '${name}' has been updated`,
+        })
         return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }

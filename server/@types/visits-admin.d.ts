@@ -1,7 +1,8 @@
-import { ValidationError } from 'express-validator'
 import { PrisonDto, SessionCapacity } from '../data/visitSchedulerApiTypes'
 
-export type FlashErrorMessage = ValidationError[] | Record<'msg', string>[]
+export type FlashErrorMessage = { msg: string }
+
+type TextOrHtml = { text: string; html?: never } | { text?: never; html: string }
 
 export interface Prison extends PrisonDto {
   name: string
@@ -13,3 +14,9 @@ export type VisitStatsSummary = {
   minimumCapacity: SessionCapacity
   dates: Record<string, { booked?: number; cancelled?: number }>
 }
+
+export type MoJAlert = {
+  variant: 'information' | 'success' | 'warning' | 'error'
+  title: string
+  showTitleAsHeading?: boolean
+} & TextOrHtml

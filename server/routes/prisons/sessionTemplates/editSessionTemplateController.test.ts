@@ -1,7 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import {
   createMockPrisonService,
   createMockSessionTemplateService,
@@ -10,10 +10,10 @@ import {
   createMockLocationGroupService,
 } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
+import { MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage | Record<string, string>[]>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
@@ -31,7 +31,7 @@ beforeEach(() => {
   sessionTemplateService.getTemplateStats.mockResolvedValue(visitStatsSummary)
 
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getPrison.mockResolvedValue(prison)
 
@@ -120,10 +120,11 @@ describe('Update a session template', () => {
         .expect('location', `/prisons/${prison.code}/session-templates/${reference}`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(1)
-          expect(flashProvider).toHaveBeenCalledWith(
-            'message',
-            `Session template '${updateSessionTemplateDto.name}' has been updated`,
-          )
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Session template updated',
+            text: `Session template '${updateSessionTemplateDto.name}' has been updated`,
+          })
           expect(sessionTemplateService.updateSessionTemplate).toHaveBeenCalledWith(
             'user1',
             reference,

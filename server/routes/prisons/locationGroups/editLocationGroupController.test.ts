@@ -1,13 +1,13 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockLocationGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
+import { MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage | Record<string, string>[]>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 const locationGroupService = createMockLocationGroupService()
@@ -20,7 +20,7 @@ beforeEach(() => {
   locationGroupService.getSingleLocationGroup.mockResolvedValue(singleLocationGroup)
 
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getPrison.mockResolvedValue(prison)
 
@@ -93,10 +93,11 @@ describe('Update a location group', () => {
         .expect('location', `/prisons/${prison.code}/location-groups/${reference}`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(1)
-          expect(flashProvider).toHaveBeenCalledWith(
-            'message',
-            `Location group '${locationGroupDto.name}' has been updated`,
-          )
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Location group updated',
+            text: `Location group '${locationGroupDto.name}' has been updated`,
+          })
           expect(locationGroupService.updateLocationGroup).toHaveBeenCalledWith(
             'user1',
             reference,

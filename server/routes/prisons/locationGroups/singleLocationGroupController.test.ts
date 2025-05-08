@@ -2,13 +2,13 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { BadRequest } from 'http-errors'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockLocationGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
+import { MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 const locationGroupService = createMockLocationGroupService()
@@ -20,7 +20,7 @@ const locationGroup = TestData.locationGroup()
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getAllPrisons.mockResolvedValue(allPrisons)
   prisonService.getPrison.mockResolvedValue(prison)
@@ -74,10 +74,11 @@ describe('Single location group page', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/location-groups`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith(
-            'message',
-            `Location group '${locationGroup.name}' has been deleted`,
-          )
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Location group deleted',
+            text: `Location group '${locationGroup.name}' has been deleted`,
+          })
           expect(locationGroupService.deleteLocationGroup).toHaveBeenCalledWith('user1', `${locationGroup.reference}`)
         })
     })
