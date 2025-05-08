@@ -4,8 +4,8 @@ import TestData from '../../../server/routes/testutils/testData'
 import {
   ExcludeDateDto,
   PrisonDto,
-  PrisonUserClientDto,
-  PrisonUserClientType,
+  UserClientDto,
+  UserClientType,
   UpdatePrisonDto,
 } from '../../../server/data/visitSchedulerApiTypes'
 
@@ -100,7 +100,7 @@ export default {
     type,
   }: {
     prisonCode: string
-    type: PrisonUserClientType
+    type: UserClientType
   }): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -110,7 +110,7 @@ export default {
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: <PrisonUserClientDto>{ active: true, userType: type },
+        jsonBody: <UserClientDto>{ active: true, userType: type },
       },
     })
   },
@@ -119,7 +119,7 @@ export default {
     type,
   }: {
     prisonCode: string
-    type: PrisonUserClientType
+    type: UserClientType
   }): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -129,7 +129,7 @@ export default {
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: <PrisonUserClientDto>{ active: false, userType: type },
+        jsonBody: <UserClientDto>{ active: false, userType: type },
       },
     })
   },

@@ -325,6 +325,23 @@
           <p>There are no location groups set up for this prison.</p>
         {% endif %} #}
 
+        {{ govukCheckboxes({
+          name: "showPublicServices",
+          fieldset: {
+            legend: {
+              text: "Show in public services?",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          errorMessage: errors | findError('showPublicServices'),
+          items: [
+            {
+              text: "Yes",
+              value: "yes",
+              checked: formValues.showPublicServices === 'Yes'
+            }
+          ]
+        }) }}
 
         {{ govukButton({
           text: "Update",

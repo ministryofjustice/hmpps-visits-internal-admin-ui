@@ -9,8 +9,8 @@ import {
   CreateSessionTemplateDto,
   PageVisitDto,
   PrisonDto,
-  PrisonUserClientDto,
-  PrisonUserClientType,
+  UserClientDto,
+  UserClientType,
   RequestSessionTemplateVisitStatsDto,
   UpdateLocationGroupDto,
   UpdatePrisonDto,
@@ -176,9 +176,9 @@ describe('visitSchedulerApiClient', () => {
   describe('activatePrisonClientType', () => {
     it('should make call to activate the given client type for the given prison', async () => {
       const prisonCode = 'HEI'
-      const prisonUserClientType: PrisonUserClientType = 'STAFF'
+      const prisonUserClientType: UserClientType = 'STAFF'
 
-      const response: PrisonUserClientDto = { active: true, userType: 'STAFF' }
+      const response: UserClientDto = { active: true, userType: 'STAFF' }
 
       fakeVisitSchedulerApi
         .put(`/admin/prisons/prison/${prisonCode}/client/${prisonUserClientType}/activate`)
@@ -194,9 +194,9 @@ describe('visitSchedulerApiClient', () => {
   describe('deactivatePrisonClientType', () => {
     it('should make call to deactivate the given client type for the given prison', async () => {
       const prisonCode = 'HEI'
-      const prisonUserClientType: PrisonUserClientType = 'STAFF'
+      const prisonUserClientType: UserClientType = 'STAFF'
 
-      const response: PrisonUserClientDto = { active: false, userType: 'STAFF' }
+      const response: UserClientDto = { active: false, userType: 'STAFF' }
 
       fakeVisitSchedulerApi
         .put(`/admin/prisons/prison/${prisonCode}/client/${prisonUserClientType}/deactivate`)
@@ -351,6 +351,7 @@ describe('visitSchedulerApiClient', () => {
           incentiveLevelGroupReferences: [],
           includeLocationGroupType: createSessionTemplateDto.includeLocationGroupType,
           locationGroupReferences: [],
+          clients: createSessionTemplateDto.clients,
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, createSessionTemplateDto)
@@ -372,6 +373,10 @@ describe('visitSchedulerApiClient', () => {
           sessionDateRange: updateSessionTemplateDto.sessionDateRange,
           sessionTimeSlot: updateSessionTemplateDto.sessionTimeSlot,
           visitRoom: updateSessionTemplateDto.visitRoom,
+          clients: [
+            { active: true, userType: 'STAFF' },
+            { active: true, userType: 'PUBLIC' },
+          ],
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, updateSessionTemplateDto)

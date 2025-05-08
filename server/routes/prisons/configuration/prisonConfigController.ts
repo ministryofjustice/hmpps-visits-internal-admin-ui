@@ -2,7 +2,7 @@ import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService } from '../../../services'
 import { responseErrorToFlashMessage } from '../../../utils/utils'
-import { PrisonUserClientType } from '../../../data/visitSchedulerApiTypes'
+import { UserClientType } from '../../../data/visitSchedulerApiTypes'
 
 export default class PrisonConfigController {
   private prisonUserClientTypes = ['PUBLIC', 'STAFF'] as const
@@ -41,7 +41,7 @@ export default class PrisonConfigController {
         return res.redirect(originalUrl)
       }
 
-      const { enabledServices }: { enabledServices: PrisonUserClientType } = req.body
+      const { enabledServices }: { enabledServices: UserClientType } = req.body
 
       try {
         if (enabledServices.includes('PUBLIC')) {

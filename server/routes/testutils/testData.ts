@@ -153,6 +153,10 @@ export default class TestData {
     visitType = 'SOCIAL',
     weeklyFrequency = 1,
     active = true,
+    clients = [
+      { active: true, userType: 'STAFF' },
+      { active: true, userType: 'PUBLIC' },
+    ],
   }: Partial<SessionTemplate> = {}): SessionTemplate =>
     ({
       dayOfWeek,
@@ -170,6 +174,7 @@ export default class TestData {
       visitType,
       weeklyFrequency,
       active,
+      clients,
     }) as SessionTemplate
 
   static createSessionTemplateDto = ({
@@ -185,6 +190,10 @@ export default class TestData {
     incentiveLevelGroupReferences = [],
     includeLocationGroupType = true,
     locationGroupReferences = [],
+    clients = [
+      { active: true, userType: 'STAFF' },
+      { active: true, userType: 'PUBLIC' },
+    ],
   }: Partial<CreateSessionTemplateDto> = {}): CreateSessionTemplateDto =>
     ({
       name,
@@ -199,6 +208,7 @@ export default class TestData {
       incentiveLevelGroupReferences,
       includeLocationGroupType,
       locationGroupReferences,
+      clients,
     }) as CreateSessionTemplateDto
 
   static updateSessionTemplateDto = ({
@@ -206,12 +216,17 @@ export default class TestData {
     sessionCapacity = { open: 10, closed: 5 },
     sessionDateRange = { validFromDate: '2023-02-01', validToDate: '2024-12-31' },
     visitRoom = 'visit room name',
+    clients = [
+      { active: true, userType: 'STAFF' },
+      { active: true, userType: 'PUBLIC' },
+    ],
   }: Partial<UpdateSessionTemplateDto> = {}): UpdateSessionTemplateDto =>
     ({
       name,
       sessionCapacity,
       sessionDateRange,
       visitRoom,
+      clients,
     }) as UpdateSessionTemplateDto
 
   static locationGroup = ({

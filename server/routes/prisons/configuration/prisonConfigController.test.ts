@@ -6,7 +6,7 @@ import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockSessionTemplateService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import { FlashErrorMessage } from '../../../@types/visits-admin'
-import { PrisonUserClientDto } from '../../../data/visitSchedulerApiTypes'
+import { UserClientDto } from '../../../data/visitSchedulerApiTypes'
 
 let app: Express
 let flashData: Record<string, string | FlashErrorMessage>
@@ -225,8 +225,8 @@ describe('Prison configuration', () => {
 
   describe('Change enabled services', () => {
     beforeEach(() => {
-      prisonService.activatePrisonClientType.mockResolvedValue({} as PrisonUserClientDto)
-      prisonService.deactivatePrisonClientType.mockResolvedValue({} as PrisonUserClientDto)
+      prisonService.activatePrisonClientType.mockResolvedValue({} as UserClientDto)
+      prisonService.deactivatePrisonClientType.mockResolvedValue({} as UserClientDto)
     })
 
     it('should deactivate STAFF and PUBLIC services', () => {

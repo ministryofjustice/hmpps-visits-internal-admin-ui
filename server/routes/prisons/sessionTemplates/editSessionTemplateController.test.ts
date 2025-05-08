@@ -81,6 +81,7 @@ describe('Update a session template', () => {
         expect($('#closedCapacity').attr('value')).toBe('2')
 
         expect($('#visitRoom').attr('value')).toBe('Visits Main Room')
+        expect($('#showPublicServices').prop('checked')).toBe(true)
 
         expect($('[data-test="submit"]').text().trim()).toBe('Update')
       })
@@ -113,6 +114,7 @@ describe('Update a session template', () => {
         .send('openCapacity=10')
         .send('closedCapacity=5')
         .send('visitRoom=visit room name')
+        .send('showPublicServices=yes')
 
       // Then
       return results

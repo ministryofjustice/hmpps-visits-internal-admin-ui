@@ -18,6 +18,9 @@ export default class SingleSessionTemplateController {
         reference,
       )
 
+      const publicClient = sessionTemplate.clients.find(client => client.userType === 'PUBLIC')
+      const showPublicServices = publicClient.active === true ? 'Yes' : 'No'
+
       const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
 
       return res.render('pages/prisons/sessionTemplates/viewSingleSessionTemplate', {
@@ -26,6 +29,7 @@ export default class SingleSessionTemplateController {
         prison,
         sessionTemplate,
         visitStats,
+        showPublicServices,
       })
     }
   }

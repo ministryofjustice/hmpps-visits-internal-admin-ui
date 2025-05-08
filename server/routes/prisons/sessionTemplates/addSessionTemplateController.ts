@@ -88,6 +88,9 @@ export default class AddSessionTemplateController {
         locationGroupReferences = locationGroups.map(locationGroup => locationGroup.reference)
       }
 
+      const publicClient = sessionTemplate.clients.find(client => client.userType === 'PUBLIC')
+      const showPublicServices = publicClient.active === true ? 'Yes' : 'No'
+
       const formValues = {
         name: `COPY - ${sessionTemplate.name}`,
         dayOfWeek: sessionTemplate.dayOfWeek,
@@ -111,6 +114,7 @@ export default class AddSessionTemplateController {
         hasLocationGroups: locationGroupReferences.length > 0 ? 'yes' : undefined,
         locationGroupBehaviour: sessionTemplate.includeLocationGroupType ? 'include' : 'exclude',
         locationGroupReferences,
+        showPublicServices,
       }
 
       req.flash('formValues', formValues)
@@ -161,6 +165,10 @@ export default class AddSessionTemplateController {
         incentiveLevelGroupReferences: req.body.hasIncentiveGroups === 'yes' ? req.body.incentiveGroupReferences : [],
         includeLocationGroupType: req.body.locationGroupBehaviour !== 'exclude',
         locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
+        clients: [
+          { active: true, userType: 'STAFF' },
+          { active: req.body.showPublicServices === 'yes', userType: 'PUBLIC' },
+        ],
       }
 
       try {

@@ -41,6 +41,10 @@ context('Session templates - add', () => {
     prisonerIncentiveLevelGroups: [incentiveLevelGroupOne, incentiveLevelGroupTwo],
     permittedLocationGroups: [locationGroupOne, locationGroupTwo],
     sessionDateRange: { validFromDate: '2023-02-01', validToDate: '2024-12-31' },
+    clients: [
+      { active: true, userType: 'STAFF' },
+      { active: false, userType: 'PUBLIC' },
+    ],
   })
 
   beforeEach(() => {
@@ -84,6 +88,7 @@ context('Session templates - add', () => {
     addSessionTemplatePage.addCategoryGroups([categoryGroupOne, categoryGroupTwo])
     addSessionTemplatePage.addIncentiveGroups([incentiveLevelGroupOne, incentiveLevelGroupTwo])
     addSessionTemplatePage.addLocationGroups([locationGroupOne, locationGroupTwo])
+    addSessionTemplatePage.togglePublicVisibility()
 
     // Submit form to add template
     cy.task('stubCreateSessionTemplate', { sessionTemplate })
@@ -117,5 +122,6 @@ context('Session templates - add', () => {
     viewSingleSessionTemplatePage.checkOnPage()
     viewSingleSessionTemplatePage.successMessage().contains(`Session template '${newTemplateName}' has been created`)
     viewSingleSessionTemplatePage.getReference().contains(sessionTemplate.reference)
+    viewSingleSessionTemplatePage.getPublicVisbility().contains('No')
   })
 })

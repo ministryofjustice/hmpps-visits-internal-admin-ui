@@ -37,6 +37,10 @@ context('Session templates - update', () => {
       sessionDateRange: { validFromDate: '2023-04-01', validToDate: '2023-08-31' },
       sessionCapacity: { open: 40, closed: 5 },
       visitRoom: 'New visit room',
+      clients: [
+        { active: true, userType: 'STAFF' },
+        { active: false, userType: 'PUBLIC' },
+      ],
     }
     updateSessionTemplatePage.enterName(updatedSessionTemplate.name)
     updateSessionTemplatePage.enterValidFromDate(updatedSessionTemplate.sessionDateRange.validFromDate)
@@ -44,6 +48,7 @@ context('Session templates - update', () => {
     updateSessionTemplatePage.enterOpenCapacity(updatedSessionTemplate.sessionCapacity.open)
     updateSessionTemplatePage.enterClosedCapacity(updatedSessionTemplate.sessionCapacity.closed)
     updateSessionTemplatePage.enterVisitRoom(updatedSessionTemplate.visitRoom)
+    updateSessionTemplatePage.togglePublicVisibility()
 
     // Submit form to update template
     cy.task('stubUpdateSessionTemplate', { sessionTemplate: updatedSessionTemplate })

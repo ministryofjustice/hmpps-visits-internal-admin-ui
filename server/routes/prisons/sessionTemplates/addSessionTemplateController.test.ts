@@ -210,6 +210,7 @@ describe('Add a session template', () => {
         .send('locationGroupBehaviour=exclude')
         .send(`locationGroupReferences=${locationGroupReferences[0]}`)
         .send(`locationGroupReferences=${locationGroupReferences[1]}`)
+        .send(`showPublicServices=yes`)
 
       // Then
       return results
@@ -288,6 +289,7 @@ describe('Add a session template', () => {
         categoryGroupReferences: Array<string>(),
         hasLocationGroups: 'yes',
         locationGroupReferences: Array<string>(),
+        showPublicServices: 'yes',
       }
 
       // When
@@ -311,6 +313,7 @@ describe('Add a session template', () => {
         .send('hasIncentiveGroups=yes')
         .send('hasCategoryGroups=yes')
         .send('hasLocationGroups=yes')
+        .send('showPublicServices=yes')
 
       // Then
       return results
@@ -351,6 +354,7 @@ describe('Copy a session template', () => {
     hasLocationGroups: 'yes',
     locationGroupBehaviour: 'include',
     locationGroupReferences: [sessionTemplateToCopy.permittedLocationGroups[0].reference],
+    showPublicServices: 'Yes',
   }
 
   describe('POST /prisons/{:prisonId}/session-templates/copy', () => {
