@@ -34,10 +34,7 @@
   "jest": {
     "transform": {
       "^.+\\.tsx?$": [
-        "ts-jest",
-        {
-          "isolatedModules": true
-        }
+        "ts-jest"
       ]
     },
     "collectCoverageFrom": [
@@ -118,6 +115,7 @@
   },
   "devDependencies": {
     "@ministryofjustice/eslint-config-hmpps": "^0.0.1-beta.2",
+    "@tsconfig/node22": "^22.0.1",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/compression": "^1.7.5",
