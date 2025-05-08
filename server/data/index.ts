@@ -47,6 +47,6 @@ export {
   BookerRegistryApiClient,
   PrisonerContactRegistryApiClient,
   PrisonRegisterApiClient,
-  RestClientBuilder,
+  type RestClientBuilder,
   VisitSchedulerApiClient,
 }
