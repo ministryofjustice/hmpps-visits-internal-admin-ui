@@ -88,7 +88,7 @@ context('Session templates - add', () => {
     addSessionTemplatePage.addCategoryGroups([categoryGroupOne, categoryGroupTwo])
     addSessionTemplatePage.addIncentiveGroups([incentiveLevelGroupOne, incentiveLevelGroupTwo])
     addSessionTemplatePage.addLocationGroups([locationGroupOne, locationGroupTwo])
-    addSessionTemplatePage.togglePublicVisibility(true)
+    addSessionTemplatePage.setHiddenFromPublic(true)
 
     // Submit form to add template
     cy.task('stubCreateSessionTemplate', { sessionTemplate })
@@ -122,6 +122,6 @@ context('Session templates - add', () => {
     viewSingleSessionTemplatePage.checkOnPage()
     viewSingleSessionTemplatePage.successMessage().contains(`Session template '${newTemplateName}' has been created`)
     viewSingleSessionTemplatePage.getReference().contains(sessionTemplate.reference)
-    viewSingleSessionTemplatePage.getPublicVisbility().contains('No')
+    viewSingleSessionTemplatePage.getPublicVisbility().contains('Yes')
   })
 })
