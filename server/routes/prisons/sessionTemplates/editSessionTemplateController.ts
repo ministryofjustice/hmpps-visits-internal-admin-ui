@@ -40,28 +40,6 @@ export default class EditSessionTemplateController {
       const validToDateMonth = validToDateSplit[1] || undefined
       const validToDateDay = validToDateSplit[2] || undefined
 
-      // const incentiveGroups = await this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
-      // const categoryGroups = await this.categoryGroupService.getCategoryGroups(res.locals.user.username, prisonId)
-      // const locationGroups = await this.locationGroupService.getLocationGroups(res.locals.user.username, prisonId)
-
-      // let categoryGroupReferences: string[] = []
-      // const activeCategoryGroups = sessionTemplate.prisonerCategoryGroups
-      // if (activeCategoryGroups !== undefined && activeCategoryGroups.length > 0) {
-      //   categoryGroupReferences = activeCategoryGroups.map(categoryGroup => categoryGroup.reference)
-      // }
-
-      // let incentiveGroupReferences: string[] = []
-      // const activeIncentiveGroups = sessionTemplate.prisonerIncentiveLevelGroups
-      // if (activeIncentiveGroups !== undefined && activeIncentiveGroups.length > 0) {
-      //   incentiveGroupReferences = activeIncentiveGroups.map(incentiveGroup => incentiveGroup.reference)
-      // }
-
-      // let locationGroupReferences: string[] = []
-      // const activeLocationGroups = sessionTemplate.permittedLocationGroups
-      // if (activeLocationGroups !== undefined && activeLocationGroups.length > 0) {
-      //   locationGroupReferences = activeLocationGroups.map(locationGroup => locationGroup.reference)
-      // }
-
       const formValues = {
         name: sessionTemplate.name,
         validFromDateDay,
@@ -74,12 +52,6 @@ export default class EditSessionTemplateController {
         openCapacity: sessionTemplate.sessionCapacity.open.toString(),
         closedCapacity: sessionTemplate.sessionCapacity.closed.toString(),
         visitRoom: sessionTemplate.visitRoom,
-        // hasIncentiveGroups: incentiveGroupReferences.length > 0 ? 'yes' : undefined,
-        // incentiveGroupReferences,
-        // hasCategoryGroups: categoryGroupReferences.length > 0 ? 'yes' : undefined,
-        // categoryGroupReferences,
-        // hasLocationGroups: locationGroupReferences.length > 0 ? 'yes' : undefined,
-        // locationGroupReferences,
       }
 
       const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
@@ -93,9 +65,6 @@ export default class EditSessionTemplateController {
         errors: req.flash('errors'),
         messages: req.flash('messages'),
         formValues,
-        // incentiveGroups,
-        // categoryGroups,
-        // locationGroups,
         prison,
         reference,
         visitStats,
@@ -137,9 +106,6 @@ export default class EditSessionTemplateController {
               : undefined,
         },
         visitRoom: req.body.visitRoom,
-        // categoryGroupReferences: req.body.hasCategoryGroups === 'yes' ? req.body.categoryGroupReferences : [],
-        // incentiveLevelGroupReferences: req.body.hasIncentiveGroups === 'yes' ? req.body.incentiveGroupReferences : [],
-        // locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
       }
 
       try {
