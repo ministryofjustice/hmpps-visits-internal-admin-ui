@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { body, ValidationChain } from 'express-validator'
 import { BookerService } from '../../../services'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class VisitorStatusController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -12,7 +12,11 @@ export default class VisitorStatusController {
       const { visitorId } = req.body
 
       if (booker.permittedPrisoners.length === 0) {
-        req.flash('message', { text: 'This booker has no prisoner', type: 'information' })
+        req.flash('messages', {
+          variant: 'information',
+          title: 'Booker has no prisoner',
+          text: 'This booker has no prisoner',
+        })
         return res.redirect('/bookers/booker/details')
       }
 
@@ -33,9 +37,13 @@ export default class VisitorStatusController {
           )
         }
 
-        req.flash('message', { text: `Visitor status updated`, type: 'success' })
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Visitor status updated',
+          text: 'Visitor status updated',
+        })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
       }
 

@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { ExcludeDateService, PrisonService, VisitService } from '../../../services'
-import { formatDate, responseErrorToFlashMessage } from '../../../utils/utils'
+import { formatDate, responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class ExcludedDatesController {
   public constructor(
@@ -22,7 +22,7 @@ export default class ExcludedDatesController {
         errors: req.flash('errors'),
         blockedDates,
         prison,
-        message: req.flash('message'),
+        messages: req.flash('messages'),
       })
     }
   }
@@ -69,9 +69,13 @@ export default class ExcludedDatesController {
 
       try {
         await this.excludeDateService.addExcludeDate(username, prisonId, excludeDate)
-        req.flash('message', `${excludeDateFormatted} has been successfully added by ${username}`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Date added',
+          text: `${excludeDateFormatted} has been successfully added by ${username}`,
+        })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
       }
       return res.redirect(originalUrl)
     }
@@ -87,9 +91,13 @@ export default class ExcludedDatesController {
 
       try {
         await this.excludeDateService.removeExcludeDate(username, prisonId, excludeDate)
-        req.flash('message', `${excludeDateFormatted} has been successfully removed by ${username}`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Date removed',
+          text: `${excludeDateFormatted} has been successfully removed by ${username}`,
+        })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
       }
 
       return res.redirect(`/prisons/${prisonId}/excluded-dates`)

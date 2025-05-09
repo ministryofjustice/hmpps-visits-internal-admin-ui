@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService } from '../../../services'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 import { PrisonContactDetails } from '../../../data/prisonRegisterApiTypes'
 
 export default class AddEditContactDetailsController {
@@ -48,7 +48,11 @@ export default class AddEditContactDetailsController {
       const contactDetailsAreEmpty = emailAddress === '' && phoneNumber === '' && webAddress === ''
 
       if (contactDetailsAreEmpty) {
-        req.flash('message', 'No contact details added (none entered)')
+        req.flash('messages', {
+          variant: 'information',
+          title: 'No contact details added',
+          text: 'No contact details added (none entered)',
+        })
         return res.redirect(`/prisons/${prisonId}/configuration`)
       }
 
@@ -60,11 +64,11 @@ export default class AddEditContactDetailsController {
           webAddress,
         })
 
-        req.flash('message', 'Contact details added')
+        req.flash('messages', { variant: 'success', title: 'Contact details added', text: 'Contact details added' })
 
         return res.redirect(`/prisons/${prisonId}/configuration`)
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
 
         return res.redirect(originalUrl)
@@ -91,7 +95,11 @@ export default class AddEditContactDetailsController {
       try {
         if (contactDetailsAreEmpty) {
           await this.prisonService.deletePrisonContactDetails(res.locals.user.username, prisonId)
-          req.flash('message', 'Contact details removed (all values set to empty)')
+          req.flash('messages', {
+            variant: 'success',
+            title: 'Contact details removed',
+            text: 'Contact details removed (all values set to empty)',
+          })
         } else {
           await this.prisonService.updatePrisonContactDetails(res.locals.user.username, prisonId, {
             type: 'SOCIAL_VISIT',
@@ -99,12 +107,16 @@ export default class AddEditContactDetailsController {
             phoneNumber,
             webAddress,
           })
-          req.flash('message', 'Contact details updated')
+          req.flash('messages', {
+            variant: 'success',
+            title: 'Contact details updated',
+            text: 'Contact details updated',
+          })
         }
 
         return res.redirect(`/prisons/${prisonId}/configuration`)
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }

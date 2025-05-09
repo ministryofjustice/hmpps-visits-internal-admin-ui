@@ -3,13 +3,13 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { FieldValidationError } from 'express-validator'
-import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from '../testutils/appSetup'
 import { createMockPrisonService, createMockSessionTemplateService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
-import { FlashErrorMessage } from '../../@types/visits-admin'
+import { MoJAlert } from '../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
@@ -18,7 +18,7 @@ const allPrisons = TestData.prisons()
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getAllPrisons.mockResolvedValue(allPrisons)
 
@@ -42,7 +42,7 @@ describe('Supported prisons', () => {
 
           expect($('h1').text().trim()).toBe('Supported prisons')
 
-          expect($('.moj-banner__message').length).toBe(0)
+          expect($('.moj-alert').length).toBe(0)
           expect($('.govuk-error-summary').length).toBe(0)
 
           expect($('[data-test="prison-code"]').eq(0).text()).toBe('HEI')
@@ -68,7 +68,9 @@ describe('Supported prisons', () => {
 
     it('should render prison added status message set in flash', () => {
       flashData = {
-        message: 'Hewell (HMP) has been successfully added',
+        messages: <MoJAlert[]>[
+          { variant: 'success', title: 'Prison added', text: 'Hewell (HMP) has been successfully added' },
+        ],
       }
 
       return request(app)
@@ -77,7 +79,7 @@ describe('Supported prisons', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('h1').text().trim()).toBe('Supported prisons')
-          expect($('.moj-banner__message').text()).toBe('Hewell (HMP) has been successfully added')
+          expect($('.moj-alert__content').text()).toBe('Hewell (HMP) has been successfully added')
         })
     })
 
@@ -113,7 +115,11 @@ describe('Supported prisons', () => {
         .expect(302)
         .expect('location', `/prisons`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'Berwyn (HMP & YOI) has been successfully added')
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Prison added',
+            text: 'Berwyn (HMP & YOI) has been successfully added',
+          })
           expect(prisonService.createPrison).toHaveBeenCalledTimes(1)
           expect(prisonService.createPrison).toHaveBeenCalledWith('user1', 'BWI')
         })

@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { validationResult, ValidationChain, body } from 'express-validator'
 import { PrisonService } from '../../../services'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class EditVisitorConfigController {
   public constructor(private readonly prisonService: PrisonService) {}
@@ -23,7 +23,7 @@ export default class EditVisitorConfigController {
         errors: req.flash('errors'),
         prison,
         formValues,
-        message: req.flash('message'),
+        messages: req.flash('messages'),
       })
     }
   }
@@ -56,11 +56,15 @@ export default class EditVisitorConfigController {
           maxChildVisitors,
           adultAgeYears,
         })
-        req.flash('message', 'Visitor configuration updated')
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Visitor configuration updated',
+          text: 'Visitor configuration updated',
+        })
 
         return res.redirect(`/prisons/${prisonId}/configuration`)
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }

@@ -1,0 +1,13 @@
+{%- from "moj/components/alert/macro.njk" import mojAlert -%}
+
+{%- if messages | length %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {%- for message in messages %}
+        {{ mojAlert(message) }}
+      {% endfor -%}
+    </div>
+  </div>
+
+{% endif -%}

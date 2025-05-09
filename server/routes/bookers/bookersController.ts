@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { BookerService } from '../../services'
-import { responseErrorToFlashMessage } from '../../utils/utils'
+import { responseErrorToFlashMessages } from '../../utils/utils'
 
 export default class BookersController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -11,7 +11,7 @@ export default class BookersController {
       return res.render('pages/bookers/bookers', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
-        message: req.flash('message')?.[0] || {},
+        messages: req.flash('messages'),
         action,
       })
     }
@@ -39,11 +39,15 @@ export default class BookersController {
         req.flash('formValues', req.body)
 
         if (error.status === 404) {
-          req.flash('message', { text: `No existing booker found with email: ${email}`, type: 'information' })
+          req.flash('messages', {
+            variant: 'information',
+            title: 'No booker found',
+            text: `No existing booker found with email: ${email}`,
+          })
           return res.redirect('/bookers/add')
         }
 
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         return res.redirect('/bookers')
       }
     }
@@ -64,11 +68,15 @@ export default class BookersController {
       try {
         const booker = await this.bookerService.createBooker(res.locals.user.username, email)
         req.session.booker = booker
-        req.flash('message', { text: `Booker record created`, type: 'success' })
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Booker record created',
+          text: 'Booker record created',
+        })
 
         return res.redirect('/bookers/booker/details')
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
         return res.redirect('/bookers/booker/add')
       }

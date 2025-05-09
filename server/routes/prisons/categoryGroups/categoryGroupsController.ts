@@ -24,7 +24,7 @@ export default class CategoryGroupsController {
       return res.render('pages/prisons/categoryGroups/viewCategoryGroups', {
         prison,
         categoryGroups,
-        message: req.flash('message'),
+        messages: req.flash('messages'),
       })
     }
   }

@@ -2,13 +2,13 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { BadRequest } from 'http-errors'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockIncentiveGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
+import { MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 const incentiveGroupService = createMockIncentiveGroupService()
@@ -20,7 +20,7 @@ const incentiveGroup = TestData.incentiveGroup()
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getAllPrisons.mockResolvedValue(allPrisons)
   prisonService.getPrison.mockResolvedValue(prison)
@@ -73,10 +73,11 @@ describe('Single incentive group page', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/incentive-groups`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith(
-            'message',
-            `Incentive group '${incentiveGroup.name}' has been deleted`,
-          )
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Incentive group deleted',
+            text: `Incentive group '${incentiveGroup.name}' has been deleted`,
+          })
           expect(incentiveGroupService.deleteIncentiveGroup).toHaveBeenCalledTimes(1)
           expect(incentiveGroupService.deleteIncentiveGroup).toHaveBeenCalledWith('user1', incentiveGroup.reference)
         })

@@ -1,4 +1,4 @@
-{%- from "moj/components/banner/macro.njk" import mojBanner -%}
+{%- from "moj/components/alert/macro.njk" import mojAlert -%}
 
 {% macro sessionTemplateVisitStats(visitStats) %}
 
@@ -22,16 +22,12 @@
 {% endset %}
 
 {% if visitStats.cancelCount > 0 or visitStats.bookedCount > 0 %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-three-quarters">
-      {{ mojBanner({
-        type: "information",
-        html: visitStatsHtml,
-        iconFallbackText: "Information",
-        attributes: { "data-test": "visit-stats" }
-      }) }}
-    </div>
-  </div>
+  {{ mojAlert({
+    variant: "information",
+    title: "Visits information",
+    html: visitStatsHtml,
+    attributes: { "data-test": "visit-stats" }
+  }) }}
 {% endif %}
 
 {% endmacro %}

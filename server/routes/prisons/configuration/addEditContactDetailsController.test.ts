@@ -2,13 +2,14 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { BadRequest } from 'http-errors'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { FieldValidationError } from 'express-validator'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
+import { MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage | Record<string, string | Record<string, string>[]>[]>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 
@@ -16,7 +17,7 @@ const prison = TestData.prison()
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getPrison.mockResolvedValue(prison)
 
@@ -37,7 +38,7 @@ describe('Add / edit contact details', () => {
         phoneNumber: 'b',
         webAddress: 'c',
       }
-      const errors = [
+      const errors = <FieldValidationError[]>[
         { path: 'emailAddress', msg: 'email error' },
         { path: 'phoneNumber', msg: 'phone error' },
         { path: 'webAddress', msg: 'web error' },
@@ -104,7 +105,11 @@ describe('Add / edit contact details', () => {
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(1)
-          expect(flashProvider).toHaveBeenCalledWith('message', 'Contact details added')
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Contact details added',
+            text: 'Contact details added',
+          })
 
           expect(prisonService.createPrisonContactDetails).toHaveBeenCalledWith(
             'user1',
@@ -127,7 +132,11 @@ describe('Add / edit contact details', () => {
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(1)
-          expect(flashProvider).toHaveBeenCalledWith('message', 'Contact details updated')
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Contact details updated',
+            text: 'Contact details updated',
+          })
 
           expect(prisonService.updatePrisonContactDetails).toHaveBeenCalledWith(
             'user1',
@@ -200,7 +209,11 @@ describe('Add / edit contact details', () => {
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(1)
-          expect(flashProvider).toHaveBeenCalledWith('message', 'No contact details added (none entered)')
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'information',
+            title: 'No contact details added',
+            text: 'No contact details added (none entered)',
+          })
           expect(prisonService.createPrisonContactDetails).not.toHaveBeenCalled()
           expect(prisonService.updatePrisonContactDetails).not.toHaveBeenCalled()
         })
@@ -217,7 +230,11 @@ describe('Add / edit contact details', () => {
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(1)
-          expect(flashProvider).toHaveBeenCalledWith('message', 'Contact details removed (all values set to empty)')
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Contact details removed',
+            text: 'Contact details removed (all values set to empty)',
+          })
           expect(prisonService.createPrisonContactDetails).not.toHaveBeenCalled()
           expect(prisonService.updatePrisonContactDetails).not.toHaveBeenCalled()
           expect(prisonService.deletePrisonContactDetails).toHaveBeenCalledWith('user1', prison.code)

@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { BookerService, PrisonerContactsService, PrisonService } from '../../../services'
 import { ContactDto } from '../../../data/prisonerContactRegistryApiTypes'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 type Visitor = {
   visitorId: number
@@ -40,7 +40,7 @@ export default class BookerDetailsController {
             })
           : []
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         contacts = []
       }
 
@@ -68,7 +68,7 @@ export default class BookerDetailsController {
 
       return res.render('pages/bookers/booker/details', {
         errors: req.flash('errors'),
-        message: req.flash('message')?.[0] || {},
+        messages: req.flash('messages'),
         booker,
         prisonName,
         visitors,
@@ -81,7 +81,11 @@ export default class BookerDetailsController {
       const { booker } = req.session
 
       req.session.booker = await this.bookerService.clearBookerDetails(res.locals.user.username, booker.reference)
-      req.flash('message', { text: 'Booker details have been cleared', type: 'success' })
+      req.flash('messages', {
+        variant: 'success',
+        title: 'Booker details cleared',
+        text: 'Booker details have been cleared',
+      })
 
       return res.redirect('/bookers/booker/details')
     }
