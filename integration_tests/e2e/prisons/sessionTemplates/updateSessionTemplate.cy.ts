@@ -6,7 +6,12 @@ import ViewSingleSessionTemplatePage from '../../../pages/prisons/sessionTemplat
 
 context('Session templates - update', () => {
   const prison = TestData.prison()
-  const sessionTemplate = TestData.sessionTemplate()
+  const sessionTemplate = TestData.sessionTemplate({
+    clients: [
+      { active: true, userType: 'STAFF' },
+      { active: false, userType: 'PUBLIC' },
+    ],
+  })
 
   beforeEach(() => {
     cy.task('reset')
@@ -37,6 +42,10 @@ context('Session templates - update', () => {
       sessionDateRange: { validFromDate: '2023-04-01', validToDate: '2023-08-31' },
       sessionCapacity: { open: 40, closed: 5 },
       visitRoom: 'New visit room',
+      clients: [
+        { active: true, userType: 'STAFF' },
+        { active: true, userType: 'PUBLIC' },
+      ],
     }
     updateSessionTemplatePage.enterName(updatedSessionTemplate.name)
     updateSessionTemplatePage.enterValidFromDate(updatedSessionTemplate.sessionDateRange.validFromDate)
@@ -44,6 +53,7 @@ context('Session templates - update', () => {
     updateSessionTemplatePage.enterOpenCapacity(updatedSessionTemplate.sessionCapacity.open)
     updateSessionTemplatePage.enterClosedCapacity(updatedSessionTemplate.sessionCapacity.closed)
     updateSessionTemplatePage.enterVisitRoom(updatedSessionTemplate.visitRoom)
+    updateSessionTemplatePage.setHiddenFromPublic(false)
 
     // Submit form to update template
     cy.task('stubUpdateSessionTemplate', { sessionTemplate: updatedSessionTemplate })
@@ -55,5 +65,6 @@ context('Session templates - update', () => {
       .successMessage()
       .contains(`Session template '${updatedSessionTemplate.name}' has been updated`)
     viewSingleSessionTemplatePage.getReference().contains(updatedSessionTemplate.reference)
+    viewSingleSessionTemplatePage.getPublicVisbility().contains('No')
   })
 })

@@ -30,6 +30,9 @@ export default class EditSessionTemplateController {
         reference,
       )
 
+      const publicClient = sessionTemplate.clients.find(client => client.userType === 'PUBLIC')
+      const hideInPublicServices = publicClient?.active === false ? 'yes' : 'no'
+
       const validFromDateSplit = sessionTemplate.sessionDateRange.validFromDate.split('-')
       const validFromDateYear = validFromDateSplit[0]
       const validFromDateMonth = validFromDateSplit[1]
@@ -52,6 +55,7 @@ export default class EditSessionTemplateController {
         openCapacity: sessionTemplate.sessionCapacity.open.toString(),
         closedCapacity: sessionTemplate.sessionCapacity.closed.toString(),
         visitRoom: sessionTemplate.visitRoom,
+        hideInPublicServices,
       }
 
       const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
@@ -106,6 +110,10 @@ export default class EditSessionTemplateController {
               : undefined,
         },
         visitRoom: req.body.visitRoom,
+        clients: [
+          { active: true, userType: 'STAFF' },
+          { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
+        ],
       }
 
       try {

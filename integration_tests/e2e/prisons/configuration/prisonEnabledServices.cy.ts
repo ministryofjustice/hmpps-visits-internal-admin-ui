@@ -1,4 +1,4 @@
-import { PrisonUserClientDto } from '../../../../server/data/visitSchedulerApiTypes'
+import { UserClientDto } from '../../../../server/data/visitSchedulerApiTypes'
 import TestData from '../../../../server/routes/testutils/testData'
 import PrisonConfigPage from '../../../pages/prisons/configuration/prisonConfig'
 
@@ -44,7 +44,7 @@ context('Prison configuration - enabled services', () => {
       cy.task('stubActivatePrisonClientType', { prisonCode: prisonDto.code, type: 'PUBLIC' })
       cy.task('stubGetPrison', {
         ...prisonDto,
-        clients: <PrisonUserClientDto[]>[
+        clients: <UserClientDto[]>[
           { active: true, userType: 'STAFF' },
           { active: true, userType: 'PUBLIC' },
         ],
