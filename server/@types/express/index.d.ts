@@ -1,5 +1,5 @@
 import { FieldValidationError } from 'express-validator'
-import { FlashErrorMessage, MoJAlert } from '../visits-admin'
+import { FlashErrorMessage, FlashFormValues, MoJAlert } from '../visits-admin'
 import type { UserDetails } from '../../services/userService'
 import { BookerDto } from '../../data/bookerRegistryApiTypes'
 
@@ -29,8 +29,8 @@ export declare global {
       flash(type: 'errors', message: FieldValidationError[] | FlashErrorMessage[]): number
       flash(type: 'errors'): FieldValidationError[] | FlashErrorMessage[]
 
-      flash(type: 'formValues', message: Record<string, string | string[]>): number
-      flash(type: 'formValues'): Record<string, string | string[]>[]
+      flash(type: 'formValues', message: FlashFormValues): number
+      flash(type: 'formValues'): FlashFormValues[]
 
       flash(type: 'messages', message: MoJAlert): number
       flash(type: 'messages'): MoJAlert[]

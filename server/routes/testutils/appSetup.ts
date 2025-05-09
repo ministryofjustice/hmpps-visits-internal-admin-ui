@@ -24,7 +24,7 @@ import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
-import { FlashErrorMessage, MoJAlert } from '../../@types/visits-admin'
+import { FlashErrorMessage, FlashFormValues, MoJAlert } from '../../@types/visits-admin'
 
 export const user: Express.User = {
   name: 'FIRST LAST',
@@ -37,12 +37,12 @@ export const user: Express.User = {
   authSource: 'NOMIS',
 }
 
-export type FlashFormValues = Record<string, unknown>
 export type FlashData = {
   errors?: FieldValidationError[] | FlashErrorMessage[]
   formValues?: FlashFormValues[]
   messages?: MoJAlert[]
 }
+
 export const flashProvider = jest.fn()
 
 function appSetup(
