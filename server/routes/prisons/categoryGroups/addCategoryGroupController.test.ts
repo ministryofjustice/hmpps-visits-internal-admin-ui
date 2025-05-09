@@ -2,13 +2,14 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { BadRequest } from 'http-errors'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { FieldValidationError } from 'express-validator'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockCategoryGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
+import { MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage | Record<string, string | Record<string, string>[]>[]>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 const categoryGroupService = createMockCategoryGroupService()
@@ -17,7 +18,7 @@ const prison = TestData.prison()
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getPrison.mockResolvedValue(prison)
 
@@ -36,7 +37,7 @@ describe('Add a category group', () => {
       const formValues = {
         name: 'a',
       }
-      const errors = [
+      const errors = <FieldValidationError[]>[
         { path: 'name', msg: 'name error' },
         { path: 'prisonerCategories', msg: 'prisonerCategories error' },
       ]
@@ -89,10 +90,11 @@ describe('Add a category group', () => {
         .expect('Location', `/prisons/${prison.code}/category-groups/${categoryGroup.reference}`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(1)
-          expect(flashProvider).toHaveBeenCalledWith(
-            'message',
-            `Category group '${createCategoryGroupDto.name}' has been created`,
-          )
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Category group created',
+            text: `Category group '${createCategoryGroupDto.name}' has been created`,
+          })
 
           expect(categoryGroupService.createCategoryGroup).toHaveBeenCalledWith('user1', createCategoryGroupDto)
         })

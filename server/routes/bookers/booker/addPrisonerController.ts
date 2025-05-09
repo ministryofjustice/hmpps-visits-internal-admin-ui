@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { BookerService, PrisonService } from '../../../services'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class AddPrisonerController {
   public constructor(
@@ -14,7 +14,11 @@ export default class AddPrisonerController {
       const { booker } = req.session
 
       if (booker.permittedPrisoners.length >= 1) {
-        req.flash('message', { text: 'This booker already has a prisoner - cannot add another', type: 'information' })
+        req.flash('messages', {
+          variant: 'information',
+          title: 'Booker has a prisoner',
+          text: 'This booker already has a prisoner - cannot add another',
+        })
         return res.redirect('/bookers/booker/details')
       }
 
@@ -45,10 +49,14 @@ export default class AddPrisonerController {
 
       try {
         await this.bookerService.addPrisoner(res.locals.user.username, booker.reference, prisonerNumber, prisonCode)
-        req.flash('message', { text: `Prisoner added`, type: 'success' })
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Prisoner added',
+          text: 'Prisoner added',
+        })
         return res.redirect('/bookers/booker/details')
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
         return res.redirect('/bookers/booker/add-prisoner')
       }

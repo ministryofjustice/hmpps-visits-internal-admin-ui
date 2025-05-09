@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService } from '../../../services'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 import { UserClientType } from '../../../data/visitSchedulerApiTypes'
 
 export default class PrisonConfigController {
@@ -23,7 +23,7 @@ export default class PrisonConfigController {
         errors: req.flash('errors'),
         prison,
         prisonContactDetails,
-        message: req.flash('message'),
+        messages: req.flash('messages'),
       })
     }
   }
@@ -55,9 +55,13 @@ export default class PrisonConfigController {
         } else {
           await this.prisonService.deactivatePrisonClientType(res.locals.user.username, prisonId, 'STAFF')
         }
-        req.flash('message', 'Enabled services have been updated')
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Enabled services updated',
+          text: 'Enabled services have been updated',
+        })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
       }
 
       return res.redirect(originalUrl)
@@ -75,9 +79,13 @@ export default class PrisonConfigController {
       try {
         await this.prisonService.activatePrison(res.locals.user.username, prisonId)
         const prisonName = await this.prisonService.getPrisonName(res.locals.user.username, prisonId)
-        req.flash('message', `${prisonName} has been activated`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Prison activated',
+          text: `${prisonName} has been activated`,
+        })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
       }
 
       return res.redirect(`/prisons/${prisonId}/configuration`)
@@ -91,9 +99,13 @@ export default class PrisonConfigController {
       try {
         await this.prisonService.deactivatePrison(res.locals.user.username, prisonId)
         const prisonName = await this.prisonService.getPrisonName(res.locals.user.username, prisonId)
-        req.flash('message', `${prisonName} has been deactivated`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Prison deactivated',
+          text: `${prisonName} has been deactivated`,
+        })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
       }
 
       return res.redirect(`/prisons/${prisonId}/configuration`)

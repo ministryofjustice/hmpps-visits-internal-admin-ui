@@ -2,14 +2,14 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { BadRequest } from 'http-errors'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockSessionTemplateService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
 import { SessionTemplate } from '../../../data/visitSchedulerApiTypes'
+import { MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
@@ -19,7 +19,7 @@ const prison = TestData.prison()
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getAllPrisons.mockResolvedValue(allPrisons)
   prisonService.getPrison.mockResolvedValue(prison)
@@ -176,7 +176,11 @@ describe('Single session template page', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'Template activated')
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Template activated',
+            text: 'Template activated',
+          })
           expect(sessionTemplateService.activateSessionTemplate).toHaveBeenCalledTimes(1)
           expect(sessionTemplateService.activateSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })
@@ -225,7 +229,11 @@ describe('Single session template page', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/session-templates/-afe.dcc.0f`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'Template deactivated')
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Template deactivated',
+            text: 'Template deactivated',
+          })
           expect(sessionTemplateService.deactivateSessionTemplate).toHaveBeenCalledTimes(1)
           expect(sessionTemplateService.deactivateSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })
@@ -271,10 +279,11 @@ describe('Single session template page', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/session-templates`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith(
-            'message',
-            `Session template '${sessionTemplate.name}' has been deleted`,
-          )
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Template deleted',
+            text: `Session template '${sessionTemplate.name}' has been deleted`,
+          })
           expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledTimes(1)
           expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(
             'user1',
@@ -289,7 +298,7 @@ describe('Single session template page', () => {
 
     it('should set error in flash if session template status not deleted', () => {
       // Given
-      const errors: FlashErrorMessage = [{ msg: '400 Bad Request' }]
+      const errors = [{ msg: '400 Bad Request' }]
       sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplate)
       sessionTemplateService.deleteSessionTemplate.mockRejectedValue(new BadRequest())
 

@@ -17,12 +17,14 @@ jest.mock('../../applicationInfo', () => {
 import express, { Express } from 'express'
 import { NotFound } from 'http-errors'
 import { Session, SessionData } from 'express-session'
+import { FieldValidationError } from 'express-validator'
 
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
+import { FlashErrorMessage, FlashFormValues, MoJAlert } from '../../@types/visits-admin'
 
 export const user: Express.User = {
   name: 'FIRST LAST',
@@ -33,6 +35,12 @@ export const user: Express.User = {
   active: true,
   activeCaseLoadId: 'MDI',
   authSource: 'NOMIS',
+}
+
+export type FlashData = {
+  errors?: FieldValidationError[] | FlashErrorMessage[]
+  formValues?: FlashFormValues[]
+  messages?: MoJAlert[]
 }
 
 export const flashProvider = jest.fn()

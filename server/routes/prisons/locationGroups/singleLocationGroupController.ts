@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { PrisonService, LocationGroupService } from '../../../services'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class SingleLocationGroupController {
   public constructor(
@@ -21,7 +21,7 @@ export default class SingleLocationGroupController {
         prison,
         locationGroup,
         sessionTemplateRef,
-        message: req.flash('message'),
+        messages: req.flash('messages'),
       })
     }
   }
@@ -33,9 +33,13 @@ export default class SingleLocationGroupController {
       try {
         const { name } = await this.locationGroupService.getSingleLocationGroup(res.locals.user.username, reference)
         await this.locationGroupService.deleteLocationGroup(res.locals.user.username, reference)
-        req.flash('message', `Location group '${name}' has been deleted`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Location group deleted',
+          text: `Location group '${name}' has been deleted`,
+        })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         return res.redirect(`/prisons/${prisonId}/location-groups/${reference}`)
       }
 

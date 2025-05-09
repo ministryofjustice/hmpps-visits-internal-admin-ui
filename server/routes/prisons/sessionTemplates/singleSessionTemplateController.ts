@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { PrisonService, SessionTemplateService } from '../../../services'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class SingleSessionTemplateController {
   public constructor(
@@ -25,7 +25,7 @@ export default class SingleSessionTemplateController {
 
       return res.render('pages/prisons/sessionTemplates/viewSingleSessionTemplate', {
         errors: req.flash('errors'),
-        message: req.flash('message'),
+        messages: req.flash('messages'),
         prison,
         sessionTemplate,
         visitStats,
@@ -40,9 +40,9 @@ export default class SingleSessionTemplateController {
 
       try {
         await this.sessionTemplateService.activateSessionTemplate(res.locals.user.username, reference)
-        req.flash('message', 'Template activated')
+        req.flash('messages', { variant: 'success', title: 'Template activated', text: 'Template activated' })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
       }
 
       return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
@@ -55,9 +55,9 @@ export default class SingleSessionTemplateController {
 
       try {
         await this.sessionTemplateService.deactivateSessionTemplate(res.locals.user.username, reference)
-        req.flash('message', 'Template deactivated')
+        req.flash('messages', { variant: 'success', title: 'Template deactivated', text: 'Template deactivated' })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
       }
 
       return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
@@ -71,9 +71,13 @@ export default class SingleSessionTemplateController {
       try {
         const { name } = await this.sessionTemplateService.getSingleSessionTemplate(res.locals.user.username, reference)
         await this.sessionTemplateService.deleteSessionTemplate(res.locals.user.username, reference)
-        req.flash('message', `Session template '${name}' has been deleted`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Template deleted',
+          text: `Session template '${name}' has been deleted`,
+        })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
       }
 

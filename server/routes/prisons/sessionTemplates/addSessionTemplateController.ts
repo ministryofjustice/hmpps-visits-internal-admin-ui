@@ -10,7 +10,7 @@ import {
 } from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class AddSessionTemplateController {
   public constructor(
@@ -176,10 +176,14 @@ export default class AddSessionTemplateController {
           res.locals.user.username,
           createSessionTemplateDto,
         )
-        req.flash('message', `Session template '${name}' has been created`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Session template created',
+          text: `Session template '${name}' has been created`,
+        })
         return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }

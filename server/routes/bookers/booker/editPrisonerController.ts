@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { BookerService, PrisonService } from '../../../services'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class EditPrisonerController {
   public constructor(
@@ -92,10 +92,14 @@ export default class EditPrisonerController {
         // TODO handle more than one booker record for an email address
         req.session.booker = (await this.bookerService.getBookersByEmail(res.locals.user.username, booker.email)).at(0)
 
-        req.flash('message', { text: `Prison updated`, type: 'success' })
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Prison updated',
+          text: 'Prison updated',
+        })
         return res.redirect('/bookers/booker/details')
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
         return res.redirect('/bookers/booker/edit-prisoner')
       }

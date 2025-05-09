@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { BookerService, PrisonerContactsService } from '../../../services'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 import { ContactDto } from '../../../data/prisonerContactRegistryApiTypes'
 
 export default class AddVisitorController {
@@ -15,7 +15,11 @@ export default class AddVisitorController {
       const { booker } = req.session
 
       if (booker.permittedPrisoners.length !== 1) {
-        req.flash('message', { text: 'This booker has no prisoner set', type: 'information' })
+        req.flash('messages', {
+          variant: 'information',
+          title: 'Booker has no prisoner',
+          text: 'This booker has no prisoner set',
+        })
         return res.redirect('/bookers/booker/details')
       }
 
@@ -27,7 +31,7 @@ export default class AddVisitorController {
           approvedOnly: true,
         })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         allContacts = []
       }
 
@@ -62,11 +66,15 @@ export default class AddVisitorController {
           booker.permittedPrisoners[0].prisonerId,
           visitorId,
         )
-        req.flash('message', { text: `Visitor added`, type: 'success' })
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Visitor added',
+          text: 'Visitor added',
+        })
 
         return res.redirect('/bookers/booker/details')
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
         return res.redirect('/bookers/booker/add-visitor')
       }

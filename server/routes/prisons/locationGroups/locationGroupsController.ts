@@ -17,7 +17,7 @@ export default class LocationGroupsController {
       return res.render('pages/prisons/locationGroups/viewLocationGroups', {
         prison,
         locationGroups,
-        message: req.flash('message'),
+        messages: req.flash('messages'),
       })
     }
   }

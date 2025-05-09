@@ -2,13 +2,14 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { BadRequest } from 'http-errors'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { FieldValidationError } from 'express-validator'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockLocationGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
+import { MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage | Record<string, string | Record<string, string>[]>[]>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 const locationGroupService = createMockLocationGroupService()
@@ -17,7 +18,7 @@ const prison = TestData.prison()
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getPrison.mockResolvedValue(prison)
 
@@ -44,7 +45,7 @@ describe('Add a location group', () => {
           },
         ],
       }
-      const errors = [
+      const errors = <FieldValidationError[]>[
         { path: 'name', msg: 'name error' },
         { path: 'location[0].levelOneCode', msg: 'max chars error' },
       ]
@@ -107,10 +108,11 @@ describe('Add a location group', () => {
         .expect('location', `/prisons/${prison.code}/location-groups/${locationGroup.reference}`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(1)
-          expect(flashProvider).toHaveBeenCalledWith(
-            'message',
-            `Location group '${createLocationGroupDto.name}' has been created`,
-          )
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Location group created',
+            text: `Location group '${createLocationGroupDto.name}' has been created`,
+          })
 
           expect(locationGroupService.createLocationGroup).toHaveBeenCalledWith('user1', createLocationGroupDto)
         })
@@ -139,10 +141,11 @@ describe('Add a location group', () => {
         .expect('location', `/prisons/${prison.code}/location-groups/${locationGroup.reference}`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(1)
-          expect(flashProvider).toHaveBeenCalledWith(
-            'message',
-            `Location group '${createLocationGroupDto.name}' has been created`,
-          )
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Location group created',
+            text: `Location group '${createLocationGroupDto.name}' has been created`,
+          })
           expect(locationGroupService.createLocationGroup.mock.calls[0]).toStrictEqual([
             'user1',
             createLocationGroupDto,

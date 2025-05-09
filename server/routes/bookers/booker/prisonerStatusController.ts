@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { BookerService } from '../../../services'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class PrisonerStatusController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -10,7 +10,11 @@ export default class PrisonerStatusController {
       const { booker } = req.session
 
       if (booker.permittedPrisoners.length === 0) {
-        req.flash('message', { text: 'This booker has no prisoner', type: 'information' })
+        req.flash('messages', {
+          variant: 'information',
+          title: 'Booker has no prisoner',
+          text: 'This booker has no prisoner',
+        })
         return res.redirect('/bookers/booker/details')
       }
 
@@ -29,9 +33,13 @@ export default class PrisonerStatusController {
           )
         }
 
-        req.flash('message', { text: `Prisoner status updated`, type: 'success' })
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Prisoner status updated',
+          text: 'Prisoner status updated',
+        })
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
       }
 

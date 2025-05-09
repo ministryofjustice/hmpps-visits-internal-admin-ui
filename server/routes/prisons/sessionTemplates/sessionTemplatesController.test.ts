@@ -1,13 +1,12 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockSessionTemplateService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
@@ -17,7 +16,7 @@ const prison = TestData.prison()
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getAllPrisons.mockResolvedValue(allPrisons)
   prisonService.getPrison.mockResolvedValue(prison)

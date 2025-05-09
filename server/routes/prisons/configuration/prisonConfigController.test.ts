@@ -2,14 +2,15 @@ import { BadRequest } from 'http-errors'
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { FieldValidationError } from 'express-validator'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockSessionTemplateService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
 import { UserClientDto } from '../../../data/visitSchedulerApiTypes'
+import { FlashErrorMessage, MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 const sessionTemplateService = createMockSessionTemplateService()
@@ -20,7 +21,7 @@ const prisonContactDetails = TestData.prisonContactDetails()
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getPrison.mockResolvedValue(activePrison)
   prisonService.getPrisonContactDetails.mockResolvedValue(prisonContactDetails)
@@ -47,7 +48,7 @@ describe('Prison configuration', () => {
 
             expect($('h1').text().trim()).toBe(activePrison.name)
 
-            expect($('.moj-banner__message').length).toBe(0)
+            expect($('.moj-alert').length).toBe(0)
             expect($('.govuk-error-summary').length).toBe(0)
 
             expect($('[data-test="prison-status"]').text().trim()).toBe('Active')
@@ -67,7 +68,7 @@ describe('Prison configuration', () => {
 
       it('should render success message set in flash', () => {
         flashData = {
-          message: 'Hewell (HMP) has been activated',
+          messages: [{ variant: 'success', title: 'Prison activated', text: 'Hewell (HMP) has been activated' }],
         }
 
         return request(app)
@@ -76,12 +77,12 @@ describe('Prison configuration', () => {
           .expect(res => {
             const $ = cheerio.load(res.text)
             expect($('h1').text().trim()).toBe(activePrison.name)
-            expect($('.moj-banner__message').text()).toBe('Hewell (HMP) has been activated')
+            expect($('.moj-alert__content').text()).toBe('Hewell (HMP) has been activated')
           })
       })
 
       it('should render any error messages set in flash', () => {
-        const error = { msg: 'Failed to change prison status' }
+        const error: FlashErrorMessage = { msg: 'Failed to change prison status' }
         flashData = { errors: [error] }
 
         return request(app)
@@ -235,7 +236,11 @@ describe('Prison configuration', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/configuration`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'Enabled services have been updated')
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Enabled services updated',
+            text: 'Enabled services have been updated',
+          })
           expect(prisonService.deactivatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'PUBLIC')
           expect(prisonService.deactivatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'STAFF')
           expect(prisonService.activatePrisonClientType).not.toHaveBeenCalled()
@@ -249,7 +254,11 @@ describe('Prison configuration', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/configuration`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'Enabled services have been updated')
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Enabled services updated',
+            text: 'Enabled services have been updated',
+          })
           expect(prisonService.activatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'PUBLIC')
           expect(prisonService.activatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'STAFF')
           expect(prisonService.deactivatePrisonClientType).not.toHaveBeenCalled()
@@ -263,7 +272,11 @@ describe('Prison configuration', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/configuration`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('message', 'Enabled services have been updated')
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Enabled services updated',
+            text: 'Enabled services have been updated',
+          })
           expect(prisonService.activatePrisonClientType).toHaveBeenCalledTimes(1)
           expect(prisonService.activatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'STAFF')
           expect(prisonService.deactivatePrisonClientType).toHaveBeenCalledTimes(1)
@@ -278,7 +291,7 @@ describe('Prison configuration', () => {
         .expect(302)
         .expect('location', `/prisons/HEI/configuration`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('errors', <FlashErrorMessage>[
+          expect(flashProvider).toHaveBeenCalledWith('errors', <FieldValidationError[]>[
             {
               location: 'body',
               msg: 'Invalid value',
@@ -318,7 +331,11 @@ describe('Prison configuration', () => {
           .expect(302)
           .expect('location', `/prisons/HEI/configuration`)
           .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('message', 'Hewell (HMP) has been activated')
+            expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+              variant: 'success',
+              title: 'Prison activated',
+              text: 'Hewell (HMP) has been activated',
+            })
             expect(prisonService.getPrisonName).toHaveBeenCalledTimes(1)
             expect(prisonService.activatePrison).toHaveBeenCalledTimes(1)
             expect(prisonService.activatePrison).toHaveBeenCalledWith('user1', 'HEI')
@@ -353,7 +370,11 @@ describe('Prison configuration', () => {
           .expect(302)
           .expect('location', `/prisons/HEI/configuration`)
           .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('message', 'Hewell (HMP) has been deactivated')
+            expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+              variant: 'success',
+              title: 'Prison deactivated',
+              text: 'Hewell (HMP) has been deactivated',
+            })
             expect(prisonService.getPrisonName).toHaveBeenCalledTimes(1)
             expect(prisonService.deactivatePrison).toHaveBeenCalledTimes(1)
             expect(prisonService.deactivatePrison).toHaveBeenCalledWith('user1', 'HEI')

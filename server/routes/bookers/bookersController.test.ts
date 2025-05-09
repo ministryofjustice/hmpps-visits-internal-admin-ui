@@ -3,19 +3,19 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { FieldValidationError } from 'express-validator'
-import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from '../testutils/appSetup'
 import { createMockBookerService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
-import { FlashErrorMessage } from '../../@types/visits-admin'
+import { MoJAlert } from '../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | Record<string, string>[] | FlashErrorMessage>
+let flashData: FlashData
 
 const bookerService = createMockBookerService()
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   app = appWithAllRoutes({ services: { bookerService } })
 })
@@ -37,7 +37,7 @@ describe('Search for a booker', () => {
 
           expect($('h1').text().trim()).toBe('Search for a booker')
 
-          expect($('.moj-banner__message').length).toBe(0)
+          expect($('.moj-alert').length).toBe(0)
           expect($('.govuk-error-summary').length).toBe(0)
 
           expect($('input[name=booker]').length).toBe(1)
@@ -53,11 +53,15 @@ describe('Search for a booker', () => {
         value: 'invalid',
         msg: 'Validation error',
       }
-      const message = { text: 'Booker message', type: 'information' }
+      const message: MoJAlert = {
+        variant: 'information',
+        title: 'Booker message',
+        text: 'Booker message',
+      }
 
       flashData = {
         errors: [error],
-        message: [message],
+        messages: [message],
       }
       return request(app)
         .get('/bookers')
@@ -66,7 +70,7 @@ describe('Search for a booker', () => {
           const $ = cheerio.load(res.text)
           expect($('h1').text().trim()).toBe('Search for a booker')
 
-          expect($('.moj-banner__message').text()).toBe(message.text)
+          expect($('.moj-alert__content').text()).toBe(message.text)
           expect($('.govuk-error-summary').text()).toContain(error.msg)
           expect($('#booker-error').text()).toContain(error.msg)
         })
@@ -85,7 +89,7 @@ describe('Search for a booker', () => {
 
           expect($('h1').text().trim()).toBe('Add a new booker')
 
-          expect($('.moj-banner__message').length).toBe(0)
+          expect($('.moj-alert').length).toBe(0)
           expect($('.govuk-error-summary').length).toBe(0)
 
           expect($('input[name=booker]').length).toBe(1)
@@ -122,9 +126,10 @@ describe('Search for a booker', () => {
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledTimes(2)
           expect(flashProvider).toHaveBeenCalledWith('formValues', { booker: booker.email })
-          expect(flashProvider).toHaveBeenCalledWith('message', {
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'information',
+            title: 'No booker found',
             text: 'No existing booker found with email: user@example.com',
-            type: 'information',
           })
           expect(bookerService.getBookersByEmail).toHaveBeenCalledWith('user1', booker.email)
         })
@@ -166,7 +171,11 @@ describe('Search for a booker', () => {
         .expect('location', '/bookers/booker/details')
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledTimes(1)
-          expect(flashProvider).toHaveBeenCalledWith('message', { text: 'Booker record created', type: 'success' })
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Booker record created',
+            text: 'Booker record created',
+          })
           expect(bookerService.createBooker).toHaveBeenCalledWith('user1', booker.email)
         })
     })

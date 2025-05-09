@@ -2,14 +2,14 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { BadRequest } from 'http-errors'
-import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockCategoryGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { FlashErrorMessage } from '../../../@types/visits-admin'
 import prisonerCategories from '../../../constants/prisonerCategories'
+import { MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
-let flashData: Record<string, string | FlashErrorMessage>
+let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 const categoryGroupService = createMockCategoryGroupService()
@@ -21,7 +21,7 @@ const categoryGroup = TestData.categoryGroup()
 
 beforeEach(() => {
   flashData = {}
-  flashProvider.mockImplementation(key => flashData[key])
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   prisonService.getAllPrisons.mockResolvedValue(allPrisons)
   prisonService.getPrison.mockResolvedValue(prison)
@@ -76,10 +76,11 @@ describe('Single category group page', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/category-groups`)
         .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith(
-            'message',
-            `Category group '${categoryGroup.name}' has been deleted`,
-          )
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Category group deleted',
+            text: `Category group '${categoryGroup.name}' has been deleted`,
+          })
           expect(categoryGroupService.deleteCategoryGroup).toHaveBeenCalledTimes(1)
           expect(categoryGroupService.deleteCategoryGroup).toHaveBeenCalledWith('user1', categoryGroup.reference)
         })

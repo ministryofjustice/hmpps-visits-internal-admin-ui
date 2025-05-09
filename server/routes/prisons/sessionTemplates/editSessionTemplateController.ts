@@ -9,7 +9,7 @@ import {
   LocationGroupService,
 } from '../../../services'
 import { UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
-import { responseErrorToFlashMessage } from '../../../utils/utils'
+import { responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class EditSessionTemplateController {
   public constructor(
@@ -43,28 +43,6 @@ export default class EditSessionTemplateController {
       const validToDateMonth = validToDateSplit[1] || undefined
       const validToDateDay = validToDateSplit[2] || undefined
 
-      // const incentiveGroups = await this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
-      // const categoryGroups = await this.categoryGroupService.getCategoryGroups(res.locals.user.username, prisonId)
-      // const locationGroups = await this.locationGroupService.getLocationGroups(res.locals.user.username, prisonId)
-
-      // let categoryGroupReferences: string[] = []
-      // const activeCategoryGroups = sessionTemplate.prisonerCategoryGroups
-      // if (activeCategoryGroups !== undefined && activeCategoryGroups.length > 0) {
-      //   categoryGroupReferences = activeCategoryGroups.map(categoryGroup => categoryGroup.reference)
-      // }
-
-      // let incentiveGroupReferences: string[] = []
-      // const activeIncentiveGroups = sessionTemplate.prisonerIncentiveLevelGroups
-      // if (activeIncentiveGroups !== undefined && activeIncentiveGroups.length > 0) {
-      //   incentiveGroupReferences = activeIncentiveGroups.map(incentiveGroup => incentiveGroup.reference)
-      // }
-
-      // let locationGroupReferences: string[] = []
-      // const activeLocationGroups = sessionTemplate.permittedLocationGroups
-      // if (activeLocationGroups !== undefined && activeLocationGroups.length > 0) {
-      //   locationGroupReferences = activeLocationGroups.map(locationGroup => locationGroup.reference)
-      // }
-
       const formValues = {
         name: sessionTemplate.name,
         validFromDateDay,
@@ -77,12 +55,6 @@ export default class EditSessionTemplateController {
         openCapacity: sessionTemplate.sessionCapacity.open.toString(),
         closedCapacity: sessionTemplate.sessionCapacity.closed.toString(),
         visitRoom: sessionTemplate.visitRoom,
-        // hasIncentiveGroups: incentiveGroupReferences.length > 0 ? 'yes' : undefined,
-        // incentiveGroupReferences,
-        // hasCategoryGroups: categoryGroupReferences.length > 0 ? 'yes' : undefined,
-        // categoryGroupReferences,
-        // hasLocationGroups: locationGroupReferences.length > 0 ? 'yes' : undefined,
-        // locationGroupReferences,
         hideInPublicServices,
       }
 
@@ -95,11 +67,8 @@ export default class EditSessionTemplateController {
       req.flash('formValues', formValues)
       return res.render('pages/prisons/sessionTemplates/editSingleSessionTemplate', {
         errors: req.flash('errors'),
-        message: req.flash('message'),
+        messages: req.flash('messages'),
         formValues,
-        // incentiveGroups,
-        // categoryGroups,
-        // locationGroups,
         prison,
         reference,
         visitStats,
@@ -141,9 +110,6 @@ export default class EditSessionTemplateController {
               : undefined,
         },
         visitRoom: req.body.visitRoom,
-        // categoryGroupReferences: req.body.hasCategoryGroups === 'yes' ? req.body.categoryGroupReferences : [],
-        // incentiveLevelGroupReferences: req.body.hasIncentiveGroups === 'yes' ? req.body.incentiveGroupReferences : [],
-        // locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
         clients: [
           { active: true, userType: 'STAFF' },
           { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
@@ -156,10 +122,14 @@ export default class EditSessionTemplateController {
           reference,
           updateSessionTemplateDto,
         )
-        req.flash('message', `Session template '${name}' has been updated`)
+        req.flash('messages', {
+          variant: 'success',
+          title: 'Session template updated',
+          text: `Session template '${name}' has been updated`,
+        })
         return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
       } catch (error) {
-        req.flash('errors', responseErrorToFlashMessage(error))
+        req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }
