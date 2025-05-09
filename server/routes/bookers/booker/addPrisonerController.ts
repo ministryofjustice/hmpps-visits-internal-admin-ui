@@ -51,8 +51,8 @@ export default class AddPrisonerController {
         await this.bookerService.addPrisoner(res.locals.user.username, booker.reference, prisonerNumber, prisonCode)
         req.flash('messages', {
           variant: 'success',
-          title: `Prisoner added`,
-          text: `Prisoner added`,
+          title: 'Prisoner added',
+          text: 'Prisoner added',
         })
         return res.redirect('/bookers/booker/details')
       } catch (error) {

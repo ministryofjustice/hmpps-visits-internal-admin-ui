@@ -68,8 +68,8 @@ export default class AddVisitorController {
         )
         req.flash('messages', {
           variant: 'success',
-          title: `Visitor added`,
-          text: `Visitor added`,
+          title: 'Visitor added',
+          text: 'Visitor added',
         })
 
         return res.redirect('/bookers/booker/details')
