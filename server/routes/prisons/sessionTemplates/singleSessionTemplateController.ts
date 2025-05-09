@@ -17,9 +17,12 @@ export default class SingleSessionTemplateController {
         res.locals.user.username,
         reference,
       )
+      console.log('----------xxxxxxxxxxxx-------------')
+      console.log(sessionTemplate)
+      console.log('----------xxxxxxxxxxxx-------------')
 
       const publicClient = sessionTemplate.clients.find(client => client.userType === 'PUBLIC')
-      const showPublicServices = publicClient.active === true ? 'Yes' : 'No'
+      const hideInPublicServices = publicClient?.active === false ? 'yes' : 'no'
 
       const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
 
@@ -29,7 +32,7 @@ export default class SingleSessionTemplateController {
         prison,
         sessionTemplate,
         visitStats,
-        showPublicServices,
+        hideInPublicServices,
       })
     }
   }

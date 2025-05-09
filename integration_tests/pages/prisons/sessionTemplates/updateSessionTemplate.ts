@@ -43,8 +43,12 @@ export default class UpdateSessionTemplatePage extends Page {
     cy.get('#visitRoom').type(room)
   }
 
-  togglePublicVisibility = (): void => {
-    cy.get('#showPublicServices').click()
+  togglePublicVisibility = (visible: boolean): void => {
+    if (visible) {
+      cy.get('#hideInPublicServices').uncheck()
+    } else {
+      cy.get('#hideInPublicServices').check()
+    }
   }
 
   updateTemplate = (): void => {

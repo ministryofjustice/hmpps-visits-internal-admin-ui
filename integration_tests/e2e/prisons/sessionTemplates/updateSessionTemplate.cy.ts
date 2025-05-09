@@ -48,7 +48,7 @@ context('Session templates - update', () => {
     updateSessionTemplatePage.enterOpenCapacity(updatedSessionTemplate.sessionCapacity.open)
     updateSessionTemplatePage.enterClosedCapacity(updatedSessionTemplate.sessionCapacity.closed)
     updateSessionTemplatePage.enterVisitRoom(updatedSessionTemplate.visitRoom)
-    updateSessionTemplatePage.togglePublicVisibility()
+    updateSessionTemplatePage.togglePublicVisibility(false)
 
     // Submit form to update template
     cy.task('stubUpdateSessionTemplate', { sessionTemplate: updatedSessionTemplate })

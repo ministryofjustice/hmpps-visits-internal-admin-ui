@@ -162,6 +162,10 @@ describe('Add a session template', () => {
         categoryGroupReferences,
         includeLocationGroupType: false,
         locationGroupReferences,
+        clients: [
+          { active: true, userType: 'STAFF' },
+          { active: false, userType: 'PUBLIC' },
+        ],
       })
 
       const sessionTemplate = TestData.sessionTemplate()
@@ -210,7 +214,7 @@ describe('Add a session template', () => {
         .send('locationGroupBehaviour=exclude')
         .send(`locationGroupReferences=${locationGroupReferences[0]}`)
         .send(`locationGroupReferences=${locationGroupReferences[1]}`)
-        .send(`showPublicServices=yes`)
+        .send(`hideInPublicServices=yes`)
 
       // Then
       return results
@@ -289,7 +293,7 @@ describe('Add a session template', () => {
         categoryGroupReferences: Array<string>(),
         hasLocationGroups: 'yes',
         locationGroupReferences: Array<string>(),
-        showPublicServices: 'yes',
+        hideInPublicServices: 'yes',
       }
 
       // When
@@ -313,7 +317,7 @@ describe('Add a session template', () => {
         .send('hasIncentiveGroups=yes')
         .send('hasCategoryGroups=yes')
         .send('hasLocationGroups=yes')
-        .send('showPublicServices=yes')
+        .send('hideInPublicServices=yes')
 
       // Then
       return results
@@ -354,7 +358,7 @@ describe('Copy a session template', () => {
     hasLocationGroups: 'yes',
     locationGroupBehaviour: 'include',
     locationGroupReferences: [sessionTemplateToCopy.permittedLocationGroups[0].reference],
-    showPublicServices: 'Yes',
+    hideInPublicServices: 'no',
   }
 
   describe('POST /prisons/{:prisonId}/session-templates/copy', () => {

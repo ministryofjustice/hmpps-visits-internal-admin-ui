@@ -88,7 +88,7 @@ context('Session templates - add', () => {
     addSessionTemplatePage.addCategoryGroups([categoryGroupOne, categoryGroupTwo])
     addSessionTemplatePage.addIncentiveGroups([incentiveLevelGroupOne, incentiveLevelGroupTwo])
     addSessionTemplatePage.addLocationGroups([locationGroupOne, locationGroupTwo])
-    addSessionTemplatePage.togglePublicVisibility()
+    addSessionTemplatePage.togglePublicVisibility(true)
 
     // Submit form to add template
     cy.task('stubCreateSessionTemplate', { sessionTemplate })

@@ -31,7 +31,7 @@ export default class EditSessionTemplateController {
       )
 
       const publicClient = sessionTemplate.clients.find(client => client.userType === 'PUBLIC')
-      const showPublicServices = publicClient.active === true ? 'Yes' : 'No'
+      const hideInPublicServices = publicClient?.active === false ? 'yes' : 'no'
 
       const validFromDateSplit = sessionTemplate.sessionDateRange.validFromDate.split('-')
       const validFromDateYear = validFromDateSplit[0]
@@ -83,7 +83,7 @@ export default class EditSessionTemplateController {
         // categoryGroupReferences,
         // hasLocationGroups: locationGroupReferences.length > 0 ? 'yes' : undefined,
         // locationGroupReferences,
-        showPublicServices,
+        hideInPublicServices,
       }
 
       const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
@@ -146,7 +146,7 @@ export default class EditSessionTemplateController {
         // locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
         clients: [
           { active: true, userType: 'STAFF' },
-          { active: req.body.showPublicServices === 'yes', userType: 'PUBLIC' },
+          { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
         ],
       }
 

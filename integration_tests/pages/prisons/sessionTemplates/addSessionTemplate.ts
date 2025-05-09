@@ -78,8 +78,12 @@ export default class AddSessionTemplatePage extends Page {
     })
   }
 
-  togglePublicVisibility = (): void => {
-    cy.get('#showPublicServices').click()
+  togglePublicVisibility = (visible: boolean): void => {
+    if (visible) {
+      cy.get('#hideInPublicServices').uncheck()
+    } else {
+      cy.get('#hideInPublicServices').check()
+    }
   }
 
   addTemplate = (): void => {

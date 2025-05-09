@@ -66,7 +66,7 @@ describe('Single session template page', () => {
           expect($('.test-template-locationGroups').text()).toContain('None')
           expect($('.test-template-categoryGroups').text()).toContain('None')
           expect($('.test-template-incentiveGroups').text()).toContain('None')
-          expect($('.test-template-showPublicServices').text()).toContain('Yes')
+          expect($('.test-template-hideInPublicServices').text()).toContain('No')
 
           // actions
           expect($('[data-test="template-change-status-form"]').attr('action')).toBe(
@@ -119,7 +119,7 @@ describe('Single session template page', () => {
           expect($('.test-template-locationGroups li a').eq(0).attr('href')).toBe(
             '/prisons/HEI/location-groups/loc-1-ref?sessionTemplateRef=-afe.dcc.0f',
           )
-          expect($('.test-template-showPublicServices').text()).toContain('No')
+          expect($('.test-template-hideInPublicServices').text()).toContain('Yes')
         })
     })
 

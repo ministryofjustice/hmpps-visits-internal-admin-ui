@@ -81,7 +81,7 @@ describe('Update a session template', () => {
         expect($('#closedCapacity').attr('value')).toBe('2')
 
         expect($('#visitRoom').attr('value')).toBe('Visits Main Room')
-        expect($('#showPublicServices').prop('checked')).toBe(true)
+        expect($('#hideInPublicServices').prop('checked')).toBe(false)
 
         expect($('[data-test="submit"]').text().trim()).toBe('Update')
       })
@@ -94,6 +94,10 @@ describe('Update a session template', () => {
       const updateSessionTemplateDto = TestData.updateSessionTemplateDto({
         name: 'new session template name',
         sessionDateRange: { validFromDate: '2023-02-01', validToDate: '2024-12-31' },
+        clients: [
+          { active: true, userType: 'STAFF' },
+          { active: false, userType: 'PUBLIC' },
+        ],
       })
       sessionTemplateService.updateSessionTemplate.mockResolvedValue({
         ...sessionTemplate,
@@ -114,7 +118,7 @@ describe('Update a session template', () => {
         .send('openCapacity=10')
         .send('closedCapacity=5')
         .send('visitRoom=visit room name')
-        .send('showPublicServices=yes')
+        .send('hideInPublicServices=yes')
 
       // Then
       return results

@@ -424,19 +424,19 @@
           }) }}
 
           {{ govukCheckboxes({
-            name: "showPublicServices",
+            name: "hideInPublicServices",
             fieldset: {
               legend: {
-                text: "Show in public services?",
+                text: "Hide in public services?",
                 classes: "govuk-fieldset__legend--m"
               }
             },
-            errorMessage: errors | findError('showPublicServices'),
+            errorMessage: errors | findError('hideInPublicServices'),
             items: [
               {
                 text: "Yes",
                 value: "yes",
-                checked: formValues.showPublicServices !== 'No'
+                checked: formValues.hideInPublicServices === 'yes'
               }
             ]
           }) }}

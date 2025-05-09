@@ -89,7 +89,7 @@ export default class AddSessionTemplateController {
       }
 
       const publicClient = sessionTemplate.clients.find(client => client.userType === 'PUBLIC')
-      const showPublicServices = publicClient.active === true ? 'Yes' : 'No'
+      const hideInPublicServices = publicClient?.active === false ? 'yes' : 'no'
 
       const formValues = {
         name: `COPY - ${sessionTemplate.name}`,
@@ -114,7 +114,7 @@ export default class AddSessionTemplateController {
         hasLocationGroups: locationGroupReferences.length > 0 ? 'yes' : undefined,
         locationGroupBehaviour: sessionTemplate.includeLocationGroupType ? 'include' : 'exclude',
         locationGroupReferences,
-        showPublicServices,
+        hideInPublicServices,
       }
 
       req.flash('formValues', formValues)
@@ -167,7 +167,7 @@ export default class AddSessionTemplateController {
         locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
         clients: [
           { active: true, userType: 'STAFF' },
-          { active: req.body.showPublicServices === 'yes', userType: 'PUBLIC' },
+          { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
         ],
       }
 
