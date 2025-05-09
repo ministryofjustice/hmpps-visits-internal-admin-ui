@@ -17,9 +17,6 @@ export default class SingleSessionTemplateController {
         res.locals.user.username,
         reference,
       )
-      console.log('----------xxxxxxxxxxxx-------------')
-      console.log(sessionTemplate)
-      console.log('----------xxxxxxxxxxxx-------------')
 
       const publicClient = sessionTemplate.clients.find(client => client.userType === 'PUBLIC')
       const hideInPublicServices = publicClient?.active === false ? 'yes' : 'no'
