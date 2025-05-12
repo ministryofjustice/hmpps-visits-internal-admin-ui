@@ -20,6 +20,11 @@ import {
   UpdateLocationGroupDto,
 } from '../../data/visitSchedulerApiTypes'
 
+const publicAndStaffClientsActive: CreateSessionTemplateDto['clients'] = [
+  { active: true, userType: 'PUBLIC' },
+  { active: true, userType: 'STAFF' },
+]
+
 export default class TestData {
   // PrisonDto from Visit Scheduler
   static prisonDto = ({
@@ -94,10 +99,7 @@ export default class TestData {
       this.prisonDto(),
       this.prisonDto({
         code: 'PNI',
-        clients: [
-          { active: true, userType: 'PUBLIC' },
-          { active: true, userType: 'STAFF' },
-        ],
+        clients: publicAndStaffClientsActive,
       }),
       this.prisonDto({ active: false, code: 'WWI', clients: [] }),
     ] as PrisonDto[],
@@ -110,10 +112,7 @@ export default class TestData {
       this.prison({
         code: 'PNI',
         name: 'Preston (HMP & YOI)',
-        clients: [
-          { active: true, userType: 'PUBLIC' },
-          { active: true, userType: 'STAFF' },
-        ],
+        clients: publicAndStaffClientsActive,
       }),
       this.prison({ active: false, code: 'WWI', name: 'Wandsworth (HMP & YOI)', clients: [] }),
     ] as Prison[],
@@ -153,10 +152,7 @@ export default class TestData {
     visitType = 'SOCIAL',
     weeklyFrequency = 1,
     active = true,
-    clients = [
-      { active: true, userType: 'STAFF' },
-      { active: true, userType: 'PUBLIC' },
-    ],
+    clients = publicAndStaffClientsActive,
   }: Partial<SessionTemplate> = {}): SessionTemplate =>
     ({
       dayOfWeek,
@@ -190,10 +186,7 @@ export default class TestData {
     incentiveLevelGroupReferences = [],
     includeLocationGroupType = true,
     locationGroupReferences = [],
-    clients = [
-      { active: true, userType: 'STAFF' },
-      { active: true, userType: 'PUBLIC' },
-    ],
+    clients = publicAndStaffClientsActive,
   }: Partial<CreateSessionTemplateDto> = {}): CreateSessionTemplateDto =>
     ({
       name,
@@ -216,10 +209,7 @@ export default class TestData {
     sessionCapacity = { open: 10, closed: 5 },
     sessionDateRange = { validFromDate: '2023-02-01', validToDate: '2024-12-31' },
     visitRoom = 'visit room name',
-    clients = [
-      { active: true, userType: 'STAFF' },
-      { active: true, userType: 'PUBLIC' },
-    ],
+    clients = publicAndStaffClientsActive,
   }: Partial<UpdateSessionTemplateDto> = {}): UpdateSessionTemplateDto =>
     ({
       name,

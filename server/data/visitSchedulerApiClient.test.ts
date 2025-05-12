@@ -374,8 +374,8 @@ describe('visitSchedulerApiClient', () => {
           sessionTimeSlot: updateSessionTemplateDto.sessionTimeSlot,
           visitRoom: updateSessionTemplateDto.visitRoom,
           clients: [
-            { active: true, userType: 'STAFF' },
             { active: true, userType: 'PUBLIC' },
+            { active: true, userType: 'STAFF' },
           ],
         })
         .matchHeader('authorization', `Bearer ${token}`)
