@@ -1,5 +1,13 @@
+import { SessionTemplate } from '../data/visitSchedulerApiTypes'
+import TestData from '../routes/testutils/testData'
 import { SanitisedError } from '../sanitisedError'
-import { convertToTitleCase, formatDate, initialiseName, responseErrorToFlashMessages } from './utils'
+import {
+  convertToTitleCase,
+  formatDate,
+  getPublicClientStatus,
+  initialiseName,
+  responseErrorToFlashMessages,
+} from './utils'
 
 describe('convert to title case', () => {
   it.each([
@@ -86,5 +94,36 @@ describe('format a sanitised response error as a flash error message', () => {
     expect(flashMessage[0]).toStrictEqual({ msg: '400 Bad Request' })
     expect(flashMessage[1]).toStrictEqual({ msg: 'API message A' })
     expect(flashMessage[2]).toStrictEqual({ msg: 'API message B' })
+  })
+})
+
+describe('getPublicClientStatus', () => {
+  const sessionTemplateBothActive = TestData.sessionTemplate()
+  const sessionTemplateBothInactive = TestData.sessionTemplate({
+    clients: [
+      { active: false, userType: 'STAFF' },
+      { active: false, userType: 'PUBLIC' },
+    ],
+  })
+  const sessionTemplatePublicInactive = TestData.sessionTemplate({
+    clients: [
+      { active: true, userType: 'STAFF' },
+      { active: false, userType: 'PUBLIC' },
+    ],
+  })
+  const sessionTemplateStaffInactive = TestData.sessionTemplate({
+    clients: [
+      { active: false, userType: 'STAFF' },
+      { active: true, userType: 'PUBLIC' },
+    ],
+  })
+
+  it.each([
+    ['Session template, both active - return no', sessionTemplateBothActive, 'no'],
+    ['Session template, both inactive - return yes', sessionTemplateBothInactive, 'yes'],
+    ['Session template, staff inactive - return no', sessionTemplateStaffInactive, 'no'],
+    ['Session template, public inactive - return yes', sessionTemplatePublicInactive, 'yes'],
+  ])('initialiseName(%s)', (_: string, a: SessionTemplate, expected: string) => {
+    expect(getPublicClientStatus(a)).toEqual(expected)
   })
 })

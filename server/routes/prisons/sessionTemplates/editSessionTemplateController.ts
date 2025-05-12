@@ -9,7 +9,7 @@ import {
   LocationGroupService,
 } from '../../../services'
 import { UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
-import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class EditSessionTemplateController {
   public constructor(
@@ -30,8 +30,7 @@ export default class EditSessionTemplateController {
         reference,
       )
 
-      const publicClient = sessionTemplate.clients.find(client => client.userType === 'PUBLIC')
-      const hideInPublicServices = publicClient?.active === false ? 'yes' : 'no'
+      const hideInPublicServices = getPublicClientStatus(sessionTemplate)
 
       const validFromDateSplit = sessionTemplate.sessionDateRange.validFromDate.split('-')
       const validFromDateYear = validFromDateSplit[0]

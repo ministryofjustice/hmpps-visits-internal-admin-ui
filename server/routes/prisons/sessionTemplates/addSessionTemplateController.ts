@@ -10,7 +10,7 @@ import {
 } from '../../../services'
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
-import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class AddSessionTemplateController {
   public constructor(
@@ -88,8 +88,7 @@ export default class AddSessionTemplateController {
         locationGroupReferences = locationGroups.map(locationGroup => locationGroup.reference)
       }
 
-      const publicClient = sessionTemplate.clients.find(client => client.userType === 'PUBLIC')
-      const hideInPublicServices = publicClient?.active === false ? 'yes' : 'no'
+      const hideInPublicServices = getPublicClientStatus(sessionTemplate)
 
       const formValues = {
         name: `COPY - ${sessionTemplate.name}`,

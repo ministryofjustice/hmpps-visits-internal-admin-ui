@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { PrisonService, SessionTemplateService } from '../../../services'
-import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class SingleSessionTemplateController {
   public constructor(
@@ -18,8 +18,7 @@ export default class SingleSessionTemplateController {
         reference,
       )
 
-      const publicClient = sessionTemplate.clients.find(client => client.userType === 'PUBLIC')
-      const hideInPublicServices = publicClient?.active === false ? 'yes' : 'no'
+      const hideInPublicServices = getPublicClientStatus(sessionTemplate)
 
       const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
 
