@@ -1,6 +1,7 @@
 import { format, parseISO } from 'date-fns'
 import { SanitisedError } from '../sanitisedError'
 import { FlashErrorMessage } from '../@types/visits-admin'
+import { SessionTemplate } from '../data/visitSchedulerApiTypes'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -57,4 +58,9 @@ export const responseErrorToFlashMessages = (error: SanitisedError): FlashErrorM
   }
 
   return flashError
+}
+
+export const getPublicClientStatus = (sessionTemplate: SessionTemplate): string => {
+  const publicClient = sessionTemplate.clients.find(client => client.userType === 'PUBLIC')
+  return publicClient?.active === false ? 'yes' : 'no'
 }

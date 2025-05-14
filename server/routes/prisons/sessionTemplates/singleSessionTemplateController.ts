@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { PrisonService, SessionTemplateService } from '../../../services'
-import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class SingleSessionTemplateController {
   public constructor(
@@ -18,6 +18,8 @@ export default class SingleSessionTemplateController {
         reference,
       )
 
+      const hideInPublicServices = getPublicClientStatus(sessionTemplate)
+
       const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
 
       return res.render('pages/prisons/sessionTemplates/viewSingleSessionTemplate', {
@@ -26,6 +28,7 @@ export default class SingleSessionTemplateController {
         prison,
         sessionTemplate,
         visitStats,
+        hideInPublicServices,
       })
     }
   }

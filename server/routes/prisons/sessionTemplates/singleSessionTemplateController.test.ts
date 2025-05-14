@@ -66,6 +66,7 @@ describe('Single session template page', () => {
           expect($('.test-template-locationGroups').text()).toContain('None')
           expect($('.test-template-categoryGroups').text()).toContain('None')
           expect($('.test-template-incentiveGroups').text()).toContain('None')
+          expect($('.test-template-hideInPublicServices').text()).toContain('No')
 
           // actions
           expect($('[data-test="template-change-status-form"]').attr('action')).toBe(
@@ -91,6 +92,10 @@ describe('Single session template page', () => {
         { incentiveLevels: [], name: 'Incentive group 1', reference: 'inc-1-ref' },
       ]
       sessionTemplate.permittedLocationGroups = [{ locations: [], name: 'Location group 1', reference: 'loc-1-ref' }]
+      sessionTemplate.clients = [
+        { active: true, userType: 'STAFF' },
+        { active: false, userType: 'PUBLIC' },
+      ]
 
       return request(app)
         .get('/prisons/HEI/session-templates/-afe.dcc.0f')
@@ -114,6 +119,7 @@ describe('Single session template page', () => {
           expect($('.test-template-locationGroups li a').eq(0).attr('href')).toBe(
             '/prisons/HEI/location-groups/loc-1-ref?sessionTemplateRef=-afe.dcc.0f',
           )
+          expect($('.test-template-hideInPublicServices').text()).toContain('Yes')
         })
     })
 

@@ -16,8 +16,8 @@ import {
   SessionTemplateVisitStatsDto,
   PageVisitDto,
   UpdatePrisonDto,
-  PrisonUserClientType,
-  PrisonUserClientDto,
+  UserClientType,
+  UserClientDto,
   ExcludeDateDto,
   UpdateLocationGroupDto,
 } from './visitSchedulerApiTypes'
@@ -98,13 +98,13 @@ export default class VisitSchedulerApiClient {
     })
   }
 
-  async activatePrisonClientType(prisonCode: string, type: PrisonUserClientType): Promise<PrisonUserClientDto> {
+  async activatePrisonClientType(prisonCode: string, type: UserClientType): Promise<UserClientDto> {
     return this.restClient.put({
       path: `/admin/prisons/prison/${prisonCode}/client/${type}/activate`,
     })
   }
 
-  async deactivatePrisonClientType(prisonCode: string, type: PrisonUserClientType): Promise<PrisonUserClientDto> {
+  async deactivatePrisonClientType(prisonCode: string, type: UserClientType): Promise<UserClientDto> {
     return this.restClient.put({
       path: `/admin/prisons/prison/${prisonCode}/client/${type}/deactivate`,
     })

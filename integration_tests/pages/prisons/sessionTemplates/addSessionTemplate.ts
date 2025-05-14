@@ -78,6 +78,14 @@ export default class AddSessionTemplatePage extends Page {
     })
   }
 
+  setHiddenFromPublic = (hidden: boolean): void => {
+    if (hidden) {
+      cy.get('#hideInPublicServices').check()
+    } else {
+      cy.get('#hideInPublicServices').uncheck()
+    }
+  }
+
   addTemplate = (): void => {
     cy.get('[data-test="submit"]').click()
   }
