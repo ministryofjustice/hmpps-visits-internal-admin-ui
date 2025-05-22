@@ -43,6 +43,14 @@ export default class UpdateSessionTemplatePage extends Page {
     cy.get('#visitRoom').type(room)
   }
 
+  setHiddenFromPublic = (hidden: boolean): void => {
+    if (hidden) {
+      cy.get('#hideInPublicServices').check()
+    } else {
+      cy.get('#hideInPublicServices').uncheck()
+    }
+  }
+
   updateTemplate = (): void => {
     cy.get('[data-test="submit"]').click()
   }

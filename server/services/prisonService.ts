@@ -1,6 +1,6 @@
 import { NotFound } from 'http-errors'
 import { HmppsAuthClient, PrisonRegisterApiClient, RestClientBuilder, VisitSchedulerApiClient } from '../data'
-import { PrisonDto, PrisonUserClientDto, PrisonUserClientType, UpdatePrisonDto } from '../data/visitSchedulerApiTypes'
+import { PrisonDto, UserClientDto, UserClientType, UpdatePrisonDto } from '../data/visitSchedulerApiTypes'
 import logger from '../../logger'
 import { Prison } from '../@types/visits-admin'
 import { PrisonContactDetails } from '../data/prisonRegisterApiTypes'
@@ -132,11 +132,7 @@ export default class PrisonService {
     return visitSchedulerApiClient.deactivatePrison(prisonCode)
   }
 
-  async activatePrisonClientType(
-    username: string,
-    prisonCode: string,
-    type: PrisonUserClientType,
-  ): Promise<PrisonUserClientDto> {
+  async activatePrisonClientType(username: string, prisonCode: string, type: UserClientType): Promise<UserClientDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
@@ -144,11 +140,7 @@ export default class PrisonService {
     return visitSchedulerApiClient.activatePrisonClientType(prisonCode, type)
   }
 
-  async deactivatePrisonClientType(
-    username: string,
-    prisonCode: string,
-    type: PrisonUserClientType,
-  ): Promise<PrisonUserClientDto> {
+  async deactivatePrisonClientType(username: string, prisonCode: string, type: UserClientType): Promise<UserClientDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 

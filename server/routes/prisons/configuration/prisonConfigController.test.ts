@@ -6,7 +6,7 @@ import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockSessionTemplateService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
-import { PrisonUserClientDto } from '../../../data/visitSchedulerApiTypes'
+import { UserClientDto } from '../../../data/visitSchedulerApiTypes'
 import { FlashErrorMessage, MoJAlert } from '../../../@types/visits-admin'
 
 let app: Express
@@ -226,8 +226,8 @@ describe('Prison configuration', () => {
 
   describe('Change enabled services', () => {
     beforeEach(() => {
-      prisonService.activatePrisonClientType.mockResolvedValue({} as PrisonUserClientDto)
-      prisonService.deactivatePrisonClientType.mockResolvedValue({} as PrisonUserClientDto)
+      prisonService.activatePrisonClientType.mockResolvedValue({} as UserClientDto)
+      prisonService.deactivatePrisonClientType.mockResolvedValue({} as UserClientDto)
     })
 
     it('should deactivate STAFF and PUBLIC services', () => {

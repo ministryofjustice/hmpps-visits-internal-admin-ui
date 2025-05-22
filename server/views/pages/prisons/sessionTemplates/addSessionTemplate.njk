@@ -422,6 +422,24 @@
               }
             ]
           }) }}
+
+          {{ govukCheckboxes({
+            name: "hideInPublicServices",
+            fieldset: {
+              legend: {
+                text: "Hide in public services?",
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            errorMessage: errors | findError('hideInPublicServices'),
+            items: [
+              {
+                text: "Yes",
+                value: "yes",
+                checked: formValues.hideInPublicServices === 'yes'
+              }
+            ]
+          }) }}
         {% else %}
           <p>There are no location groups set up for this prison.</p>
         {% endif %}

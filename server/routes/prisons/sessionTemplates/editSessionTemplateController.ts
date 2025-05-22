@@ -9,7 +9,7 @@ import {
   LocationGroupService,
 } from '../../../services'
 import { UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
-import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class EditSessionTemplateController {
   public constructor(
@@ -29,6 +29,8 @@ export default class EditSessionTemplateController {
         res.locals.user.username,
         reference,
       )
+
+      const hideInPublicServices = getPublicClientStatus(sessionTemplate)
 
       const validFromDateSplit = sessionTemplate.sessionDateRange.validFromDate.split('-')
       const validFromDateYear = validFromDateSplit[0]
@@ -52,6 +54,7 @@ export default class EditSessionTemplateController {
         openCapacity: sessionTemplate.sessionCapacity.open.toString(),
         closedCapacity: sessionTemplate.sessionCapacity.closed.toString(),
         visitRoom: sessionTemplate.visitRoom,
+        hideInPublicServices,
       }
 
       const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
@@ -106,6 +109,10 @@ export default class EditSessionTemplateController {
               : undefined,
         },
         visitRoom: req.body.visitRoom,
+        clients: [
+          { active: true, userType: 'STAFF' },
+          { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
+        ],
       }
 
       try {

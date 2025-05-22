@@ -480,6 +480,46 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/admin/session-templates/template/{reference}/client/{type}/activate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Activate session template client using given session template reference and client type
+     * @description Activate a session template for a user client type
+     */
+    put: operations['activateSessionTemplateForClient']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/admin/session-templates/template/{reference}/client/{type}/deactivate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Deactivate session template client using given session template reference and client type
+     * @description Deactivate a session template for a user client type
+     */
+    put: operations['deActivateSessionTemplateClient']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/admin/session-templates/template/{reference}/deactivate': {
     parameters: {
       query?: never
@@ -925,19 +965,56 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/visits/notification/count': {
+  '/visits/external-system': {
     parameters: {
       query?: never
       header?: never
       path?: never
       cookie?: never
     }
-    /**
-     * Get notification count
-     * @description Retrieve notification count by visit reference
-     */
-    get: operations['getNotificationCount']
+    get?: never
     put?: never
+    /**
+     * Create a visit which already exists in an external system
+     * @description The visit is assumed to have been validated at this point, this endpoint does not check that this visit is valid.
+     */
+    post: operations['createVisitFromExternalSystem']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/external-system/{clientReference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Get visit reference from given client reference */
+    get: operations['getVisitReferenceByClientReference']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/external-system/{reference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update visit which already exists in an external system
+     * @description The visit is assumed to have been validated at this point, this endpoint does not check that this visit is valid.
+     */
+    put: operations['updateVisitFromExternalSystem']
     post?: never
     delete?: never
     options?: never
@@ -1047,6 +1124,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/visits/notification/visit/{reference}/events': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * get visit notification events by booking reference
+     * @description Retrieve visit  notification events by booking reference
+     */
+    get: operations['getNotificationEventsForBookingReference']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/visits/notification/visit/{reference}/ignore': {
     parameters: {
       query?: never
@@ -1057,26 +1154,6 @@ export interface paths {
     get?: never
     /** Do not change an existing booked visit and ignore all notifications */
     put: operations['ignoreVisitNotifications']
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/visits/notification/visit/{reference}/types': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * get visit notification types by booking reference
-     * @description Retrieve visit  notification types by booking reference
-     */
-    get: operations['getNotificationTypesForBookingReference']
-    put?: never
     post?: never
     delete?: never
     options?: never
@@ -1168,6 +1245,40 @@ export interface paths {
      */
     get: operations['getFutureNotificationVisitGroups']
     put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/notify/callback': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /** To notify VSiP that a callback response has been received from GOV.UK notify */
+    put: operations['handleNotifyCallback']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/notify/create': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /** To notify VSiP that a message / email has been sent to GOV.UK notify */
+    put: operations['notifyMessageCreated']
     post?: never
     delete?: never
     options?: never
@@ -1364,7 +1475,7 @@ export interface components {
        * @example STAFF
        * @enum {string}
        */
-      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
     }
     /** @description Application */
     ApplicationDto: {
@@ -1376,16 +1487,19 @@ export interface components {
       /**
        * Format: date-time
        * @description The visit created date and time
+       * @example 2018-12-01T13:45:00
        */
       createdTimestamp: string
       /**
        * Format: date-time
        * @description The finishing date and time of the visit
+       * @example 2018-12-01T13:45:00
        */
       endTimestamp: string
       /**
        * Format: date-time
        * @description The visit modified date and time
+       * @example 2018-12-01T13:45:00
        */
       modifiedTimestamp: string
       /**
@@ -1416,6 +1530,7 @@ export interface components {
       /**
        * Format: date-time
        * @description The date and time of the visit
+       * @example 2018-12-01T13:45:00
        */
       startTimestamp: string
       /**
@@ -1423,7 +1538,8 @@ export interface components {
        * @example STAFF
        * @enum {string}
        */
-      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+      /** @description Contact associated with the application */
       visitContact?: components['schemas']['ContactDto']
       /** @description Visit Notes */
       visitNotes: components['schemas']['VisitNoteDto'][]
@@ -1439,6 +1555,7 @@ export interface components {
        * @enum {string}
        */
       visitType: 'SOCIAL'
+      /** @description Additional support associated with the application */
       visitorSupport?: components['schemas']['VisitorSupportDto']
       /** @description List of visitors associated with the application */
       visitors: components['schemas']['VisitorDto'][]
@@ -1467,6 +1584,7 @@ export interface components {
         | 'APPLICATION_INVALID_VISIT_ALREADY_BOOKED'
         | 'APPLICATION_INVALID_NO_VO_BALANCE'
         | 'APPLICATION_INVALID_NO_SLOT_CAPACITY'
+        | 'APPLICATION_INVALID_USER_TYPE'
       )[]
     }
     /** @description Visit Session */
@@ -1488,6 +1606,7 @@ export interface components {
        * @example v9d.7ed.7u
        */
       sessionTemplateReference: string
+      /** @description Session time slot */
       sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
     }
     BookingRequestDto: {
@@ -1507,6 +1626,11 @@ export interface components {
         | 'NOT_KNOWN'
         | 'NOT_APPLICABLE'
         | 'BY_PRISONER'
+      /**
+       * @description User type for user who actioned this request
+       * @enum {string}
+       */
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
     }
     CancelVisitDto: {
       /** @description Username for user who actioned this request */
@@ -1523,13 +1647,14 @@ export interface components {
         | 'NOT_KNOWN'
         | 'NOT_APPLICABLE'
         | 'BY_PRISONER'
+      /** @description Outcome - status and text */
       cancelOutcome: components['schemas']['OutcomeDto']
       /**
        * @description User type
        * @example STAFF
        * @enum {string}
        */
-      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
     }
     ChangeApplicationDto: {
       /** @description allow over booking */
@@ -1551,7 +1676,9 @@ export interface components {
        * @example v9d.7ed.7u
        */
       sessionTemplateReference: string
+      /** @description Contact associated with the visit */
       visitContact?: components['schemas']['ContactDto']
+      /** @description additional support associated with the visit, if null support will not be updated */
       visitorSupport?: components['schemas']['ApplicationSupportDto']
       /** @description List of visitors associated with the visit */
       visitors?: components['schemas']['VisitorDto'][]
@@ -1606,8 +1733,10 @@ export interface components {
        * @example STAFF
        * @enum {string}
        */
-      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+      /** @description Contact associated with the visit */
       visitContact?: components['schemas']['ContactDto']
+      /** @description additional support associated with the visit */
       visitorSupport?: components['schemas']['ApplicationSupportDto']
       /** @description List of visitors associated with the visit */
       visitors: components['schemas']['VisitorDto'][]
@@ -1657,7 +1786,6 @@ export interface components {
        */
       prisonId: string
     }
-    /** @description Contact associated with the visit */
     CreateLegacyContactOnVisitRequestDto: {
       /**
        * @description Contact Name
@@ -1671,7 +1799,6 @@ export interface components {
        */
       telephone?: string
     }
-    /** @description Create legacy data */
     CreateLegacyDataRequestDto: {
       /**
        * Format: int64
@@ -1697,6 +1824,8 @@ export interface components {
     CreateSessionTemplateDto: {
       /** @description list of group references for allowed prisoner category groups */
       categoryGroupReferences?: string[]
+      /** @description Session template user clients. */
+      clients: components['schemas']['UserClientDto'][]
       /**
        * @description day of week fpr visit
        * @example MONDAY
@@ -1719,8 +1848,11 @@ export interface components {
        * @example MDI
        */
       prisonId: string
+      /** @description The open and closed capacity of the session template */
       sessionCapacity: components['schemas']['SessionCapacityDto']
+      /** @description The start and end date of the Validity period for the session template */
       sessionDateRange: components['schemas']['SessionDateRangeDto']
+      /** @description The start and end time of the generated visit session(s) */
       sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
        * @description Visit Room
@@ -1734,6 +1866,71 @@ export interface components {
        */
       weeklyFrequency: number
     }
+    CreateVisitFromExternalSystemDto: {
+      /**
+       * @description Client name
+       * @example client_name
+       */
+      clientName: string
+      /**
+       * @description Client visit reference
+       * @example Reference ID in the client system
+       */
+      clientVisitReference: string
+      /**
+       * Format: date-time
+       * @description The date and time of when the visit was created in NEXUS
+       * @example 2018-12-01T13:45:00
+       */
+      createDateTime: string
+      /**
+       * Format: date-time
+       * @description The finishing date and time of the visit
+       * @example 2018-12-01T13:45:00
+       */
+      endTimestamp: string
+      /**
+       * @description Prison Id
+       * @example 3-character code, example = MDI
+       */
+      prisonId: string
+      /**
+       * @description Prisoner Id
+       * @example AF34567G
+       */
+      prisonerId: string
+      /**
+       * Format: date-time
+       * @description The date and time of the visit
+       * @example 2018-12-01T13:45:00
+       */
+      startTimestamp: string
+      /** @description Contact associated with the visit */
+      visitContact: components['schemas']['ContactDto']
+      /** @description Visit Notes */
+      visitNotes: components['schemas']['VisitNoteDto'][]
+      /**
+       * @description Visit Restriction
+       * @example OPEN
+       * @enum {string}
+       */
+      visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
+      /**
+       * @description Visit Room
+       * @example A1
+       */
+      visitRoom: string
+      /**
+       * @description Visit Type
+       * @example SOCIAL
+       * @enum {string}
+       */
+      visitType: 'SOCIAL'
+      /** @description Additional support associated with the visit */
+      visitorSupport?: components['schemas']['VisitorSupportDto']
+      /** @description List of visitors associated with the visit */
+      visitors?: components['schemas']['VisitorDto'][]
+    }
     ErrorResponse: {
       developerMessage?: string
       /** Format: int32 */
@@ -1744,6 +1941,7 @@ export interface components {
     }
     /** @description Event Audit */
     EventAuditDto: {
+      /** @description Event actioned by information */
       actionedBy: components['schemas']['ActionedByDto']
       /**
        * @description What was the application method for this event
@@ -1760,8 +1958,16 @@ export interface components {
       /**
        * Format: date-time
        * @description event creat date and time
+       * @example 2018-12-01T13:45:00
        */
       createTimestamp: string
+      /**
+       * Format: int64
+       * @description The id of the event
+       */
+      id: number
+      /** @description Notify history for the event */
+      notifyHistory: components['schemas']['NotifyHistoryDto'][]
       /** @description Session template used for this event */
       sessionTemplateReference?: string
       /** @description Notes added against the event */
@@ -1788,6 +1994,10 @@ export interface components {
         | 'PERSON_RESTRICTION_UPSERTED_EVENT'
         | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
         | 'VISITOR_UNAPPROVED_EVENT'
+        | 'UPDATED_NON_ASSOCIATION_VISIT_EVENT'
+        | 'CANCELLED_NON_ASSOCIATION_VISIT_EVENT'
+        | 'IGNORED_NON_ASSOCIATION_VISIT_NOTIFICATIONS_EVENT'
+        | 'PAIRED_VISIT_CANCELLED_IGNORED_OR_UPDATED_EVENT'
     }
     /** @description Prison exclude date */
     ExcludeDateDto: {
@@ -1812,17 +2022,21 @@ export interface components {
       /**
        * Format: date-time
        * @description The date and time of when the visit was created in NOMIS
+       * @example 2018-12-01T13:45:00
        */
       createDateTime?: string
       /**
        * Format: date-time
        * @description The finishing date and time of the visit
+       * @example 2018-12-01T13:45:00
        */
       endTimestamp: string
+      /** @description Create legacy data */
       legacyData?: components['schemas']['CreateLegacyDataRequestDto']
       /**
        * Format: date-time
        * @description The date and time of when the visit was modified in NOMIS
+       * @example 2018-12-10T13:45:00
        */
       modifyDateTime?: string
       /**
@@ -1865,8 +2079,10 @@ export interface components {
       /**
        * Format: date-time
        * @description The date and time of the visit
+       * @example 2018-12-01T13:45:00
        */
       startTimestamp: string
+      /** @description Contact associated with the visit */
       visitContact?: components['schemas']['CreateLegacyContactOnVisitRequestDto']
       /** @description Visit notes */
       visitNotes?: components['schemas']['VisitNoteDto'][]
@@ -1899,6 +2115,7 @@ export interface components {
     MigratedCancelVisitDto: {
       /** @description Username for user who actioned this request */
       actionedBy: string
+      /** @description Outcome - status and text */
       cancelOutcome: components['schemas']['OutcomeDto']
     }
     MoveVisitsDto: {
@@ -1953,6 +2170,116 @@ export interface components {
         | 'PERSON_RESTRICTION_UPSERTED_EVENT'
         | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
         | 'VISITOR_UNAPPROVED_EVENT'
+    }
+    /** @description Gov Notify Callback Notification */
+    NotifyCallbackNotificationDto: {
+      /**
+       * Format: date-time
+       * @description The timestamp for the final update of the notification (when delivered or ultimately failed)
+       */
+      completedAt?: string
+      /**
+       * Format: date-time
+       * @description The timestamp for when the vsip notification service sent the notification to gov notify
+       */
+      createdAt: string
+      /**
+       * @description The id of the event audit which the notification is linked to
+       * @example 123456
+       */
+      eventAuditReference: string
+      /** @description The UUID of the notification */
+      notificationId: string
+      /**
+       * @description The type of the notification
+       * @example email
+       */
+      notificationType: string
+      /**
+       * Format: date-time
+       * @description The timestamp for when gov notify sent the notification
+       */
+      sentAt?: string
+      /** @description The email or phone number the notification was sent to */
+      sentTo: string
+      /** @description The final status of the notification */
+      status: string
+      /**
+       * @description The id the template used for the notification
+       * @example email
+       */
+      templateId: string
+      /**
+       * @description The version of the template used for the notification
+       * @example email
+       */
+      templateVersion: string
+    }
+    /** @description Gov Notify Create Notification */
+    NotifyCreateNotificationDto: {
+      /**
+       * Format: date-time
+       * @description The timestamp for when the vsip notification service sent the notification to gov notify
+       */
+      createdAt: string
+      /** @description The UUID of the notification */
+      notificationId: string
+      /**
+       * @description The type of the notification
+       * @example email
+       */
+      notificationType: string
+      /**
+       * @description The id of the event audit which the notification is linked to
+       * @example 123456
+       */
+      reference: string
+      /**
+       * @description The id the template used for the notification
+       * @example email
+       */
+      templateId: string
+      /**
+       * @description The version of the template used for the notification
+       * @example email
+       */
+      templateVersion: string
+    }
+    NotifyHistoryDto: {
+      /**
+       * Format: date-time
+       * @description Notification Completed At
+       */
+      completedAt?: string
+      /**
+       * Format: date-time
+       * @description Notification Created At
+       */
+      createdAt?: string
+      /**
+       * Format: int64
+       * @description The event audit id the notify event is associated with
+       */
+      eventAuditId: number
+      /** @description The notification id for Notify action */
+      notificationId: string
+      /**
+       * @description Notification Type (Email / SMS)
+       * @enum {string}
+       */
+      notificationType: 'EMAIL' | 'SMS'
+      /**
+       * Format: date-time
+       * @description Notification Sent At
+       */
+      sentAt?: string
+      /** @description The email or phone number the notification was sent to */
+      sentTo?: string
+      /**
+       * @description Notification Status
+       * @enum {string}
+       */
+      status: 'SENDING' | 'DELIVERED' | 'FAILED' | 'UNKNOWN'
     }
     /** @description Visit Outcome */
     OutcomeDto: {
@@ -2018,7 +2345,6 @@ export interface components {
       sort?: components['schemas']['SortObject']
       unpaged?: boolean
     }
-    /** @description list of locations for group */
     PermittedSessionLocationDto: {
       /**
        * @description Level four location code
@@ -2063,7 +2389,7 @@ export interface components {
        */
       adultAgeYears: number
       /** @description prison user client */
-      clients: components['schemas']['PrisonUserClientDto'][]
+      clients: components['schemas']['UserClientDto'][]
       /**
        * @description prison code
        * @example BHI
@@ -2097,20 +2423,6 @@ export interface components {
        */
       policyNoticeDaysMin: number
     }
-    /** @description Prison user client dto */
-    PrisonUserClientDto: {
-      /**
-       * @description is prison user client active
-       * @example true
-       */
-      active: boolean
-      /**
-       * @description User type
-       * @example STAFF
-       * @enum {string}
-       */
-      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
-    }
     PrisonerAlertCreatedUpdatedNotificationDto: {
       activeAlerts: string[]
       alertsAdded: string[]
@@ -2143,7 +2455,6 @@ export interface components {
       /** Format: date */
       validToDate?: string
     }
-    /** @description List of details of affected visits */
     PrisonerVisitsNotificationDto: {
       /**
        * @description Visit Booking Reference
@@ -2151,11 +2462,12 @@ export interface components {
        */
       bookingReference: string
       /**
-       * @description Description of the flagged event
-       * @example Visitor with id <id> has had restriction <restriction> added
+       * @description username of the last user to action the visit booking (E.g. book, update)
+       * @example SMITH1
        */
-      description: string
       lastActionedBy: components['schemas']['ActionedByDto']
+      /** @description A list of all notification attributes for a given visit */
+      notificationEventAttributes: components['schemas']['VisitNotificationEventAttributeDto'][]
       /**
        * @description Prisoner Number
        * @example AF34567G
@@ -2167,18 +2479,6 @@ export interface components {
        * @example 2023-11-08
        */
       visitDate: string
-      /**
-       * Format: int64
-       * @description For visitor specific events, the id of the affected visitor
-       * @example 1234567
-       */
-      visitorId?: number
-      /**
-       * @description For visitor specific events, the restriction type of the affected visitor
-       * @example BAN
-       * @enum {string}
-       */
-      visitorRestrictionType?: 'BAN' | 'CHILD' | 'CLOSED' | 'NONCON' | 'PREINF' | 'RESTRICT'
     }
     RequestSessionTemplateVisitStatsDto: {
       /**
@@ -2209,7 +2509,6 @@ export interface components {
        */
       open: number
     }
-    /** @description list of permitted prisoner category groups */
     SessionCategoryGroupDto: {
       /** @description list of allowed prisoner categories for group */
       categories: (
@@ -2241,7 +2540,6 @@ export interface components {
        */
       reference: string
     }
-    /** @description The start and end date of the Validity period for the session template */
     SessionDateRangeDto: {
       /**
        * Format: date
@@ -2256,7 +2554,6 @@ export interface components {
        */
       validToDate?: string
     }
-    /** @description list of permitted incentive level groups */
     SessionIncentiveLevelGroupDto: {
       /** @description list of allowed incentive levels for group */
       incentiveLevels: ('ENHANCED' | 'ENHANCED_2' | 'ENHANCED_3' | 'BASIC' | 'STANDARD')[]
@@ -2271,7 +2568,6 @@ export interface components {
        */
       reference: string
     }
-    /** @description list of permitted session location groups */
     SessionLocationGroupDto: {
       /** @description list of locations for group */
       locations: components['schemas']['PermittedSessionLocationDto'][]
@@ -2290,6 +2586,7 @@ export interface components {
     SessionScheduleDto: {
       /** @description Determines behaviour of location groups. True will mean the location groups are inclusive, false means they are exclusive. */
       areLocationGroupsInclusive: boolean
+      /** @description The capacity for the session */
       capacity: components['schemas']['SessionCapacityDto']
       /**
        * @description prisoner category groups
@@ -2306,13 +2603,20 @@ export interface components {
        * @example Wing C
        */
       prisonerLocationGroupNames: string[]
+      /** @description Validity period for the session template */
       sessionDateRange: components['schemas']['SessionDateRangeDto']
       /**
        * @description Session Template Reference
        * @example v9d.7ed.7u
        */
       sessionTemplateReference: string
+      /** @description The time slot of the generated visit session(s) */
       sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
+      /**
+       * @description visit room name
+       * @example Visits Room
+       */
+      visitRoom: string
       /**
        * @description visit type
        * @example Social
@@ -2332,6 +2636,8 @@ export interface components {
        * @example true
        */
       active: boolean
+      /** @description User Client's for the session template */
+      clients: components['schemas']['UserClientDto'][]
       /**
        * @description day of week for visit
        * @example MONDAY
@@ -2361,8 +2667,11 @@ export interface components {
        * @example v9d.7ed.7u
        */
       reference: string
+      /** @description session capacity */
       sessionCapacity: components['schemas']['SessionCapacityDto']
+      /** @description Validity period for the session template */
       sessionDateRange: components['schemas']['SessionDateRangeDto']
+      /** @description The time slot of the generated visit session(s) */
       sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
        * @description Visit Room
@@ -2382,8 +2691,8 @@ export interface components {
        */
       weeklyFrequency: number
     }
-    /** @description count of cancelled visits by date */
     SessionTemplateVisitCountsDto: {
+      /** @description Open and closed visit counts for the day */
       visitCounts: components['schemas']['SessionCapacityDto']
       /**
        * Format: date
@@ -2401,6 +2710,7 @@ export interface components {
       cancelCount: number
       /** @description count of cancelled visits by date */
       cancelVisitsByDate?: components['schemas']['SessionTemplateVisitCountsDto'][]
+      /** @description Minimum Session Capacity */
       minimumCapacity: components['schemas']['SessionCapacityDto']
       /**
        * Format: int32
@@ -2411,16 +2721,17 @@ export interface components {
       /** @description count of visits by date */
       visitsByDate?: components['schemas']['SessionTemplateVisitCountsDto'][]
     }
-    /** @description The start and end time of the generated visit session(s) */
     SessionTimeSlotDto: {
       /**
        * Format: HH:mm
-       * @example 13:45
+       * @description The end time of the generated visit session(s)
+       * @example 11:30
        */
       endTime: string
       /**
        * Format: HH:mm
-       * @example 13:45
+       * @description The start time of the generated visit session(s)
+       * @example 10:30
        */
       startTime: string
     }
@@ -2511,6 +2822,8 @@ export interface components {
     UpdateSessionTemplateDto: {
       /** @description list of group references for allowed prisoner category groups */
       categoryGroupReferences?: string[]
+      /** @description Session template user clients. */
+      clients?: components['schemas']['UserClientDto'][]
       /** @description list of group references for allowed prisoner incentive levels */
       incentiveLevelGroupReferences?: string[]
       /** @description list of group references for permitted session location groups */
@@ -2520,8 +2833,11 @@ export interface components {
        * @example Monday Xmas
        */
       name: string
+      /** @description The open and closed capacity of the session template */
       sessionCapacity?: components['schemas']['SessionCapacityDto']
+      /** @description The start and end date of the Validity period for the session template */
       sessionDateRange?: components['schemas']['SessionDateRangeDto']
+      /** @description The start and end time of the generated visit session(s) */
       sessionTimeSlot?: components['schemas']['SessionTimeSlotDto']
       /**
        * @description Visit Room
@@ -2535,6 +2851,59 @@ export interface components {
        */
       weeklyFrequency?: number
     }
+    UpdateVisitFromExternalSystemDto: {
+      /**
+       * Format: date-time
+       * @description The finishing date and time of the visit
+       * @example 2018-12-01T13:45:00
+       */
+      endTimestamp: string
+      /**
+       * Format: date-time
+       * @description The date and time of the visit
+       * @example 2018-12-01T13:45:00
+       */
+      startTimestamp: string
+      /** @description Contact associated with the visit */
+      visitContact: components['schemas']['ContactDto']
+      /** @description Visit Notes */
+      visitNotes: components['schemas']['VisitNoteDto'][]
+      /**
+       * @description Visit Restriction
+       * @example OPEN
+       * @enum {string}
+       */
+      visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
+      /**
+       * @description Visit Room
+       * @example A1
+       */
+      visitRoom: string
+      /**
+       * @description Visit Type
+       * @example SOCIAL
+       * @enum {string}
+       */
+      visitType: 'SOCIAL'
+      /** @description Additional support associated with the visit */
+      visitorSupport?: components['schemas']['VisitorSupportDto']
+      /** @description List of visitors associated with the visit */
+      visitors?: components['schemas']['VisitorDto'][]
+    }
+    /** @description Prison / Session Template user client dto */
+    UserClientDto: {
+      /**
+       * @description is prison user client active
+       * @example true
+       */
+      active: boolean
+      /**
+       * @description User type
+       * @example STAFF
+       * @enum {string}
+       */
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+    }
     ValidationErrorResponse: {
       validationMessages: string[]
     }
@@ -2544,25 +2913,29 @@ export interface components {
        * @description Application Reference
        * @example dfs-wjs-eqr
        */
-      applicationReference: string
+      applicationReference?: string
       /**
        * Format: date-time
        * @description The visit created date and time
+       * @example 2018-12-01T13:45:00
        */
       createdTimestamp: string
       /**
        * Format: date-time
        * @description The finishing date and time of the visit
+       * @example 2018-12-01T13:45:00
        */
       endTimestamp: string
       /**
        * Format: date-time
        * @description Date the visit was first booked or migrated
+       * @example 2018-12-01T13:45:00
        */
       firstBookedDateTime?: string
       /**
        * Format: date-time
        * @description The visit modified date and time
+       * @example 2018-12-01T13:45:00
        */
       modifiedTimestamp: string
       /**
@@ -2615,6 +2988,7 @@ export interface components {
       /**
        * Format: date-time
        * @description The date and time of the visit
+       * @example 2018-12-01T13:45:00
        */
       startTimestamp: string
       /**
@@ -2622,8 +2996,11 @@ export interface components {
        * @example STAFF
        * @enum {string}
        */
-      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+      /** @description Contact associated with the visit */
       visitContact: components['schemas']['ContactDto']
+      /** @description External system details associated with the visit */
+      visitExternalSystemDetails?: components['schemas']['VisitExternalSystemDetailsDto']
       /** @description Visit Notes */
       visitNotes: components['schemas']['VisitNoteDto'][]
       /**
@@ -2649,9 +3026,22 @@ export interface components {
        * @enum {string}
        */
       visitType: 'SOCIAL'
+      /** @description Additional support associated with the visit */
       visitorSupport?: components['schemas']['VisitorSupportDto']
       /** @description List of visitors associated with the visit */
       visitors: components['schemas']['VisitorDto'][]
+    }
+    VisitExternalSystemDetailsDto: {
+      /**
+       * @description Client name
+       * @example client_name
+       */
+      clientName?: string
+      /**
+       * @description Client visit reference
+       * @example Reference ID in the client system
+       */
+      clientVisitReference?: string
     }
     /** @description VisitNote */
     VisitNoteDto: {
@@ -2666,6 +3056,50 @@ export interface components {
        * @enum {string}
        */
       type: 'VISITOR_CONCERN' | 'VISIT_OUTCOMES' | 'VISIT_COMMENT' | 'STATUS_CHANGED_REASON'
+    }
+    VisitNotificationEventAttributeDto: {
+      /**
+       * @description Name of the attribute associated with the notification event
+       * @example VISITOR_RESTRICTION
+       * @enum {string}
+       */
+      attributeName: 'VISITOR_RESTRICTION' | 'VISITOR_ID'
+      /**
+       * @description Value of the attribute associated with the notification event
+       * @example BAN
+       */
+      attributeValue: string
+    }
+    /** @description Visit notification event details. */
+    VisitNotificationEventDto: {
+      /** @description Additional data, empty list if no additional data associated */
+      additionalData: components['schemas']['VisitNotificationEventAttributeDto'][]
+      /**
+       * Format: date-time
+       * @description Created date and time
+       * @example 2018-12-01T13:45:00
+       */
+      createdDateTime: string
+      /**
+       * @description Notification Event Reference
+       * @example aa-bb-cc-dd
+       */
+      notificationEventReference: string
+      /**
+       * @description Notification Event Type
+       * @enum {string}
+       */
+      type:
+        | 'NON_ASSOCIATION_EVENT'
+        | 'PRISONER_RELEASED_EVENT'
+        | 'PRISONER_RESTRICTION_CHANGE_EVENT'
+        | 'PRISON_VISITS_BLOCKED_FOR_DATE'
+        | 'SESSION_VISITS_BLOCKED_FOR_DATE'
+        | 'PRISONER_RECEIVED_EVENT'
+        | 'PRISONER_ALERTS_UPDATED_EVENT'
+        | 'PERSON_RESTRICTION_UPSERTED_EVENT'
+        | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
+        | 'VISITOR_UNAPPROVED_EVENT'
     }
     /** @description Visit Session */
     VisitSessionDto: {
@@ -2684,6 +3118,7 @@ export interface components {
       /**
        * Format: date-time
        * @description The end timestamp for this visit session
+       * @example 2020-11-01T14:30:00
        */
       endTimestamp: string
       /**
@@ -2713,6 +3148,7 @@ export interface components {
       /**
        * Format: date-time
        * @description The start timestamp for this visit session
+       * @example 2020-11-01T12:00:00
        */
       startTimestamp: string
       /**
@@ -3788,7 +4224,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: 'STAFF' | 'PUBLIC' | 'SYSTEM'
+        type: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
       }
       cookie?: never
     }
@@ -3800,7 +4236,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['PrisonUserClientDto']
+          'application/json': components['schemas']['UserClientDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -3846,7 +4282,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: 'STAFF' | 'PUBLIC' | 'SYSTEM'
+        type: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
       }
       cookie?: never
     }
@@ -3858,7 +4294,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['PrisonUserClientDto']
+          'application/json': components['schemas']['UserClientDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -4379,6 +4815,122 @@ export interface operations {
       }
     }
   }
+  activateSessionTemplateForClient: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description session template reference
+         * @example aaa-bbb-ccc
+         */
+        reference: string
+        /**
+         * @description type
+         * @example STAFF
+         */
+        type: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description session template client activated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UserClientDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to activate prison client */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description session template cannot be found to activate session template client */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deActivateSessionTemplateClient: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description session template reference
+         * @example aaa-bbb-ccc
+         */
+        reference: string
+        /**
+         * @description type
+         * @example STAFF
+         */
+        type: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description session template client deactivated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UserClientDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to activate prison client */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description session template cannot be found to deactivate session template client */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   deActivateSessionTemplate: {
     parameters: {
       query?: never
@@ -4713,7 +5265,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: 'STAFF' | 'PUBLIC' | 'SYSTEM'
+        type: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
       }
       cookie?: never
     }
@@ -5219,6 +5771,11 @@ export interface operations {
          * @example user-1
          */
         username?: string
+        /**
+         * @description userType
+         * @example STAFF
+         */
+        userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
       }
       header?: never
       path?: never
@@ -5293,6 +5850,11 @@ export interface operations {
          * @example user-1
          */
         username?: string
+        /**
+         * @description userType
+         * @example STAFF
+         */
+        userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
       }
       header?: never
       path?: never
@@ -5683,22 +6245,35 @@ export interface operations {
       }
     }
   }
-  getNotificationCount: {
+  createVisitFromExternalSystem: {
     parameters: {
       query?: never
       header?: never
       path?: never
       cookie?: never
     }
-    requestBody?: never
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateVisitFromExternalSystemDto']
+      }
+    }
     responses: {
-      /** @description Retrieve notification count */
+      /** @description Visit created */
       200: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['NotificationCountDto']
+          'application/json': components['schemas']['VisitDto']
+        }
+      }
+      /** @description Incorrect request to create a visit from an external system */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -5710,8 +6285,145 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Incorrect permissions to access this endpoint */
+      /** @description Incorrect permissions to create a visit from an external system */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Entity not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getVisitReferenceByClientReference: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description clientReference
+         * @example AABDC234
+         */
+        clientReference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Visit reference returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': string[]
+        }
+      }
+      /** @description Incorrect request to get a visit reference */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get a visit reference */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Client reference not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateVisitFromExternalSystem: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description reference
+         * @example v9-d7-ed-7u
+         */
+        reference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateVisitFromExternalSystemDto']
+      }
+    }
+    responses: {
+      /** @description Visit updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['VisitDto']
+        }
+      }
+      /** @description Incorrect request to update a visit from an external system */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to update a visit from an external system */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Existing visit not found */
+      404: {
         headers: {
           [name: string]: unknown
         }
@@ -6441,6 +7153,50 @@ export interface operations {
       }
     }
   }
+  getNotificationEventsForBookingReference: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description bookingReference
+         * @example v9*d7*ed*7u
+         */
+        reference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successfully retrieved visit notification events by booking reference */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['VisitNotificationEventDto'][]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to access this endpoint */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   ignoreVisitNotifications: {
     parameters: {
       query?: never
@@ -6498,61 +7254,6 @@ export interface operations {
       }
       /** @description Visit not found */
       404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  getNotificationTypesForBookingReference: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description bookingReference
-         * @example v9*d7*ed*7u
-         */
-        reference: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Retrieved visit  notification types by booking reference */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': (
-            | 'NON_ASSOCIATION_EVENT'
-            | 'PRISONER_RELEASED_EVENT'
-            | 'PRISONER_RESTRICTION_CHANGE_EVENT'
-            | 'PRISON_VISITS_BLOCKED_FOR_DATE'
-            | 'SESSION_VISITS_BLOCKED_FOR_DATE'
-            | 'PRISONER_RECEIVED_EVENT'
-            | 'PRISONER_ALERTS_UPDATED_EVENT'
-            | 'PERSON_RESTRICTION_UPSERTED_EVENT'
-            | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
-            | 'VISITOR_UNAPPROVED_EVENT'
-          )[]
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to access this endpoint */
-      403: {
         headers: {
           [name: string]: unknown
         }
@@ -6924,7 +7625,21 @@ export interface operations {
   }
   getNotificationCountForPrison: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description list of notificationEventTypes */
+        types?: (
+          | 'NON_ASSOCIATION_EVENT'
+          | 'PRISONER_RELEASED_EVENT'
+          | 'PRISONER_RESTRICTION_CHANGE_EVENT'
+          | 'PRISON_VISITS_BLOCKED_FOR_DATE'
+          | 'SESSION_VISITS_BLOCKED_FOR_DATE'
+          | 'PRISONER_RECEIVED_EVENT'
+          | 'PRISONER_ALERTS_UPDATED_EVENT'
+          | 'PERSON_RESTRICTION_UPSERTED_EVENT'
+          | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
+          | 'VISITOR_UNAPPROVED_EVENT'
+        )[]
+      }
       header?: never
       path: {
         /**
@@ -7000,6 +7715,228 @@ export interface operations {
         }
       }
       /** @description Incorrect permissions to access this endpoint */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  handleNotifyCallback: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['NotifyCallbackNotificationDto']
+      }
+    }
+    responses: {
+      /** @description callback handled successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '103 CHECKPOINT'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '302 MOVED_TEMPORARILY'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '305 USE_PROXY'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '413 REQUEST_ENTITY_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '414 REQUEST_URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+            | '420 METHOD_FAILURE'
+            | '421 DESTINATION_LOCKED'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyMessageCreated: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['NotifyCreateNotificationDto']
+      }
+    }
+    responses: {
+      /** @description create message added successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '103 CHECKPOINT'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '302 MOVED_TEMPORARILY'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '305 USE_PROXY'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '413 REQUEST_ENTITY_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '414 REQUEST_URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+            | '420 METHOD_FAILURE'
+            | '421 DESTINATION_LOCKED'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
       403: {
         headers: {
           [name: string]: unknown
