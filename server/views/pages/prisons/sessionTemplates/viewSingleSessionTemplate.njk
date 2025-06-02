@@ -24,6 +24,9 @@
 
       {%- set categoryGroups -%}
         {%- if sessionTemplate.prisonerCategoryGroups.length -%}
+          <p>
+            <span data-test="category-group-behaviour">{% if sessionTemplate.includeCategoryGroupType %}Includes{% else %}Excludes{% endif %}</span>:
+          </p>
           <ul class="govuk-list govuk-list--bullet">
             {%- for categoryGroup in sessionTemplate.prisonerCategoryGroups -%}
               <li>
@@ -38,6 +41,9 @@
 
       {%- set incentiveGroups -%}
         {%- if sessionTemplate.prisonerIncentiveLevelGroups.length -%}
+          <p>
+            <span data-test="incentive-group-behaviour">{% if sessionTemplate.includeIncentiveGroupType %}Includes{% else %}Excludes{% endif %}</span>:
+          </p>
           <ul class="govuk-list govuk-list--bullet">
             {%- for incentiveGroup in sessionTemplate.prisonerIncentiveLevelGroups -%}
               <li>
