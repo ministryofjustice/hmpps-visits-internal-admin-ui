@@ -159,7 +159,9 @@ describe('Add a session template', () => {
       const locationGroupReferences = ['lRef1', 'lRef2']
 
       const createSessionTemplateDto = TestData.createSessionTemplateDto({
+        includeIncentiveGroupType: false,
         incentiveLevelGroupReferences,
+        includeCategoryGroupType: false,
         categoryGroupReferences,
         includeLocationGroupType: false,
         locationGroupReferences,
@@ -206,9 +208,11 @@ describe('Add a session template', () => {
         .send('closedCapacity=5')
         .send('visitRoom=visit room name')
         .send('hasIncentiveGroups=yes')
+        .send('incentiveGroupBehaviour=exclude')
         .send(`incentiveGroupReferences=${incentiveLevelGroupReferences[0]}`)
         .send(`incentiveGroupReferences=${incentiveLevelGroupReferences[1]}`)
         .send('hasCategoryGroups=yes')
+        .send('categoryGroupBehaviour=exclude')
         .send(`categoryGroupReferences=${categoryGroupReferences[0]}`)
         .send(`categoryGroupReferences=${categoryGroupReferences[1]}`)
         .send('hasLocationGroups=yes')
@@ -354,8 +358,10 @@ describe('Copy a session template', () => {
     closedCapacity: '2',
     visitRoom: 'Visits Main Room',
     hasIncentiveGroups: 'yes',
+    incentiveGroupBehaviour: 'include',
     incentiveGroupReferences: [sessionTemplateToCopy.prisonerIncentiveLevelGroups[0].reference],
     hasCategoryGroups: 'yes',
+    categoryGroupBehaviour: 'include',
     categoryGroupReferences: [sessionTemplateToCopy.prisonerCategoryGroups[0].reference],
     hasLocationGroups: 'yes',
     locationGroupBehaviour: 'include',

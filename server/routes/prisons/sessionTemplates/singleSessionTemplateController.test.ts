@@ -123,19 +123,64 @@ describe('Single session template page', () => {
         })
     })
 
-    it('should label location groups when set to exclude', () => {
+    it('should label all groups when set to exclude', () => {
       sessionTemplate.includeLocationGroupType = false
       sessionTemplate.permittedLocationGroups = [{ locations: [], name: 'Location group 1', reference: 'loc-1-ref' }]
+      sessionTemplate.includeIncentiveGroupType = false
+      sessionTemplate.prisonerIncentiveLevelGroups = [{ incentiveLevels: [], name: 'Enhanced', reference: 'inc-1-ref' }]
+      sessionTemplate.includeCategoryGroupType = false
+      sessionTemplate.prisonerCategoryGroups = [{ categories: [], name: 'Category group 1', reference: 'cat-1-ref' }]
 
       return request(app)
         .get('/prisons/HEI/session-templates/-afe.dcc.0f')
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
+          expect($('[data-test=incentive-group-behaviour]').text()).toBe('Excludes')
+          expect($('[data-test=category-group-behaviour]').text()).toBe('Excludes')
           expect($('[data-test=location-group-behaviour]').text()).toBe('Excludes')
           expect($('.test-template-locationGroups li').eq(0).text().trim()).toBe('Location group 1')
           expect($('.test-template-locationGroups li a').eq(0).attr('href')).toBe(
             '/prisons/HEI/location-groups/loc-1-ref?sessionTemplateRef=-afe.dcc.0f',
+          )
+          expect($('.test-template-incentiveGroups li').eq(0).text().trim()).toBe('Enhanced')
+          expect($('.test-template-incentiveGroups li a').eq(0).attr('href')).toBe(
+            '/prisons/HEI/incentive-groups/inc-1-ref?sessionTemplateRef=-afe.dcc.0f',
+          )
+          expect($('.test-template-categoryGroups li').eq(0).text().trim()).toBe('Category group 1')
+          expect($('.test-template-categoryGroups li a').eq(0).attr('href')).toBe(
+            '/prisons/HEI/category-groups/cat-1-ref?sessionTemplateRef=-afe.dcc.0f',
+          )
+        })
+    })
+
+    it('should label all groups when set to include', () => {
+      sessionTemplate.includeLocationGroupType = true
+      sessionTemplate.permittedLocationGroups = [{ locations: [], name: 'Location group 1', reference: 'loc-1-ref' }]
+      sessionTemplate.includeIncentiveGroupType = true
+      sessionTemplate.prisonerIncentiveLevelGroups = [{ incentiveLevels: [], name: 'Enhanced', reference: 'inc-1-ref' }]
+      sessionTemplate.includeCategoryGroupType = true
+      sessionTemplate.prisonerCategoryGroups = [{ categories: [], name: 'Category group 1', reference: 'cat-1-ref' }]
+
+      return request(app)
+        .get('/prisons/HEI/session-templates/-afe.dcc.0f')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=incentive-group-behaviour]').text()).toBe('Includes')
+          expect($('[data-test=category-group-behaviour]').text()).toBe('Includes')
+          expect($('[data-test=location-group-behaviour]').text()).toBe('Includes')
+          expect($('.test-template-locationGroups li').eq(0).text().trim()).toBe('Location group 1')
+          expect($('.test-template-locationGroups li a').eq(0).attr('href')).toBe(
+            '/prisons/HEI/location-groups/loc-1-ref?sessionTemplateRef=-afe.dcc.0f',
+          )
+          expect($('.test-template-incentiveGroups li').eq(0).text().trim()).toBe('Enhanced')
+          expect($('.test-template-incentiveGroups li a').eq(0).attr('href')).toBe(
+            '/prisons/HEI/incentive-groups/inc-1-ref?sessionTemplateRef=-afe.dcc.0f',
+          )
+          expect($('.test-template-categoryGroups li').eq(0).text().trim()).toBe('Category group 1')
+          expect($('.test-template-categoryGroups li a').eq(0).attr('href')).toBe(
+            '/prisons/HEI/category-groups/cat-1-ref?sessionTemplateRef=-afe.dcc.0f',
           )
         })
     })

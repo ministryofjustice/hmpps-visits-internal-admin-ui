@@ -107,8 +107,10 @@ export default class AddSessionTemplateController {
         closedCapacity: sessionTemplate.sessionCapacity.closed.toString(),
         visitRoom: sessionTemplate.visitRoom,
         hasIncentiveGroups: incentiveGroupReferences.length > 0 ? 'yes' : undefined,
+        incentiveGroupBehaviour: sessionTemplate.includeIncentiveGroupType ? 'include' : 'exclude',
         incentiveGroupReferences,
         hasCategoryGroups: categoryGroupReferences.length > 0 ? 'yes' : undefined,
+        categoryGroupBehaviour: sessionTemplate.includeCategoryGroupType ? 'include' : 'exclude',
         categoryGroupReferences,
         hasLocationGroups: locationGroupReferences.length > 0 ? 'yes' : undefined,
         locationGroupBehaviour: sessionTemplate.includeLocationGroupType ? 'include' : 'exclude',
@@ -160,7 +162,9 @@ export default class AddSessionTemplateController {
           endTime: req.body.endTime,
         },
         visitRoom: req.body.visitRoom,
+        includeCategoryGroupType: req.body.categoryGroupBehaviour !== 'exclude',
         categoryGroupReferences: req.body.hasCategoryGroups === 'yes' ? req.body.categoryGroupReferences : [],
+        includeIncentiveGroupType: req.body.incentiveGroupBehaviour !== 'exclude',
         incentiveLevelGroupReferences: req.body.hasIncentiveGroups === 'yes' ? req.body.incentiveGroupReferences : [],
         includeLocationGroupType: req.body.locationGroupBehaviour !== 'exclude',
         locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
@@ -271,10 +275,16 @@ export default class AddSessionTemplateController {
         return true
       }),
       body('visitRoom').trim().isLength({ min: 3 }).withMessage('Enter a name over 3 characters long'),
+      body('incentiveGroupBehaviour', 'You must specify incentive group behaviour')
+        .if(body('hasIncentiveGroups').equals('yes'))
+        .isIn(['include', 'exclude']),
       body('incentiveGroupReferences', 'You must select at least one incentive group')
         .toArray()
         .if(body('hasIncentiveGroups').equals('yes'))
         .isArray({ min: 1 }),
+      body('categoryGroupBehaviour', 'You must specify category group behaviour')
+        .if(body('hasCategoryGroups').equals('yes'))
+        .isIn(['include', 'exclude']),
       body('categoryGroupReferences', 'You must select at least one category group')
         .toArray()
         .if(body('hasCategoryGroups').equals('yes'))

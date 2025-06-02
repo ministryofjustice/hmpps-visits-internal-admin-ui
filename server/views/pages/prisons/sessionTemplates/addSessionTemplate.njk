@@ -285,6 +285,32 @@
         <h2 class="govuk-heading-m">Category groups</h2>
         {% if categoryGroupsItems | length %}
           {%- set categoryGroupsHtml %}
+          {{ govukRadios({
+              classes: "govuk-radios--inline",
+              name: "categoryGroupBehaviour",
+              fieldset: {
+                legend: {
+                  text: "Category groups behaviour",
+                  classes: "govuk-fieldset__legend--s"
+                },
+                attributes: { "data-test": "category-group-behaviour" }
+              },
+              hint: {
+                text: "Include or exclude category groups from this session template?"
+              },
+              items: [
+                {
+                  value: "include",
+                  text: "Include"
+                },
+                {
+                  value: "exclude",
+                  text: "Exclude"
+                }
+              ],
+              value: formValues.categoryGroupBehaviour or "include",
+              errorMessage: errors | findError('categoryGroupBehaviour')
+            }) }}
             {{ govukCheckboxes({
               name: "categoryGroupReferences",
               fieldset: {
@@ -324,6 +350,32 @@
         <h2 class="govuk-heading-m">Incentive level groups</h2>
         {% if incentiveGroupsItems | length %}
           {%- set incentiveGroupsHtml %}
+            {{ govukRadios({
+              classes: "govuk-radios--inline",
+              name: "incentiveGroupBehaviour",
+              fieldset: {
+                legend: {
+                  text: "Incentive groups behaviour",
+                  classes: "govuk-fieldset__legend--s"
+                },
+                attributes: { "data-test": "incentive-group-behaviour" }
+              },
+              hint: {
+                text: "Include or exclude incentive groups from this session template?"
+              },
+              items: [
+                {
+                  value: "include",
+                  text: "Include"
+                },
+                {
+                  value: "exclude",
+                  text: "Exclude"
+                }
+              ],
+              value: formValues.incentiveGroupBehaviour or "include",
+              errorMessage: errors | findError('incentiveGroupBehaviour')
+            }) }}
             {{ govukCheckboxes({
               name: "incentiveGroupReferences",
               fieldset: {

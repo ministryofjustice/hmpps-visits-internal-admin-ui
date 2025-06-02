@@ -1834,7 +1834,11 @@ export interface components {
       dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
       /** @description list of group references for allowed prisoner incentive levels */
       incentiveLevelGroupReferences?: string[]
-      /** @description Determines behaviour of location groups. True will mean these location groups are included, false means they will be excluded. */
+      /** @description Determines behaviour of category groups. True equates to these category groups being included, false equates to them being excluded. */
+      includeCategoryGroupType: boolean
+      /** @description Determines behaviour of incentive groups. True equates to these incentive groups being included, false equates to them being excluded. */
+      includeIncentiveGroupType: boolean
+      /** @description Determines behaviour of location groups. True equates to these location groups being included, false equates to them being excluded. */
       includeLocationGroupType: boolean
       /** @description list of group references for permitted session location groups */
       locationGroupReferences?: string[]
@@ -2369,6 +2373,7 @@ export interface components {
     }
     PersonRestrictionUpsertedNotificationDto: {
       prisonerNumber: string
+      restrictionId: string
       restrictionType: string
       /** Format: date */
       validFromDate: string
@@ -2644,7 +2649,11 @@ export interface components {
        * @enum {string}
        */
       dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
-      /** @description Determines behaviour of location groups. True will mean these location groups are included, false means they will be excluded. */
+      /** @description Determines behaviour of category groups. True equates to these category groups being included, false equates to them being excluded. */
+      includeCategoryGroupType: boolean
+      /** @description Determines behaviour of incentive groups. True equates to these incentive groups being included, false equates to them being excluded. */
+      includeIncentiveGroupType: boolean
+      /** @description Determines behaviour of location groups. True equates to these location groups being included, false equates to them being excluded. */
       includeLocationGroupType: boolean
       /**
        * @description name
@@ -3063,7 +3072,7 @@ export interface components {
        * @example VISITOR_RESTRICTION
        * @enum {string}
        */
-      attributeName: 'VISITOR_RESTRICTION' | 'VISITOR_ID'
+      attributeName: 'VISITOR_RESTRICTION' | 'VISITOR_RESTRICTION_ID' | 'VISITOR_ID' | 'PAIRED_VISIT'
       /**
        * @description Value of the attribute associated with the notification event
        * @example BAN
@@ -3182,6 +3191,7 @@ export interface components {
       visitContact?: boolean
     }
     VisitorRestrictionUpsertedNotificationDto: {
+      restrictionId: string
       restrictionType: string
       /** Format: date */
       validFromDate: string
@@ -5277,6 +5287,10 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
+          /** @example [
+           *       "HEI",
+           *       "MDI"
+           *     ] */
           'application/json': string[]
         }
       }
