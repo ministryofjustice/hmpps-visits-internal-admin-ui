@@ -1,16 +1,15 @@
 import { RequestHandler, Router } from 'express'
 import { ValidationChain } from 'express-validator'
 import BookersController from './bookersController'
-import asyncMiddleware from '../../middleware/asyncMiddleware'
 import { Services } from '../../services'
 import bookerRoutes from './booker'
 
 export default function routes(services: Services): Router {
   const router = Router()
 
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+  const get = (path: string | string[], handler: RequestHandler) => router.get(path, handler)
   const postWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
-    router.post(path, ...validationChain, asyncMiddleware(handler))
+    router.post(path, ...validationChain, handler)
 
   const bookers = new BookersController(services.bookerService)
 

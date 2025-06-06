@@ -1,6 +1,5 @@
 import { RequestHandler, Router } from 'express'
 import { ValidationChain } from 'express-validator'
-import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import { Services } from '../../../services'
 import BookerDetailsController from './bookerDetailsController'
 import AddPrisonerController from './addPrisonerController'
@@ -12,10 +11,10 @@ import EditPrisonerController from './editPrisonerController'
 export default function routes(services: Services): Router {
   const router = Router()
 
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const post = (path: string | string[], handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
+  const get = (path: string | string[], handler: RequestHandler) => router.get(path, handler)
+  const post = (path: string | string[], handler: RequestHandler) => router.post(path, handler)
   const postWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
-    router.post(path, ...validationChain, asyncMiddleware(handler))
+    router.post(path, ...validationChain, handler)
 
   const bookerDetails = new BookerDetailsController(
     services.bookerService,
