@@ -41,7 +41,7 @@ export default class PrisonConfigController {
         return res.redirect(originalUrl)
       }
 
-      const enabledServices = (req.body?.enabledServices as UserClientType) ?? ''
+      const { enabledServices }: { enabledServices: UserClientType } = req.body
 
       try {
         if (enabledServices.includes('PUBLIC')) {
