@@ -22,10 +22,6 @@ generic-service:
     ENVIRONMENT_NAME: STAGING
     APPLICATIONINSIGHTS_CONNECTION_STRING: null # disable App Insights for staging
 
-  namespace_secrets:
-    hmpps-visits-internal-admin-ui:
-      APPINSIGHTS_INSTRUMENTATIONKEY: null # disable App Insights for staging
-
 generic-prometheus-alerts:
   alertSeverity: visits-alerts-nonprod
   businessHoursOnly: true
