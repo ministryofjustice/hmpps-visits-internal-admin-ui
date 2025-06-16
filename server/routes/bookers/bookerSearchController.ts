@@ -3,12 +3,12 @@ import { ValidationChain, body, validationResult } from 'express-validator'
 import { BookerService } from '../../services'
 import { responseErrorToFlashMessages } from '../../utils/utils'
 
-export default class BookersController {
+export default class BookerSearchController {
   public constructor(private readonly bookerService: BookerService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      return res.render('pages/bookers/bookers', {
+      return res.render('pages/bookers/search', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
         messages: req.flash('messages'),
@@ -16,7 +16,7 @@ export default class BookersController {
     }
   }
 
-  public search(): RequestHandler {
+  public submit(): RequestHandler {
     return async (req, res) => {
       delete req.session.booker
 
@@ -26,7 +26,7 @@ export default class BookersController {
         req.flash('formValues', req.body)
         return res.redirect('/bookers')
       }
-      const { booker: email }: { booker: string } = req.body
+      const { search: email }: { search: string } = req.body
 
       try {
         // TODO handle more than one booker record for an email address
@@ -53,6 +53,6 @@ export default class BookersController {
   }
 
   public validate(): ValidationChain[] {
-    return [body('booker', 'Enter a valid email address').trim().isEmail()]
+    return [body('search', 'Enter a valid email address').trim().isEmail()]
   }
 }

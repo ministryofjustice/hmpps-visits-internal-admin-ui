@@ -1,6 +1,6 @@
 import { RequestHandler, Router } from 'express'
 import { ValidationChain } from 'express-validator'
-import BookersController from './bookersController'
+import BookerSearchController from './bookerSearchController'
 import { Services } from '../../services'
 import bookerRoutes from './booker'
 
@@ -11,10 +11,10 @@ export default function routes(services: Services): Router {
   const postWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
     router.post(path, ...validationChain, handler)
 
-  const bookers = new BookersController(services.bookerService)
+  const bookerSearch = new BookerSearchController(services.bookerService)
 
-  get('/bookers', bookers.view())
-  postWithValidation('/bookers/search', bookers.validate(), bookers.search())
+  get('/bookers', bookerSearch.view())
+  postWithValidation('/bookers/search', bookerSearch.validate(), bookerSearch.submit())
 
   router.use('/bookers/booker', bookerRoutes(services))
 
