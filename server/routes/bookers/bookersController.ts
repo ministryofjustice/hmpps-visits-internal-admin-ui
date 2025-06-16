@@ -6,13 +6,12 @@ import { responseErrorToFlashMessages } from '../../utils/utils'
 export default class BookersController {
   public constructor(private readonly bookerService: BookerService) {}
 
-  public view(action: 'search' | 'add'): RequestHandler {
+  public view(): RequestHandler {
     return async (req, res) => {
       return res.render('pages/bookers/bookers', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
         messages: req.flash('messages'),
-        action,
       })
     }
   }
@@ -44,41 +43,11 @@ export default class BookersController {
             title: 'No booker found',
             text: `No existing booker found with email: ${email}`,
           })
-          return res.redirect('/bookers/add')
+          return res.redirect('/bookers')
         }
 
         req.flash('errors', responseErrorToFlashMessages(error))
         return res.redirect('/bookers')
-      }
-    }
-  }
-
-  public add(): RequestHandler {
-    return async (req, res) => {
-      delete req.session.booker
-
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        req.flash('errors', errors.array())
-        req.flash('formValues', req.body)
-        return res.redirect('/bookers/add')
-      }
-      const { booker: email }: { booker: string } = req.body
-
-      try {
-        const booker = await this.bookerService.createBooker(res.locals.user.username, email)
-        req.session.booker = booker
-        req.flash('messages', {
-          variant: 'success',
-          title: 'Booker record created',
-          text: 'Booker record created',
-        })
-
-        return res.redirect('/bookers/booker/details')
-      } catch (error) {
-        req.flash('errors', responseErrorToFlashMessages(error))
-        req.flash('formValues', req.body)
-        return res.redirect('/bookers/booker/add')
       }
     }
   }
