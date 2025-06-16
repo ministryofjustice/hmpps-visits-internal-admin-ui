@@ -13,10 +13,8 @@ export default function routes(services: Services): Router {
 
   const bookers = new BookersController(services.bookerService)
 
-  get('/bookers', bookers.view('search'))
-  get('/bookers/add', bookers.view('add'))
+  get('/bookers', bookers.view())
   postWithValidation('/bookers/search', bookers.validate(), bookers.search())
-  postWithValidation('/bookers/add', bookers.validate(), bookers.add())
 
   router.use('/bookers/booker', bookerRoutes(services))
 

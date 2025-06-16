@@ -1,6 +1,5 @@
 import TestData from '../../../server/routes/testutils/testData'
 import IndexPage from '../../pages'
-import AddNewBookerPage from '../../pages/bookers/addNewBooker'
 import AddPrisonerPage from '../../pages/bookers/addPrisoner'
 import AddVisitorPage from '../../pages/bookers/addVisitor'
 import BookerDetailsPage from '../../pages/bookers/bookerDetails'
@@ -36,16 +35,10 @@ context('Booker management', () => {
     const searchForBookerPage = Page.verifyOnPage(SearchForBookerPage)
 
     // Search for booker
-    cy.task('stubGetBookersByEmailNotFound', booker.email)
-    searchForBookerPage.enterBookerEmail(booker.email)
-    searchForBookerPage.search()
-
-    // Booker not found - Add booker page - add booker
-    cy.task('stubCreateBooker', booker)
     cy.task('stubGetBookersByEmail', { email: booker.email, bookers: [booker] })
     cy.task('stubGetSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [], approvedOnly: false })
-    const addNewBookerPage = Page.verifyOnPage(AddNewBookerPage)
-    addNewBookerPage.add()
+    searchForBookerPage.enterBookerEmail(booker.email)
+    searchForBookerPage.search()
 
     // Booker details page
     const bookerDetailsPage = Page.verifyOnPage(BookerDetailsPage)

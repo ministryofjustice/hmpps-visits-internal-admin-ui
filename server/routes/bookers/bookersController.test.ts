@@ -77,27 +77,6 @@ describe('Search for a booker', () => {
     })
   })
 
-  describe('GET /bookers/add', () => {
-    it('should render the booker search page', () => {
-      return request(app)
-        .get('/bookers/add')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('.moj-primary-navigation__item').length).toBe(3)
-          expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/bookers')
-
-          expect($('h1').text().trim()).toBe('Add a new booker')
-
-          expect($('.moj-alert').length).toBe(0)
-          expect($('.govuk-error-summary').length).toBe(0)
-
-          expect($('input[name=booker]').length).toBe(1)
-          expect($('[data-test=submit]').text().trim()).toBe('Add new booker')
-        })
-    })
-  })
-
   describe('POST /bookers/search', () => {
     const booker = TestData.bookerDto()
 
@@ -115,14 +94,14 @@ describe('Search for a booker', () => {
         })
     })
 
-    it('should search for booker by email and redirect to Add booker when not found', () => {
+    it('should search for booker by email and redirect to booker search when not found', () => {
       bookerService.getBookersByEmail.mockRejectedValue(new NotFound())
 
       return request(app)
         .post('/bookers/search')
         .send({ booker: booker.email })
         .expect(302)
-        .expect('location', '/bookers/add')
+        .expect('location', '/bookers')
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledTimes(2)
           expect(flashProvider).toHaveBeenCalledWith('formValues', { booker: booker.email })
@@ -154,45 +133,6 @@ describe('Search for a booker', () => {
           expect(flashProvider).toHaveBeenCalledWith('formValues', { booker: 'INVALID' })
           expect(flashProvider).toHaveBeenCalledWith('errors', [expectedError])
           expect(bookerService.getBookersByEmail).not.toHaveBeenCalled()
-        })
-    })
-  })
-
-  describe('POST /bookers/add', () => {
-    const booker = TestData.bookerDto()
-
-    it('should add booker by email using BookerService and redirect to booker details', () => {
-      bookerService.createBooker.mockResolvedValue(booker)
-
-      return request(app)
-        .post('/bookers/add')
-        .send({ booker: booker.email })
-        .expect(302)
-        .expect('location', '/bookers/booker/details')
-        .expect(() => {
-          expect(flashProvider).toHaveBeenCalledTimes(1)
-          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
-            variant: 'success',
-            title: 'Booker record created',
-            text: 'Booker record created',
-          })
-          expect(bookerService.createBooker).toHaveBeenCalledWith('user1', booker.email)
-        })
-    })
-
-    it('should handle errors adding booker and redirect to Add booker page', () => {
-      bookerService.createBooker.mockRejectedValue(new NotFound())
-
-      return request(app)
-        .post('/bookers/add')
-        .send({ booker: booker.email })
-        .expect(302)
-        .expect('location', '/bookers/booker/add')
-        .expect(() => {
-          expect(flashProvider).toHaveBeenCalledTimes(2)
-          expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '404 Not Found' }])
-          expect(flashProvider).toHaveBeenCalledWith('formValues', { booker: booker.email })
-          expect(bookerService.createBooker).toHaveBeenCalledWith('user1', booker.email)
         })
     })
   })

@@ -2,7 +2,6 @@ import RestClient from './restClient'
 import config from '../config'
 import {
   BookerDto,
-  CreateBookerDto,
   CreatePermittedPrisonerDto,
   CreatePermittedVisitorDto,
   PermittedPrisonerDto,
@@ -16,10 +15,6 @@ export default class BookerRegistryApiClient {
   }
 
   // Booker
-
-  async createBooker(email: string): Promise<BookerDto> {
-    return this.restClient.put({ path: '/public/booker/config', data: <CreateBookerDto>{ email } })
-  }
 
   async getBookersByEmail(email: string): Promise<BookerDto[]> {
     return this.restClient.get({ path: `/public/booker/config/email/${email}` })

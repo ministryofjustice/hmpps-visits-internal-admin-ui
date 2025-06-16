@@ -2,10 +2,9 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageHeaderTitle = "Search for a booker" if action == "search" else "Add a new booker" %}
+{% set pageHeaderTitle = "Search for a booker" %}
 {% set pageTitle = applicationName + " - Manage bookers " + pageHeaderTitle %}
 {% set activePrimaryNav = "bookers" %}
-{% set backLinkHref = "/bookers" if action == "add" %}
 
 {% block content %}
 {{ super() }}
@@ -15,11 +14,9 @@
 
     <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
 
-    {% if action == "search" %}
-      <p>Search for an existing booker or add a new one.</p>
-    {% endif %}
+    <p>Search for an existing booker.</p>
 
-    <form action="/bookers/{{ action }}" method="POST" novalidate>
+    <form action="/bookers/search" method="POST" novalidate>
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
       {{ govukInput({
@@ -36,7 +33,7 @@
         }) }}
 
         {{ govukButton({
-          text: "Search" if action == "search" else "Add new booker",
+          text: "Search",
           preventDoubleClick: true,
           attributes: { "data-test": "submit" }
         }) }}

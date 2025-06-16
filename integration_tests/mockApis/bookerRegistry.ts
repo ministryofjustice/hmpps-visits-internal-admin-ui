@@ -18,40 +18,6 @@ export default {
     })
   },
 
-  stubGetBookersByEmailNotFound: (email: string): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        url: `/bookerRegistry/public/booker/config/email/${email}`,
-      },
-      response: {
-        status: 404,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      },
-    })
-  },
-
-  stubCreateBooker: (booker: BookerDto): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'PUT',
-        url: '/bookerRegistry/public/booker/config',
-        bodyPatterns: [
-          {
-            equalToJson: {
-              email: booker.email,
-            },
-          },
-        ],
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: booker,
-      },
-    })
-  },
-
   stubCreateBookerPrisoner: ({
     booker,
     prisoner,
