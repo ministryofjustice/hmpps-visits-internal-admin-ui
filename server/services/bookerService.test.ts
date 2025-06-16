@@ -29,6 +29,16 @@ describe('Booker service', () => {
   })
 
   describe('Booker', () => {
+    describe('getBookerByReference', () => {
+      it('should get booker details given reference', async () => {
+        bookerRegistryApiClient.getBookerByReference.mockResolvedValue(booker)
+        const results = await bookerService.getBookerByReference('user', booker.reference)
+
+        expect(bookerRegistryApiClient.getBookerByReference).toHaveBeenCalledWith(booker.reference)
+        expect(results).toStrictEqual(booker)
+      })
+    })
+
     describe('getBookersByEmail', () => {
       it('should get booker details given email address', async () => {
         bookerRegistryApiClient.getBookersByEmail.mockResolvedValue([booker])
