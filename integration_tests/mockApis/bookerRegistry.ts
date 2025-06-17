@@ -21,8 +21,13 @@ export default {
   stubGetBookersByEmail: ({ email, bookers }: { email: string; bookers: BookerDto[] }): SuperAgentRequest => {
     return stubFor({
       request: {
-        method: 'GET',
-        url: `/bookerRegistry/public/booker/config/email/${email}`,
+        method: 'POST',
+        url: '/bookerRegistry/public/booker/config/search',
+        bodyPatterns: [
+          {
+            equalToJson: { email },
+          },
+        ],
       },
       response: {
         status: 200,
