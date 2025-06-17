@@ -1,7 +1,6 @@
 import { FieldValidationError } from 'express-validator'
 import { FlashErrorMessage, FlashFormValues, MoJAlert } from '../visits-admin'
 import type { UserDetails } from '../../services/userService'
-import { BookerDto } from '../../data/bookerRegistryApiTypes'
 
 export default {}
 
@@ -10,9 +9,6 @@ declare module 'express-session' {
   interface SessionData {
     returnTo: string
     nowInMinutes: number
-
-    // Current booker for booker management
-    booker?: BookerDto
   }
 }
 

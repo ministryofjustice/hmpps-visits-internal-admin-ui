@@ -7,6 +7,7 @@ import PrisonerStatusController from './prisonerStatusController'
 import AddVisitorController from './addVisitorController'
 import VisitorStatusController from './visitorStatusController'
 import EditPrisonerController from './editPrisonerController'
+import { BOOKER_REFERENCE_REGEX } from '../../../constants/constants'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -27,32 +28,29 @@ export default function routes(services: Services): Router {
   const addVisitor = new AddVisitorController(services.bookerService, services.prisonerContactsService)
   const visitorStatus = new VisitorStatusController(services.bookerService)
 
-  // middleware to ensure booker in session for all /bookers/booker routes
-  router.use((req, res, next) => {
-    const { booker } = req.session
-    if (!booker) {
-      return res.redirect('/bookers')
-    }
-    return next()
+  // middleware to validate booker reference on all /bookers/booker/{:reference} routes
+  router.use('/:reference/', (req, res, next) => {
+    const { reference } = req.params
+    return BOOKER_REFERENCE_REGEX.test(reference) ? next() : res.redirect('/bookers')
   })
 
-  get('/details', bookerDetails.view())
-  post('/clear-details', bookerDetails.clear())
+  get('/:reference/', bookerDetails.view())
+  post('/:reference/clear', bookerDetails.clear())
 
-  get('/add-prisoner', addPrisoner.view())
-  postWithValidation('/add-prisoner', addPrisoner.validate(), addPrisoner.submit())
+  get('/:reference/add-prisoner', addPrisoner.view())
+  postWithValidation('/:reference/add-prisoner', addPrisoner.validate(), addPrisoner.submit())
 
-  get('/edit-prisoner', editPrisoner.view())
-  postWithValidation('/edit-prisoner', editPrisoner.validate(), editPrisoner.submit())
+  get('/:reference/edit-prisoner', editPrisoner.view())
+  postWithValidation('/:reference/edit-prisoner', editPrisoner.validate(), editPrisoner.submit())
 
-  post('/activate-prisoner', prisonerStatus.setStatus('inactive'))
-  post('/deactivate-prisoner', prisonerStatus.setStatus('active'))
+  post('/:reference/activate-prisoner', prisonerStatus.setStatus('inactive'))
+  post('/:reference/deactivate-prisoner', prisonerStatus.setStatus('active'))
 
-  get('/add-visitor', addVisitor.view())
-  postWithValidation('/add-visitor', addVisitor.validate(), addVisitor.submit())
+  get('/:reference/add-visitor', addVisitor.view())
+  postWithValidation('/:reference/add-visitor', addVisitor.validate(), addVisitor.submit())
 
-  postWithValidation('/activate-visitor', visitorStatus.validate(), visitorStatus.setStatus('inactive'))
-  postWithValidation('/deactivate-visitor', visitorStatus.validate(), visitorStatus.setStatus('active'))
+  postWithValidation('/:reference/activate-visitor', visitorStatus.validate(), visitorStatus.setStatus('inactive'))
+  postWithValidation('/:reference/deactivate-visitor', visitorStatus.validate(), visitorStatus.setStatus('active'))
 
   return router
 }

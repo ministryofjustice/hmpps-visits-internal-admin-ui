@@ -1,7 +1,6 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { SessionData } from 'express-session'
 import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import {
   createMockBookerService,
@@ -16,16 +15,14 @@ let flashData: FlashData
 const bookerService = createMockBookerService()
 const prisonerContactsService = createMockPrisonerContactsService()
 const prisonService = createMockPrisonService()
-let sessionData: SessionData
 
 beforeEach(() => {
   flashData = {}
   flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
-  sessionData = {} as SessionData
 
   prisonService.getPrisonName.mockResolvedValue('Hewell (HMP)')
 
-  app = appWithAllRoutes({ services: { bookerService, prisonerContactsService, prisonService }, sessionData })
+  app = appWithAllRoutes({ services: { bookerService, prisonerContactsService, prisonService } })
 })
 
 afterEach(() => {
@@ -33,19 +30,19 @@ afterEach(() => {
 })
 
 describe('Booker details', () => {
-  describe('GET /bookers/booker/details', () => {
+  describe('GET /bookers/booker/{:reference}', () => {
     it('should render the booker details page', () => {
       const contact = TestData.contact()
       const prisoner = TestData.permittedPrisonerDto({
         permittedVisitors: [{ visitorId: contact.personId, active: true }],
       })
       const booker = TestData.bookerDto({ permittedPrisoners: [prisoner] })
-      sessionData.booker = booker
+
       bookerService.getBookerByReference.mockResolvedValue(booker)
       prisonerContactsService.getSocialContacts.mockResolvedValue([contact])
 
       return request(app)
-        .get('/bookers/booker/details')
+        .get(`/bookers/booker/${booker.reference}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -81,8 +78,8 @@ describe('Booker details', () => {
         })
     })
 
-    it('should redirect to booker search if no booker in session', () => {
-      return request(app).get('/bookers/booker/details').expect(302).expect('location', '/bookers')
+    it('should redirect to booker search if invalid booker reference in URL', () => {
+      return request(app).get('/bookers/booker/not-a-booker-ref').expect(302).expect('location', '/bookers')
     })
   })
 })

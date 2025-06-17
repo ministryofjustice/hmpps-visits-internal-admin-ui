@@ -11,11 +11,12 @@ export default class EditPrisonerController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { booker } = req.session
-      const prisoner = booker.permittedPrisoners[0]
+      const { reference } = req.params
+      const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
+      const prisoner = booker.permittedPrisoners[0] // TODO handle bookers with more than 1 prisoner
 
       if (!prisoner) {
-        return res.redirect('/bookers/booker/details')
+        return res.redirect(`/bookers/booker/${reference}`)
       }
 
       const currentPrisonName = await this.prisonService.getPrisonName(res.locals.user.username, prisoner.prisonCode)
@@ -36,18 +37,20 @@ export default class EditPrisonerController {
 
   public submit(): RequestHandler {
     return async (req, res) => {
+      const { reference } = req.params
+
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', req.body)
-        return res.redirect('/bookers/booker/edit-prisoner')
+        return res.redirect(`/bookers/booker/${reference}/edit-prisoner`)
       }
 
-      const { booker } = req.session
-      const prisoner = booker.permittedPrisoners[0]
+      const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
+      const prisoner = booker.permittedPrisoners[0] // TODO handle bookers with more than 1 prisoner
 
       if (!prisoner) {
-        return res.redirect('/bookers/booker/details')
+        return res.redirect(`/bookers/booker/${reference}`)
       }
 
       const { prisonCode }: { prisonCode: string } = req.body
@@ -87,20 +90,16 @@ export default class EditPrisonerController {
           }
         })
 
-        // clear session and re-load data
-        delete req.session.booker
-        req.session.booker = await this.bookerService.getBookerByReference(res.locals.user.username, booker.reference)
-
         req.flash('messages', {
           variant: 'success',
           title: 'Prison updated',
           text: 'Prison updated',
         })
-        return res.redirect('/bookers/booker/details')
+        return res.redirect(`/bookers/booker/${reference}`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
-        return res.redirect('/bookers/booker/edit-prisoner')
+        return res.redirect(`/bookers/booker/${reference}/edit-prisoner`)
       }
     }
   }

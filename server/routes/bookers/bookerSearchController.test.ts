@@ -87,7 +87,7 @@ describe('Search for a booker', () => {
         .post('/bookers/search')
         .send({ search: booker.email })
         .expect(302)
-        .expect('location', '/bookers/booker/details')
+        .expect('location', `/bookers/booker/${booker.reference}`)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', booker.email)
@@ -101,7 +101,7 @@ describe('Search for a booker', () => {
         .post('/bookers/search')
         .send({ search: booker.reference })
         .expect(302)
-        .expect('location', '/bookers/booker/details')
+        .expect('location', `/bookers/booker/${booker.reference}`)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', booker.reference)

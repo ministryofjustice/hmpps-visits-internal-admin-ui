@@ -20,8 +20,6 @@ export default class BookerSearchController {
 
   public submit(): RequestHandler {
     return async (req, res) => {
-      delete req.session.booker
-
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
@@ -32,10 +30,11 @@ export default class BookerSearchController {
 
       try {
         // TODO handle more than one booker record for an email address
-        const booker = (await this.bookerService.getBookersByEmailOrReference(res.locals.user.username, search))[0]
-        req.session.booker = booker
+        const { reference } = (
+          await this.bookerService.getBookersByEmailOrReference(res.locals.user.username, search)
+        )[0]
 
-        return res.redirect('/bookers/booker/details')
+        return res.redirect(`/bookers/booker/${reference}`)
       } catch (error) {
         req.flash('formValues', req.body)
 

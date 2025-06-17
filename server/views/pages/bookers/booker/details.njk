@@ -29,7 +29,7 @@
       <p data-test="prisoner-number">Not set</p>
 
       {{ govukButton({
-        href: "/bookers/booker/add-prisoner",
+        href: "/bookers/booker/" + booker.reference + "/add-prisoner",
         text: "Add a prisoner",
         preventDoubleClick: true,
         attributes: { "data-test": "add-prisoner" }
@@ -46,13 +46,13 @@
 
       <div class="govuk-button-group">
         {% set prisonerAction = "deactivate" if prisoner.active else "activate" %}
-        <form action="/bookers/booker/{{ prisonerAction }}-prisoner" method="POST" novalidate>
+        <form action="/bookers/booker/{{ booker.reference }}/{{ prisonerAction }}-prisoner" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
           {{ govukButton({
             text: "Change registered prison",
             classes: "govuk-button--secondary",
-            href: "/bookers/booker/edit-prisoner",
+            href: "/bookers/booker/" + booker.reference + "/edit-prisoner",
             preventDoubleClick: true
           }) }}
 
@@ -99,7 +99,7 @@
               attributes: { "data-test": "visitor-status-" + loop.index }
             },
             {
-              html: '<form action="/bookers/booker/' + visitorAction + '-visitor" method="POST" novalidate>' +
+              html: '<form action="/bookers/booker/' + booker.reference + '/' + visitorAction + '-visitor" method="POST" novalidate>' +
                       '<input type="hidden" name="_csrf" value="' + csrfToken + '">' +
                       govukButton({
                         text: visitorAction | capitalize,
@@ -142,7 +142,7 @@
       {% endif %}
 
       {{ govukButton({
-        href: "/bookers/booker/add-visitor",
+        href: "/bookers/booker/" + booker.reference + "/add-visitor",
         classes: "govuk-button--secondary" if visitors | length,
         text: "Add a visitor",
         preventDoubleClick: true,
@@ -155,7 +155,7 @@
       <p>This will remove prisoner and visitor records for this booker.</p>
       <p>The email, booker reference and GOV.UK One Login identifier will be kept.</p>
 
-      <form action="/bookers/booker/clear-details" method="POST" novalidate>
+      <form action="/bookers/booker/{{ booker.reference }}/clear" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {{ govukButton({
           text: "Clear booker details",

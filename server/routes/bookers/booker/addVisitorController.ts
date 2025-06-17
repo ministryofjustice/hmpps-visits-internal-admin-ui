@@ -12,7 +12,8 @@ export default class AddVisitorController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { booker } = req.session
+      const { reference } = req.params
+      const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
 
       if (booker.permittedPrisoners.length !== 1) {
         req.flash('messages', {
@@ -20,7 +21,7 @@ export default class AddVisitorController {
           title: 'Booker has no prisoner',
           text: 'This booker has no prisoner set',
         })
-        return res.redirect('/bookers/booker/details')
+        return res.redirect(`/bookers/booker/${reference}`)
       }
 
       let allContacts: ContactDto[]
@@ -49,15 +50,17 @@ export default class AddVisitorController {
 
   public submit(): RequestHandler {
     return async (req, res) => {
+      const { reference } = req.params
+
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', req.body)
-        return res.redirect('/bookers/booker/add-visitor')
+        return res.redirect(`/bookers/booker/${reference}/add-visitor`)
       }
 
-      const { booker } = req.session
       const { visitorId }: { visitorId: number } = req.body
+      const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
 
       try {
         await this.bookerService.addVisitor(
@@ -72,11 +75,11 @@ export default class AddVisitorController {
           text: 'Visitor added',
         })
 
-        return res.redirect('/bookers/booker/details')
+        return res.redirect(`/bookers/booker/${reference}`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
-        return res.redirect('/bookers/booker/add-visitor')
+        return res.redirect(`/bookers/booker/${reference}/add-visitor`)
       }
     }
   }
