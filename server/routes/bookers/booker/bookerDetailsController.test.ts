@@ -41,7 +41,7 @@ describe('Booker details', () => {
       })
       const booker = TestData.bookerDto({ permittedPrisoners: [prisoner] })
       sessionData.booker = booker
-      bookerService.getBookersByEmail.mockResolvedValue([booker])
+      bookerService.getBookerByReference.mockResolvedValue(booker)
       prisonerContactsService.getSocialContacts.mockResolvedValue([contact])
 
       return request(app)
@@ -71,7 +71,7 @@ describe('Booker details', () => {
           expect($('[data-test=visitor-restrictions-1]').text().trim()).toBe('None')
           expect($('[data-test=visitor-status-1]').text().trim()).toBe('Active')
 
-          expect(bookerService.getBookersByEmail).toHaveBeenCalledWith('user1', booker.email)
+          expect(bookerService.getBookerByReference).toHaveBeenCalledWith('user1', booker.reference)
           expect(prisonerContactsService.getSocialContacts).toHaveBeenCalledWith({
             username: 'user1',
             prisonerId: prisoner.prisonerId,

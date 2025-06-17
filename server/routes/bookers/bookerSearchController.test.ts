@@ -81,7 +81,7 @@ describe('Search for a booker', () => {
     const booker = TestData.bookerDto()
 
     it('should search for booker by email using BookerService and redirect to booker details', () => {
-      bookerService.getBookersByEmail.mockResolvedValue([booker])
+      bookerService.getBookersByEmailOrReference.mockResolvedValue([booker])
 
       return request(app)
         .post('/bookers/search')
@@ -90,12 +90,26 @@ describe('Search for a booker', () => {
         .expect('location', '/bookers/booker/details')
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(bookerService.getBookersByEmail).toHaveBeenCalledWith('user1', booker.email)
+          expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', booker.email)
+        })
+    })
+
+    it('should search for booker by reference using BookerService and redirect to booker details', () => {
+      bookerService.getBookersByEmailOrReference.mockResolvedValue([booker])
+
+      return request(app)
+        .post('/bookers/search')
+        .send({ search: booker.reference })
+        .expect(302)
+        .expect('location', '/bookers/booker/details')
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', booker.reference)
         })
     })
 
     it('should search for booker by email and redirect to booker search when not found', () => {
-      bookerService.getBookersByEmail.mockRejectedValue(new NotFound())
+      bookerService.getBookersByEmailOrReference.mockRejectedValue(new NotFound())
 
       return request(app)
         .post('/bookers/search')
@@ -108,19 +122,19 @@ describe('Search for a booker', () => {
           expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
             variant: 'information',
             title: 'No booker found',
-            text: 'No existing booker found with email: user@example.com',
+            text: 'No existing booker found for: user@example.com',
           })
-          expect(bookerService.getBookersByEmail).toHaveBeenCalledWith('user1', booker.email)
+          expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', booker.email)
         })
     })
 
-    it('should reject an invalid email address and redirect with validation error', () => {
+    it('should reject an invalid search term and redirect with validation error', () => {
       const expectedError: FieldValidationError = {
         type: 'field',
         location: 'body',
         path: 'search',
-        value: 'INVALID',
-        msg: 'Enter a valid email address',
+        value: 'invalid',
+        msg: 'Enter a valid email address or booker reference',
       }
 
       return request(app)
@@ -130,9 +144,9 @@ describe('Search for a booker', () => {
         .expect('location', '/bookers')
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledTimes(2)
-          expect(flashProvider).toHaveBeenCalledWith('formValues', { search: 'INVALID' })
+          expect(flashProvider).toHaveBeenCalledWith('formValues', { search: 'invalid' })
           expect(flashProvider).toHaveBeenCalledWith('errors', [expectedError])
-          expect(bookerService.getBookersByEmail).not.toHaveBeenCalled()
+          expect(bookerService.getBookersByEmailOrReference).not.toHaveBeenCalled()
         })
     })
   })

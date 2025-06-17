@@ -1,7 +1,9 @@
 import { RequestHandler } from 'express'
-import { ValidationChain, body, validationResult } from 'express-validator'
+import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
+import validator from 'validator'
 import { BookerService } from '../../services'
 import { responseErrorToFlashMessages } from '../../utils/utils'
+import { BOOKER_REFERENCE_REGEX } from '../../constants/constants'
 
 export default class BookerSearchController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -26,11 +28,11 @@ export default class BookerSearchController {
         req.flash('formValues', req.body)
         return res.redirect('/bookers')
       }
-      const { search: email }: { search: string } = req.body
+      const { search } = matchedData<{ search: string }>(req)
 
       try {
         // TODO handle more than one booker record for an email address
-        const booker = (await this.bookerService.getBookersByEmail(res.locals.user.username, email))[0]
+        const booker = (await this.bookerService.getBookersByEmailOrReference(res.locals.user.username, search))[0]
         req.session.booker = booker
 
         return res.redirect('/bookers/booker/details')
@@ -41,7 +43,7 @@ export default class BookerSearchController {
           req.flash('messages', {
             variant: 'information',
             title: 'No booker found',
-            text: `No existing booker found with email: ${email}`,
+            text: `No existing booker found for: ${search}`,
           })
           return res.redirect('/bookers')
         }
@@ -53,6 +55,16 @@ export default class BookerSearchController {
   }
 
   public validate(): ValidationChain[] {
-    return [body('search', 'Enter a valid email address').trim().isEmail()]
+    return [
+      body('search')
+        .trim()
+        .toLowerCase()
+        .custom(value => {
+          if (validator.isEmail(value) || validator.matches(value, BOOKER_REFERENCE_REGEX)) {
+            return true
+          }
+          throw new Error('Enter a valid email address or booker reference')
+        }),
+    ]
   }
 }

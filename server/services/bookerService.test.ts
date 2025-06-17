@@ -1,7 +1,6 @@
 import TestData from '../routes/testutils/testData'
 import { createMockBookerRegistryApiClient, createMockHmppsAuthClient } from '../data/testutils/mocks'
 import BookerService from './bookerService'
-import { BookerDto } from '../data/bookerRegistryApiTypes'
 
 const token = 'some token'
 
@@ -30,7 +29,7 @@ describe('Booker service', () => {
 
   describe('Booker', () => {
     describe('getBookerByReference', () => {
-      it('should get booker details given reference', async () => {
+      it('should get booker details given booker reference', async () => {
         bookerRegistryApiClient.getBookerByReference.mockResolvedValue(booker)
         const results = await bookerService.getBookerByReference('user', booker.reference)
 
@@ -39,28 +38,35 @@ describe('Booker service', () => {
       })
     })
 
-    describe('getBookersByEmail', () => {
-      it('should get booker details given email address', async () => {
-        bookerRegistryApiClient.getBookersByEmail.mockResolvedValue([booker])
-        const results = await bookerService.getBookersByEmail('user', booker.email)
+    describe('getBookersByEmailOrReference', () => {
+      describe('By email', () => {
+        it('should get booker details given email address', async () => {
+          bookerRegistryApiClient.getBookersByEmail.mockResolvedValue([booker])
+          const results = await bookerService.getBookersByEmailOrReference('user', booker.email)
 
-        expect(bookerRegistryApiClient.getBookersByEmail).toHaveBeenCalledWith(booker.email)
-        expect(results).toStrictEqual([booker])
+          expect(bookerRegistryApiClient.getBookersByEmail).toHaveBeenCalledWith(booker.email)
+          expect(bookerRegistryApiClient.getBookerByReference).not.toHaveBeenCalled()
+          expect(results).toStrictEqual([booker])
+        })
+
+        it('should throw an error if API returns more than one booker for an email', async () => {
+          bookerRegistryApiClient.getBookersByEmail.mockResolvedValue([booker, booker])
+          await expect(bookerService.getBookersByEmailOrReference('user', booker.email)).rejects.toThrow()
+
+          expect(bookerRegistryApiClient.getBookersByEmail).toHaveBeenCalledWith(booker.email)
+          expect(bookerRegistryApiClient.getBookerByReference).not.toHaveBeenCalled()
+        })
       })
 
-      it('should handle API returning single booker instead of array', async () => {
-        bookerRegistryApiClient.getBookersByEmail.mockResolvedValue(booker as unknown as BookerDto[])
-        const results = await bookerService.getBookersByEmail('user', booker.email)
+      describe('By reference', () => {
+        it('should get booker details given reference', async () => {
+          bookerRegistryApiClient.getBookerByReference.mockResolvedValue(booker)
+          const results = await bookerService.getBookersByEmailOrReference('user', booker.reference)
 
-        expect(bookerRegistryApiClient.getBookersByEmail).toHaveBeenCalledWith(booker.email)
-        expect(results).toStrictEqual([booker])
-      })
-
-      it('should throw an error if API returns more than one booker for an email', async () => {
-        bookerRegistryApiClient.getBookersByEmail.mockResolvedValue([booker, booker])
-        await expect(bookerService.getBookersByEmail('user', booker.email)).rejects.toThrow()
-
-        expect(bookerRegistryApiClient.getBookersByEmail).toHaveBeenCalledWith(booker.email)
+          expect(bookerRegistryApiClient.getBookerByReference).toHaveBeenCalledWith(booker.reference)
+          expect(bookerRegistryApiClient.getBookersByEmail).not.toHaveBeenCalled()
+          expect(results).toStrictEqual([booker])
+        })
       })
     })
 
