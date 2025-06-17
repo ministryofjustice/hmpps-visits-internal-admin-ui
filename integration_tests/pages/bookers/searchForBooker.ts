@@ -5,8 +5,8 @@ export default class SearchForBookerPage extends Page {
     super('Search for a booker account')
   }
 
-  enterBookerEmail = (email: string): void => {
-    cy.get('#search').type(email)
+  enterBookerSearchTerm = (search: string): void => {
+    cy.get('#search').type(search)
   }
 
   search = (): void => {
