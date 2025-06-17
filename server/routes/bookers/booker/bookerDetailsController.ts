@@ -20,10 +20,9 @@ export default class BookerDetailsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { email } = req.session.booker
+      const { reference } = req.session.booker
 
-      // TODO handle more than one booker record for an email address
-      const booker = (await this.bookerService.getBookersByEmail(res.locals.user.username, email))[0]
+      const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
       req.session.booker = booker
 
       const prisoner = booker.permittedPrisoners[0] ?? undefined

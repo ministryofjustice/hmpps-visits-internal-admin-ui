@@ -1,14 +1,16 @@
 import { RequestHandler } from 'express'
-import { ValidationChain, body, validationResult } from 'express-validator'
+import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
+import validator from 'validator'
 import { BookerService } from '../../services'
 import { responseErrorToFlashMessages } from '../../utils/utils'
+import { BOOKER_REFERENCE_REGEX } from '../../constants/constants'
 
-export default class BookersController {
+export default class BookerSearchController {
   public constructor(private readonly bookerService: BookerService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      return res.render('pages/bookers/bookers', {
+      return res.render('pages/bookers/search', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
         messages: req.flash('messages'),
@@ -16,7 +18,7 @@ export default class BookersController {
     }
   }
 
-  public search(): RequestHandler {
+  public submit(): RequestHandler {
     return async (req, res) => {
       delete req.session.booker
 
@@ -26,11 +28,11 @@ export default class BookersController {
         req.flash('formValues', req.body)
         return res.redirect('/bookers')
       }
-      const { booker: email }: { booker: string } = req.body
+      const { search } = matchedData<{ search: string }>(req)
 
       try {
         // TODO handle more than one booker record for an email address
-        const booker = (await this.bookerService.getBookersByEmail(res.locals.user.username, email))[0]
+        const booker = (await this.bookerService.getBookersByEmailOrReference(res.locals.user.username, search))[0]
         req.session.booker = booker
 
         return res.redirect('/bookers/booker/details')
@@ -41,7 +43,7 @@ export default class BookersController {
           req.flash('messages', {
             variant: 'information',
             title: 'No booker found',
-            text: `No existing booker found with email: ${email}`,
+            text: `No existing booker found for: ${search}`,
           })
           return res.redirect('/bookers')
         }
@@ -53,6 +55,16 @@ export default class BookersController {
   }
 
   public validate(): ValidationChain[] {
-    return [body('booker', 'Enter a valid email address').trim().isEmail()]
+    return [
+      body('search')
+        .trim()
+        .toLowerCase()
+        .custom(value => {
+          if (validator.isEmail(value) || validator.matches(value, BOOKER_REFERENCE_REGEX)) {
+            return true
+          }
+          throw new Error('Enter a valid email address or booker reference')
+        }),
+    ]
   }
 }

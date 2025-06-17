@@ -27,6 +27,18 @@ describe('bookerRegistryApiClient', () => {
   })
 
   describe('Booker', () => {
+    describe('getBookerByReference', () => {
+      it('should get booker details for given reference', async () => {
+        fakeBookerRegistryApi
+          .get(`/public/booker/config/${booker.reference}`)
+          .matchHeader('authorization', `Bearer ${token}`)
+          .reply(200, booker)
+
+        const output = await bookerRegistryApiClient.getBookerByReference(booker.reference)
+        expect(output).toStrictEqual(booker)
+      })
+    })
+
     describe('getBookersByEmail', () => {
       it('should get booker details for given email', async () => {
         fakeBookerRegistryApi

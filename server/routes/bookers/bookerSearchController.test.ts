@@ -35,12 +35,12 @@ describe('Search for a booker', () => {
           expect($('.moj-primary-navigation__item').length).toBe(3)
           expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/bookers')
 
-          expect($('h1').text().trim()).toBe('Search for a booker')
+          expect($('h1').text().trim()).toBe('Search for a booker account')
 
           expect($('.moj-alert').length).toBe(0)
           expect($('.govuk-error-summary').length).toBe(0)
 
-          expect($('input[name=booker]').length).toBe(1)
+          expect($('input[name=search]').length).toBe(1)
           expect($('[data-test=submit]').text().trim()).toBe('Search')
         })
     })
@@ -49,14 +49,14 @@ describe('Search for a booker', () => {
       const error: FieldValidationError = {
         type: 'field',
         location: 'body',
-        path: 'booker',
+        path: 'search',
         value: 'invalid',
         msg: 'Validation error',
       }
       const message: MoJAlert = {
         variant: 'information',
-        title: 'Booker message',
-        text: 'Booker message',
+        title: 'Search message',
+        text: 'Search message',
       }
 
       flashData = {
@@ -68,11 +68,11 @@ describe('Search for a booker', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('h1').text().trim()).toBe('Search for a booker')
+          expect($('h1').text().trim()).toBe('Search for a booker account')
 
           expect($('.moj-alert__content').text()).toBe(message.text)
           expect($('.govuk-error-summary').text()).toContain(error.msg)
-          expect($('#booker-error').text()).toContain(error.msg)
+          expect($('#search-error').text()).toContain(error.msg)
         })
     })
   })
@@ -81,58 +81,72 @@ describe('Search for a booker', () => {
     const booker = TestData.bookerDto()
 
     it('should search for booker by email using BookerService and redirect to booker details', () => {
-      bookerService.getBookersByEmail.mockResolvedValue([booker])
+      bookerService.getBookersByEmailOrReference.mockResolvedValue([booker])
 
       return request(app)
         .post('/bookers/search')
-        .send({ booker: booker.email })
+        .send({ search: booker.email })
         .expect(302)
         .expect('location', '/bookers/booker/details')
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(bookerService.getBookersByEmail).toHaveBeenCalledWith('user1', booker.email)
+          expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', booker.email)
+        })
+    })
+
+    it('should search for booker by reference using BookerService and redirect to booker details', () => {
+      bookerService.getBookersByEmailOrReference.mockResolvedValue([booker])
+
+      return request(app)
+        .post('/bookers/search')
+        .send({ search: booker.reference })
+        .expect(302)
+        .expect('location', '/bookers/booker/details')
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', booker.reference)
         })
     })
 
     it('should search for booker by email and redirect to booker search when not found', () => {
-      bookerService.getBookersByEmail.mockRejectedValue(new NotFound())
+      bookerService.getBookersByEmailOrReference.mockRejectedValue(new NotFound())
 
       return request(app)
         .post('/bookers/search')
-        .send({ booker: booker.email })
+        .send({ search: booker.email })
         .expect(302)
         .expect('location', '/bookers')
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledTimes(2)
-          expect(flashProvider).toHaveBeenCalledWith('formValues', { booker: booker.email })
+          expect(flashProvider).toHaveBeenCalledWith('formValues', { search: booker.email })
           expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
             variant: 'information',
             title: 'No booker found',
-            text: 'No existing booker found with email: user@example.com',
+            text: 'No existing booker found for: user@example.com',
           })
-          expect(bookerService.getBookersByEmail).toHaveBeenCalledWith('user1', booker.email)
+          expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', booker.email)
         })
     })
 
-    it('should reject an invalid email address and redirect with validation error', () => {
+    it('should reject an invalid search term and redirect with validation error', () => {
       const expectedError: FieldValidationError = {
         type: 'field',
         location: 'body',
-        path: 'booker',
-        value: 'INVALID',
-        msg: 'Enter a valid email address',
+        path: 'search',
+        value: 'invalid',
+        msg: 'Enter a valid email address or booker reference',
       }
 
       return request(app)
         .post('/bookers/search')
-        .send({ booker: 'INVALID' })
+        .send({ search: 'INVALID' })
         .expect(302)
         .expect('location', '/bookers')
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledTimes(2)
-          expect(flashProvider).toHaveBeenCalledWith('formValues', { booker: 'INVALID' })
+          expect(flashProvider).toHaveBeenCalledWith('formValues', { search: 'invalid' })
           expect(flashProvider).toHaveBeenCalledWith('errors', [expectedError])
-          expect(bookerService.getBookersByEmail).not.toHaveBeenCalled()
+          expect(bookerService.getBookersByEmailOrReference).not.toHaveBeenCalled()
         })
     })
   })
