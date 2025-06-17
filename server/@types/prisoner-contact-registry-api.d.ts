@@ -366,6 +366,12 @@ export interface components {
     /** @description A contact for a prisoner */
     RestrictionDto: {
       /**
+       * Format: int32
+       * @description Restriction ID
+       * @example 123
+       */
+      restrictionId: number
+      /**
        * @description Restriction Type Code
        * @example 123
        */

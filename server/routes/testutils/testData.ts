@@ -358,11 +358,13 @@ export default class TestData {
     oneLoginSub = 'one-login-user',
     email = 'user@example.com',
     permittedPrisoners = [],
+    createdTimestamp = '2025-06-01T09:00:00',
   }: Partial<BookerDto> = {}): BookerDto => ({
     reference,
     oneLoginSub,
     email,
     permittedPrisoners,
+    createdTimestamp,
   })
 
   static permittedPrisonerDto = ({
