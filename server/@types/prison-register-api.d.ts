@@ -4,62 +4,6 @@
  */
 
 export interface paths {
-  '/secure/prisons/id/{prisonId}/videolink-conferencing-centre/email-address': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * Get a prison's Videolink Conferencing Centre email address
-     * @deprecated
-     */
-    get: operations['getEmailForVideoConferencingCentre']
-    /**
-     * Set or change a prison's Videolink Conferencing Centre email address
-     * @deprecated
-     */
-    put: operations['putEmailAddressForVideolinkConferencingCentre']
-    post?: never
-    /**
-     * Remove a prison's Videolink Conferencing Centre email address
-     * @deprecated
-     */
-    delete: operations['deleteEmailAddressForVideolinkConferencingCentre']
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/secure/prisons/id/{prisonId}/offender-management-unit/email-address': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * Get a prison's Offender Management Unit email address
-     * @deprecated
-     */
-    get: operations['getEmailForOffenderManagementUnit']
-    /**
-     * Set or change a prison's Offender Management Unit email address
-     * @deprecated
-     */
-    put: operations['putEmailAddressForOffenderManagementUnit']
-    post?: never
-    /**
-     * Remove a prison's Offender Management Unit email address
-     * @deprecated
-     */
-    delete: operations['deleteEmailAddressForOffenderManagementUnit']
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/secure/prisons/id/{prisonId}/department/contact-details': {
     parameters: {
       query?: never
@@ -93,6 +37,22 @@ export interface paths {
      * @description Updates prison information, role required is MAINTAIN_REF_DATA or MAINTAIN_PRISON_DATA
      */
     put: operations['updatePrison']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/prison-maintenance/id/{prisonId}/welsh-address/{addressId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['updateWelshAddress']
     post?: never
     delete?: never
     options?: never
@@ -284,40 +244,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/gp/prison/{prisonId}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /** Get GP practice code about specified prison */
-    get: operations['getPrisonFromId_1']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/gp/practice/{gpPracticeCode}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /** Get specified prison from GP practice code */
-    get: operations['getPrisonFromGpPrescriber']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -362,6 +288,11 @@ export interface components {
        * @example HMP Moorland
        */
       prisonName: string
+      /**
+       * @description Welsh name of the prison
+       * @example Carchar Brynbuga
+       */
+      prisonNameInWelsh?: string
       /** @description Whether the prison is still active */
       active: boolean
       /** @description If this is a male prison */
@@ -377,7 +308,6 @@ export interface components {
       /** @description Set of categories for this prison */
       categories: ('A' | 'B' | 'C' | 'D')[]
     }
-    /** @description List of address for this prison */
     AddressDto: {
       /**
        * Format: int64
@@ -415,6 +345,31 @@ export interface components {
        * @example England
        */
       country: string
+      /**
+       * @description Address line 1 in Welsh
+       * @example Coed-y-Paen
+       */
+      addressLine1InWelsh?: string
+      /**
+       * @description Address line 2 in Welsh
+       * @example Hatfield Woodhouse
+       */
+      addressLine2InWelsh?: string
+      /**
+       * @description Village/Town/City in Welsh
+       * @example Pont-y-pŵl
+       */
+      townInWelsh?: string
+      /**
+       * @description County in Welsh
+       * @example Sir Fynwy
+       */
+      countyInWelsh?: string
+      /**
+       * @description Country in Welsh
+       * @example Cymru
+       */
+      countryInWelsh?: string
     }
     /** @description Prison Information */
     PrisonDto: {
@@ -428,6 +383,11 @@ export interface components {
        * @example Moorland HMP
        */
       prisonName: string
+      /**
+       * @description Name of the prison in Welsh
+       * @example Carchar Brynbuga
+       */
+      prisonNameInWelsh?: string
       /** @description Whether the prison is still active */
       active: boolean
       /** @description Whether the prison has male prisoners */
@@ -447,7 +407,6 @@ export interface components {
       /** @description List of operators for this prison */
       operators: components['schemas']['PrisonOperatorDto'][]
     }
-    /** @description List of operators for this prison */
     PrisonOperatorDto: {
       /**
        * @description Prison operator name
@@ -455,7 +414,6 @@ export interface components {
        */
       name: string
     }
-    /** @description List of types for this prison */
     PrisonTypeDto: {
       /**
        * @description Prison type code
@@ -468,6 +426,34 @@ export interface components {
        * @example His Majesty’s Prison
        */
       description: string
+    }
+    /** @description Welsh Address Update Record */
+    UpdateWelshAddressDto: {
+      /**
+       * @description Address line 1 in Welsh
+       * @example Bawtry Road
+       */
+      addressLine1InWelsh?: string
+      /**
+       * @description Address line 2 in Welsh
+       * @example Hatfield Woodhouse
+       */
+      addressLine2InWelsh?: string
+      /**
+       * @description Village/Town/City in Welsh
+       * @example Brynbuga
+       */
+      townInWelsh?: string
+      /**
+       * @description County in Welsh
+       * @example Sir Fynwy
+       */
+      countyInWelsh?: string
+      /**
+       * @description Country in Welsh
+       * @example Cymru
+       */
+      countryInWelsh?: string
     }
     /** @description Address Update Record */
     UpdateAddressDto: {
@@ -518,6 +504,11 @@ export interface components {
        * @example HMP Moorland
        */
       prisonName: string
+      /**
+       * @description Welsh name of the prison
+       * @example Carchar Brynbuga
+       */
+      prisonNameInWelsh?: string
       /** @description Whether the prison is still active */
       active: boolean
       /** @description If this is a male prison */
@@ -560,254 +551,6 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
-  getEmailForVideoConferencingCentre: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description Prison ID
-         * @example MDI
-         */
-        prisonId: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Returns the email address */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'text/plain': unknown
-        }
-      }
-      /** @description Client error - invalid prisonId or similar */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'text/plain': string
-        }
-      }
-      /** @description The prison does not have a Videolink Conferencing Centre email address */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'text/plain': string
-        }
-      }
-    }
-  }
-  putEmailAddressForVideolinkConferencingCentre: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description Prison ID
-         * @example MDI
-         */
-        prisonId: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'text/plain': string
-      }
-    }
-    responses: {
-      /** @description The email address was created */
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description The email address was updated */
-      204: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Client error - invalid prisonId, email address or similar */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description No prison found for the supplied prison id */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  deleteEmailAddressForVideolinkConferencingCentre: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description Prison ID
-         * @example MDI
-         */
-        prisonId: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description The email address was removed */
-      204: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Client error - invalid prisonId or similar */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  getEmailForOffenderManagementUnit: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description Prison ID
-         * @example MDI
-         */
-        prisonId: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Returns the email address */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'text/plain': unknown
-        }
-      }
-      /** @description Client error - invalid prisonId or similar */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'text/plain': string
-        }
-      }
-      /** @description The prison does not have a Offender Management Unit email address */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'text/plain': string
-        }
-      }
-    }
-  }
-  putEmailAddressForOffenderManagementUnit: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description Prison ID
-         * @example MDI
-         */
-        prisonId: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'text/plain': string
-      }
-    }
-    responses: {
-      /** @description The email address was created */
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description The email address was updated */
-      204: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Client error - invalid prisonId, email address, media type or similar */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description No prison found for the supplied prison id */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  deleteEmailAddressForOffenderManagementUnit: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description Prison ID
-         * @example MDI
-         */
-        prisonId: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description The email address was removed */
-      204: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Client error - invalid prisonId or similar */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
   getContactDetails: {
     parameters: {
       query: {
@@ -815,7 +558,7 @@ export interface operations {
          * @description Department type
          * @example SOCIAL_VISIT
          */
-        departmentType: string
+        departmentType: 'PRISON' | 'SOCIAL_VISIT' | 'VIDEOLINK_CONFERENCING_CENTRE' | 'OFFENDER_MANAGEMENT_UNIT'
       }
       header?: never
       path: {
@@ -865,7 +608,7 @@ export interface operations {
          * @description if true individual contact details are removed if null
          * @example true
          */
-        removeIfNull?: string
+        removeIfNull?: boolean
       }
       header?: never
       path: {
@@ -967,7 +710,7 @@ export interface operations {
          * @description Department type
          * @example SOCIAL_VISIT
          */
-        departmentType: string
+        departmentType: 'PRISON' | 'SOCIAL_VISIT' | 'VIDEOLINK_CONFERENCING_CENTRE' | 'OFFENDER_MANAGEMENT_UNIT'
       }
       header?: never
       path: {
@@ -1145,6 +888,41 @@ export interface operations {
       }
     }
   }
+  updateWelshAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Prison Id
+         * @example MDI
+         */
+        prisonId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateWelshAddressDto']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AddressDto']
+        }
+      }
+    }
+  }
   updateAddress: {
     parameters: {
       query?: never
@@ -1159,7 +937,7 @@ export interface operations {
          * @description Address Id
          * @example 234231
          */
-        addressId: string
+        addressId: number
       }
       cookie?: never
     }
@@ -1230,7 +1008,7 @@ export interface operations {
          * @description Address Id
          * @example 234231
          */
-        addressId: string
+        addressId: number
       }
       cookie?: never
     }
@@ -1550,7 +1328,7 @@ export interface operations {
          * @description Address Id
          * @example 234231
          */
-        addressId: string
+        addressId: number
       }
       cookie?: never
     }
@@ -1563,76 +1341,6 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['AddressDto']
-        }
-      }
-    }
-  }
-  getPrisonFromId_1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description Prison ID
-         * @example MDI
-         */
-        prisonId: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Bad request.  Wrong format for prison_id. */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Prison not found. */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  getPrisonFromGpPrescriber: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description GP Practice Code
-         * @example Y05537
-         */
-        gpPracticeCode: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Bad request.  Wrong format for GP practice code. */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description No prison linked to the GP practice code. */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }

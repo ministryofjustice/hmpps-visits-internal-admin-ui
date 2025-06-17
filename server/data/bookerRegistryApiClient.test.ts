@@ -2,7 +2,7 @@ import nock from 'nock'
 import config from '../config'
 import TestData from '../routes/testutils/testData'
 import BookerRegistryApiClient from './bookerRegistryApiClient'
-import { CreatePermittedPrisonerDto, CreatePermittedVisitorDto } from './bookerRegistryApiTypes'
+import { CreatePermittedPrisonerDto, CreatePermittedVisitorDto, SearchBookerDto } from './bookerRegistryApiTypes'
 
 describe('bookerRegistryApiClient', () => {
   let fakeBookerRegistryApi: nock.Scope
@@ -42,7 +42,7 @@ describe('bookerRegistryApiClient', () => {
     describe('getBookersByEmail', () => {
       it('should get booker details for given email', async () => {
         fakeBookerRegistryApi
-          .get(`/public/booker/config/email/${booker.email}`)
+          .post('/public/booker/config/search', <SearchBookerDto>{ email: booker.email })
           .matchHeader('authorization', `Bearer ${token}`)
           .reply(200, [booker])
 

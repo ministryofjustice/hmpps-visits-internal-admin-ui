@@ -21,7 +21,7 @@ export default class BookerRegistryApiClient {
   }
 
   async getBookersByEmail(email: string): Promise<BookerDto[]> {
-    return this.restClient.get({ path: `/public/booker/config/email/${email}` })
+    return this.restClient.post({ path: '/public/booker/config/search', data: { email } })
   }
 
   async clearBookerDetails(bookerReference: string): Promise<BookerDto> {

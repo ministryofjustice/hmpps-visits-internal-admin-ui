@@ -44,26 +44,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/public/booker/config': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    /**
-     * Create bookers details
-     * @description Create bookers details
-     */
-    put: operations['create']
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/public/booker/config/{bookerReference}/prisoner': {
     parameters: {
       query?: never
@@ -184,6 +164,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/public/booker/config/search': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Search for a booker using specific criteria
+     * @description Search for a booker using specific criteria, returns list (list of 1 entry if only 1 booker is found)
+     */
+    post: operations['searchForBooker']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/public/booker/{bookerReference}/permitted/prisoners': {
     parameters: {
       query?: never
@@ -277,6 +277,7 @@ export interface paths {
     }
     /**
      * get booker by email
+     * @deprecated
      * @description get booker by email
      */
     get: operations['getBookerByEmail']
@@ -353,21 +354,23 @@ export interface components {
        */
       prisonId: string
     }
-    /** @description Create booker with associated permitted prisoner data. */
-    CreateBookerDto: {
-      /** @description auth email */
-      email: string
-    }
-    /** @description Booker of visits. */
-    BookerDto: {
-      /** @description This is the booker reference and should be used to acquire booker information */
-      reference: string
-      /** @description auth reference/sub */
-      oneLoginSub: string
-      /** @description auth email */
-      email: string
-      /** @description Permitted prisoners list */
-      permittedPrisoners: components['schemas']['PermittedPrisonerDto'][]
+    /** @description Create permitted prisoner with permitted visitors associated with the booker. */
+    CreatePermittedPrisonerDto: {
+      /**
+       * @description prisoner Id
+       * @example A1234AA
+       */
+      prisonerId: string
+      /**
+       * @description prison code
+       * @example MDI
+       */
+      prisonCode: string
+      /**
+       * @description Active / Inactive permitted prisoner
+       * @example true
+       */
+      active: boolean
     }
     /** @description Permitted prisoner associated with the booker. */
     PermittedPrisonerDto: {
@@ -404,24 +407,6 @@ export interface components {
       active: boolean
     }
     /** @description Create permitted prisoner with permitted visitors associated with the booker. */
-    CreatePermittedPrisonerDto: {
-      /**
-       * @description prisoner Id
-       * @example A1234AA
-       */
-      prisonerId: string
-      /**
-       * @description prison code
-       * @example MDI
-       */
-      prisonCode: string
-      /**
-       * @description Active / Inactive permitted prisoner
-       * @example true
-       */
-      active: boolean
-    }
-    /** @description Create permitted prisoner with permitted visitors associated with the booker. */
     CreatePermittedVisitorDto: {
       /**
        * Format: int64
@@ -434,6 +419,27 @@ export interface components {
        * @example true
        */
       active: boolean
+    }
+    /** @description Booker of visits. */
+    SearchBookerDto: {
+      /** @description auth email */
+      email: string
+    }
+    /** @description Booker of visits. */
+    BookerDto: {
+      /** @description This is the booker reference and should be used to acquire booker information */
+      reference: string
+      /** @description auth reference/sub */
+      oneLoginSub: string
+      /** @description auth email */
+      email: string
+      /** @description Permitted prisoners list */
+      permittedPrisoners: components['schemas']['PermittedPrisonerDto'][]
+      /**
+       * Format: date-time
+       * @description The time of booker account creation
+       */
+      createdTimestamp: string
     }
     BookerPrisonerValidationErrorResponse: {
       validationError: string
@@ -552,66 +558,6 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  create: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateBookerDto']
-      }
-    }
-    responses: {
-      /** @description Have created booker correctly */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['BookerDto']
-        }
-      }
-      /** @description Created */
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['BookerDto']
-        }
-      }
-      /** @description Incorrect request to access this endpoint */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
-        }
-      }
-      /** @description Incorrect permissions for this action */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
         }
       }
     }
@@ -957,6 +903,48 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  searchForBooker: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SearchBookerDto']
+      }
+    }
+    responses: {
+      /** @description Booker found via search */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['BookerDto'][]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to search for booker */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }

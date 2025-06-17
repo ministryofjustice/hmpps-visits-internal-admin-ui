@@ -7,3 +7,5 @@ export type CreatePermittedPrisonerDto = components['schemas']['CreatePermittedP
 export type CreatePermittedVisitorDto = components['schemas']['CreatePermittedVisitorDto']
 
 export type PermittedPrisonerDto = components['schemas']['PermittedPrisonerDto']
+
+export type SearchBookerDto = components['schemas']['SearchBookerDto']
