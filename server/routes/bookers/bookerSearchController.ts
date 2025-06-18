@@ -29,11 +29,14 @@ export default class BookerSearchController {
       const { search } = matchedData<{ search: string }>(req)
 
       try {
-        // TODO handle more than one booker record for an email address
-        const { reference } = (
-          await this.bookerService.getBookersByEmailOrReference(res.locals.user.username, search)
-        )[0]
+        const bookers = await this.bookerService.getBookersByEmailOrReference(res.locals.user.username, search)
 
+        if (bookers.length > 1) {
+          req.session.bookerSearchResults = bookers
+          return res.redirect('/bookers/search/results')
+        }
+
+        const { reference } = bookers[0]
         return res.redirect(`/bookers/booker/${reference}`)
       } catch (error) {
         req.flash('formValues', req.body)

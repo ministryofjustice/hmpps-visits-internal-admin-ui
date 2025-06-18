@@ -27,11 +27,6 @@ export default class BookerService {
       ? await bookerRegistryApiClient.getBookersByEmail(search)
       : [await bookerRegistryApiClient.getBookerByReference(search)]
 
-    // TODO Handle more than one booker record for an email
-    if (bookers.length > 1) {
-      throw new Error('More than one booker record for this email address!')
-    }
-
     return bookers
   }
 
