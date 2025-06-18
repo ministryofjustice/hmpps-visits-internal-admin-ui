@@ -20,10 +20,9 @@ export default class BookerDetailsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { reference } = req.session.booker
+      const { reference } = req.params
 
       const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
-      req.session.booker = booker
 
       const prisoner = booker.permittedPrisoners[0] ?? undefined
       const prisonName =
@@ -77,16 +76,17 @@ export default class BookerDetailsController {
 
   public clear(): RequestHandler {
     return async (req, res) => {
-      const { booker } = req.session
+      const { reference } = req.params
 
-      req.session.booker = await this.bookerService.clearBookerDetails(res.locals.user.username, booker.reference)
+      await this.bookerService.clearBookerDetails(res.locals.user.username, reference)
+
       req.flash('messages', {
         variant: 'success',
         title: 'Booker details cleared',
         text: 'Booker details have been cleared',
       })
 
-      return res.redirect('/bookers/booker/details')
+      return res.redirect(`/bookers/booker/${reference}`)
     }
   }
 }

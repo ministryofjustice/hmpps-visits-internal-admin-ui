@@ -6,7 +6,7 @@
 {% set pageHeaderTitle = "Add a prisoner" %}
 {% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
 {% set activePrimaryNav = "bookers" %}
-{% set backLinkHref = "/bookers/booker/details" %}
+{% set backLinkHref = "/bookers/booker/" + booker.reference %}
 
 {% block content %}
 {{ super() }}
@@ -18,7 +18,7 @@
 
     <p>Add a prisoner to booker <strong>{{ booker.email }}</strong></p>
 
-    <form action="/bookers/booker/add-prisoner" method="POST" novalidate>
+    <form action="/bookers/booker/{{ booker.reference }}/add-prisoner" method="POST" novalidate>
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
       {{ govukInput({

@@ -2,6 +2,7 @@ import { RequestHandler } from 'express'
 import { body, validationResult } from 'express-validator'
 import { PrisonService } from '../../services'
 import { responseErrorToFlashMessages } from '../../utils/utils'
+import { PRISON_CODE_REGEX } from '../../constants/constants'
 
 export default class SupportedPrisonsController {
   public constructor(private readonly prisonService: PrisonService) {}
@@ -25,7 +26,7 @@ export default class SupportedPrisonsController {
       await body('prisonId')
         .trim()
         .toUpperCase()
-        .matches(/^[A-Z]{3}$/)
+        .matches(PRISON_CODE_REGEX)
         .withMessage('Enter a three letter prison code')
         .bail()
         .custom(async prisonId => {

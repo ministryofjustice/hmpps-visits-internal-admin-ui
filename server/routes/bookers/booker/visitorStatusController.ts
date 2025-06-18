@@ -8,8 +8,9 @@ export default class VisitorStatusController {
 
   public setStatus(action: 'active' | 'inactive'): RequestHandler {
     return async (req, res) => {
-      const { booker } = req.session
+      const { reference } = req.params
       const { visitorId } = req.body
+      const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
 
       if (booker.permittedPrisoners.length === 0) {
         req.flash('messages', {
@@ -17,7 +18,7 @@ export default class VisitorStatusController {
           title: 'Booker has no prisoner',
           text: 'This booker has no prisoner',
         })
-        return res.redirect('/bookers/booker/details')
+        return res.redirect(`/bookers/booker/${reference}`)
       }
 
       try {
@@ -47,7 +48,7 @@ export default class VisitorStatusController {
         req.flash('formValues', req.body)
       }
 
-      return res.redirect('/bookers/booker/details')
+      return res.redirect(`/bookers/booker/${reference}`)
     }
   }
 
