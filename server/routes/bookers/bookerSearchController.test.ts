@@ -130,20 +130,26 @@ describe('Search for a booker', () => {
 
           expect($('[data-test=booker-email-1]').text()).toBe(email)
           expect($('[data-test=booker-reference-1]').text()).toBe(booker3.reference)
-          expect($('[data-test=booker-reference-1] a').attr('href')).toBe(`/bookers/booker/${booker3.reference}`)
+          expect($('[data-test=booker-reference-1] a').attr('href')).toBe(
+            `/bookers/booker/${booker3.reference}?from=search-results`,
+          )
           expect($('[data-test=booker-prisoners-1] .govuk-tag').eq(0).text().trim()).toBe('1 active')
           expect($('[data-test=booker-prisoners-1] .govuk-tag').eq(1).text().trim()).toBe('1 inactive')
           expect($('[data-test=booker-created-date-1]').text()).toBe('3 June 2025')
 
           expect($('[data-test=booker-email-2]').text()).toBe(email)
           expect($('[data-test=booker-reference-2]').text()).toBe(booker2.reference)
-          expect($('[data-test=booker-reference-2] a').attr('href')).toBe(`/bookers/booker/${booker2.reference}`)
+          expect($('[data-test=booker-reference-2] a').attr('href')).toBe(
+            `/bookers/booker/${booker2.reference}?from=search-results`,
+          )
           expect($('[data-test=booker-prisoners-2] .govuk-tag').eq(0).text().trim()).toBe('1 active')
           expect($('[data-test=booker-created-date-2]').text()).toBe('2 June 2025')
 
           expect($('[data-test=booker-email-3]').text()).toBe(email)
           expect($('[data-test=booker-reference-3]').text()).toBe(booker1.reference)
-          expect($('[data-test=booker-reference-3] a').attr('href')).toBe(`/bookers/booker/${booker1.reference}`)
+          expect($('[data-test=booker-reference-3] a').attr('href')).toBe(
+            `/bookers/booker/${booker1.reference}?from=search-results`,
+          )
           expect($('[data-test=booker-prisoners-3]').text().trim()).toBe('None')
           expect($('[data-test=booker-created-date-3]').text()).toBe('1 June 2025')
 
