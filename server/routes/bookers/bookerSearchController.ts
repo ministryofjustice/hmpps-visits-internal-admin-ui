@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
 import validator from 'validator'
+import { compareDesc } from 'date-fns'
 import { BookerService } from '../../services'
 import { responseErrorToFlashMessages } from '../../utils/utils'
 import { BOOKER_REFERENCE_REGEX } from '../../constants/constants'
@@ -10,11 +11,30 @@ export default class BookerSearchController {
 
   public view(): RequestHandler {
     return async (req, res) => {
+      delete req.session.bookerEmail
+
       return res.render('pages/bookers/search', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
         messages: req.flash('messages'),
       })
+    }
+  }
+
+  public viewResults(): RequestHandler {
+    return async (req, res) => {
+      const { bookerEmail } = req.session
+
+      if (!bookerEmail) {
+        return res.redirect('/bookers')
+      }
+
+      const bookers = await this.bookerService.getBookersByEmailOrReference(res.locals.user.username, bookerEmail)
+      const bookersByCreatedDesc = bookers.toSorted((a, b) =>
+        compareDesc(new Date(a.createdTimestamp), new Date(b.createdTimestamp)),
+      )
+
+      return res.render('pages/bookers/searchResults', { bookers: bookersByCreatedDesc })
     }
   }
 
@@ -32,7 +52,7 @@ export default class BookerSearchController {
         const bookers = await this.bookerService.getBookersByEmailOrReference(res.locals.user.username, search)
 
         if (bookers.length > 1) {
-          req.session.bookerSearchResults = bookers
+          req.session.bookerEmail = search
           return res.redirect('/bookers/search/results')
         }
 

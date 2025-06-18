@@ -1,0 +1,78 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% set pageHeaderTitle = "Select a booker account" %}
+{% set pageTitle = applicationName + " - Manage bookers " + pageHeaderTitle %}
+{% set activePrimaryNav = "bookers" %}
+{% set backLinkHref = "/bookers" %}
+
+{% set bookerRows = [] %}
+{% for booker in bookers %}
+
+  {% if not booker.permittedPrisoners | length %}
+    {% set prisoners = "None" %}
+  {% else %}
+    {% set prisonersByActiveStatus = booker.permittedPrisoners | groupby("active") %}
+    {% set activePrisonerCount = prisonersByActiveStatus["true"] | length%}
+    {% set inactivePrisonerCount = prisonersByActiveStatus["false"] | length%}
+
+    {% set prisoners %}
+      {{- govukTag({
+        text: activePrisonerCount + " active",
+        classes: "govuk-tag--blue" + (" govuk-!-margin-bottom-2" if inactivePrisonerCount)
+      }) if activePrisonerCount }}
+
+      {%- if activePrisonerCount and inactivePrisonerCount %}
+        <br>
+      {% endif %}
+
+      {{- govukTag({
+        text: inactivePrisonerCount + " inactive",
+        classes: "govuk-tag--grey"
+      }) if inactivePrisonerCount }}
+    {% endset %}
+
+  {% endif %}
+
+  {% set bookerRows = (bookerRows.push([
+      {
+        text: booker.email,
+        attributes: { "data-test": "booker-email-" + loop.index }
+      },
+      {
+        html: '<a href="/bookers/booker/' + booker.reference + '">' + booker.reference + "</a>",
+        attributes: { "data-test": "booker-reference-" + loop.index }
+      },
+      {
+        html: prisoners,
+        attributes: { "data-test": "booker-prisoners-" + loop.index }
+      },
+      {
+        text: booker.createdTimestamp | formatDate,
+        attributes: { "data-test": "booker-created-date-" + loop.index }
+      }
+    ]), bookerRows) %}
+{% endfor %}
+
+{% block content %}
+{{ super() }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
+
+      {{ govukTable({
+        head: [
+          { text: "Email address" },
+          { text: "Booker reference" },
+          { text: "Prisoners" },
+          { text: "Date registered" }
+        ],
+        rows: bookerRows
+      }) }}
+
+  </div>
+</div>
+
+{% endblock %}
