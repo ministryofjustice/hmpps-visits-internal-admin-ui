@@ -23,12 +23,23 @@ export default class EditSessionTemplateController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { prisonId, reference } = req.params
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
 
-      const sessionTemplate = await this.sessionTemplateService.getSingleSessionTemplate(
+      const prisonPromise = this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const incentivePromise = this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
+      const categoryPromise = this.categoryGroupService.getCategoryGroups(res.locals.user.username, prisonId)
+      const locationPromise = this.locationGroupService.getLocationGroups(res.locals.user.username, prisonId)
+      const sessionTemplatePromise = this.sessionTemplateService.getSingleSessionTemplate(
         res.locals.user.username,
         reference,
       )
+
+      const [prison, incentiveGroups, categoryGroups, locationGroups, sessionTemplate] = await Promise.all([
+        prisonPromise,
+        incentivePromise,
+        categoryPromise,
+        locationPromise,
+        sessionTemplatePromise,
+      ])
 
       const hideInPublicServices = getPublicClientStatus(sessionTemplate)
 
@@ -42,6 +53,24 @@ export default class EditSessionTemplateController {
       const validToDateMonth = validToDateSplit[1] || undefined
       const validToDateDay = validToDateSplit[2] || undefined
 
+      let categoryGroupReferences: string[] = []
+      const { prisonerCategoryGroups } = sessionTemplate
+      if (prisonerCategoryGroups !== undefined && prisonerCategoryGroups.length > 0) {
+        categoryGroupReferences = prisonerCategoryGroups.map(categoryGroup => categoryGroup.reference)
+      }
+
+      let incentiveGroupReferences: string[] = []
+      const { prisonerIncentiveLevelGroups } = sessionTemplate
+      if (prisonerIncentiveLevelGroups !== undefined && prisonerIncentiveLevelGroups.length > 0) {
+        incentiveGroupReferences = prisonerIncentiveLevelGroups.map(incentiveGroup => incentiveGroup.reference)
+      }
+
+      let locationGroupReferences: string[] = []
+      const { permittedLocationGroups } = sessionTemplate
+      if (permittedLocationGroups !== undefined && permittedLocationGroups.length > 0) {
+        locationGroupReferences = permittedLocationGroups.map(locationGroup => locationGroup.reference)
+      }
+
       const formValues = {
         name: sessionTemplate.name,
         validFromDateDay,
@@ -54,6 +83,15 @@ export default class EditSessionTemplateController {
         openCapacity: sessionTemplate.sessionCapacity.open.toString(),
         closedCapacity: sessionTemplate.sessionCapacity.closed.toString(),
         visitRoom: sessionTemplate.visitRoom,
+        hasIncentiveGroups: incentiveGroupReferences.length > 0 ? 'yes' : undefined,
+        incentiveGroupBehaviour: sessionTemplate.includeIncentiveGroupType ? 'include' : 'exclude',
+        incentiveGroupReferences,
+        hasCategoryGroups: categoryGroupReferences.length > 0 ? 'yes' : undefined,
+        categoryGroupBehaviour: sessionTemplate.includeCategoryGroupType ? 'include' : 'exclude',
+        categoryGroupReferences,
+        hasLocationGroups: locationGroupReferences.length > 0 ? 'yes' : undefined,
+        locationGroupBehaviour: sessionTemplate.includeLocationGroupType ? 'include' : 'exclude',
+        locationGroupReferences,
         hideInPublicServices,
       }
 
@@ -73,6 +111,9 @@ export default class EditSessionTemplateController {
         visitStats,
         firstDate,
         lastDate,
+        categoryGroups,
+        incentiveGroups,
+        locationGroups,
       })
     }
   }
@@ -109,6 +150,12 @@ export default class EditSessionTemplateController {
               : undefined,
         },
         visitRoom: req.body.visitRoom,
+        includeCategoryGroupType: req.body.categoryGroupBehaviour !== 'exclude',
+        categoryGroupReferences: req.body.hasCategoryGroups === 'yes' ? req.body.categoryGroupReferences : [],
+        includeIncentiveGroupType: req.body.incentiveGroupBehaviour !== 'exclude',
+        incentiveLevelGroupReferences: req.body.hasIncentiveGroups === 'yes' ? req.body.incentiveGroupReferences : [],
+        includeLocationGroupType: req.body.locationGroupBehaviour !== 'exclude',
+        locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
         clients: [
           { active: true, userType: 'STAFF' },
           { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },

@@ -1,3 +1,4 @@
+import { CategoryGroup, IncentiveGroup, LocationGroup } from '../../../../server/data/visitSchedulerApiTypes'
 import Page from '../../page'
 
 export default class UpdateSessionTemplatePage extends Page {
@@ -41,6 +42,28 @@ export default class UpdateSessionTemplatePage extends Page {
   enterVisitRoom = (room: string): void => {
     cy.get('#visitRoom').clear()
     cy.get('#visitRoom').type(room)
+  }
+
+  addCategoryGroups = (categoryGroups: CategoryGroup[]): void => {
+    cy.get('#hasCategoryGroups').check()
+    categoryGroups.forEach(categoryGroup => {
+      cy.get('[data-test="category-groups"] label').contains(categoryGroup.name).siblings('input').check()
+    })
+  }
+
+  addIncentiveGroups = (incentiveGroups: IncentiveGroup[]): void => {
+    cy.get('#hasIncentiveGroups').check()
+    incentiveGroups.forEach(incentiveGroup => {
+      cy.get('[data-test="incentive-groups"] label').contains(incentiveGroup.name).siblings('input').check()
+    })
+  }
+
+  addLocationGroups = (locationGroups: LocationGroup[], behaviour: 'include' | 'exclude' = 'include'): void => {
+    cy.get('#hasLocationGroups').check()
+    cy.get(`input[name=locationGroupBehaviour][value=${behaviour}]`).check()
+    locationGroups.forEach(locationGroup => {
+      cy.get('[data-test="location-groups"] label').contains(locationGroup.name).siblings('input').check()
+    })
   }
 
   setHiddenFromPublic = (hidden: boolean): void => {

@@ -375,6 +375,12 @@ describe('visitSchedulerApiClient', () => {
           sessionDateRange: updateSessionTemplateDto.sessionDateRange,
           sessionTimeSlot: updateSessionTemplateDto.sessionTimeSlot,
           visitRoom: updateSessionTemplateDto.visitRoom,
+          includeCategoryGroupType: true,
+          includeIncentiveGroupType: true,
+          includeLocationGroupType: true,
+          categoryGroupReferences: ['-cat~abc~de'],
+          incentiveLevelGroupReferences: ['-inc~abc~de'],
+          locationGroupReferences: ['-loc~abc~de'],
           clients: [
             { active: true, userType: 'PUBLIC' },
             { active: true, userType: 'STAFF' },
