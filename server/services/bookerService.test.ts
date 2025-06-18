@@ -39,34 +39,22 @@ describe('Booker service', () => {
     })
 
     describe('getBookersByEmailOrReference', () => {
-      describe('By email', () => {
-        it('should get booker details given email address', async () => {
-          bookerRegistryApiClient.getBookersByEmail.mockResolvedValue([booker])
-          const results = await bookerService.getBookersByEmailOrReference('user', booker.email)
+      it('should get booker details given email address', async () => {
+        bookerRegistryApiClient.getBookersByEmail.mockResolvedValue([booker])
+        const results = await bookerService.getBookersByEmailOrReference('user', booker.email)
 
-          expect(bookerRegistryApiClient.getBookersByEmail).toHaveBeenCalledWith(booker.email)
-          expect(bookerRegistryApiClient.getBookerByReference).not.toHaveBeenCalled()
-          expect(results).toStrictEqual([booker])
-        })
-
-        it('should throw an error if API returns more than one booker for an email', async () => {
-          bookerRegistryApiClient.getBookersByEmail.mockResolvedValue([booker, booker])
-          await expect(bookerService.getBookersByEmailOrReference('user', booker.email)).rejects.toThrow()
-
-          expect(bookerRegistryApiClient.getBookersByEmail).toHaveBeenCalledWith(booker.email)
-          expect(bookerRegistryApiClient.getBookerByReference).not.toHaveBeenCalled()
-        })
+        expect(bookerRegistryApiClient.getBookersByEmail).toHaveBeenCalledWith(booker.email)
+        expect(bookerRegistryApiClient.getBookerByReference).not.toHaveBeenCalled()
+        expect(results).toStrictEqual([booker])
       })
 
-      describe('By reference', () => {
-        it('should get booker details given reference', async () => {
-          bookerRegistryApiClient.getBookerByReference.mockResolvedValue(booker)
-          const results = await bookerService.getBookersByEmailOrReference('user', booker.reference)
+      it('should get booker details given reference', async () => {
+        bookerRegistryApiClient.getBookerByReference.mockResolvedValue(booker)
+        const results = await bookerService.getBookersByEmailOrReference('user', booker.reference)
 
-          expect(bookerRegistryApiClient.getBookerByReference).toHaveBeenCalledWith(booker.reference)
-          expect(bookerRegistryApiClient.getBookersByEmail).not.toHaveBeenCalled()
-          expect(results).toStrictEqual([booker])
-        })
+        expect(bookerRegistryApiClient.getBookerByReference).toHaveBeenCalledWith(booker.reference)
+        expect(bookerRegistryApiClient.getBookersByEmail).not.toHaveBeenCalled()
+        expect(results).toStrictEqual([booker])
       })
     })
 

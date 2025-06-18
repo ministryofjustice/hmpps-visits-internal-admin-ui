@@ -16,6 +16,8 @@ export default function routes(services: Services): Router {
   get('/bookers', bookerSearch.view())
   postWithValidation('/bookers/search', bookerSearch.validate(), bookerSearch.submit())
 
+  get('/bookers/search/results', bookerSearch.viewResults())
+
   router.use('/bookers/booker', bookerRoutes(services))
 
   return router

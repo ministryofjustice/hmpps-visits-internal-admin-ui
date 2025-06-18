@@ -31,16 +31,18 @@ afterEach(() => {
 
 describe('Booker details', () => {
   describe('GET /bookers/booker/{:reference}', () => {
-    it('should render the booker details page', () => {
-      const contact = TestData.contact()
-      const prisoner = TestData.permittedPrisonerDto({
-        permittedVisitors: [{ visitorId: contact.personId, active: true }],
-      })
-      const booker = TestData.bookerDto({ permittedPrisoners: [prisoner] })
+    const contact = TestData.contact()
+    const prisoner = TestData.permittedPrisonerDto({
+      permittedVisitors: [{ visitorId: contact.personId, active: true }],
+    })
+    const booker = TestData.bookerDto({ permittedPrisoners: [prisoner] })
 
+    beforeEach(() => {
       bookerService.getBookerByReference.mockResolvedValue(booker)
       prisonerContactsService.getSocialContacts.mockResolvedValue([contact])
+    })
 
+    it('should render the booker details page', () => {
       return request(app)
         .get(`/bookers/booker/${booker.reference}`)
         .expect('Content-Type', /html/)
@@ -48,6 +50,7 @@ describe('Booker details', () => {
           const $ = cheerio.load(res.text)
           expect($('.moj-primary-navigation__item').length).toBe(3)
           expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/bookers')
+          expect($('.govuk-back-link').attr('href')).toBe('/bookers')
 
           expect($('h1').text().trim()).toBe('Booker details')
 
@@ -75,6 +78,16 @@ describe('Booker details', () => {
             approvedOnly: false,
           })
           expect(prisonService.getPrisonName).toHaveBeenCalledWith('user1', prisoner.prisonCode)
+        })
+    })
+
+    it('should render correct back link if coming from booker search results page', () => {
+      return request(app)
+        .get(`/bookers/booker/${booker.reference}?from=search-results`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('.govuk-back-link').attr('href')).toBe('/bookers/search/results')
         })
     })
 

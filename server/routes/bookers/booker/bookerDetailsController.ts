@@ -21,6 +21,7 @@ export default class BookerDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { reference } = req.params
+      const backLinkHref = req.query.from === 'search-results' ? '/bookers/search/results' : '/bookers'
 
       const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
 
@@ -67,6 +68,7 @@ export default class BookerDetailsController {
       return res.render('pages/bookers/booker/details', {
         errors: req.flash('errors'),
         messages: req.flash('messages'),
+        backLinkHref,
         booker,
         prisonName,
         visitors,
