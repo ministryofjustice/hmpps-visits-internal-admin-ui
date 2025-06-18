@@ -9,6 +9,8 @@ declare module 'express-session' {
   interface SessionData {
     returnTo: string
     nowInMinutes: number
+
+    bookerEmail: string // used for passing search term to booker results page
   }
 }
 
