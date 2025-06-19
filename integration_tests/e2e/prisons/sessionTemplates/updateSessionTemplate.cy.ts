@@ -1,4 +1,4 @@
-import { SessionTemplate } from '../../../../server/data/visitSchedulerApiTypes'
+import { SessionTemplate, UpdateSessionTemplateDto } from '../../../../server/data/visitSchedulerApiTypes'
 import TestData from '../../../../server/routes/testutils/testData'
 import Page from '../../../pages/page'
 import UpdateSessionTemplatePage from '../../../pages/prisons/sessionTemplates/updateSessionTemplate'
@@ -42,7 +42,24 @@ context('Session templates - update', () => {
     const updateSessionTemplatePage = Page.verifyOnPageTitle(UpdateSessionTemplatePage, prison.name)
 
     // Update template fields
-    const updatedSessionTemplate: SessionTemplate = {
+
+    const updateSessionTemplate: UpdateSessionTemplateDto = {
+      name: 'Updated template name',
+      sessionDateRange: { validFromDate: '2023-04-01', validToDate: '2023-08-31' },
+      sessionCapacity: { open: 40, closed: 5 },
+      visitRoom: 'New visit room',
+      includeCategoryGroupType: true,
+      categoryGroupReferences: [categoryGroups.reference],
+      includeIncentiveGroupType: true,
+      incentiveLevelGroupReferences: [incentiveGroups.reference],
+      includeLocationGroupType: true,
+      locationGroupReferences: [locationGroups.reference],
+      clients: [
+        { active: true, userType: 'STAFF' },
+        { active: true, userType: 'PUBLIC' },
+      ],
+    }
+    const returnedUpdatedSessionTemplate: SessionTemplate = {
       ...sessionTemplate,
       name: 'Updated template name',
       sessionDateRange: { validFromDate: '2023-04-01', validToDate: '2023-08-31' },
@@ -59,27 +76,30 @@ context('Session templates - update', () => {
         { active: true, userType: 'PUBLIC' },
       ],
     }
-    updateSessionTemplatePage.enterName(updatedSessionTemplate.name)
-    updateSessionTemplatePage.enterValidFromDate(updatedSessionTemplate.sessionDateRange.validFromDate)
-    updateSessionTemplatePage.enterValidToDate(updatedSessionTemplate.sessionDateRange.validToDate)
-    updateSessionTemplatePage.enterOpenCapacity(updatedSessionTemplate.sessionCapacity.open)
-    updateSessionTemplatePage.enterClosedCapacity(updatedSessionTemplate.sessionCapacity.closed)
-    updateSessionTemplatePage.enterVisitRoom(updatedSessionTemplate.visitRoom)
+    updateSessionTemplatePage.enterName(returnedUpdatedSessionTemplate.name)
+    updateSessionTemplatePage.enterValidFromDate(returnedUpdatedSessionTemplate.sessionDateRange.validFromDate)
+    updateSessionTemplatePage.enterValidToDate(returnedUpdatedSessionTemplate.sessionDateRange.validToDate)
+    updateSessionTemplatePage.enterOpenCapacity(returnedUpdatedSessionTemplate.sessionCapacity.open)
+    updateSessionTemplatePage.enterClosedCapacity(returnedUpdatedSessionTemplate.sessionCapacity.closed)
+    updateSessionTemplatePage.enterVisitRoom(returnedUpdatedSessionTemplate.visitRoom)
     updateSessionTemplatePage.addCategoryGroups([categoryGroups])
     updateSessionTemplatePage.addIncentiveGroups([incentiveGroups])
     updateSessionTemplatePage.addLocationGroups([locationGroups])
     updateSessionTemplatePage.setHiddenFromPublic(false)
 
     // Submit form to update template
-    cy.task('stubUpdateSessionTemplate', { sessionTemplate: updatedSessionTemplate })
-    cy.task('stubGetSingleSessionTemplate', { sessionTemplate: updatedSessionTemplate })
+    cy.task('stubUpdateSessionTemplate', {
+      sessionTemplate: updateSessionTemplate,
+      reference: sessionTemplate.reference,
+    })
+    cy.task('stubGetSingleSessionTemplate', { sessionTemplate: returnedUpdatedSessionTemplate })
     updateSessionTemplatePage.updateTemplate()
 
     // Finish in single session template view with success message
     viewSingleSessionTemplatePage
       .successMessage()
-      .contains(`Session template '${updatedSessionTemplate.name}' has been updated`)
-    viewSingleSessionTemplatePage.getReference().contains(updatedSessionTemplate.reference)
+      .contains(`Session template '${returnedUpdatedSessionTemplate.name}' has been updated`)
+    viewSingleSessionTemplatePage.getReference().contains(returnedUpdatedSessionTemplate.reference)
     viewSingleSessionTemplatePage.getPublicVisbility().contains('No')
   })
 })

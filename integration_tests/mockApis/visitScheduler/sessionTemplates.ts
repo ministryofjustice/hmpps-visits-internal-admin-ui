@@ -7,6 +7,7 @@ import {
   SessionTemplate,
   RequestSessionTemplateVisitStatsDto,
   SessionTemplateVisitStatsDto,
+  UpdateSessionTemplateDto,
 } from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
@@ -127,11 +128,17 @@ export default {
     })
   },
 
-  stubUpdateSessionTemplate: ({ sessionTemplate }: { sessionTemplate: SessionTemplate }): SuperAgentRequest => {
+  stubUpdateSessionTemplate: ({
+    sessionTemplate,
+    reference,
+  }: {
+    sessionTemplate: UpdateSessionTemplateDto
+    reference: string
+  }): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'PUT',
-        url: `/visitScheduler/admin/session-templates/template/${sessionTemplate.reference}`,
+        url: `/visitScheduler/admin/session-templates/template/${reference}`,
         bodyPatterns: [
           {
             equalToJson: {
@@ -140,11 +147,11 @@ export default {
               sessionDateRange: sessionTemplate.sessionDateRange,
               visitRoom: sessionTemplate.visitRoom,
               includeCategoryGroupType: sessionTemplate.includeCategoryGroupType,
-              categoryGroupReferences: [TestData.categoryGroup().reference],
+              categoryGroupReferences: sessionTemplate.categoryGroupReferences,
               includeIncentiveGroupType: sessionTemplate.includeIncentiveGroupType,
-              incentiveLevelGroupReferences: [TestData.incentiveGroup().reference],
+              incentiveLevelGroupReferences: sessionTemplate.incentiveLevelGroupReferences,
               includeLocationGroupType: sessionTemplate.includeLocationGroupType,
-              locationGroupReferences: [TestData.locationGroup().reference],
+              locationGroupReferences: sessionTemplate.locationGroupReferences,
               clients: sessionTemplate.clients,
             },
           },
