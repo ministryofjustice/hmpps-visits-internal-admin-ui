@@ -53,23 +53,12 @@ export default class EditSessionTemplateController {
       const validToDateMonth = validToDateSplit[1] || undefined
       const validToDateDay = validToDateSplit[2] || undefined
 
-      let categoryGroupReferences: string[] = []
-      const { prisonerCategoryGroups } = sessionTemplate
-      if (prisonerCategoryGroups !== undefined && prisonerCategoryGroups.length > 0) {
-        categoryGroupReferences = prisonerCategoryGroups.map(categoryGroup => categoryGroup.reference)
-      }
+      const { prisonerCategoryGroups, prisonerIncentiveLevelGroups, permittedLocationGroups } = sessionTemplate
 
-      let incentiveGroupReferences: string[] = []
-      const { prisonerIncentiveLevelGroups } = sessionTemplate
-      if (prisonerIncentiveLevelGroups !== undefined && prisonerIncentiveLevelGroups.length > 0) {
-        incentiveGroupReferences = prisonerIncentiveLevelGroups.map(incentiveGroup => incentiveGroup.reference)
-      }
-
-      let locationGroupReferences: string[] = []
-      const { permittedLocationGroups } = sessionTemplate
-      if (permittedLocationGroups !== undefined && permittedLocationGroups.length > 0) {
-        locationGroupReferences = permittedLocationGroups.map(locationGroup => locationGroup.reference)
-      }
+      const categoryGroupReferences = prisonerCategoryGroups?.map(categoryGroup => categoryGroup.reference) ?? []
+      const incentiveGroupReferences =
+        prisonerIncentiveLevelGroups?.map(incentiveGroup => incentiveGroup.reference) ?? []
+      const locationGroupReferences = permittedLocationGroups?.map(locationGroup => locationGroup.reference) ?? []
 
       const formValues = {
         name: sessionTemplate.name,
