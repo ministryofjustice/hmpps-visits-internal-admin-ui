@@ -1,0 +1,27 @@
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{# Render tags with active/inactive counts for booker prisoners/visitors #}
+{% macro activeOrInactiveCount(items) -%}
+  {% if not items | length -%}
+    None
+  {%- else %}
+    {% set itemsByActiveStatus = items | groupby("active") %}
+    {% set activeItemCount = itemsByActiveStatus["true"] | length%}
+    {% set inactiveItemCount = itemsByActiveStatus["false"] | length%}
+
+    {{- govukTag({
+      text: activeItemCount + " active",
+      classes: "govuk-tag--blue" + (" govuk-!-margin-bottom-2" if inactiveItemCount)
+    }) if activeItemCount -}}
+
+    {%- if activeItemCount and inactiveItemCount -%}
+      <br>
+    {% endif %}
+
+    {{- govukTag({
+      text: inactiveItemCount + " inactive",
+      classes: "govuk-tag--grey"
+    }) if inactiveItemCount -}}
+
+  {% endif %}
+{%- endmacro %}

@@ -8,11 +8,13 @@ export default class VisitorStatusController {
 
   public setStatus(action: 'active' | 'inactive'): RequestHandler {
     return async (req, res) => {
-      const { reference } = req.params
+      const { prisonerId, reference } = req.params
       const { visitorId } = req.body
-      const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
 
-      if (booker.permittedPrisoners.length === 0) {
+      const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
+      const prisoner = booker.permittedPrisoners.find(permittedPrisoner => permittedPrisoner.prisonerId === prisonerId)
+
+      if (!prisoner) {
         req.flash('messages', {
           variant: 'information',
           title: 'Booker has no prisoner',
@@ -26,14 +28,14 @@ export default class VisitorStatusController {
           await this.bookerService.deactivateVisitor(
             res.locals.user.username,
             booker.reference,
-            booker.permittedPrisoners[0].prisonerId,
+            prisoner.prisonerId,
             visitorId,
           )
         } else {
           await this.bookerService.activateVisitor(
             res.locals.user.username,
             booker.reference,
-            booker.permittedPrisoners[0].prisonerId,
+            prisoner.prisonerId,
             visitorId,
           )
         }
@@ -48,7 +50,7 @@ export default class VisitorStatusController {
         req.flash('formValues', req.body)
       }
 
-      return res.redirect(`/bookers/booker/${reference}`)
+      return res.redirect(`/bookers/booker/${reference}/prisoner/${prisonerId}`)
     }
   }
 

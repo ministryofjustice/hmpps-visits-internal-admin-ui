@@ -9,19 +9,21 @@ export default class BookerDetailsPage extends Page {
 
   bookerReference = (): PageElement => cy.get('[data-test="booker-reference"]')
 
-  prisonerNumber = (): PageElement => cy.get('[data-test="prisoner-number"]')
-
-  prisonName = (): PageElement => cy.get('[data-test="registered-prison-name"]')
+  noPrisonersMessage = (): PageElement => cy.get('[data-test="no-prisoners"]')
 
   addPrisoner = (): void => {
     cy.get('[data-test="add-prisoner"]').click()
   }
 
-  getVisitorName = (index: number): PageElement => cy.get(`[data-test="visitor-name-${index.toString()}"]`)
+  selectPrisoner = (prisonerId: string) => cy.get('a').contains(prisonerId).click()
 
-  addVisitor = (): void => {
-    cy.get('[data-test="add-visitor"]').click()
-  }
+  getPrisonerId = (row: number): PageElement => cy.get(`[data-test="prison-number-${row}"]`)
+
+  getPrisonName = (row: number): PageElement => cy.get(`[data-test="prison-name-${row}"]`)
+
+  getPrisonerStatus = (row: number): PageElement => cy.get(`[data-test="prisoner-status-${row}"]`)
+
+  getPrisonerVisitors = (row: number): PageElement => cy.get(`[data-test="prisoner-visitors-${row}"]`)
 
   clearBookerDetails = (): void => {
     cy.get('[data-test="clear-booker-details"]').click()

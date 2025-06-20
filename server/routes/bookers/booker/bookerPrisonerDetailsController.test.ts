@@ -29,8 +29,8 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Booker details', () => {
-  describe('GET /bookers/booker/{:reference}', () => {
+describe('Booker prisoner details', () => {
+  describe('GET /bookers/booker/{:reference}/prisoner/{:prisonerId}', () => {
     const contact = TestData.contact()
     const prisoner = TestData.permittedPrisonerDto({
       permittedVisitors: [{ visitorId: contact.personId, active: true }],
@@ -42,17 +42,17 @@ describe('Booker details', () => {
       prisonerContactsService.getSocialContacts.mockResolvedValue([contact])
     })
 
-    it('should render the booker details page', () => {
+    it('should render the prisoner details page', () => {
       return request(app)
-        .get(`/bookers/booker/${booker.reference}`)
+        .get(`/bookers/booker/${booker.reference}/prisoner/${prisoner.prisonerId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('.moj-primary-navigation__item').length).toBe(3)
           expect($('.moj-primary-navigation__link[aria-current]').attr('href')).toBe('/bookers')
-          expect($('.govuk-back-link').attr('href')).toBe('/bookers')
+          expect($('.govuk-back-link').attr('href')).toBe(`/bookers/booker/${booker.reference}`)
 
-          expect($('h1').text().trim()).toBe('Booker details')
+          expect($('h1').text().trim()).toBe('Prisoner details')
 
           expect($('.moj-alert').length).toBe(0)
           expect($('.govuk-error-summary').length).toBe(0)
@@ -81,18 +81,11 @@ describe('Booker details', () => {
         })
     })
 
-    it('should render correct back link if coming from booker search results page', () => {
+    it('should redirect to booker details if invalid prisoner reference in URL', () => {
       return request(app)
-        .get(`/bookers/booker/${booker.reference}?from=search-results`)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('.govuk-back-link').attr('href')).toBe('/bookers/search/results')
-        })
-    })
-
-    it('should redirect to booker search if invalid booker reference in URL', () => {
-      return request(app).get('/bookers/booker/not-a-booker-ref').expect(302).expect('location', '/bookers')
+        .get(`/bookers/booker/${booker.reference}/prisoner/NOT-A-PRISONER`)
+        .expect(302)
+        .expect('location', `/bookers/booker/${booker.reference}`)
     })
   })
 })

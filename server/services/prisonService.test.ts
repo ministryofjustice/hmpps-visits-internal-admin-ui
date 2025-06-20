@@ -203,6 +203,14 @@ describe('Prisons service', () => {
     })
   })
 
+  describe('getPrisonNames', () => {
+    it('should return all prison names', async () => {
+      const results = await prisonService.getPrisonNames('user')
+      expect(results[prisonNames[0].prisonId]).toBe(prisonNames[0].prisonName)
+      expect(results[prisonNames[1].prisonId]).toBe(prisonNames[1].prisonName)
+    })
+  })
+
   describe('activatePrison', () => {
     it('should change prison to active', async () => {
       await prisonService.activatePrison('user', prisonDto.code)
