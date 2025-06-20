@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { BookerService, PrisonService } from '../../../services'
@@ -87,24 +88,23 @@ export default class EditPrisonerController {
     // Clear booker details before re-adding all prisoners
     await this.bookerService.clearBookerDetails(username, booker.reference)
 
-    booker.permittedPrisoners.forEach(async prisoner => {
+    for (const prisoner of booker.permittedPrisoners) {
       // re-add prisoner
       await this.bookerService.addPrisoner(username, booker.reference, prisoner.prisonerId, prisoner.prisonCode)
-
       // defaults to creating 'active' so check if necessary to deactivate
       if (!prisoner.active) {
         await this.bookerService.deactivatePrisoner(username, booker.reference, prisoner.prisonerId)
       }
 
       // re-add visitors
-      prisoner.permittedVisitors.forEach(async visitor => {
+      for (const visitor of prisoner.permittedVisitors) {
         await this.bookerService.addVisitor(username, booker.reference, prisoner.prisonerId, visitor.visitorId)
 
         // defaults to creating 'active' so check if necessary to deactivate
         if (!visitor.active) {
           await this.bookerService.deactivateVisitor(username, booker.reference, prisoner.prisonerId, visitor.visitorId)
         }
-      })
-    })
+      }
+    }
   }
 }
