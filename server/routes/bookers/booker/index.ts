@@ -1,13 +1,14 @@
 import { RequestHandler, Router } from 'express'
 import { ValidationChain } from 'express-validator'
 import { Services } from '../../../services'
-import BookerDetailsController from './bookerDetailsController'
+import BookerController from './bookerController'
 import AddPrisonerController from './addPrisonerController'
 import PrisonerStatusController from './prisonerStatusController'
 import AddVisitorController from './addVisitorController'
 import VisitorStatusController from './visitorStatusController'
 import EditPrisonerController from './editPrisonerController'
-import { BOOKER_REFERENCE_REGEX } from '../../../constants/constants'
+import { BOOKER_REFERENCE_REGEX, PRISON_NUMBER_REGEX } from '../../../constants/constants'
+import BookerPrisonerDetailsController from './bookerPrisonerDetailsController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -17,7 +18,8 @@ export default function routes(services: Services): Router {
   const postWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
     router.post(path, ...validationChain, handler)
 
-  const bookerDetails = new BookerDetailsController(
+  const booker = new BookerController(services.bookerService, services.prisonService)
+  const bookerPrisonerDetails = new BookerPrisonerDetailsController(
     services.bookerService,
     services.prisonerContactsService,
     services.prisonService,
@@ -34,23 +36,43 @@ export default function routes(services: Services): Router {
     return BOOKER_REFERENCE_REGEX.test(reference) ? next() : res.redirect('/bookers')
   })
 
-  get('/:reference/', bookerDetails.view())
-  post('/:reference/clear', bookerDetails.clear())
+  // middleware to validate prisoner ID on all /bookers/booker/{:reference}/prisoner/{:prisonerId} routes
+  router.use('/:reference/prisoner/:prisonerId', (req, res, next) => {
+    const { reference, prisonerId } = req.params
+    return PRISON_NUMBER_REGEX.test(prisonerId) ? next() : res.redirect(`/bookers/booker/${reference}`)
+  })
 
+  // Booker routes
+  get('/:reference/', booker.view())
+  post('/:reference/clear', booker.clear())
+
+  // Add prisoner to a booker
   get('/:reference/add-prisoner', addPrisoner.view())
   postWithValidation('/:reference/add-prisoner', addPrisoner.validate(), addPrisoner.submit())
 
-  get('/:reference/edit-prisoner', editPrisoner.view())
-  postWithValidation('/:reference/edit-prisoner', editPrisoner.validate(), editPrisoner.submit())
+  // Booker prisoner routes
+  get('/:reference/prisoner/:prisonerId', bookerPrisonerDetails.view())
 
-  post('/:reference/activate-prisoner', prisonerStatus.setStatus('inactive'))
-  post('/:reference/deactivate-prisoner', prisonerStatus.setStatus('active'))
+  get('/:reference/prisoner/:prisonerId/edit', editPrisoner.view())
+  postWithValidation('/:reference/prisoner/:prisonerId/edit', editPrisoner.validate(), editPrisoner.submit())
 
-  get('/:reference/add-visitor', addVisitor.view())
-  postWithValidation('/:reference/add-visitor', addVisitor.validate(), addVisitor.submit())
+  post('/:reference/prisoner/:prisonerId/activate', prisonerStatus.setStatus('inactive'))
+  post('/:reference/prisoner/:prisonerId/deactivate', prisonerStatus.setStatus('active'))
 
-  postWithValidation('/:reference/activate-visitor', visitorStatus.validate(), visitorStatus.setStatus('inactive'))
-  postWithValidation('/:reference/deactivate-visitor', visitorStatus.validate(), visitorStatus.setStatus('active'))
+  // Booker prisoner visitor routes
+  get('/:reference/prisoner/:prisonerId/add-visitor', addVisitor.view())
+  postWithValidation('/:reference/prisoner/:prisonerId/add-visitor', addVisitor.validate(), addVisitor.submit())
+
+  postWithValidation(
+    '/:reference/prisoner/:prisonerId/activate-visitor',
+    visitorStatus.validate(),
+    visitorStatus.setStatus('inactive'),
+  )
+  postWithValidation(
+    '/:reference/prisoner/:prisonerId/deactivate-visitor',
+    visitorStatus.validate(),
+    visitorStatus.setStatus('active'),
+  )
 
   return router
 }

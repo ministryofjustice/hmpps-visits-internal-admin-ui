@@ -1,4 +1,5 @@
 {% extends "partials/layout.njk" %}
+{%- from "partials/activeOrInactiveCount.njk" import activeOrInactiveCount -%}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
@@ -9,43 +10,20 @@
 
 {% set bookerRows = [] %}
 {% for booker in bookers %}
-
-  {% if not booker.permittedPrisoners | length %}
-    {% set prisoners = "None" %}
-  {% else %}
-    {% set prisonersByActiveStatus = booker.permittedPrisoners | groupby("active") %}
-    {% set activePrisonerCount = prisonersByActiveStatus["true"] | length%}
-    {% set inactivePrisonerCount = prisonersByActiveStatus["false"] | length%}
-
-    {% set prisoners %}
-      {{- govukTag({
-        text: activePrisonerCount + " active",
-        classes: "govuk-tag--blue" + (" govuk-!-margin-bottom-2" if inactivePrisonerCount)
-      }) if activePrisonerCount }}
-
-      {%- if activePrisonerCount and inactivePrisonerCount %}
-        <br>
-      {% endif %}
-
-      {{- govukTag({
-        text: inactivePrisonerCount + " inactive",
-        classes: "govuk-tag--grey"
-      }) if inactivePrisonerCount }}
-    {% endset %}
-
-  {% endif %}
-
   {% set bookerRows = (bookerRows.push([
       {
         text: booker.email,
         attributes: { "data-test": "booker-email-" + loop.index }
       },
       {
-        html: '<a href="/bookers/booker/' + booker.reference + '?from=search-results">' + booker.reference + "</a>",
+        html:
+          '<a href="/bookers/booker/' + booker.reference + '?from=search-results" class="govuk-link--no-visited-state">' +
+            booker.reference +
+          "</a>",
         attributes: { "data-test": "booker-reference-" + loop.index }
       },
       {
-        html: prisoners,
+        html: activeOrInactiveCount(booker.permittedPrisoners),
         attributes: { "data-test": "booker-prisoners-" + loop.index }
       },
       {
@@ -59,7 +37,7 @@
 {{ super() }}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
 
       {{ govukTable({

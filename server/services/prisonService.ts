@@ -157,7 +157,7 @@ export default class PrisonService {
     return prisonName
   }
 
-  private async getPrisonNames(username: string): Promise<Record<string, string>> {
+  async getPrisonNames(username: string): Promise<Record<string, string>> {
     await this.refreshPrisonNames(username)
 
     return this.prisonNames

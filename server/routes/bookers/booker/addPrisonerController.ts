@@ -15,11 +15,12 @@ export default class AddPrisonerController {
       const { reference } = req.params
       const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
 
-      if (booker.permittedPrisoners.length >= 1) {
+      const hasActivePrisoner = booker.permittedPrisoners.some(prisoner => prisoner.active)
+      if (hasActivePrisoner) {
         req.flash('messages', {
           variant: 'information',
-          title: 'Booker has a prisoner',
-          text: 'This booker already has a prisoner - cannot add another',
+          title: 'Booker has an active prisoner',
+          text: 'This booker already has an active prisoner - cannot add another',
         })
         return res.redirect(`/bookers/booker/${reference}`)
       }
@@ -39,6 +40,7 @@ export default class AddPrisonerController {
   public submit(): RequestHandler {
     return async (req, res) => {
       const { reference } = req.params
+      const { prisonerNumber, prisonCode }: { prisonerNumber: string; prisonCode: string } = req.body
 
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
@@ -46,8 +48,6 @@ export default class AddPrisonerController {
         req.flash('formValues', req.body)
         return res.redirect(`/bookers/booker/${reference}/add-prisoner`)
       }
-
-      const { prisonerNumber, prisonCode }: { prisonerNumber: string; prisonCode: string } = req.body
 
       try {
         await this.bookerService.addPrisoner(res.locals.user.username, reference, prisonerNumber, prisonCode)

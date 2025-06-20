@@ -12,10 +12,11 @@ export default class AddVisitorController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { reference } = req.params
+      const { prisonerId, reference } = req.params
       const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
+      const prisoner = booker.permittedPrisoners.find(permittedPrisoner => permittedPrisoner.prisonerId === prisonerId)
 
-      if (booker.permittedPrisoners.length !== 1) {
+      if (!prisoner) {
         req.flash('messages', {
           variant: 'information',
           title: 'Booker has no prisoner',
@@ -28,7 +29,7 @@ export default class AddVisitorController {
       try {
         allContacts = await this.prisonerContactsService.getSocialContacts({
           username: res.locals.user.username,
-          prisonerId: booker.permittedPrisoners[0].prisonerId,
+          prisonerId: prisoner.prisonerId,
           approvedOnly: true,
         })
       } catch (error) {
@@ -36,7 +37,7 @@ export default class AddVisitorController {
         allContacts = []
       }
 
-      const existingVisitorIds = booker.permittedPrisoners[0].permittedVisitors.map(visitor => visitor.visitorId)
+      const existingVisitorIds = prisoner.permittedVisitors.map(visitor => visitor.visitorId)
       const filteredContacts = allContacts.filter(contact => !existingVisitorIds.includes(contact.personId))
 
       return res.render('pages/bookers/booker/addVisitor', {
@@ -44,42 +45,38 @@ export default class AddVisitorController {
         formValues: req.flash('formValues')?.[0] || {},
         booker,
         contacts: filteredContacts,
+        prisoner,
       })
     }
   }
 
   public submit(): RequestHandler {
     return async (req, res) => {
-      const { reference } = req.params
+      const { prisonerId, reference } = req.params
 
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', req.body)
-        return res.redirect(`/bookers/booker/${reference}/add-visitor`)
+        return res.redirect(`/bookers/booker/${reference}/prisoner/${prisonerId}/add-visitor`)
       }
 
       const { visitorId }: { visitorId: number } = req.body
       const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
 
       try {
-        await this.bookerService.addVisitor(
-          res.locals.user.username,
-          booker.reference,
-          booker.permittedPrisoners[0].prisonerId,
-          visitorId,
-        )
+        await this.bookerService.addVisitor(res.locals.user.username, booker.reference, prisonerId, visitorId)
         req.flash('messages', {
           variant: 'success',
           title: 'Visitor added',
           text: 'Visitor added',
         })
 
-        return res.redirect(`/bookers/booker/${reference}`)
+        return res.redirect(`/bookers/booker/${reference}/prisoner/${prisonerId}`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessages(error))
         req.flash('formValues', req.body)
-        return res.redirect(`/bookers/booker/${reference}/add-visitor`)
+        return res.redirect(`/bookers/booker/${reference}/prisoner/${prisonerId}/add-visitor`)
       }
     }
   }
