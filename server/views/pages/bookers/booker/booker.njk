@@ -1,0 +1,89 @@
+{% extends "partials/layout.njk" %}
+{%- from "partials/activeOrInactiveCount.njk" import activeOrInactiveCount -%}
+{%- from "partials/activeOrInactiveTag.njk" import activeOrInactiveTag -%}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set pageHeaderTitle = "Booker details" %}
+{% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
+{% set activePrimaryNav = "bookers" %}
+
+{% set prisonerRows = [] %}
+{% for prisoner in booker.permittedPrisoners %}
+  {% set prisonerRows = (prisonerRows.push([
+    {
+      html:
+        '<a href="/bookers/booker/' + booker.reference + '/prisoner/' + prisoner.prisonerId + '" class="govuk-link--no-visited-state">' +
+          prisoner.prisonerId +
+        "</a>",
+      attributes: { "data-test": "prison-number-" + loop.index }
+    },
+    {
+      text: prisonNames[prisoner.prisonCode],
+      attributes: { "data-test": "prison-name-" + loop.index }
+    },
+    {
+      html: activeOrInactiveTag(prisoner.active),
+      attributes: { "data-test": "prisoner-status-" + loop.index }
+    },
+    {
+      html: activeOrInactiveCount(prisoner.permittedVisitors),
+      attributes: { "data-test": "prisoner-visitors-" + loop.index }
+    }
+    ]), prisonerRows) %}
+{% endfor %}
+
+{% block content %}
+{{ super() }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
+
+    <p>Email: <strong data-test="booker-email">{{ booker.email }}</strong></p>
+    <p>Reference: <strong data-test="booker-reference">{{ booker.reference }}</strong></p>
+
+    <h2 class="govuk-heading-m">Prisoners</h2>
+    {% if not booker.permittedPrisoners | length %}
+      <p data-test="no-prisoners">This booker has no prisoners.</p>
+
+      {{ govukButton({
+        href: "/bookers/booker/" + booker.reference + "/add-prisoner",
+        text: "Add a prisoner",
+        preventDoubleClick: true,
+        attributes: { "data-test": "add-prisoner" }
+      }) }}
+
+    {% else %}
+      <p>Select a prisoner to manage.</p>
+
+      {{ govukTable({
+        head: [
+          { text: "Prison number" },
+          { text: "Prison" },
+          { text: "Status" },
+          { text: "Visitors" }
+        ],
+        rows: prisonerRows
+      }) }}
+
+      <hr class="govuk-section-break govuk-section-break--l">
+      <h2 class="govuk-heading-m">Clear booker details</h2>
+      <p>This will remove prisoner and visitor records for this booker.</p>
+      <p>The email, booker reference and GOV.UK One Login identifier will be kept.</p>
+
+      <form action="/bookers/booker/{{ booker.reference }}/clear" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukButton({
+          text: "Clear booker details",
+          classes: "govuk-button--warning",
+          preventDoubleClick: true,
+          attributes: { "data-test": "clear-booker-details" }
+        }) }}
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

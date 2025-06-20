@@ -6,7 +6,7 @@
 {% set pageHeaderTitle = "Add a visitor" %}
 {% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
 {% set activePrimaryNav = "bookers" %}
-{% set backLinkHref = "/bookers/booker/" + booker.reference %}
+{% set backLinkHref = "/bookers/booker/" + booker.reference + "/prisoner/" + prisoner.prisonerId%}
 
 {% block content %}
 {{ super() }}
@@ -18,7 +18,7 @@
 
     <p>
       Add a visitor for prisoner
-      <strong>{{ booker.permittedPrisoners[0].prisonerId}}</strong>
+      <strong>{{ prisoner.prisonerId}}</strong>
       and booker <strong>{{ booker.email }}</strong>.
     </p>
 
@@ -26,7 +26,7 @@
 
     <p>Showing prisoner's social contacts that are approved, have a date of birth and have not already been added.</p>
 
-      <form action="/bookers/booker/{{ booker.reference }}/add-visitor" method="POST" novalidate>
+      <form action="/bookers/booker/{{ booker.reference }}/prisoner/{{ prisoner.prisonerId }}/add-visitor" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {% set contactRows = [] %}

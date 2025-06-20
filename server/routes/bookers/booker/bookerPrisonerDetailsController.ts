@@ -11,7 +11,7 @@ type Visitor = {
   restrictions: ContactDto['restrictions']
   active: boolean
 }
-export default class BookerDetailsController {
+export default class BookerPrisonerDetailsController {
   public constructor(
     private readonly bookerService: BookerService,
     private readonly prisonerContactsService: PrisonerContactsService,
@@ -20,12 +20,16 @@ export default class BookerDetailsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { reference } = req.params
-      const backLinkHref = req.query.from === 'search-results' ? '/bookers/search/results' : '/bookers'
+      const { prisonerId, reference } = req.params
 
       const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
 
-      const prisoner = booker.permittedPrisoners[0] ?? undefined
+      const prisoner = booker.permittedPrisoners.find(permittedPrisoner => permittedPrisoner.prisonerId === prisonerId)
+
+      if (!prisoner) {
+        return res.redirect(`/bookers/booker/${reference}`)
+      }
+
       const prisonName =
         prisoner && (await this.prisonService.getPrisonName(res.locals.user.username, prisoner.prisonCode))
 
@@ -65,30 +69,14 @@ export default class BookerDetailsController {
             }
       })
 
-      return res.render('pages/bookers/booker/details', {
+      return res.render('pages/bookers/booker/bookerPrisonerDetails', {
         errors: req.flash('errors'),
         messages: req.flash('messages'),
-        backLinkHref,
         booker,
+        prisoner,
         prisonName,
         visitors,
       })
-    }
-  }
-
-  public clear(): RequestHandler {
-    return async (req, res) => {
-      const { reference } = req.params
-
-      await this.bookerService.clearBookerDetails(res.locals.user.username, reference)
-
-      req.flash('messages', {
-        variant: 'success',
-        title: 'Booker details cleared',
-        text: 'Booker details have been cleared',
-      })
-
-      return res.redirect(`/bookers/booker/${reference}`)
     }
   }
 }

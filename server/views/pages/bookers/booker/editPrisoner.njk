@@ -6,7 +6,7 @@
 {% set pageHeaderTitle = "Change prisoner’s registered prison" %}
 {% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
 {% set activePrimaryNav = "bookers" %}
-{% set backLinkHref = "/bookers/booker/" + booker.reference %}
+{% set backLinkHref = "/bookers/booker/" + booker.reference + "/prisoner/" + prisoner.prisonerId %}
 
 {% block content %}
 {{ super() }}
@@ -20,7 +20,7 @@
     <p>Prisoner: <strong>{{ prisoner.prisonerId }}</strong></p>
     <p>Currently registered prison: <strong>{{ currentPrisonName }}</strong></p>
 
-    <form action="/bookers/booker/{{ booker.reference }}/edit-prisoner" method="POST" novalidate>
+    <form action="/bookers/booker/{{ booker.reference }}/prisoner/{{ prisoner.prisonerId }}/edit" method="POST" novalidate>
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukSelect({
