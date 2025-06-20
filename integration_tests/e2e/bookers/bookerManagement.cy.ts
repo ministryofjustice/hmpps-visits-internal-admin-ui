@@ -3,6 +3,7 @@ import IndexPage from '../../pages'
 import AddPrisonerPage from '../../pages/bookers/addPrisoner'
 import AddVisitorPage from '../../pages/bookers/addVisitor'
 import BookerDetailsPage from '../../pages/bookers/bookerDetails'
+import PrisonerDetailsPage from '../../pages/bookers/prisonerDetails'
 import SearchForBookerPage from '../../pages/bookers/searchForBooker'
 import Page from '../../pages/page'
 
@@ -28,7 +29,7 @@ context('Booker management', () => {
     cy.signIn()
   })
 
-  it('should look up a booker, add them and prisoner/visitor details', () => {
+  it('should look up a booker then add prisoner and visitor details', () => {
     // Navigate to booker search page
     const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.bookersCard().click()
@@ -45,7 +46,7 @@ context('Booker management', () => {
     const bookerDetailsPage = Page.verifyOnPage(BookerDetailsPage)
     bookerDetailsPage.bookerEmail().contains(booker.email)
     bookerDetailsPage.bookerReference().contains(booker.reference)
-    bookerDetailsPage.prisonerNumber().contains('Not set')
+    bookerDetailsPage.noPrisonersMessage()
 
     // Add prisoner
     bookerDetailsPage.addPrisoner()
@@ -59,21 +60,29 @@ context('Booker management', () => {
 
     // Booker details - prisoner added
     bookerDetailsPage.checkOnPage()
-    bookerDetailsPage.prisonerNumber().contains(prisoner.prisonerId)
-    bookerDetailsPage.prisonName().contains('Hewell (HMP)')
+    bookerDetailsPage.getPrisonerId(1).contains(prisoner.prisonerId)
+    bookerDetailsPage.getPrisonName(1).contains('Hewell (HMP)')
+    bookerDetailsPage.getPrisonerStatus(1).contains('Active')
+    bookerDetailsPage.getPrisonerVisitors(1).contains('None')
+
+    // Prisoner details page
+    bookerDetailsPage.selectPrisoner(prisoner.prisonerId)
+    const prisonerDetailsPage = Page.verifyOnPage(PrisonerDetailsPage)
+    prisonerDetailsPage.prisonerNumber().contains(prisoner.prisonerId)
+    prisonerDetailsPage.prisonName().contains('Hewell (HMP)')
 
     // Add visitor
     cy.task('stubGetSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [contact], approvedOnly: true })
-    bookerDetailsPage.addVisitor()
+    prisonerDetailsPage.addVisitor()
     const addVisitorPage = Page.verifyOnPage(AddVisitorPage)
     addVisitorPage.selectVisitorById(contact.personId)
     cy.task('stubCreateBookerPrisonerVisitor', { booker, prisoner, contact })
     cy.task('stubGetBookerByReference', { booker: bookerWithPrisonerAndContacts })
     addVisitorPage.addVisitor()
 
-    // Booker details - visitor added
-    bookerDetailsPage.checkOnPage()
-    bookerDetailsPage.getVisitorName(1).contains(`${contact.firstName} ${contact.lastName}`)
+    // Prisoner details - visitor added
+    prisonerDetailsPage.checkOnPage()
+    prisonerDetailsPage.getVisitorName(1).contains(`${contact.firstName} ${contact.lastName}`)
   })
 
   it('should clear details for an existing booker', () => {
@@ -92,12 +101,11 @@ context('Booker management', () => {
     searchForBookerPage.enterBookerSearchTerm(booker.email)
     searchForBookerPage.search()
 
-    // Booker details page - prisoner and visitors present
+    // Booker details page - prisoner present
     const bookerDetailsPage = Page.verifyOnPage(BookerDetailsPage)
     bookerDetailsPage.bookerEmail().contains(booker.email)
     bookerDetailsPage.bookerReference().contains(booker.reference)
-    bookerDetailsPage.prisonerNumber().contains(prisoner.prisonerId)
-    bookerDetailsPage.getVisitorName(1).contains(`${contact.firstName} ${contact.lastName}`)
+    bookerDetailsPage.getPrisonerId(1).contains(prisoner.prisonerId)
 
     // Clear booker details
     cy.task('stubClearBookerDetails', bookerWithPrisonerAndContacts)
@@ -106,6 +114,6 @@ context('Booker management', () => {
 
     // Booker details page - no prisoner set
     bookerDetailsPage.checkOnPage()
-    bookerDetailsPage.prisonerNumber().contains('Not set')
+    bookerDetailsPage.noPrisonersMessage()
   })
 })
