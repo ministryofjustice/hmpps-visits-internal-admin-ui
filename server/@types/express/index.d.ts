@@ -1,4 +1,4 @@
-import { FieldValidationError } from 'express-validator'
+import { ValidationError } from 'express-validator'
 import { FlashErrorMessage, FlashFormValues, MoJAlert } from '../visits-admin'
 import type { UserDetails } from '../../services/userService'
 
@@ -24,8 +24,8 @@ export declare global {
     interface Request {
       verified?: boolean
       id: string
-      flash(type: 'errors', message: FieldValidationError[] | FlashErrorMessage[]): number
-      flash(type: 'errors'): FieldValidationError[] | FlashErrorMessage[]
+      flash(type: 'errors', message: ValidationError[] | FlashErrorMessage[]): number
+      flash(type: 'errors'): ValidationError[] | FlashErrorMessage[]
 
       flash(type: 'formValues', message: FlashFormValues): number
       flash(type: 'formValues'): FlashFormValues[]

@@ -2,7 +2,12 @@ import nock from 'nock'
 import config from '../config'
 import TestData from '../routes/testutils/testData'
 import BookerRegistryApiClient from './bookerRegistryApiClient'
-import { CreatePermittedPrisonerDto, CreatePermittedVisitorDto, SearchBookerDto } from './bookerRegistryApiTypes'
+import {
+  CreatePermittedPrisonerDto,
+  CreatePermittedVisitorDto,
+  SearchBookerDto,
+  UpdateRegisteredPrisonersPrisonDto,
+} from './bookerRegistryApiTypes'
 
 describe('bookerRegistryApiClient', () => {
   let fakeBookerRegistryApi: nock.Scope
@@ -82,6 +87,24 @@ describe('bookerRegistryApiClient', () => {
           prisoner.prisonCode,
         )
         expect(output).toStrictEqual(prisoner)
+      })
+    })
+
+    describe('updateRegisteredPrison', () => {
+      it('should update registered prison for given booker reference and prisoner ID', async () => {
+        const newPrisonId = 'ABC'
+
+        fakeBookerRegistryApi
+          .put(`/public/booker/config/${booker.reference}/prisoner/${prisoner.prisonerId}/prison`, <
+            UpdateRegisteredPrisonersPrisonDto
+          >{
+            prisonId: newPrisonId,
+          })
+          .matchHeader('authorization', `Bearer ${token}`)
+          .reply(201, prisoner)
+
+        await bookerRegistryApiClient.updateRegisteredPrison(booker.reference, prisoner.prisonerId, newPrisonId)
+        expect(fakeBookerRegistryApi.isDone()).toBeTruthy()
       })
     })
 

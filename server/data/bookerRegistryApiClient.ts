@@ -5,6 +5,7 @@ import {
   CreatePermittedPrisonerDto,
   CreatePermittedVisitorDto,
   PermittedPrisonerDto,
+  UpdateRegisteredPrisonersPrisonDto,
 } from './bookerRegistryApiTypes'
 
 export default class BookerRegistryApiClient {
@@ -34,6 +35,13 @@ export default class BookerRegistryApiClient {
     return this.restClient.put({
       path: `/public/booker/config/${bookerReference}/prisoner`,
       data: <CreatePermittedPrisonerDto>{ prisonerId, active: true, prisonCode },
+    })
+  }
+
+  async updateRegisteredPrison(bookerReference: string, prisonerId: string, newPrisonCode: string): Promise<void> {
+    await this.restClient.put({
+      path: `/public/booker/config/${bookerReference}/prisoner/${prisonerId}/prison`,
+      data: <UpdateRegisteredPrisonersPrisonDto>{ prisonId: newPrisonCode },
     })
   }
 

@@ -124,6 +124,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/public/booker/config/{bookerReference}/prisoner/{prisonerId}/prison': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update a registered prisoner's prison code
+     * @description Update a registered prisoner's prison code
+     */
+    put: operations['updateBookerPrisonerPrison']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/public/booker/config/{bookerReference}/prisoner/{prisonerId}/deactivate': {
     parameters: {
       query?: never
@@ -268,27 +288,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/public/booker/config/email/{emailAddress}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * get booker by email
-     * @deprecated
-     * @description get booker by email
-     */
-    get: operations['getBookerByEmail']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -419,6 +418,14 @@ export interface components {
        * @example true
        */
       active: boolean
+    }
+    /** @description Update a prisoner's prison code. */
+    UpdateRegisteredPrisonersPrisonDto: {
+      /**
+       * @description Prison Id
+       * @example MDI
+       */
+      prisonId: string
     }
     /** @description Booker of visits. */
     SearchBookerDto: {
@@ -797,6 +804,69 @@ export interface operations {
         }
       }
       /** @description Visitor not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  updateBookerPrisonerPrison: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        bookerReference: string
+        prisonerId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateRegisteredPrisonersPrisonDto']
+      }
+    }
+    responses: {
+      /** @description Registered prisoner's prison code wasupdated successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PermittedPrisonerDto']
+        }
+      }
+      /** @description Validation failure, incorrect request to update registered prisoner's prison code */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Incorrect permissions for this action */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description booker / prisoner not found */
       404: {
         headers: {
           [name: string]: unknown
@@ -1208,55 +1278,6 @@ export interface operations {
         }
       }
       /** @description Booker not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
-        }
-      }
-    }
-  }
-  getBookerByEmail: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        emailAddress: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description has got booker by email */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['BookerDto'][]
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
-        }
-      }
-      /** @description Incorrect permissions for this action */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
-        }
-      }
-      /** @description booker not found */
       404: {
         headers: {
           [name: string]: unknown

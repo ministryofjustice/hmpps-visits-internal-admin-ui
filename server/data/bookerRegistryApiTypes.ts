@@ -9,3 +9,5 @@ export type CreatePermittedVisitorDto = components['schemas']['CreatePermittedVi
 export type PermittedPrisonerDto = components['schemas']['PermittedPrisonerDto']
 
 export type SearchBookerDto = components['schemas']['SearchBookerDto']
+
+export type UpdateRegisteredPrisonersPrisonDto = components['schemas']['UpdateRegisteredPrisonersPrisonDto']
