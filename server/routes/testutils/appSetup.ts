@@ -63,7 +63,6 @@ function appSetup(
     res.locals = {
       user: { ...req.user },
     }
-    req.body = req.body || {}
     next()
   })
   app.use(express.json())

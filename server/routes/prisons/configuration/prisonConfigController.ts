@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express'
-import { ValidationChain, body, validationResult } from 'express-validator'
+import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { PrisonService } from '../../../services'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
 import { UserClientType } from '../../../data/visitSchedulerApiTypes'
@@ -41,7 +41,7 @@ export default class PrisonConfigController {
         return res.redirect(originalUrl)
       }
 
-      const { enabledServices }: { enabledServices: UserClientType } = req.body
+      const { enabledServices } = matchedData<{ enabledServices: UserClientType[] }>(req)
 
       try {
         if (enabledServices.includes('PUBLIC')) {
