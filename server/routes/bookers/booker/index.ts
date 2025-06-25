@@ -1,5 +1,4 @@
-import { RequestHandler, Router } from 'express'
-import { ValidationChain } from 'express-validator'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import BookerController from './bookerController'
 import AddPrisonerController from './addPrisonerController'
@@ -12,11 +11,6 @@ import BookerPrisonerDetailsController from './bookerPrisonerDetailsController'
 
 export default function routes(services: Services): Router {
   const router = Router()
-
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, handler)
-  const post = (path: string | string[], handler: RequestHandler) => router.post(path, handler)
-  const postWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
-    router.post(path, ...validationChain, handler)
 
   const booker = new BookerController(services.bookerService, services.prisonService)
   const bookerPrisonerDetails = new BookerPrisonerDetailsController(
@@ -43,32 +37,32 @@ export default function routes(services: Services): Router {
   })
 
   // Booker routes
-  get('/:reference/', booker.view())
-  post('/:reference/clear', booker.clear())
+  router.get('/:reference/', booker.view())
+  router.post('/:reference/clear', booker.clear())
 
   // Add prisoner to a booker
-  get('/:reference/add-prisoner', addPrisoner.view())
-  postWithValidation('/:reference/add-prisoner', addPrisoner.validate(), addPrisoner.submit())
+  router.get('/:reference/add-prisoner', addPrisoner.view())
+  router.post('/:reference/add-prisoner', addPrisoner.validate(), addPrisoner.submit())
 
   // Booker prisoner routes
-  get('/:reference/prisoner/:prisonerId', bookerPrisonerDetails.view())
+  router.get('/:reference/prisoner/:prisonerId', bookerPrisonerDetails.view())
 
-  get('/:reference/prisoner/:prisonerId/edit', editPrisoner.view())
-  postWithValidation('/:reference/prisoner/:prisonerId/edit', editPrisoner.validate(), editPrisoner.submit())
+  router.get('/:reference/prisoner/:prisonerId/edit', editPrisoner.view())
+  router.post('/:reference/prisoner/:prisonerId/edit', editPrisoner.validate(), editPrisoner.submit())
 
-  post('/:reference/prisoner/:prisonerId/activate', prisonerStatus.setStatus('inactive'))
-  post('/:reference/prisoner/:prisonerId/deactivate', prisonerStatus.setStatus('active'))
+  router.post('/:reference/prisoner/:prisonerId/activate', prisonerStatus.setStatus('inactive'))
+  router.post('/:reference/prisoner/:prisonerId/deactivate', prisonerStatus.setStatus('active'))
 
   // Booker prisoner visitor routes
-  get('/:reference/prisoner/:prisonerId/add-visitor', addVisitor.view())
-  postWithValidation('/:reference/prisoner/:prisonerId/add-visitor', addVisitor.validate(), addVisitor.submit())
+  router.get('/:reference/prisoner/:prisonerId/add-visitor', addVisitor.view())
+  router.post('/:reference/prisoner/:prisonerId/add-visitor', addVisitor.validate(), addVisitor.submit())
 
-  postWithValidation(
+  router.post(
     '/:reference/prisoner/:prisonerId/activate-visitor',
     visitorStatus.validate(),
     visitorStatus.setStatus('inactive'),
   )
-  postWithValidation(
+  router.post(
     '/:reference/prisoner/:prisonerId/deactivate-visitor',
     visitorStatus.validate(),
     visitorStatus.setStatus('active'),
