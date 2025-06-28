@@ -1,0 +1,65 @@
+<h2 class="govuk-heading-m">Location groups</h2>
+{% if locationGroupsItems | length %}
+  {%- set locationGroupsHtml %}
+    {{ govukRadios({
+      classes: "govuk-radios--inline",
+      name: "locationGroupBehaviour",
+      fieldset: {
+        legend: {
+          text: "Location groups behaviour",
+          classes: "govuk-fieldset__legend--s"
+        },
+        attributes: { "data-test": "location-group-behaviour" }
+      },
+      hint: {
+        text: "Include or exclude location groups from this session template?"
+      },
+      items: [
+        {
+          value: "include",
+          text: "Include"
+        },
+        {
+          value: "exclude",
+          text: "Exclude"
+        }
+      ],
+      value: formValues.locationGroupBehaviour or "include",
+      errorMessage: errors | findError('locationGroupBehaviour')
+    }) }}
+
+    {{ govukCheckboxes({
+      name: "locationGroupReferences",
+      fieldset: {
+        legend: {
+          text: "Which location groups?",
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--s"
+        },
+        attributes: { "data-test": "location-groups" }
+      },
+      hint: {
+        text: "Select all that apply."
+      },
+      items: locationGroupsItems,
+      values: formValues.locationGroupReferences,
+      errorMessage: errors | findError('locationGroupReferences')
+    }) }}
+  {% endset -%}
+  {{ govukCheckboxes({
+    name: "hasLocationGroups",
+    errorMessage: errors | findError('hasLocationGroups'),
+    items: [
+      {
+        text: "Add location groups to this session template?",
+        value: "yes",
+        conditional: {
+        html: locationGroupsHtml
+      },
+        checked: formValues.hasLocationGroups === "yes"
+      }
+    ]
+  }) }}
+{% else %}
+  <p>There are no location groups set up for this prison.</p>
+{% endif %}
