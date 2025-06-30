@@ -82,6 +82,7 @@ export default class EditSessionTemplateController {
         locationGroupBehaviour: sessionTemplate.includeLocationGroupType ? 'include' : 'exclude',
         locationGroupReferences,
         hideInPublicServices,
+        ...req.flash('formValues')?.[0],
       }
 
       const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
@@ -90,7 +91,6 @@ export default class EditSessionTemplateController {
       const firstDate = visitDates.at(0) ?? ''
       const lastDate = visitDates.at(-1) ?? ''
 
-      req.flash('formValues', formValues)
       return res.render('pages/prisons/sessionTemplates/editSingleSessionTemplate', {
         errors: req.flash('errors'),
         messages: req.flash('messages'),
@@ -119,6 +119,8 @@ export default class EditSessionTemplateController {
         req.flash('formValues', req.body)
         return res.redirect(originalUrl)
       }
+
+      const validateRequest = !req.body.ignoreVisitValidationErrors
 
       const validFromDateDay = req.body.validFromDateDay.padStart(2, '0')
       const validFromDateMonth = req.body.validFromDateMonth.padStart(2, '0')
@@ -150,12 +152,12 @@ export default class EditSessionTemplateController {
           { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
         ],
       }
-
       try {
         const { name } = await this.sessionTemplateService.updateSessionTemplate(
           res.locals.user.username,
           reference,
           updateSessionTemplateDto,
+          validateRequest,
         )
         req.flash('messages', {
           variant: 'success',
@@ -165,7 +167,13 @@ export default class EditSessionTemplateController {
         return res.redirect(`/prisons/${prisonId}/session-templates/${reference}`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessages(error))
-        req.flash('formValues', req.body)
+
+        const formValues = req.body
+        if (error.status === 400) {
+          formValues.requireConfirmation = true
+        }
+        req.flash('formValues', formValues)
+
         return res.redirect(originalUrl)
       }
     }

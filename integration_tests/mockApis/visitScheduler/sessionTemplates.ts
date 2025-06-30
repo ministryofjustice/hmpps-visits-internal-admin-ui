@@ -131,14 +131,16 @@ export default {
   stubUpdateSessionTemplate: ({
     sessionTemplate,
     reference,
+    validateRequest,
   }: {
     sessionTemplate: UpdateSessionTemplateDto
     reference: string
+    validateRequest: boolean
   }): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'PUT',
-        url: `/visitScheduler/admin/session-templates/template/${reference}`,
+        url: `/visitScheduler/admin/session-templates/template/${reference}?&validateRequest=${validateRequest}`,
         bodyPatterns: [
           {
             equalToJson: {

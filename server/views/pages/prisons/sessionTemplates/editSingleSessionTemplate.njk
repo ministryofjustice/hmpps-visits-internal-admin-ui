@@ -231,6 +231,22 @@
             }
           ]
         }) }}
+        
+        {{ govukCheckboxes({
+          name: "ignoreVisitValidationErrors",
+          fieldset: {
+            legend: {
+              text: "Ignore validation errors?",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          items: [
+            {
+              text: "Yes",
+              value: "yes"
+            }
+          ]
+        }) if formValues.requireConfirmation }}
 
         {{ govukButton({
           text: "Update",

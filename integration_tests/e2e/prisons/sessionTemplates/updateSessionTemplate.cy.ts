@@ -91,6 +91,7 @@ context('Session templates - update', () => {
     cy.task('stubUpdateSessionTemplate', {
       sessionTemplate: updateSessionTemplate,
       reference: sessionTemplate.reference,
+      validateRequest: true,
     })
     cy.task('stubGetSingleSessionTemplate', { sessionTemplate: returnedUpdatedSessionTemplate })
     updateSessionTemplatePage.updateTemplate()

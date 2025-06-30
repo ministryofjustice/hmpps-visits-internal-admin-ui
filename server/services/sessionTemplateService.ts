@@ -79,11 +79,16 @@ export default class SessionTemplateService {
     username: string,
     reference: string,
     updateSessionTemplateDto: UpdateSessionTemplateDto,
+    validateRequest: boolean,
   ): Promise<SessionTemplate> {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
 
-    const sessionTemplate = await visitSchedulerApiClient.updateSessionTemplate(reference, updateSessionTemplateDto)
+    const sessionTemplate = await visitSchedulerApiClient.updateSessionTemplate(
+      reference,
+      updateSessionTemplateDto,
+      validateRequest,
+    )
     logger.info(
       `Session template '${sessionTemplate.reference}' updated for prison '${sessionTemplate.prisonId}' by ${username}`,
     )

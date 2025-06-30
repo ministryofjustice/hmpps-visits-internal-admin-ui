@@ -4632,7 +4632,13 @@ export interface operations {
   }
   updateSessionTemplate: {
     parameters: {
-      query?: never
+      query?: {
+        /**
+         * @description Defaults to true. Pass value as false to skip validation.
+         * @example true
+         */
+        validateRequest?: boolean
+      }
       header?: never
       path: {
         /**

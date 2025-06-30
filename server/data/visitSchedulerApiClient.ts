@@ -181,10 +181,14 @@ export default class VisitSchedulerApiClient {
   async updateSessionTemplate(
     reference: string,
     updateSessionTemplateDto: UpdateSessionTemplateDto,
+    validateRequest: boolean,
   ): Promise<SessionTemplate> {
     return this.restClient.put({
-      path: `/admin/session-templates/template/${reference}`,
+      path: `/admin/session-templates/template/${reference}?`,
       data: updateSessionTemplateDto,
+      query: new URLSearchParams({
+        validateRequest: validateRequest.toString(),
+      }).toString(),
     })
   }
 

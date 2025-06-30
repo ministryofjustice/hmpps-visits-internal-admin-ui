@@ -104,6 +104,8 @@ describe('Update a session template', () => {
         ...updateSessionTemplateDto,
       })
 
+      const validateRequest = true
+
       // When
       const results = request(app)
         .post(url)
@@ -144,6 +146,7 @@ describe('Update a session template', () => {
             'user1',
             reference,
             updateSessionTemplateDto,
+            validateRequest,
           )
         })
     })
