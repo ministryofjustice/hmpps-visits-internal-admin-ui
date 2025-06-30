@@ -89,6 +89,21 @@ describe('Booker service', () => {
       })
     })
 
+    describe('updateRegisteredPrison', () => {
+      it('should update registered prison for a given booker reference and prison ID', async () => {
+        const newPrisonId = 'ABC'
+        bookerRegistryApiClient.updateRegisteredPrison.mockResolvedValue()
+
+        await bookerService.updateRegisteredPrison('user', booker.reference, prisoner.prisonerId, newPrisonId)
+
+        expect(bookerRegistryApiClient.updateRegisteredPrison).toHaveBeenCalledWith(
+          booker.reference,
+          prisoner.prisonerId,
+          newPrisonId,
+        )
+      })
+    })
+
     describe('activatePrisoner', () => {
       it('should activate prisoner for booker', async () => {
         bookerRegistryApiClient.activatePrisoner.mockResolvedValue()

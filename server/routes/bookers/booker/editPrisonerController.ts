@@ -1,9 +1,7 @@
-/* eslint-disable no-await-in-loop */
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { BookerService, PrisonService } from '../../../services'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
-import { BookerDto } from '../../../data/bookerRegistryApiTypes'
 
 export default class EditPrisonerController {
   public constructor(
@@ -53,7 +51,12 @@ export default class EditPrisonerController {
       try {
         const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
 
-        await this.updatePrisonerPrison(res.locals.user.username, booker, prisonerId, prisonCode)
+        await this.bookerService.updateRegisteredPrison(
+          res.locals.user.username,
+          booker.reference,
+          prisonerId,
+          prisonCode,
+        )
 
         req.flash('messages', {
           variant: 'success',
@@ -71,40 +74,5 @@ export default class EditPrisonerController {
 
   public validate(): ValidationChain[] {
     return [body('prisonCode', 'Select a prison').matches(/^[A-Z]{3}$/)]
-  }
-
-  private async updatePrisonerPrison(
-    username: string,
-    booker: BookerDto,
-    prisonerId: string,
-    newPrisonCode: string,
-  ): Promise<void> {
-    // prisoner to be updated
-    const prisonerToUpdate = booker.permittedPrisoners.find(
-      permittedPrisoner => permittedPrisoner.prisonerId === prisonerId,
-    )
-    prisonerToUpdate.prisonCode = newPrisonCode
-
-    // Clear booker details before re-adding all prisoners
-    await this.bookerService.clearBookerDetails(username, booker.reference)
-
-    for (const prisoner of booker.permittedPrisoners) {
-      // re-add prisoner
-      await this.bookerService.addPrisoner(username, booker.reference, prisoner.prisonerId, prisoner.prisonCode)
-      // defaults to creating 'active' so check if necessary to deactivate
-      if (!prisoner.active) {
-        await this.bookerService.deactivatePrisoner(username, booker.reference, prisoner.prisonerId)
-      }
-
-      // re-add visitors
-      for (const visitor of prisoner.permittedVisitors) {
-        await this.bookerService.addVisitor(username, booker.reference, prisoner.prisonerId, visitor.visitorId)
-
-        // defaults to creating 'active' so check if necessary to deactivate
-        if (!visitor.active) {
-          await this.bookerService.deactivateVisitor(username, booker.reference, prisoner.prisonerId, visitor.visitorId)
-        }
-      }
-    }
   }
 }

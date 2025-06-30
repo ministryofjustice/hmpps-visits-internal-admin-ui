@@ -1,4 +1,4 @@
-import { RequestHandler, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../services'
 import SupportedPrisonsController from './supportedPrisonsController'
 import excludedDatesRoutes from './excludedDates'
@@ -11,13 +11,11 @@ import incentiveGroupsRoutes from './incentiveGroups'
 export default function routes(services: Services): Router {
   const router = Router()
 
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, handler)
-  const post = (path: string | string[], handler: RequestHandler) => router.post(path, handler)
-
   const supportedPrisons = new SupportedPrisonsController(services.prisonService)
 
-  get('/prisons', supportedPrisons.view())
-  post('/prisons', supportedPrisons.addPrison())
+  router.get('/prisons', supportedPrisons.view())
+  router.post('/prisons', supportedPrisons.addPrison())
+
   router.use(excludedDatesRoutes(services))
   router.use(categoryGroupsRoutes(services))
   router.use(locationGroupsRoutes(services))
