@@ -24,7 +24,9 @@
 
     {% if contacts | length %}
 
-    <p>Showing prisoner's social contacts that are approved, have a date of birth and have not already been added.</p>
+    <p>Showing prisoner's social contacts that are approved and have not already been added.</p>
+
+    <p>Visitors without a date of birth entered cannot be selected.</p>
 
       <form action="/bookers/booker/{{ booker.reference }}/prisoner/{{ prisoner.prisonerId }}/add-visitor" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -35,7 +37,7 @@
             {
               html:
                 '<div class="govuk-radios__item">' +
-                  '<input class="govuk-radios__input" id="visitor-' + contact.personId + '" name="visitorId" type="radio" value="' + contact.personId + '">' +
+                  '<input class="govuk-radios__input" id="visitor-' + contact.personId + '" name="visitorId" type="radio" value="' + contact.personId + '"' + (" disabled" if not contact.dateOfBirth) + '>' +
                   '<label class="govuk-label govuk-radios__label" for="visitor-' + contact.personId + '">' +
                     '<span class="govuk-visually-hidden">Select contact ' + contact.personId + '</span>' +
                   '</label>' +
@@ -48,8 +50,9 @@
               text: contact.personId
             },
             {
-              html: contact.dateOfBirth | formatDate +
-                '<br>(' + contact.dateOfBirth | displayAge + ')'
+              html: (contact.dateOfBirth | formatDate +
+                '<br>(' + contact.dateOfBirth | displayAge + ')') if contact.dateOfBirth
+                else "Not entered"
             },
             {
               html: visitorRestrictions(contact)

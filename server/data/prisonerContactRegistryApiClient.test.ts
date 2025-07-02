@@ -22,26 +22,40 @@ describe('prisonerContactRegistryApiClient', () => {
     nock.cleanAll()
   })
 
-  describe('getSocialContacts', () => {
-    it('should call get social contacts for given prisoner ID and approvedOnly flag', async () => {
+  describe('getAllSocialContacts', () => {
+    it('should get all social contacts for given prisoner', async () => {
       const prisoner = TestData.permittedPrisonerDto()
       const contacts = [TestData.contact()]
-      const approvedOnly = true
 
       fakePrisonerContactRegistryApi
-        .get(`/prisoners/${prisoner.prisonerId}/contacts/social`)
+        .get(`/v2/prisoners/${prisoner.prisonerId}/contacts/social`)
         .query({
-          approvedVisitorsOnly: approvedOnly,
-          hasDateOfBirth: true,
+          hasDateOfBirth: false,
           withAddress: false,
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, contacts)
 
-      const output = await prisonerContactRegistryApiClient.getSocialContacts({
-        prisonerId: prisoner.prisonerId,
-        approvedOnly,
-      })
+      const output = await prisonerContactRegistryApiClient.getAllSocialContacts(prisoner.prisonerId)
+      expect(output).toStrictEqual(contacts)
+    })
+  })
+
+  describe('getApprovedSocialContacts', () => {
+    it('should get all approved social contacts for given prisoner', async () => {
+      const prisoner = TestData.permittedPrisonerDto()
+      const contacts = [TestData.contact()]
+
+      fakePrisonerContactRegistryApi
+        .get(`/v2/prisoners/${prisoner.prisonerId}/contacts/social/approved`)
+        .query({
+          hasDateOfBirth: false,
+          withAddress: false,
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, contacts)
+
+      const output = await prisonerContactRegistryApiClient.getApprovedSocialContacts(prisoner.prisonerId)
       expect(output).toStrictEqual(contacts)
     })
   })

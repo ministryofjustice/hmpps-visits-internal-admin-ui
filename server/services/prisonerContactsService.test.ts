@@ -24,21 +24,35 @@ describe('Prisoner Contacts service', () => {
   })
 
   describe('getSocialContacts', () => {
-    it('should get social contacts for prisoner', async () => {
+    it('should get social contacts for prisoner - approvedOnly = true', async () => {
       const contacts = [TestData.contact()]
       const prisoner = TestData.permittedPrisonerDto()
 
-      prisonerContactRegistryApiClient.getSocialContacts.mockResolvedValue(contacts)
+      prisonerContactRegistryApiClient.getApprovedSocialContacts.mockResolvedValue(contacts)
       const results = await prisonerContactsService.getSocialContacts({
         username: 'user',
         prisonerId: prisoner.prisonerId,
         approvedOnly: true,
       })
 
-      expect(prisonerContactRegistryApiClient.getSocialContacts).toHaveBeenCalledWith({
+      expect(prisonerContactRegistryApiClient.getApprovedSocialContacts).toHaveBeenCalledWith(prisoner.prisonerId)
+      expect(prisonerContactRegistryApiClient.getAllSocialContacts).not.toHaveBeenCalled()
+      expect(results).toStrictEqual(contacts)
+    })
+
+    it('should get social contacts for prisoner - approvedOnly = false', async () => {
+      const contacts = [TestData.contact()]
+      const prisoner = TestData.permittedPrisonerDto()
+
+      prisonerContactRegistryApiClient.getAllSocialContacts.mockResolvedValue(contacts)
+      const results = await prisonerContactsService.getSocialContacts({
+        username: 'user',
         prisonerId: prisoner.prisonerId,
-        approvedOnly: true,
+        approvedOnly: false,
       })
+
+      expect(prisonerContactRegistryApiClient.getAllSocialContacts).toHaveBeenCalledWith(prisoner.prisonerId)
+      expect(prisonerContactRegistryApiClient.getApprovedSocialContacts).not.toHaveBeenCalled()
       expect(results).toStrictEqual(contacts)
     })
   })
