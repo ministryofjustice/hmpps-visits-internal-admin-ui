@@ -2107,7 +2107,7 @@ export interface components {
        * @example RESERVED
        * @enum {string}
        */
-      visitStatus: 'BOOKED' | 'CANCELLED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN'
+      visitStatus: 'BOOKED' | 'CANCELLED'
       /**
        * @description Visit Type
        * @example SOCIAL
@@ -2989,7 +2989,7 @@ export interface components {
        * @example BOOKED
        * @enum {string}
        */
-      visitStatus: 'BOOKED' | 'CANCELLED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN'
+      visitStatus: 'BOOKED' | 'CANCELLED'
       /**
        * @description Visit Type
        * @example SOCIAL
@@ -4632,7 +4632,13 @@ export interface operations {
   }
   updateSessionTemplate: {
     parameters: {
-      query?: never
+      query?: {
+        /**
+         * @description Defaults to true. Pass value as false to skip validation.
+         * @example true
+         */
+        validateRequest?: boolean
+      }
       header?: never
       path: {
         /**
@@ -7988,7 +7994,7 @@ export interface operations {
          * @description Filter results by visit status
          * @example BOOKED
          */
-        visitStatus: ('BOOKED' | 'CANCELLED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN')[]
+        visitStatus: ('BOOKED' | 'CANCELLED')[]
         /**
          * @description Pagination page number, starting at zero
          * @example 0
@@ -8120,7 +8126,7 @@ export interface operations {
          * @description Filter results by visit status
          * @example BOOKED
          */
-        visitStatus: ('BOOKED' | 'CANCELLED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN')[]
+        visitStatus: ('BOOKED' | 'CANCELLED')[]
         /**
          * @description Filter results by prison id/code
          * @example MDI

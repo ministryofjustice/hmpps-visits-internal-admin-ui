@@ -134,9 +134,9 @@ export default class TestData {
     includeCategoryGroupType = true,
     includeIncentiveGroupType = true,
     permittedLocationGroups = [],
-    prisonId = 'HEI',
     prisonerCategoryGroups = [],
     prisonerIncentiveLevelGroups = [],
+    prisonId = 'HEI',
     reference = '-afe.dcc.0f',
     sessionCapacity = {
       closed: 2,
@@ -217,6 +217,12 @@ export default class TestData {
     sessionCapacity = { open: 10, closed: 5 },
     sessionDateRange = { validFromDate: '2023-02-01', validToDate: '2024-12-31' },
     visitRoom = 'visit room name',
+    includeCategoryGroupType = true,
+    categoryGroupReferences = [TestData.categoryGroup().reference],
+    includeIncentiveGroupType = true,
+    incentiveLevelGroupReferences = [TestData.incentiveGroup().reference],
+    includeLocationGroupType = true,
+    locationGroupReferences = [TestData.locationGroup().reference],
     clients = publicAndStaffClientsActive,
   }: Partial<UpdateSessionTemplateDto> = {}): UpdateSessionTemplateDto =>
     ({
@@ -225,20 +231,29 @@ export default class TestData {
       sessionDateRange,
       visitRoom,
       clients,
+      includeCategoryGroupType,
+      includeIncentiveGroupType,
+      includeLocationGroupType,
+      categoryGroupReferences,
+      incentiveLevelGroupReferences,
+      locationGroupReferences,
     }) as UpdateSessionTemplateDto
 
-  static locationGroup = ({
-    name = 'Wing A',
-    reference = '-afe~dcb~fb',
-    locations = [
-      {
-        levelOneCode: 'A',
-        levelTwoCode: undefined,
-        levelThreeCode: undefined,
-        levelFourCode: undefined,
-      },
-    ],
-  }: Partial<LocationGroup> = {}): LocationGroup => ({ name, reference, locations })
+  static createCategoryGroupDto = ({
+    name = 'Category A (High Risk) prisoners',
+    prisonId = 'HEI',
+    categories = ['A_EXCEPTIONAL', 'A_HIGH', 'A_PROVISIONAL', 'A_STANDARD'],
+  }: Partial<CreateCategoryGroupDto> = {}): CreateCategoryGroupDto => ({
+    categories,
+    name,
+    prisonId,
+  })
+
+  static createIncentiveGroupDto = ({
+    name = 'Enhanced prisoners',
+    prisonId = 'HEI',
+    incentiveLevels = ['ENHANCED'],
+  }: Partial<CreateIncentiveGroupDto> = {}): CreateIncentiveGroupDto => ({ name, prisonId, incentiveLevels })
 
   static createLocationGroupDto = ({
     name = 'Wing A',
@@ -253,6 +268,31 @@ export default class TestData {
     ],
   }: Partial<CreateLocationGroupDto> = {}): CreateLocationGroupDto => ({ name, prisonId, locations })
 
+  static categoryGroup = ({
+    name = 'Category A (High Risk) prisoners',
+    reference = '-cat~abc~de',
+    categories = ['A_EXCEPTIONAL', 'A_HIGH', 'A_PROVISIONAL', 'A_STANDARD'],
+  }: Partial<CategoryGroup> = {}): CategoryGroup => ({ name, reference, categories })
+
+  static incentiveGroup = ({
+    name = 'Enhanced prisoners',
+    reference = '-inc~abc~de',
+    incentiveLevels = ['ENHANCED'],
+  }: Partial<IncentiveGroup> = {}): IncentiveGroup => ({ name, reference, incentiveLevels })
+
+  static locationGroup = ({
+    name = 'Wing A',
+    reference = '-loc~abc~de',
+    locations = [
+      {
+        levelOneCode: 'A',
+        levelTwoCode: undefined,
+        levelThreeCode: undefined,
+        levelFourCode: undefined,
+      },
+    ],
+  }: Partial<LocationGroup> = {}): LocationGroup => ({ name, reference, locations })
+
   static updateLocationGroupDto = ({
     name = 'Wing A',
     locations = [
@@ -264,34 +304,6 @@ export default class TestData {
       },
     ],
   }: Partial<UpdateLocationGroupDto> = {}): UpdateLocationGroupDto => ({ name, locations })
-
-  static createCategoryGroupDto = ({
-    name = 'Category A (High Risk) prisoners',
-    prisonId = 'HEI',
-    categories = ['A_EXCEPTIONAL', 'A_HIGH', 'A_PROVISIONAL', 'A_STANDARD'],
-  }: Partial<CreateCategoryGroupDto> = {}): CreateCategoryGroupDto => ({
-    categories,
-    name,
-    prisonId,
-  })
-
-  static categoryGroup = ({
-    name = 'Category A (High Risk) prisoners',
-    reference = '-afe~dcb~fb',
-    categories = ['A_EXCEPTIONAL', 'A_HIGH', 'A_PROVISIONAL', 'A_STANDARD'],
-  }: Partial<CategoryGroup> = {}): CategoryGroup => ({ name, reference, categories })
-
-  static incentiveGroup = ({
-    name = 'Enhanced prisoners',
-    reference = '-afe~dcb~fc',
-    incentiveLevels = ['ENHANCED'],
-  }: Partial<IncentiveGroup> = {}): IncentiveGroup => ({ name, reference, incentiveLevels })
-
-  static createIncentiveGroupDto = ({
-    name = 'Enhanced prisoners',
-    prisonId = 'HEI',
-    incentiveLevels = ['ENHANCED'],
-  }: Partial<CreateIncentiveGroupDto> = {}): CreateIncentiveGroupDto => ({ name, prisonId, incentiveLevels })
 
   static requestVisitStatsDto = ({
     visitsFromDate = '2023-01-01',

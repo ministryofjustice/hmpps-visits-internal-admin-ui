@@ -13,8 +13,8 @@ const prisonService = createMockPrisonService()
 const locationGroupService = createMockLocationGroupService()
 
 const prison = TestData.prison()
-const reference = '-afe~dcb~fb'
 const singleLocationGroup = TestData.locationGroup()
+const { reference } = singleLocationGroup
 
 beforeEach(() => {
   locationGroupService.getSingleLocationGroup.mockResolvedValue(singleLocationGroup)

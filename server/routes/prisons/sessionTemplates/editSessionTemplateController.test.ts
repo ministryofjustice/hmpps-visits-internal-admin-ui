@@ -104,6 +104,8 @@ describe('Update a session template', () => {
         ...updateSessionTemplateDto,
       })
 
+      const validateRequest = true
+
       // When
       const results = request(app)
         .post(url)
@@ -118,6 +120,15 @@ describe('Update a session template', () => {
         .send('openCapacity=10')
         .send('closedCapacity=5')
         .send('visitRoom=visit room name')
+        .send('categoryGroupBehaviour=include')
+        .send('incentiveGroupBehaviour=include')
+        .send('locationGroupBehaviour=include')
+        .send('hasCategoryGroups=yes')
+        .send('hasIncentiveGroups=yes')
+        .send('hasLocationGroups=yes')
+        .send('categoryGroupReferences=-cat~abc~de')
+        .send('incentiveGroupReferences=-inc~abc~de')
+        .send('locationGroupReferences=-loc~abc~de')
         .send('hideInPublicServices=yes')
 
       // Then
@@ -135,6 +146,7 @@ describe('Update a session template', () => {
             'user1',
             reference,
             updateSessionTemplateDto,
+            validateRequest,
           )
         })
     })

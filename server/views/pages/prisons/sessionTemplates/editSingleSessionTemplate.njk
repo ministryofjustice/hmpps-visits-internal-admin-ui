@@ -208,122 +208,11 @@
           errorMessage: errors | findError('visitRoom')
         }) }}
 
-        {# <h2 class="govuk-heading-m">Category groups</h2>
-        {% if categoryGroupsItems | length %}
-          {%- set categoryGroupsHtml %}
-            {{ govukCheckboxes({
-              name: "categoryGroupReferences",
-              fieldset: {
-                legend: {
-                  text: "Which category groups?",
-                  isPageHeading: true,
-                  classes: "govuk-fieldset__legend--s"
-                },
-                attributes: { "data-test": "category-groups" }
-              },
-              hint: {
-                text: "Select all that apply."
-              },
-              items: categoryGroupsItems,
-              values: formValues.categoryGroupReferences,
-              errorMessage: errors | findError('categoryGroupReferences')
-            }) }}
-          {% endset -%}
-          {{ govukCheckboxes({
-            name: "hasCategoryGroups",
-            errorMessage: errors | findError('hasCategoryGroups'),
-            items: [
-              {
-                text: "Add category groups to this session template?",
-                value: "yes",
-                conditional: {
-                html: categoryGroupsHtml
-              },
-                checked: formValues.hasCategoryGroups === "yes"
-              }
-            ]
-          }) }}
-        {% else %}
-          <p>There are no category groups set up for this prison.</p>
-        {% endif %}
+        {% include './includes/categoryGroup.njk' %}
 
-        <h2 class="govuk-heading-m">Incentive level groups</h2>
-        {% if incentiveGroupsItems | length %}
-          {%- set incentiveGroupsHtml %}
-            {{ govukCheckboxes({
-              name: "incentiveGroupReferences",
-              fieldset: {
-                legend: {
-                  text: "Which incentive level groups?",
-                  isPageHeading: true,
-                  classes: "govuk-fieldset__legend--s"
-                },
-                attributes: { "data-test": "incentive-groups" }
-              },
-              hint: {
-                text: "Select all that apply."
-              },
-              items: incentiveGroupsItems,
-              values: formValues.incentiveGroupReferences,
-              errorMessage: errors | findError('incentiveGroupReferences')
-            }) }}
-          {% endset -%}
-          {{ govukCheckboxes({
-            name: "hasIncentiveGroups",
-            errorMessage: errors | findError('hasIncentiveGroups'),
-            items: [
-              {
-                text: "Add incentive level groups to this session template?",
-                value: "yes",
-                conditional: {
-                html: incentiveGroupsHtml
-              },
-                checked: formValues.hasIncentiveGroups === "yes"
-              }
-            ]
-          }) }}
-        {% else %}
-          <p>There are no incentive groups set up for this prison.</p>
-        {% endif %}
+        {% include './includes/incentiveGroup.njk' %}
 
-        <h2 class="govuk-heading-m">Location groups</h2>
-        {% if locationGroupsItems | length %}
-          {%- set locationGroupsHtml %}
-            {{ govukCheckboxes({
-              name: "locationGroupReferences",
-              fieldset: {
-                legend: {
-                  text: "Which location groups?",
-                  isPageHeading: true,
-                  classes: "govuk-fieldset__legend--s"
-                },
-                attributes: { "data-test": "location-groups" }
-              },
-              hint: {
-                text: "Select all that apply."
-              },
-              items: locationGroupsItems,
-              values: formValues.locationGroupReferences,
-              errorMessage: errors | findError('locationGroupReferences')
-            }) }}
-          {% endset -%}
-          {{ govukCheckboxes({
-            name: "hasLocationGroups",
-            errorMessage: errors | findError('hasLocationGroups'),
-            items: [
-              {
-                text: "Add location groups to this session template?",
-                value: "yes",
-                conditional: {
-                html: locationGroupsHtml
-              },
-                checked: formValues.hasLocationGroups === "yes"
-              }
-            ]
-          }) }}
-        {% else %}
-          <p>There are no location groups set up for this prison.</p>
-        {% endif %} #}
+        {% include './includes/locationGroup.njk' %}
 
         {{ govukCheckboxes({
           name: "hideInPublicServices",
@@ -342,6 +231,22 @@
             }
           ]
         }) }}
+        
+        {{ govukCheckboxes({
+          name: "ignoreVisitValidationErrors",
+          fieldset: {
+            legend: {
+              text: "Ignore validation errors?",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          items: [
+            {
+              text: "Yes",
+              value: "yes"
+            }
+          ]
+        }) if formValues.requireConfirmation }}
 
         {{ govukButton({
           text: "Update",

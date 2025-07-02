@@ -368,13 +368,22 @@ describe('visitSchedulerApiClient', () => {
     it('should update a new session template', async () => {
       const updateSessionTemplateDto = TestData.updateSessionTemplateDto()
       const reference = 'ABC-DEF-GHI'
+      const validateRequest = true
       fakeVisitSchedulerApi
-        .put(`/admin/session-templates/template/${reference}`, <UpdateSessionTemplateDto>{
+        .put(`/admin/session-templates/template/${reference}?&validateRequest=${validateRequest}`, <
+          UpdateSessionTemplateDto
+        >{
           name: updateSessionTemplateDto.name,
           sessionCapacity: updateSessionTemplateDto.sessionCapacity,
           sessionDateRange: updateSessionTemplateDto.sessionDateRange,
           sessionTimeSlot: updateSessionTemplateDto.sessionTimeSlot,
           visitRoom: updateSessionTemplateDto.visitRoom,
+          includeCategoryGroupType: true,
+          includeIncentiveGroupType: true,
+          includeLocationGroupType: true,
+          categoryGroupReferences: ['-cat~abc~de'],
+          incentiveLevelGroupReferences: ['-inc~abc~de'],
+          locationGroupReferences: ['-loc~abc~de'],
           clients: [
             { active: true, userType: 'PUBLIC' },
             { active: true, userType: 'STAFF' },
@@ -383,7 +392,11 @@ describe('visitSchedulerApiClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, updateSessionTemplateDto)
 
-      const output = await visitSchedulerApiClient.updateSessionTemplate(reference, updateSessionTemplateDto)
+      const output = await visitSchedulerApiClient.updateSessionTemplate(
+        reference,
+        updateSessionTemplateDto,
+        validateRequest,
+      )
 
       expect(output).toEqual(updateSessionTemplateDto)
     })

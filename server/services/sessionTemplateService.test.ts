@@ -90,6 +90,7 @@ describe('Session template service', () => {
         'user',
         'ABC-DEF-GHI',
         updateSessionTemplateDto,
+        true,
       )
 
       expect(results).toEqual(singleSessionTemplate)
