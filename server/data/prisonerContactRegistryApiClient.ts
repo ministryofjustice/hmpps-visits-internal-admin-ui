@@ -9,18 +9,21 @@ export default class PrisonerContactRegistryApiClient {
     this.restClient = new RestClient('prisonerContactRegistryApiClient', config.apis.prisonerContactRegistry, token)
   }
 
-  async getSocialContacts({
-    prisonerId,
-    approvedOnly,
-  }: {
-    prisonerId: string
-    approvedOnly: boolean
-  }): Promise<ContactDto[]> {
+  async getAllSocialContacts(prisonerId: string): Promise<ContactDto[]> {
     return this.restClient.get({
-      path: `/prisoners/${prisonerId}/contacts/social`,
+      path: `/v2/prisoners/${prisonerId}/contacts/social`,
       query: new URLSearchParams({
-        approvedVisitorsOnly: approvedOnly.toString(),
-        hasDateOfBirth: 'true',
+        hasDateOfBirth: 'false',
+        withAddress: 'false',
+      }).toString(),
+    })
+  }
+
+  async getApprovedSocialContacts(prisonerId: string): Promise<ContactDto[]> {
+    return this.restClient.get({
+      path: `/v2/prisoners/${prisonerId}/contacts/social/approved`,
+      query: new URLSearchParams({
+        hasDateOfBirth: 'false',
         withAddress: 'false',
       }).toString(),
     })

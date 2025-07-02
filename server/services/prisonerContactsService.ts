@@ -19,6 +19,8 @@ export default class PrisonerContactsService {
     const token = await this.hmppsAuthClient.getSystemClientToken(username)
     const prisonerContactRegistryApiClient = this.prisonerContactRegistryApiClientFactory(token)
 
-    return prisonerContactRegistryApiClient.getSocialContacts({ prisonerId, approvedOnly })
+    return approvedOnly
+      ? prisonerContactRegistryApiClient.getApprovedSocialContacts(prisonerId)
+      : prisonerContactRegistryApiClient.getAllSocialContacts(prisonerId)
   }
 }

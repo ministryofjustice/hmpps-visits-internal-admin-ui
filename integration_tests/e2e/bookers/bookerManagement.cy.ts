@@ -38,7 +38,7 @@ context('Booker management', () => {
     // Search for booker
     cy.task('stubGetBookersByEmail', { email: booker.email, bookers: [booker] })
     cy.task('stubGetBookerByReference', { booker })
-    cy.task('stubGetSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [], approvedOnly: false })
+    cy.task('stubGetAllSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [] })
     searchForBookerPage.enterBookerSearchTerm(booker.email)
     searchForBookerPage.search()
 
@@ -55,7 +55,7 @@ context('Booker management', () => {
     addPrisonerPage.selectPrison(prisoner.prisonCode)
     cy.task('stubCreateBookerPrisoner', { booker, prisoner })
     cy.task('stubGetBookerByReference', { booker: bookerWithPrisoner })
-    cy.task('stubGetSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [contact], approvedOnly: false })
+    cy.task('stubGetAllSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [contact] })
     addPrisonerPage.addPrisoner()
 
     // Booker details - prisoner added
@@ -72,7 +72,7 @@ context('Booker management', () => {
     prisonerDetailsPage.prisonName().contains('Hewell (HMP)')
 
     // Add visitor
-    cy.task('stubGetSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [contact], approvedOnly: true })
+    cy.task('stubGetApprovedSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [contact] })
     prisonerDetailsPage.addVisitor()
     const addVisitorPage = Page.verifyOnPage(AddVisitorPage)
     addVisitorPage.selectVisitorById(contact.personId)
@@ -97,7 +97,7 @@ context('Booker management', () => {
       bookers: [bookerWithPrisonerAndContacts],
     })
     cy.task('stubGetBookerByReference', { booker: bookerWithPrisonerAndContacts })
-    cy.task('stubGetSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [contact], approvedOnly: false })
+    cy.task('stubGetAllSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [contact] })
     searchForBookerPage.enterBookerSearchTerm(booker.email)
     searchForBookerPage.search()
 
