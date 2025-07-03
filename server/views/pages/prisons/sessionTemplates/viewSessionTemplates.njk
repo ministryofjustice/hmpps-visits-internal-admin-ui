@@ -82,12 +82,15 @@
             ]), rows) %}
 
             {%- for sessionTemplate in sessionTemplates -%}
+              {% set hasPublicClient = (sessionTemplate.clients | selectattr("active") | groupby("userType"))["PUBLIC"] | length %}
+
               {% set sessionActiveHtml %}
                 {{ govukTag({
                   text: "Active" if sessionTemplate.active else "Inactive",
                   classes: "govuk-tag--blue" if sessionTemplate.active else "govuk-tag--grey"
                 }) }}
               {% endset %}
+
               {%- set groupsListWithCount = [
                 groupCountIfNotEmpty(sessionTemplate.prisonerCategoryGroups, 'Category') | trim,
                 groupCountIfNotEmpty(sessionTemplate.prisonerIncentiveLevelGroups, 'Incentive') | trim,
@@ -101,7 +104,7 @@
                   attributes: { "data-test": "template-name" }
                 },
                 {
-                  html: sessionActiveHtml,
+                  html: sessionActiveHtml + ('<br><div class="govuk-!-margin-top-3">Not&nbsp;public</div>' if not hasPublicClient),
                   attributes: { "data-test": "template-status"}
                 },
                 {

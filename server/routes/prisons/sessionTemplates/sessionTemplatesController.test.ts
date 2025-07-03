@@ -30,13 +30,10 @@ afterEach(() => {
 
 describe('Session templates listing page', () => {
   describe('GET /prisons/{:prisonId}/session-templates', () => {
-    const sessionTemplate = TestData.sessionTemplate()
-
-    beforeEach(() => {
-      sessionTemplateService.getSessionTemplates.mockResolvedValue([sessionTemplate])
-    })
-
     it('should display session templates listing page for the prison', () => {
+      const sessionTemplate = TestData.sessionTemplate()
+      sessionTemplateService.getSessionTemplates.mockResolvedValue([sessionTemplate])
+
       return request(app)
         .get(`/prisons/${prison.code}/session-templates`)
         .expect('Content-Type', /html/)
@@ -82,6 +79,24 @@ describe('Session templates listing page', () => {
             prison.code,
             'CURRENT_OR_FUTURE',
           )
+        })
+    })
+
+    it('should show label if a template is hidden from public services', () => {
+      const sessionTemplate = TestData.sessionTemplate({
+        clients: [
+          { active: false, userType: 'PUBLIC' },
+          { active: true, userType: 'STAFF' },
+        ],
+      })
+      sessionTemplateService.getSessionTemplates.mockResolvedValue([sessionTemplate])
+
+      return request(app)
+        .get(`/prisons/${prison.code}/session-templates`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="template-status"]').text().trim()).toMatch(/Active\s+Not\spublic/)
         })
     })
   })
