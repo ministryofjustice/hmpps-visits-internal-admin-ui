@@ -63,8 +63,8 @@ export default class EditBookingWindowController {
       body('policyNoticeDaysMin')
         .trim()
         .toInt()
-        .isInt({ min: 1 })
-        .withMessage('Enter a min booking window value of at least 1'),
+        .isInt({ min: 0 })
+        .withMessage('Enter a min booking window value of at least 0'),
       body('policyNoticeDaysMax')
         .trim()
         .toInt()
@@ -76,7 +76,7 @@ export default class EditBookingWindowController {
           policyNoticeDaysMax,
         }: { policyNoticeDaysMin: number; policyNoticeDaysMax: number } = req.body
         if (policyNoticeDaysMin > policyNoticeDaysMax) {
-          throw new Error('Enter a Min window less than or equal to the Max')
+          throw new Error('Enter a min window less than or equal to the max')
         }
         return true
       }),

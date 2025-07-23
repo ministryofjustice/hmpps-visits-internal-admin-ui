@@ -74,11 +74,11 @@ describe('Prison booking window edit', () => {
         })
     })
 
-    it('should set validation errors when min and max are below 0 form data', () => {
-      const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: -1, policyNoticeDaysMax: -1 })
+    it('should set validation errors when min and max are too low', () => {
+      const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: -1, policyNoticeDaysMax: 0 })
 
       const expectedValidationErrors = [
-        expect.objectContaining({ path: 'policyNoticeDaysMin', msg: 'Enter a min booking window value of at least 1' }),
+        expect.objectContaining({ path: 'policyNoticeDaysMin', msg: 'Enter a min booking window value of at least 0' }),
         expect.objectContaining({ path: 'policyNoticeDaysMax', msg: 'Enter a max booking window value of at least 1' }),
       ]
 
@@ -104,7 +104,7 @@ describe('Prison booking window edit', () => {
       const expectedValidationErrors = [
         expect.objectContaining({
           path: 'policyNoticeDaysMin',
-          msg: 'Enter a Min window less than or equal to the Max',
+          msg: 'Enter a min window less than or equal to the max',
         }),
       ]
 
