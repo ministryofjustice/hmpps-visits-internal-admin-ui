@@ -36,6 +36,8 @@
 
       <h2 class="govuk-heading-m">Booking window</h2>
 
+      <p class="govuk-body">Booking windows are stipulated in whole days - for example a 2 day minimum window will mean that requests made on a Monday will show sessions from the Thursday (skipping the whole of Tuesday and Wednesday). A 0 (zero) day minimum booking window means that visits can be booked for the next day.</p>
+
       {{ govukSummaryList({
         rows: [
           {
@@ -128,6 +130,8 @@
       <hr class="govuk-section-break govuk-section-break--xl">
       <h2 class="govuk-heading-m">Enabled services</h2>
 
+      <p class="govuk-body">Select which services this prison should have enabled.</p>
+
       <form action="/prisons/{{ prison.code }}/update-enabled-services" data-test="prison-enabled-services-form" method="POST" novalidate>
 
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -135,9 +139,6 @@
         {% set prisonClientsByType = prison.clients | groupby("userType") %}
         {{ govukCheckboxes({
           name: "enabledServices",
-          hint: {
-            text: "Select which services this prison should have enabled"
-          },
           items: [
             {
               value: "STAFF",
