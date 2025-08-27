@@ -26,6 +26,7 @@ export default class BookerDetailsPage extends Page {
   getPrisonerVisitors = (row: number): PageElement => cy.get(`[data-test="prisoner-visitors-${row}"]`)
 
   clearBookerDetails = (): void => {
-    cy.get('[data-test="clear-booker-details"]').click()
+    cy.contains('Clear booker details').click() // expand the details component that hides the button
+    cy.get('[data-test="clear-booker-details"]').click() // click the button
   }
 }
