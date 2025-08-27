@@ -3,6 +3,7 @@
 {%- from "partials/activeOrInactiveTag.njk" import activeOrInactiveTag -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% set pageHeaderTitle = "Booker details" %}
 {% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
@@ -69,19 +70,25 @@
       }) }}
 
       <hr class="govuk-section-break govuk-section-break--l">
-      <h2 class="govuk-heading-m">Clear booker details</h2>
-      <p>This will remove prisoner and visitor records for this booker.</p>
-      <p>The email, booker reference and GOV.UK One Login identifier will be kept.</p>
 
-      <form action="/bookers/booker/{{ booker.reference }}/clear" method="POST" novalidate>
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        {{ govukButton({
-          text: "Clear booker details",
-          classes: "govuk-button--warning",
-          preventDoubleClick: true,
-          attributes: { "data-test": "clear-booker-details" }
-        }) }}
-      </form>
+      <p>To remove all prisoner and visitor records for this booker you can clear the booker details.</p>
+      {% call govukDetails({
+        summaryText: "Clear booker details"
+      }) %}
+        <p>This will remove prisoner and visitor records for this booker.</p>
+        <p>The email, booker reference and GOV.UK One Login identifier will be kept.</p>
+        <p>This action <strong>cannot be undone</strong>.</p>
+
+        <form action="/bookers/booker/{{ booker.reference }}/clear" method="POST" novalidate>
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          {{ govukButton({
+            text: "Clear booker details",
+            classes: "govuk-button--warning govuk-!-margin-bottom-1",
+            preventDoubleClick: true,
+            attributes: { "data-test": "clear-booker-details" }
+          }) }}
+        </form>
+      {% endcall %}
     {% endif %}
   </div>
 </div>
