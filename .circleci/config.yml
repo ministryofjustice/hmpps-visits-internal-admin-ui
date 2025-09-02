@@ -24,7 +24,7 @@ parameters:
 
   node-version:
     type: string
-    default: 22.18-browsers
+    default: 22.19-browsers
 
 jobs:
   build:
