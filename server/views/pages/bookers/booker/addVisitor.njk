@@ -50,7 +50,7 @@
             },
             {
               html: (contact.dateOfBirth | formatDate +
-                '(' + contact.dateOfBirth | displayAge + ')') if contact.dateOfBirth
+                '&nbsp(' + contact.dateOfBirth | displayAge + ')') if contact.dateOfBirth
                 else "Not entered"
             }
           ]), contactRows)%}
