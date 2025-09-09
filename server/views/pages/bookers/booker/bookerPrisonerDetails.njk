@@ -70,7 +70,7 @@
           },
           {
             html: (visitor.dateOfBirth | formatDate +
-              '(' + visitor.dateOfBirth | displayAge + ')') if visitor.dateOfBirth,
+              '&nbsp(' + visitor.dateOfBirth | displayAge + ')') if visitor.dateOfBirth,
               attributes: { "data-test": "visitor-dob-" + loop.index }
           },
           {
