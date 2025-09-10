@@ -68,7 +68,6 @@ describe('Booker prisoner details', () => {
           expect($('[data-test=visitor-id-1]').text()).toBe(contact.personId.toString())
           expect($('[data-test=visitor-dob-1]').text()).toContain('28 July 1986')
           expect($('[data-test=visitor-approved-1]').text()).toBe('Yes')
-          expect($('[data-test=visitor-restrictions-1]').text().trim()).toBe('None')
           expect($('[data-test=visitor-status-1]').text().trim()).toBe('Active')
 
           expect(bookerService.getBookerByReference).toHaveBeenCalledWith('user1', booker.reference)

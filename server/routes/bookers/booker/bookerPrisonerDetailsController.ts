@@ -8,7 +8,6 @@ type Visitor = {
   name: string
   dateOfBirth: string
   approved: string
-  restrictions: ContactDto['restrictions']
   active: boolean
 }
 export default class BookerPrisonerDetailsController {
@@ -56,7 +55,6 @@ export default class BookerPrisonerDetailsController {
               name: `${matchedContact.firstName} ${matchedContact.lastName}`,
               dateOfBirth: matchedContact.dateOfBirth,
               approved: matchedContact.approvedVisitor ? 'Yes' : 'No',
-              restrictions: matchedContact.restrictions,
               active: visitor.active,
             }
           : {
@@ -64,7 +62,6 @@ export default class BookerPrisonerDetailsController {
               name: 'UNKNOWN',
               dateOfBirth: '',
               approved: '',
-              restrictions: [],
               active: visitor.active,
             }
       })

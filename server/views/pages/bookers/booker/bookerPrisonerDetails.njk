@@ -3,7 +3,6 @@
 {%- from "partials/activeOrInactiveTag.njk" import activeOrInactiveTag -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{%- from "partials/visitorRestrictions.njk" import visitorRestrictions -%}
 
 {% set pageHeaderTitle = "Prisoner details" %}
 {% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
@@ -71,16 +70,12 @@
           },
           {
             html: (visitor.dateOfBirth | formatDate +
-              '<br>(' + visitor.dateOfBirth | displayAge + ')') if visitor.dateOfBirth,
+              '&nbsp(' + visitor.dateOfBirth | displayAge + ')') if visitor.dateOfBirth,
               attributes: { "data-test": "visitor-dob-" + loop.index }
           },
           {
             text: visitor.approved,
             attributes: { "data-test": "visitor-approved-" + loop.index }
-          },
-          {
-            html: visitorRestrictions(visitor),
-            attributes: { "data-test": "visitor-restrictions-" + loop.index }
           },
           {
             html: activeOrInactiveTag(visitor.active),
@@ -114,9 +109,6 @@
           },
           {
             text: "Approved visitor"
-          },
-          {
-            text: "Restrictions"
           },
           {
             text: "Status"
