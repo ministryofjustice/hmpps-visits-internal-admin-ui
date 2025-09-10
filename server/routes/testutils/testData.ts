@@ -397,7 +397,6 @@ export default class TestData {
     lastName = 'Smith',
     dateOfBirth = '1986-07-28',
     approvedVisitor = true,
-    restrictions = [],
   }: Partial<ContactDto> = {}): ContactDto =>
     ({
       personId,
@@ -405,7 +404,6 @@ export default class TestData {
       lastName,
       dateOfBirth,
       approvedVisitor,
-      restrictions,
     }) as ContactDto
 
   static excludeDateDto = ({
