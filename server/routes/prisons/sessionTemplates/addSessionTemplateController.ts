@@ -116,6 +116,7 @@ export default class AddSessionTemplateController {
         locationGroupBehaviour: sessionTemplate.includeLocationGroupType ? 'include' : 'exclude',
         locationGroupReferences,
         hideInPublicServices,
+        visitOrderRestriction: sessionTemplate.visitOrderRestriction,
       }
 
       req.flash('formValues', formValues)
@@ -172,6 +173,7 @@ export default class AddSessionTemplateController {
           { active: true, userType: 'STAFF' },
           { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
         ],
+        visitOrderRestriction: req.body.visitOrderRestriction,
       }
 
       try {

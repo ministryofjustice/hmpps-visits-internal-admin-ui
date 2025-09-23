@@ -82,6 +82,7 @@ export default class EditSessionTemplateController {
         locationGroupBehaviour: sessionTemplate.includeLocationGroupType ? 'include' : 'exclude',
         locationGroupReferences,
         hideInPublicServices,
+        visitOrderRestriction: sessionTemplate.visitOrderRestriction,
         ...req.flash('formValues')?.[0],
       }
 
@@ -151,6 +152,7 @@ export default class EditSessionTemplateController {
           { active: true, userType: 'STAFF' },
           { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
         ],
+        visitOrderRestriction: req.body.visitOrderRestriction,
       }
       try {
         const { name } = await this.sessionTemplateService.updateSessionTemplate(

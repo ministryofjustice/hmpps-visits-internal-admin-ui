@@ -164,6 +164,39 @@
           ]
         }) }}
 
+        {{ govukRadios({
+          name: "visitOrderRestriction",
+          fieldset: {
+            legend: {
+              text: "What type of visiting order is used for this session?",
+              classes: "govuk-fieldset__legend--m"
+            },
+            attributes: { "data-test": "visit-order-restriction" }
+          },
+          items: [
+            {
+              value: "VO_PVO",
+              text: "VO or PVO"
+            },
+            {
+              value: "VO",
+              text: "VO only"
+            },
+            {
+              value: "PVO",
+              text: "PVO only"
+            },
+            {
+              divider: "or"
+            },
+            {
+              value: "NONE",
+              text: "This session does not using a visiting order"
+            }
+          ],
+          value: formValues.visitOrderRestriction
+        }) }}
+
         {{ govukInput({
           label: {
             text: "Open capacity",
