@@ -169,9 +169,10 @@ describe('Add a session template', () => {
           { active: true, userType: 'STAFF' },
           { active: false, userType: 'PUBLIC' },
         ],
+        visitOrderRestriction: 'PVO',
       })
 
-      const sessionTemplate = TestData.sessionTemplate()
+      const sessionTemplate = TestData.sessionTemplate({ visitOrderRestriction: 'PVO' })
       sessionTemplate.prisonerIncentiveLevelGroups = [
         { reference: incentiveLevelGroupReferences[0] },
         { reference: incentiveLevelGroupReferences[1] },
@@ -204,6 +205,7 @@ describe('Add a session template', () => {
         .send('validToDateDay=31')
         .send('validToDateMonth=12')
         .send('validToDateYear=2024')
+        .send('visitOrderRestriction=PVO')
         .send('openCapacity=10')
         .send('closedCapacity=5')
         .send('visitRoom=visit room name')
@@ -343,6 +345,7 @@ describe('Copy a session template', () => {
     prisonerIncentiveLevelGroups: [TestData.incentiveGroup()],
     prisonerCategoryGroups: [TestData.categoryGroup()],
     permittedLocationGroups: [TestData.locationGroup()],
+    visitOrderRestriction: 'NONE',
   })
 
   const expectedFormValues: Record<string, string | string[]> = {
@@ -367,6 +370,7 @@ describe('Copy a session template', () => {
     locationGroupBehaviour: 'include',
     locationGroupReferences: [sessionTemplateToCopy.permittedLocationGroups[0].reference],
     hideInPublicServices: 'no',
+    visitOrderRestriction: 'NONE',
   }
 
   describe('POST /prisons/{:prisonId}/session-templates/copy', () => {

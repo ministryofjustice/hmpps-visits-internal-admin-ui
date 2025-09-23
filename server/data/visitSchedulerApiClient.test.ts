@@ -354,6 +354,7 @@ describe('visitSchedulerApiClient', () => {
           includeLocationGroupType: createSessionTemplateDto.includeLocationGroupType,
           locationGroupReferences: [],
           clients: createSessionTemplateDto.clients,
+          visitOrderRestriction: 'VO_PVO',
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, createSessionTemplateDto)
