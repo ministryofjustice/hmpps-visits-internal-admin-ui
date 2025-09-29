@@ -88,31 +88,4 @@ describe('Nunjucks Filters', () => {
       })
     })
   })
-
-  describe('voRestrictionText', () => {
-    it('should return "VO or PVO" when input is VO_PVO', () => {
-      const result = njk.getFilter('voRestrictionText')('VO_PVO')
-      expect(result).toEqual('VO or PVO')
-    })
-
-    it('should return "VO only" when input is VO', () => {
-      const result = njk.getFilter('voRestrictionText')('VO')
-      expect(result).toEqual('VO only')
-    })
-
-    it('should return "PVO only" when input is PVO', () => {
-      const result = njk.getFilter('voRestrictionText')('PVO')
-      expect(result).toEqual('PVO only')
-    })
-
-    it('should return "This session does not use a visiting order" when input is NONE', () => {
-      const result = njk.getFilter('voRestrictionText')('NONE')
-      expect(result).toEqual('This session does not use a visiting order')
-    })
-
-    it('should return "Unsupported type" when input is XXX', () => {
-      const result = njk.getFilter('voRestrictionText')('xxx')
-      expect(result).toEqual('Unsupported type')
-    })
-  })
 })

@@ -10,6 +10,7 @@ import {
 } from '../../../services'
 import { UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
+import visitOrderDescriptions from '../../../constants/visitOrderRestriction'
 
 export default class EditSessionTemplateController {
   public constructor(
@@ -60,6 +61,8 @@ export default class EditSessionTemplateController {
         prisonerIncentiveLevelGroups?.map(incentiveGroup => incentiveGroup.reference) ?? []
       const locationGroupReferences = permittedLocationGroups?.map(locationGroup => locationGroup.reference) ?? []
 
+      console.log(visitOrderDescriptions)
+
       const formValues = {
         name: sessionTemplate.name,
         validFromDateDay,
@@ -104,6 +107,7 @@ export default class EditSessionTemplateController {
         categoryGroups,
         incentiveGroups,
         locationGroups,
+        visitOrderDescriptions,
       })
     }
   }

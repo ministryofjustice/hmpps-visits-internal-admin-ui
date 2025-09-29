@@ -92,20 +92,5 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     return `${age} old`
   })
 
-  njkEnv.addFilter('voRestrictionText', (visitOrderRestriction: SessionTemplate['visitOrderRestriction']) => {
-    switch (visitOrderRestriction) {
-      case 'VO_PVO':
-        return 'VO or PVO'
-      case 'VO':
-        return 'VO only'
-      case 'PVO':
-        return 'PVO only'
-      case 'NONE':
-        return 'This session does not use a visiting order'
-      default:
-        return 'Unsupported type'
-    }
-  })
-
   return njkEnv
 }

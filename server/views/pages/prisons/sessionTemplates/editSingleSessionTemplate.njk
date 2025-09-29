@@ -51,6 +51,15 @@
         }), locationGroupsItems) %}
       {% endfor %}
 
+      {# Build visitOrder items array for radio buttons #}
+      {% set visitOrderItems = [] %}
+      {% for visitOrder, description in visitOrderDescriptions %}
+        {% set visitOrderItems = (visitOrderItems.push({
+          value: visitOrder,
+          text: description
+        }), visitOrderItems)%}
+      {% endfor %}
+
       {{ sessionTemplateVisitStats(visitStats) }}
 
       <form action="/prisons/{{ prison.code }}/session-templates/{{ reference }}/edit" method="POST" novalidate>
@@ -173,27 +182,7 @@
             },
             attributes: { "data-test": "visit-order-restriction" }
           },
-          items: [
-            {
-              value: "VO_PVO",
-              text: "VO or PVO"
-            },
-            {
-              value: "VO",
-              text: "VO only"
-            },
-            {
-              value: "PVO",
-              text: "PVO only"
-            },
-            {
-              divider: "or"
-            },
-            {
-              value: "NONE",
-              text: "This session does not using a visiting order"
-            }
-          ],
+          items: visitOrderItems,
           value: formValues.visitOrderRestriction
         }) }}
 

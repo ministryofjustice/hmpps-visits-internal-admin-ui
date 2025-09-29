@@ -11,6 +11,7 @@ import {
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
 import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
+import visitOrderDescriptions from '../../../constants/visitOrderRestriction'
 
 export default class AddSessionTemplateController {
   public constructor(
@@ -47,6 +48,7 @@ export default class AddSessionTemplateController {
         locationGroups,
         daysOfWeek,
         formValues,
+        visitOrderDescriptions,
       })
     }
   }

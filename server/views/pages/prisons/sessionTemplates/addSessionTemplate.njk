@@ -51,6 +51,14 @@
         }), locationGroupsItems) %}
       {% endfor %}
 
+      {# Build visitOrder items array for radio buttons #}
+      {% set visitOrderItems = [] %}
+      {% for visitOrder, description in visitOrderDescriptions %}
+        {% set visitOrderItems = (visitOrderItems.push({
+          value: visitOrder,
+          text: description
+        }), visitOrderItems)%}
+      {% endfor %}
 
       <form action="/prisons/{{ prison.code }}/session-templates/add" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -241,32 +249,8 @@
             },
             attributes: { "data-test": "visit-order-restriction" }
           },
-          items: [
-            {
-              value: "VO_PVO",
-              text: "VO or PVO",
-              checked: true
-            },
-            {
-              value: "VO",
-              text: "VO only",
-              checked: formValues.visitOrderRestriction === "VO"
-            },
-            {
-              value: "PVO",
-              text: "PVO only",
-              checked: formValues.visitOrderRestriction === "PVO"
-            },
-            {
-              divider: "or"
-            },
-            {
-              value: "NONE",
-              text: "This session does not using a visiting order",
-              checked: formValues.visitOrderRestriction === "NONE"
-            }
-          ],
-          value: formValues.visitOrderRestriction
+          items: visitOrderItems,
+          value: (formValues.visitOrderRestriction if formValues.visitOrderRestriction else 'VO_PVO')
         }) }}
 
         {{ govukInput({
