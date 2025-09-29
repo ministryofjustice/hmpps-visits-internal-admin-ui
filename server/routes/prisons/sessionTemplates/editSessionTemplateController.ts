@@ -61,8 +61,6 @@ export default class EditSessionTemplateController {
         prisonerIncentiveLevelGroups?.map(incentiveGroup => incentiveGroup.reference) ?? []
       const locationGroupReferences = permittedLocationGroups?.map(locationGroup => locationGroup.reference) ?? []
 
-      console.log(visitOrderDescriptions)
-
       const formValues = {
         name: sessionTemplate.name,
         validFromDateDay,
