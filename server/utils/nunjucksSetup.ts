@@ -7,7 +7,6 @@ import { formatDuration, intervalToDuration, isAfter } from 'date-fns'
 import { formatDate, initialiseName } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
-import { SessionTemplate } from '../data/visitSchedulerApiTypes'
 
 const production = process.env.NODE_ENV === 'production'
 
