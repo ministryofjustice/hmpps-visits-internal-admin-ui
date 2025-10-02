@@ -53,6 +53,7 @@ export default {
     secret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
     expiryMinutes: Number(get('WEB_SESSION_TIMEOUT_IN_MINUTES', 120)),
   },
+  contactsUrl: get('CONTACTS_URL', 'https://contacts-dev.hmpps.service.justice.gov.uk', requiredInProduction),
   apis: {
     hmppsAuth: {
       url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
