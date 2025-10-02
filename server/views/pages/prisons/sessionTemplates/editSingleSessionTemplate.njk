@@ -186,7 +186,8 @@
             attributes: { "data-test": "visit-order-restriction" }
           },
           items: visitOrderItems,
-          value: formValues.visitOrderRestriction
+          value: formValues.visitOrderRestriction,
+          errorMessage: errors | findError('visitOrderRestriction')
         }) }}
 
         {{ govukInput({
