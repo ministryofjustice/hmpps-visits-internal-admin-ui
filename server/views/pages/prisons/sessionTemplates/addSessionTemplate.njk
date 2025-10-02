@@ -54,6 +54,9 @@
       {# Build visitOrder items array for radio buttons #}
       {% set visitOrderItems = [] %}
       {% for visitOrder, description in visitOrderDescriptions %}
+        {% if loop.last %}
+          {% set visitOrderItems = (visitOrderItems.push({ divider: "or" }), visitOrderItems) %}
+        {% endif %}
         {% set visitOrderItems = (visitOrderItems.push({
           value: visitOrder,
           text: description
@@ -250,7 +253,8 @@
             attributes: { "data-test": "visit-order-restriction" }
           },
           items: visitOrderItems,
-          value: (formValues.visitOrderRestriction if formValues.visitOrderRestriction else 'VO_PVO')
+          value: (formValues.visitOrderRestriction if formValues.visitOrderRestriction else 'VO_PVO'),
+          errorMessage: errors | findError('visitOrderRestriction')
         }) }}
 
         {{ govukInput({

@@ -228,6 +228,7 @@ export default class TestData {
     includeLocationGroupType = true,
     locationGroupReferences = [TestData.locationGroup().reference],
     clients = publicAndStaffClientsActive,
+    visitOrderRestriction = 'VO_PVO',
   }: Partial<UpdateSessionTemplateDto> = {}): UpdateSessionTemplateDto =>
     ({
       name,
@@ -241,6 +242,7 @@ export default class TestData {
       categoryGroupReferences,
       incentiveLevelGroupReferences,
       locationGroupReferences,
+      visitOrderRestriction,
     }) as UpdateSessionTemplateDto
 
   static createCategoryGroupDto = ({

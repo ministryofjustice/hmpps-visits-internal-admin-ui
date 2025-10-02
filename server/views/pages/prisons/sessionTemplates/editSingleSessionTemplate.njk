@@ -54,6 +54,9 @@
       {# Build visitOrder items array for radio buttons #}
       {% set visitOrderItems = [] %}
       {% for visitOrder, description in visitOrderDescriptions %}
+        {% if loop.last %}
+          {% set visitOrderItems = (visitOrderItems.push({ divider: "or" }), visitOrderItems) %}
+        {% endif %}
         {% set visitOrderItems = (visitOrderItems.push({
           value: visitOrder,
           text: description

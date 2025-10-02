@@ -211,6 +211,7 @@ export default class AddSessionTemplateController {
         }
         return true
       }),
+      body('visitOrderRestriction').notEmpty().withMessage('Select a visit order restriction'),
       body('weeklyFrequency')
         .trim()
         .toInt()

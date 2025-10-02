@@ -71,6 +71,7 @@ describe('Add a session template', () => {
         hasIncentiveGroups: 'yes',
         hasCategoryGroups: 'yes',
         hasLocationGroups: 'yes',
+        visitOrderRestriction: 'VO',
       }
       const errors = <FieldValidationError[]>[
         { path: 'name', msg: 'name error' },
@@ -83,6 +84,7 @@ describe('Add a session template', () => {
         { path: 'openCapacity', msg: 'openCapacity error' },
         { path: 'closedCapacity', msg: 'closedCapacity error' },
         { path: 'visitRoom', msg: 'visitRoom error' },
+        { path: 'visitOrderRestriction', msg: 'visitOrderRestriction error' },
       ]
 
       flashData = { errors, formValues: [formValues] }
@@ -133,6 +135,10 @@ describe('Add a session template', () => {
         expect($('#validToDate-validToDateDay').attr('value')).toBe('4')
         expect($('#validToDate-validToDateMonth').attr('value')).toBe('5')
         expect($('#validToDate-validToDateYear').attr('value')).toBe('6')
+
+        expect($('#visitOrderRestriction-error').text()).toContain('visitOrderRestriction error')
+        expect($('input[name=visitOrderRestriction]:checked').attr('value')).toBe('VO')
+        expect($('input[name=visitOrderRestriction]:checked ~ label').text().trim()).toBe('VO only')
 
         expect($('.govuk-error-summary a[href="#openCapacity-error"]').length).toBe(1)
         expect($('#openCapacity-error').text()).toContain('openCapacity error')

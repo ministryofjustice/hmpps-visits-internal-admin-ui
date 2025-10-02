@@ -248,6 +248,7 @@ export default class EditSessionTemplateController {
           }
           return true
         }),
+      body('visitOrderRestriction').notEmpty().withMessage('Select a visit order restriction'),
       body(['openCapacity', 'closedCapacity']).trim().toInt().isInt().withMessage('Enter a number'),
       body(['openCapacity', 'closedCapacity']).custom((_value, { req }) => {
         const { openCapacity, closedCapacity } = req.body

@@ -58,6 +58,7 @@ context('Session templates - update', () => {
         { active: true, userType: 'STAFF' },
         { active: true, userType: 'PUBLIC' },
       ],
+      visitOrderRestriction: 'VO_PVO',
     }
     const returnedUpdatedSessionTemplate: SessionTemplate = {
       ...sessionTemplate,
