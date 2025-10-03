@@ -155,6 +155,7 @@ export default class TestData {
     weeklyFrequency = 1,
     active = true,
     clients = publicAndStaffClientsActive,
+    visitOrderRestriction = 'VO_PVO',
   }: Partial<SessionTemplate> = {}): SessionTemplate =>
     ({
       dayOfWeek,
@@ -175,6 +176,7 @@ export default class TestData {
       weeklyFrequency,
       active,
       clients,
+      visitOrderRestriction,
     }) as SessionTemplate
 
   static createSessionTemplateDto = ({
@@ -193,6 +195,7 @@ export default class TestData {
     includeLocationGroupType = true,
     locationGroupReferences = [],
     clients = publicAndStaffClientsActive,
+    visitOrderRestriction = 'VO_PVO',
   }: Partial<CreateSessionTemplateDto> = {}): CreateSessionTemplateDto =>
     ({
       name,
@@ -210,6 +213,7 @@ export default class TestData {
       includeLocationGroupType,
       locationGroupReferences,
       clients,
+      visitOrderRestriction,
     }) as CreateSessionTemplateDto
 
   static updateSessionTemplateDto = ({
@@ -224,6 +228,7 @@ export default class TestData {
     includeLocationGroupType = true,
     locationGroupReferences = [TestData.locationGroup().reference],
     clients = publicAndStaffClientsActive,
+    visitOrderRestriction = 'VO_PVO',
   }: Partial<UpdateSessionTemplateDto> = {}): UpdateSessionTemplateDto =>
     ({
       name,
@@ -237,6 +242,7 @@ export default class TestData {
       categoryGroupReferences,
       incentiveLevelGroupReferences,
       locationGroupReferences,
+      visitOrderRestriction,
     }) as UpdateSessionTemplateDto
 
   static createCategoryGroupDto = ({

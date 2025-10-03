@@ -117,6 +117,7 @@ describe('Update a session template', () => {
         .send('validToDateDay=31')
         .send('validToDateMonth=12')
         .send('validToDateYear=2024')
+        .send('visitOrderRestriction=VO_PVO')
         .send('openCapacity=10')
         .send('closedCapacity=5')
         .send('visitRoom=visit room name')

@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { PrisonService, SessionTemplateService } from '../../../services'
+import visitOrderDescriptions from '../../../constants/visitOrderRestriction'
 import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
 
 export default class SingleSessionTemplateController {
@@ -22,12 +23,15 @@ export default class SingleSessionTemplateController {
 
       const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
 
+      const visitOrderValue = visitOrderDescriptions[sessionTemplate.visitOrderRestriction]
+
       return res.render('pages/prisons/sessionTemplates/viewSingleSessionTemplate', {
         errors: req.flash('errors'),
         messages: req.flash('messages'),
         prison,
         sessionTemplate,
         visitStats,
+        visitOrderValue,
         hideInPublicServices,
       })
     }

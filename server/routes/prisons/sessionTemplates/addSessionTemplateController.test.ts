@@ -71,6 +71,7 @@ describe('Add a session template', () => {
         hasIncentiveGroups: 'yes',
         hasCategoryGroups: 'yes',
         hasLocationGroups: 'yes',
+        visitOrderRestriction: 'VO',
       }
       const errors = <FieldValidationError[]>[
         { path: 'name', msg: 'name error' },
@@ -83,6 +84,7 @@ describe('Add a session template', () => {
         { path: 'openCapacity', msg: 'openCapacity error' },
         { path: 'closedCapacity', msg: 'closedCapacity error' },
         { path: 'visitRoom', msg: 'visitRoom error' },
+        { path: 'visitOrderRestriction', msg: 'visitOrderRestriction error' },
       ]
 
       flashData = { errors, formValues: [formValues] }
@@ -134,6 +136,10 @@ describe('Add a session template', () => {
         expect($('#validToDate-validToDateMonth').attr('value')).toBe('5')
         expect($('#validToDate-validToDateYear').attr('value')).toBe('6')
 
+        expect($('#visitOrderRestriction-error').text()).toContain('visitOrderRestriction error')
+        expect($('input[name=visitOrderRestriction]:checked').attr('value')).toBe('VO')
+        expect($('input[name=visitOrderRestriction]:checked ~ label').text().trim()).toBe('VO only')
+
         expect($('.govuk-error-summary a[href="#openCapacity-error"]').length).toBe(1)
         expect($('#openCapacity-error').text()).toContain('openCapacity error')
         expect($('#openCapacity').attr('value')).toBe('aa')
@@ -169,9 +175,10 @@ describe('Add a session template', () => {
           { active: true, userType: 'STAFF' },
           { active: false, userType: 'PUBLIC' },
         ],
+        visitOrderRestriction: 'PVO',
       })
 
-      const sessionTemplate = TestData.sessionTemplate()
+      const sessionTemplate = TestData.sessionTemplate({ visitOrderRestriction: 'PVO' })
       sessionTemplate.prisonerIncentiveLevelGroups = [
         { reference: incentiveLevelGroupReferences[0] },
         { reference: incentiveLevelGroupReferences[1] },
@@ -204,6 +211,7 @@ describe('Add a session template', () => {
         .send('validToDateDay=31')
         .send('validToDateMonth=12')
         .send('validToDateYear=2024')
+        .send('visitOrderRestriction=PVO')
         .send('openCapacity=10')
         .send('closedCapacity=5')
         .send('visitRoom=visit room name')
@@ -343,6 +351,7 @@ describe('Copy a session template', () => {
     prisonerIncentiveLevelGroups: [TestData.incentiveGroup()],
     prisonerCategoryGroups: [TestData.categoryGroup()],
     permittedLocationGroups: [TestData.locationGroup()],
+    visitOrderRestriction: 'NONE',
   })
 
   const expectedFormValues: Record<string, string | string[]> = {
@@ -367,6 +376,7 @@ describe('Copy a session template', () => {
     locationGroupBehaviour: 'include',
     locationGroupReferences: [sessionTemplateToCopy.permittedLocationGroups[0].reference],
     hideInPublicServices: 'no',
+    visitOrderRestriction: 'NONE',
   }
 
   describe('POST /prisons/{:prisonId}/session-templates/copy', () => {

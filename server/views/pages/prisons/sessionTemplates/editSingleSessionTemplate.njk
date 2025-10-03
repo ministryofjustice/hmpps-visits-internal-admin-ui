@@ -51,6 +51,18 @@
         }), locationGroupsItems) %}
       {% endfor %}
 
+      {# Build visitOrder items array for radio buttons #}
+      {% set visitOrderItems = [] %}
+      {% for visitOrder, description in visitOrderDescriptions %}
+        {% if loop.last %}
+          {% set visitOrderItems = (visitOrderItems.push({ divider: "or" }), visitOrderItems) %}
+        {% endif %}
+        {% set visitOrderItems = (visitOrderItems.push({
+          value: visitOrder,
+          text: description
+        }), visitOrderItems)%}
+      {% endfor %}
+
       {{ sessionTemplateVisitStats(visitStats) }}
 
       <form action="/prisons/{{ prison.code }}/session-templates/{{ reference }}/edit" method="POST" novalidate>
@@ -162,6 +174,20 @@
               checked: formValues.hasEndDate === "yes"
             }
           ]
+        }) }}
+
+        {{ govukRadios({
+          name: "visitOrderRestriction",
+          fieldset: {
+            legend: {
+              text: "What type of visiting order is used for this session?",
+              classes: "govuk-fieldset__legend--m"
+            },
+            attributes: { "data-test": "visit-order-restriction" }
+          },
+          items: visitOrderItems,
+          value: formValues.visitOrderRestriction,
+          errorMessage: errors | findError('visitOrderRestriction')
         }) }}
 
         {{ govukInput({

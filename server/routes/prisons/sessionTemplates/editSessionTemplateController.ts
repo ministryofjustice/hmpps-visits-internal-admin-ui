@@ -10,6 +10,7 @@ import {
 } from '../../../services'
 import { UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
+import visitOrderDescriptions from '../../../constants/visitOrderRestriction'
 
 export default class EditSessionTemplateController {
   public constructor(
@@ -82,6 +83,7 @@ export default class EditSessionTemplateController {
         locationGroupBehaviour: sessionTemplate.includeLocationGroupType ? 'include' : 'exclude',
         locationGroupReferences,
         hideInPublicServices,
+        visitOrderRestriction: sessionTemplate.visitOrderRestriction,
         ...req.flash('formValues')?.[0],
       }
 
@@ -103,6 +105,7 @@ export default class EditSessionTemplateController {
         categoryGroups,
         incentiveGroups,
         locationGroups,
+        visitOrderDescriptions,
       })
     }
   }
@@ -151,6 +154,7 @@ export default class EditSessionTemplateController {
           { active: true, userType: 'STAFF' },
           { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
         ],
+        visitOrderRestriction: req.body.visitOrderRestriction,
       }
       try {
         const { name } = await this.sessionTemplateService.updateSessionTemplate(
@@ -244,6 +248,7 @@ export default class EditSessionTemplateController {
           }
           return true
         }),
+      body('visitOrderRestriction').notEmpty().withMessage('Select a visit order restriction'),
       body(['openCapacity', 'closedCapacity']).trim().toInt().isInt().withMessage('Enter a number'),
       body(['openCapacity', 'closedCapacity']).custom((_value, { req }) => {
         const { openCapacity, closedCapacity } = req.body

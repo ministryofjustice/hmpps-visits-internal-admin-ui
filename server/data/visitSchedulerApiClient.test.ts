@@ -354,6 +354,7 @@ describe('visitSchedulerApiClient', () => {
           includeLocationGroupType: createSessionTemplateDto.includeLocationGroupType,
           locationGroupReferences: [],
           clients: createSessionTemplateDto.clients,
+          visitOrderRestriction: 'VO_PVO',
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, createSessionTemplateDto)
@@ -388,6 +389,7 @@ describe('visitSchedulerApiClient', () => {
             { active: true, userType: 'PUBLIC' },
             { active: true, userType: 'STAFF' },
           ],
+          visitOrderRestriction: 'VO_PVO',
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, updateSessionTemplateDto)

@@ -32,6 +32,7 @@ export type UpdateSessionTemplateDto = components['schemas']['UpdateSessionTempl
 export type RequestSessionTemplateVisitStatsDto = components['schemas']['RequestSessionTemplateVisitStatsDto']
 export type SessionCapacity = components['schemas']['SessionCapacityDto']
 export type SessionTemplateVisitStatsDto = components['schemas']['SessionTemplateVisitStatsDto']
+export type VisitOrderRestrictions = components['schemas']['SessionTemplateDto']['visitOrderRestriction']
 
 // Visits
 export type PageVisitDto = components['schemas']['PageVisitDto']

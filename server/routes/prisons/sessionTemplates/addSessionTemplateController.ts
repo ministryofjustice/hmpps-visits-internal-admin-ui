@@ -11,6 +11,7 @@ import {
 import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
 import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
+import visitOrderDescriptions from '../../../constants/visitOrderRestriction'
 
 export default class AddSessionTemplateController {
   public constructor(
@@ -47,6 +48,7 @@ export default class AddSessionTemplateController {
         locationGroups,
         daysOfWeek,
         formValues,
+        visitOrderDescriptions,
       })
     }
   }
@@ -116,6 +118,7 @@ export default class AddSessionTemplateController {
         locationGroupBehaviour: sessionTemplate.includeLocationGroupType ? 'include' : 'exclude',
         locationGroupReferences,
         hideInPublicServices,
+        visitOrderRestriction: sessionTemplate.visitOrderRestriction,
       }
 
       req.flash('formValues', formValues)
@@ -172,6 +175,7 @@ export default class AddSessionTemplateController {
           { active: true, userType: 'STAFF' },
           { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
         ],
+        visitOrderRestriction: req.body.visitOrderRestriction,
       }
 
       try {
@@ -207,6 +211,7 @@ export default class AddSessionTemplateController {
         }
         return true
       }),
+      body('visitOrderRestriction').notEmpty().withMessage('Select a visit order restriction'),
       body('weeklyFrequency')
         .trim()
         .toInt()

@@ -814,6 +814,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/public/booker/{bookerReference}/visits/events': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get relevant visit events by booker reference
+     * @description Get relevant visit events by booker reference
+     */
+    get: operations['getVisitEventsByBookerReference']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/visit-sessions': {
     parameters: {
       query?: never
@@ -1016,6 +1036,57 @@ export interface paths {
      */
     put: operations['updateVisitFromExternalSystem']
     post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/notification/court-video-appointment/cancelled-or-deleted': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** To notify VSiP that a court video appointment has been cancelled or deleted */
+    post: operations['notifyVSiPThatCourtVideoAppointmentCancelledDeleted']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/notification/court-video-appointment/created': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** To notify VSiP that a court video appointment has been created */
+    post: operations['notifyVSiPThatCourtVideoAppointmentCreated']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/notification/court-video-appointment/updated': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** To notify VSiP that a court video appointment has been updated */
+    post: operations['notifyVSiPThatCourtVideoAppointmentUpdated']
     delete?: never
     options?: never
     head?: never
@@ -1279,6 +1350,86 @@ export interface paths {
     get?: never
     /** To notify VSiP that a message / email has been sent to GOV.UK notify */
     put: operations['notifyMessageCreated']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/requests/{prisonCode}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all visit requests for a prison
+     * @description Retrieve a list of visit requests for a prison
+     */
+    get: operations['getVisitRequestsForPrison']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/requests/{prisonCode}/count': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get count for how many visit requests are open for a prison
+     * @description Returns an Int count for how many visit requests are open for a prison
+     */
+    get: operations['getVisitRequestsCountForPrison']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/requests/{reference}/approve': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Approve a visit request
+     * @description Endpoint to approve a visit request by visit reference
+     */
+    put: operations['approveVisitRequestByReference']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/requests/{reference}/reject': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Reject a visit request
+     * @description Endpoint to reject a visit request by visit reference
+     */
+    put: operations['rejectVisitRequestByReference']
     post?: never
     delete?: never
     options?: never
@@ -1585,8 +1736,16 @@ export interface components {
         | 'APPLICATION_INVALID_VISIT_ALREADY_BOOKED'
         | 'APPLICATION_INVALID_NO_VO_BALANCE'
         | 'APPLICATION_INVALID_NO_SLOT_CAPACITY'
+        | 'APPLICATION_INVALID_VISIT_DATE_BLOCKED'
+        | 'APPLICATION_INVALID_SESSION_DATE_BLOCKED'
         | 'APPLICATION_INVALID_USER_TYPE'
       )[]
+    }
+    ApproveRejectionVisitRequestBodyDto: {
+      /** @description Username for user who actioned this request */
+      actionedBy: string
+      /** @description Reference of the visit for approval */
+      visitReference: string
     }
     /** @description Visit Session */
     AvailableVisitSessionDto: {
@@ -1627,6 +1786,8 @@ export interface components {
         | 'NOT_KNOWN'
         | 'NOT_APPLICABLE'
         | 'BY_PRISONER'
+      /** @description flag to determine if visit should be a request or instant booking */
+      isRequestBooking?: boolean
       /**
        * @description User type for user who actioned this request
        * @enum {string}
@@ -1701,6 +1862,9 @@ export interface components {
        * @example 01234 567890
        */
       telephone?: string
+    }
+    CourtVideoAppointmentNotificationDto: {
+      appointmentInstanceId: string
     }
     CreateApplicationDto: {
       /** @description Username for user who actioned this request */
@@ -1860,6 +2024,12 @@ export interface components {
       /** @description The start and end time of the generated visit session(s) */
       sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
+       * @description The type of visit order restriction, defaults to VO_PVO (Either allowed)
+       * @example PVO
+       * @enum {string}
+       */
+      visitOrderRestriction: 'VO_PVO' | 'VO' | 'PVO' | 'NONE'
+      /**
        * @description Visit Room
        * @example Visits Main Hall
        */
@@ -1960,6 +2130,8 @@ export interface components {
         | 'NOT_KNOWN'
         | 'NOT_APPLICABLE'
         | 'BY_PRISONER'
+      /** @description Visit reference */
+      bookingReference?: string
       /**
        * Format: date-time
        * @description event creat date and time
@@ -1988,6 +2160,11 @@ export interface components {
         | 'BOOKED_VISIT'
         | 'UPDATED_VISIT'
         | 'CANCELLED_VISIT'
+        | 'REQUESTED_VISIT'
+        | 'REQUESTED_VISIT_APPROVED'
+        | 'REQUESTED_VISIT_REJECTED'
+        | 'REQUESTED_VISIT_AUTO_REJECTED'
+        | 'REQUESTED_VISIT_WITHDRAWN'
         | 'NON_ASSOCIATION_EVENT'
         | 'PRISONER_RELEASED_EVENT'
         | 'PRISONER_RECEIVED_EVENT'
@@ -1999,6 +2176,7 @@ export interface components {
         | 'PERSON_RESTRICTION_UPSERTED_EVENT'
         | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
         | 'VISITOR_UNAPPROVED_EVENT'
+        | 'COURT_VIDEO_APPOINTMENT_CREATED_OR_UPDATED_EVENT'
         | 'UPDATED_NON_ASSOCIATION_VISIT_EVENT'
         | 'CANCELLED_NON_ASSOCIATION_VISIT_EVENT'
         | 'IGNORED_NON_ASSOCIATION_VISIT_NOTIFICATIONS_EVENT'
@@ -2071,6 +2249,7 @@ export interface components {
         | 'SUPERSEDED_CANCELLATION'
         | 'DETAILS_CHANGED_AFTER_BOOKING'
         | 'BOOKER_CANCELLED'
+        | 'REQUESTED_VISIT_WITHDRAWN'
       /**
        * @description Prison Id
        * @example MDI
@@ -2290,6 +2469,7 @@ export interface components {
         | 'SUPERSEDED_CANCELLATION'
         | 'DETAILS_CHANGED_AFTER_BOOKING'
         | 'BOOKER_CANCELLED'
+        | 'REQUESTED_VISIT_WITHDRAWN'
       /**
        * @description Outcome text
        * @example Because he got covid
@@ -2298,6 +2478,24 @@ export interface components {
     }
     PageVisitDto: {
       content?: components['schemas']['VisitDto'][]
+      empty?: boolean
+      first?: boolean
+      last?: boolean
+      /** Format: int32 */
+      number?: number
+      /** Format: int32 */
+      numberOfElements?: number
+      pageable?: components['schemas']['PageableObject']
+      /** Format: int32 */
+      size?: number
+      sort?: components['schemas']['SortObject']
+      /** Format: int64 */
+      totalElements?: number
+      /** Format: int32 */
+      totalPages?: number
+    }
+    PageVisitPreviewDto: {
+      content?: components['schemas']['VisitPreviewDto'][]
       empty?: boolean
       first?: boolean
       last?: boolean
@@ -2638,6 +2836,12 @@ export interface components {
       /** @description The time slot of the generated visit session(s) */
       sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
+       * @description The type of visit order restriction
+       * @example PVO
+       * @enum {string}
+       */
+      visitOrderRestriction: 'VO_PVO' | 'VO' | 'PVO' | 'NONE'
+      /**
        * @description Visit Room
        * @example A1 L3
        */
@@ -2810,6 +3014,12 @@ export interface components {
       /** @description The start and end time of the generated visit session(s) */
       sessionTimeSlot?: components['schemas']['SessionTimeSlotDto']
       /**
+       * @description The type of visit order restriction, defaults to VO_PVO (Either allowed)
+       * @example PVO
+       * @enum {string}
+       */
+      visitOrderRestriction?: 'VO_PVO' | 'VO' | 'PVO' | 'NONE'
+      /**
        * @description Visit Room
        * @example Visits Main Hall
        */
@@ -2935,6 +3145,7 @@ export interface components {
         | 'SUPERSEDED_CANCELLATION'
         | 'DETAILS_CHANGED_AFTER_BOOKING'
         | 'BOOKER_CANCELLED'
+        | 'REQUESTED_VISIT_WITHDRAWN'
       /**
        * @description Prison Id
        * @example MDI
@@ -2991,6 +3202,19 @@ export interface components {
        */
       visitStatus: 'BOOKED' | 'CANCELLED'
       /**
+       * @description Visit Sub Status
+       * @example AUTO_APPROVED
+       * @enum {string}
+       */
+      visitSubStatus:
+        | 'APPROVED'
+        | 'AUTO_APPROVED'
+        | 'REQUESTED'
+        | 'REJECTED'
+        | 'AUTO_REJECTED'
+        | 'WITHDRAWN'
+        | 'CANCELLED'
+      /**
        * @description Visit Type
        * @example SOCIAL
        * @enum {string}
@@ -3033,7 +3257,12 @@ export interface components {
        * @example VISITOR_RESTRICTION
        * @enum {string}
        */
-      attributeName: 'VISITOR_RESTRICTION' | 'VISITOR_RESTRICTION_ID' | 'VISITOR_ID' | 'PAIRED_VISIT'
+      attributeName:
+        | 'VISITOR_RESTRICTION'
+        | 'VISITOR_RESTRICTION_ID'
+        | 'VISITOR_ID'
+        | 'PAIRED_VISIT'
+        | 'APPOINTMENT_INSTANCE_ID'
       /**
        * @description Value of the attribute associated with the notification event
        * @example BAN
@@ -3070,6 +3299,8 @@ export interface components {
         | 'PERSON_RESTRICTION_UPSERTED_EVENT'
         | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
         | 'VISITOR_UNAPPROVED_EVENT'
+        | 'COURT_VIDEO_APPOINTMENT_CREATED_OR_UPDATED_EVENT'
+        | 'COURT_VIDEO_APPOINTMENT_CANCELLED_DELETED_EVENT'
     }
     VisitNotificationsDto: {
       /**
@@ -3095,6 +3326,93 @@ export interface components {
        * @example v9-d7-ed-7u
        */
       visitReference: string
+    }
+    VisitPreviewDto: {
+      /**
+       * Format: date-time
+       * @description Date the visit was first booked or migrated
+       * @example 2018-12-01T13:45:00
+       */
+      firstBookedDateTime: string
+      /**
+       * @description First name of the prisoner
+       * @example John
+       */
+      firstName: string
+      /**
+       * @description Last name of the prisoner
+       * @example Smith
+       */
+      lastName: string
+      /**
+       * @description Prisoner Number
+       * @example A1234AA
+       */
+      prisonerId: string
+      /**
+       * @description Visit reference
+       * @example dp-we-rs-te
+       */
+      visitReference: string
+      /**
+       * @description Visit Restriction
+       * @example OPEN
+       * @enum {string}
+       */
+      visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
+      /**
+       * @description Visit Status
+       * @example BOOKED
+       * @enum {string}
+       */
+      visitStatus: 'BOOKED' | 'CANCELLED'
+      /**
+       * @description Visit Sub Status
+       * @example REQUESTED
+       * @enum {string}
+       */
+      visitSubStatus:
+        | 'APPROVED'
+        | 'AUTO_APPROVED'
+        | 'REQUESTED'
+        | 'REJECTED'
+        | 'AUTO_REJECTED'
+        | 'WITHDRAWN'
+        | 'CANCELLED'
+      /** @description Timeslot for the visit */
+      visitTimeSlot: components['schemas']['SessionTimeSlotDto']
+      /**
+       * Format: int32
+       * @description Number of visitors added to the visit
+       * @example 10
+       */
+      visitorCount: number
+    }
+    VisitRequestSummaryDto: {
+      /** @description Name of the main contact for the visit request */
+      mainContact?: string
+      /** @description ID of the prisoner who is being visited */
+      prisonNumber: string
+      /** @description First name of the prisoner who is being visited */
+      prisonerFirstName: string
+      /** @description Last name of the prisoner who is being visited */
+      prisonerLastName: string
+      /**
+       * Format: date
+       * @description Date the visit request was made
+       */
+      requestedOnDate: string
+      /**
+       * Format: date
+       * @description Visit date
+       */
+      visitDate: string
+      /** @description Visit reference */
+      visitReference: string
+    }
+    VisitRequestsCountDto: {
+      /** Format: int32 */
+      count: number
     }
     /** @description Visit Session */
     VisitSessionDto: {
@@ -5749,6 +6067,59 @@ export interface operations {
       }
     }
   }
+  getVisitEventsByBookerReference: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description bookerReference
+         * @example asd-aed-vhj
+         */
+        bookerReference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description relevant visit events returned for a booker */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['EventAuditDto'][]
+        }
+      }
+      /** @description Incorrect request to get visit events by booker reference */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   getVisitBookingSessions: {
     parameters: {
       query: {
@@ -6430,6 +6801,366 @@ export interface operations {
       }
       /** @description Existing visit not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPThatCourtVideoAppointmentCancelledDeleted: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CourtVideoAppointmentNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '103 CHECKPOINT'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '302 MOVED_TEMPORARILY'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '305 USE_PROXY'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '413 REQUEST_ENTITY_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '414 REQUEST_URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+            | '420 METHOD_FAILURE'
+            | '421 DESTINATION_LOCKED'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of change */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPThatCourtVideoAppointmentCreated: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CourtVideoAppointmentNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '103 CHECKPOINT'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '302 MOVED_TEMPORARILY'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '305 USE_PROXY'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '413 REQUEST_ENTITY_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '414 REQUEST_URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+            | '420 METHOD_FAILURE'
+            | '421 DESTINATION_LOCKED'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of change */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPThatCourtVideoAppointmentUpdated: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CourtVideoAppointmentNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '103 CHECKPOINT'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '302 MOVED_TEMPORARILY'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '305 USE_PROXY'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '413 REQUEST_ENTITY_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '414 REQUEST_URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+            | '420 METHOD_FAILURE'
+            | '421 DESTINATION_LOCKED'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of change */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
+      403: {
         headers: {
           [name: string]: unknown
         }
@@ -7644,6 +8375,8 @@ export interface operations {
           | 'PERSON_RESTRICTION_UPSERTED_EVENT'
           | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
           | 'VISITOR_UNAPPROVED_EVENT'
+          | 'COURT_VIDEO_APPOINTMENT_CREATED_OR_UPDATED_EVENT'
+          | 'COURT_VIDEO_APPOINTMENT_CANCELLED_DELETED_EVENT'
         )[]
       }
       header?: never
@@ -7702,6 +8435,8 @@ export interface operations {
           | 'PERSON_RESTRICTION_UPSERTED_EVENT'
           | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
           | 'VISITOR_UNAPPROVED_EVENT'
+          | 'COURT_VIDEO_APPOINTMENT_CREATED_OR_UPDATED_EVENT'
+          | 'COURT_VIDEO_APPOINTMENT_CANCELLED_DELETED_EVENT'
         )[]
       }
       header?: never
@@ -7967,6 +8702,202 @@ export interface operations {
       }
     }
   }
+  getVisitRequestsForPrison: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description prisonCode
+         * @example CFI
+         */
+        prisonCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successfully retrieved all visit requests for a prison */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['VisitRequestSummaryDto'][]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to access this endpoint */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getVisitRequestsCountForPrison: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description prisonCode
+         * @example CFI
+         */
+        prisonCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successfully retrieved count of visit requests for prison */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['VisitRequestsCountDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to access this endpoint */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  approveVisitRequestByReference: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description visit reference */
+        reference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ApproveRejectionVisitRequestBodyDto']
+      }
+    }
+    responses: {
+      /** @description Successfully approved visit request */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['VisitDto']
+        }
+      }
+      /** @description Incorrect request to approve visit request by reference (not found or not in correct sub status) */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to access this endpoint */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  rejectVisitRequestByReference: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description visit reference */
+        reference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ApproveRejectionVisitRequestBodyDto']
+      }
+    }
+    responses: {
+      /** @description Successfully rejected visit request */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['VisitDto']
+        }
+      }
+      /** @description Incorrect request to reject visit request by reference (not found or not in correct sub status) */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to access this endpoint */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   getVisitsByFilterPageable: {
     parameters: {
       query: {
@@ -8155,7 +9086,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['PageVisitDto']
+          'application/json': components['schemas']['PageVisitPreviewDto']
         }
       }
       /** @description Incorrect request to get visits by session template */
