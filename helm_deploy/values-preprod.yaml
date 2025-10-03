@@ -19,6 +19,7 @@ generic-service:
     PRISONER_CONTACT_REGISTRY_API_URL: "https://prisoner-contact-registry-preprod.prison.service.justice.gov.uk"
     PRISON_REGISTER_API_URL: "https://prison-register-preprod.hmpps.service.justice.gov.uk"
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler-preprod.prison.service.justice.gov.uk"
+    CONTACTS_URL: "https://contacts-preprod.hmpps.service.justice.gov.uk"
     ENVIRONMENT_NAME: PRE-PRODUCTION
 
 generic-prometheus-alerts:
