@@ -48,6 +48,13 @@
           classes: "govuk-button--secondary",
           preventDoubleClick: true
         }) }}
+
+        {{ govukButton({
+          text: "View social contacts",
+          href:  contactsUrl + "/prisoner/" + prisoner.prisonerId + "/contacts/list?relationshipStatus=ACTIVE_AND_INACTIVE&relationshipType=S",
+          preventDoubleClick: true
+        }) }}
+
       </form>
     </div>
 
