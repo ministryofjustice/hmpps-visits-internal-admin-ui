@@ -109,4 +109,16 @@ export default {
       },
     })
   },
+
+  stubBookerRegistryPing: () => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/bookerRegistry/health/ping',
+      },
+      response: {
+        status: 200,
+      },
+    })
+  },
 }

@@ -4,8 +4,10 @@ context('Healthcheck', () => {
       cy.task('reset')
       cy.task('stubAuthPing')
       cy.task('stubManageUsersPing')
+      cy.task('stubBookerRegistryPing')
       cy.task('stubTokenVerificationPing')
       cy.task('stubPrisonRegisterPing')
+      cy.task('stubPrisonerContactRegistryPing')
       cy.task('stubVisitSchedulerPing')
     })
 
