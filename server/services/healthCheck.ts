@@ -45,7 +45,13 @@ function gatherCheckInfo(aggregateStatus: Record<string, unknown>, currentStatus
 const apiChecks = [
   service('hmppsAuth', `${config.apis.hmppsAuth.url}/health/ping`, config.apis.hmppsAuth.agent),
   service('manageUsersApi', `${config.apis.manageUsersApi.url}/health/ping`, config.apis.manageUsersApi.agent),
+  service('bookerRegistry', `${config.apis.bookerRegistry.url}/health/ping`, config.apis.bookerRegistry.agent),
   service('prisonRegister', `${config.apis.prisonRegister.url}/health/ping`, config.apis.prisonRegister.agent),
+  service(
+    'prisonerContactRegistry',
+    `${config.apis.prisonerContactRegistry.url}/health/ping`,
+    config.apis.prisonerContactRegistry.agent,
+  ),
   service('visitScheduler', `${config.apis.visitScheduler.url}/health/ping`, config.apis.visitScheduler.agent),
   ...(config.apis.tokenVerification.enabled
     ? [
