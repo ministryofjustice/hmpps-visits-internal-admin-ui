@@ -37,7 +37,7 @@ describe('visitAllocationApiClient', () => {
   })
 
   describe('getNegativeBalanceCount', () => {
-    it('should get negative balances for given prison', async () => {
+    it('should get negative balance count for given prison', async () => {
       const prisonNegativeBalanceCount = TestData.prisonNegativeBalanceCount()
 
       fakeVisitAllocationApi
