@@ -12,9 +12,9 @@ function get<T>(name: string, fallback: T, options = { requireInProduction: fals
 
 function translateEnvironment(gitHubEnvironmentName: string = ''): string {
   switch (gitHubEnvironmentName) {
-    case 'PREPROD':
+    case 'preprod':
       return 'PRE-PRODUCTION'
-    case 'PROD':
+    case 'prod':
       return ''
     default:
       return gitHubEnvironmentName.toUpperCase()
