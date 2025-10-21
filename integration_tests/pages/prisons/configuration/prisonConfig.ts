@@ -72,6 +72,11 @@ export default class PrisonConfigPage extends Page {
     cy.get('[data-test="visitor-config-edit"]').click()
   }
 
+  // Visit allocation balances
+  getNegativeBalanceCount = (): PageElement => cy.get('[data-test=negative-balance-count]')
+
+  resetNegativeBalancesButton = (): PageElement => cy.get('[data-test="visit-allocation-reset"]')
+
   // Status
   activatePrison = (): void => {
     cy.get('[data-test="prison-change-status"]').contains('Activate').click()

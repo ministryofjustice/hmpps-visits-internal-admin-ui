@@ -4,7 +4,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
-import { createMockPrisonService, createMockSessionTemplateService } from '../../../services/testutils/mocks'
+import { createMockPrisonService, createMockVisitAllocationService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import { UserClientDto } from '../../../data/visitSchedulerApiTypes'
 import { FlashErrorMessage, MoJAlert } from '../../../@types/visits-admin'
@@ -13,11 +13,12 @@ let app: Express
 let flashData: FlashData
 
 const prisonService = createMockPrisonService()
-const sessionTemplateService = createMockSessionTemplateService()
+const visitAllocationService = createMockVisitAllocationService()
 
 const activePrison = TestData.prison()
 const inactivePrison = TestData.prison({ active: false })
 const prisonContactDetails = TestData.prisonContactDetails()
+const negativeBalanceCount = TestData.prisonNegativeBalanceCount()
 
 beforeEach(() => {
   flashData = {}
@@ -26,7 +27,9 @@ beforeEach(() => {
   prisonService.getPrison.mockResolvedValue(activePrison)
   prisonService.getPrisonContactDetails.mockResolvedValue(prisonContactDetails)
 
-  app = appWithAllRoutes({ services: { prisonService, sessionTemplateService } })
+  visitAllocationService.getNegativeBalanceCount.mockResolvedValue(negativeBalanceCount)
+
+  app = appWithAllRoutes({ services: { prisonService, visitAllocationService } })
 })
 
 afterEach(() => {
@@ -62,7 +65,8 @@ describe('Prison configuration', () => {
             expect($('h2').eq(1).text().trim()).toContain('Contact details')
             expect($('h2').eq(2).text().trim()).toContain('Enabled services')
             expect($('h2').eq(3).text().trim()).toContain('Visitor configuration')
-            expect($('h2').eq(4).text().trim()).toContain('Prison status')
+            expect($('h2').eq(4).text().trim()).toContain('Visit allocation balances')
+            expect($('h2').eq(5).text().trim()).toContain('Prison status')
           })
       })
 
@@ -316,6 +320,20 @@ describe('Prison configuration', () => {
           expect(flashProvider).toHaveBeenCalledWith('errors', [error])
           expect(prisonService.activatePrisonClientType).not.toHaveBeenCalled()
           expect(prisonService.deactivatePrisonClientType).toHaveBeenCalledWith('user1', 'HEI', 'PUBLIC')
+        })
+    })
+  })
+
+  describe('Visit allocation balances', () => {
+    it('should render negative visit allocation balance count', () => {
+      return request(app)
+        .get('/prisons/HEI/configuration')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=negative-balance-count]').text()).toBe('3 prisoners')
+          expect($('[data-test=visit-allocation-reset]').text().trim()).toBe('Reset negative balances')
+          expect($('[data-test=visit-allocation-reset]').attr('href')).toBe('/prisons/HEI/allocations/reset/confirm')
         })
     })
   })
