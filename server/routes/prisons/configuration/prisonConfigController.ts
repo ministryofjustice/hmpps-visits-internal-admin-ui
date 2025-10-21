@@ -1,28 +1,33 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
-import { PrisonService } from '../../../services'
+import { PrisonService, VisitAllocationService } from '../../../services'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
 import { UserClientType } from '../../../data/visitSchedulerApiTypes'
 
 export default class PrisonConfigController {
   private prisonUserClientTypes = ['PUBLIC', 'STAFF'] as const
 
-  public constructor(private readonly prisonService: PrisonService) {}
+  public constructor(
+    private readonly prisonService: PrisonService,
+    private readonly visitAllocationService: VisitAllocationService,
+  ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
       const { prisonId } = req.params
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const { username } = res.locals.user
 
-      const prisonContactDetails = await this.prisonService.getPrisonContactDetails(
-        res.locals.user.username,
-        prison.code,
-      )
+      const [prison, prisonContactDetails, negativeBalanceCount] = await Promise.all([
+        this.prisonService.getPrison(res.locals.user.username, prisonId),
+        this.prisonService.getPrisonContactDetails(username, prisonId),
+        this.visitAllocationService.getNegativeBalanceCount({ username, prisonCode: prisonId }),
+      ])
 
       return res.render('pages/prisons/configuration/config', {
         errors: req.flash('errors'),
         prison,
         prisonContactDetails,
+        negativeBalanceCount: negativeBalanceCount.count,
         messages: req.flash('messages'),
       })
     }

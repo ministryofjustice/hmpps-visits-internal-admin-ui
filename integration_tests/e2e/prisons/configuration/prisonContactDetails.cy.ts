@@ -11,6 +11,8 @@ context('Prison configuration - contact details', () => {
     cy.task('stubPrisonNames')
     cy.task('stubGetAllPrisons')
     cy.signIn()
+
+    cy.task('stubGetNegativeBalanceCount', {})
   })
 
   describe('Prison contact details', () => {

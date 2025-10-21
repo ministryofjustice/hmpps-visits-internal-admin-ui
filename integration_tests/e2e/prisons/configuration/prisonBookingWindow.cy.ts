@@ -15,6 +15,7 @@ context('Prison configuration - booking window', () => {
     cy.signIn()
 
     cy.task('stubGetPrisonContactDetails', { prisonCode })
+    cy.task('stubGetNegativeBalanceCount', {})
   })
 
   const prisonDto = TestData.prisonDto()

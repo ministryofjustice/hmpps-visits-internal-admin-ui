@@ -11,6 +11,8 @@ context('Prison configuration - visitor config', () => {
     cy.task('stubPrisonNames')
     cy.task('stubGetAllPrisons')
     cy.signIn()
+
+    cy.task('stubGetNegativeBalanceCount', {})
   })
 
   describe('Prison visitor configuration', () => {

@@ -19,6 +19,7 @@ context('Prison configuration - prison status', () => {
     cy.signIn()
 
     cy.task('stubGetPrisonContactDetails', { prisonCode })
+    cy.task('stubGetNegativeBalanceCount', {})
   })
 
   const inactivePrison = TestData.prisonDto({ active: false })

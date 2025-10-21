@@ -41,4 +41,15 @@ export default abstract class Page {
   getLocationGroupsTab = (): PageElement => cy.get('[data-test="tab-location-groups"]')
 
   getConfigTab = (): PageElement => cy.get('[data-test="tab-config"]')
+
+  protected clickDisabledOnSubmitButton = (dataTestName: string): void => {
+    cy.get(`[data-test=${dataTestName}]`).within(button => {
+      // set a one-off event listener for window unload to check
+      // submit booking button is disabled after it is clicked
+      cy.once('window:before:unload', () => {
+        expect(button.attr('disabled')).to.eq('disabled')
+      })
+      cy.wrap(button).click()
+    })
+  }
 }
