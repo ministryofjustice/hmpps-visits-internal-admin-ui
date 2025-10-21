@@ -18,6 +18,10 @@ APIS='{
       "url": "https://prison-register-dev.hmpps.service.justice.gov.uk/v3/api-docs"
     },
     {
+      "api": "visit-allocation-api",
+      "url": "https://hmpps-visit-allocation-api-dev.prison.service.justice.gov.uk/v3/api-docs"
+    },
+    {
       "api": "visit-scheduler-api",
       "url": "https://visit-scheduler-dev.prison.service.justice.gov.uk/v3/api-docs"
     }

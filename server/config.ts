@@ -109,6 +109,15 @@ export default {
       },
       agent: new AgentConfig(Number(get('PRISON_REGISTER_API_TIMEOUT_RESPONSE', 10000))),
     },
+    // 30 second timeouts because bulk resetting VO balances can be slow
+    visitAllocation: {
+      url: get('VISIT_ALLOCATION_API_URL', 'http://localhost:8080', requiredInProduction),
+      timeout: {
+        response: Number(get('VISIT_ALLOCATION_API_TIMEOUT_RESPONSE', 30000)),
+        deadline: Number(get('VISIT_ALLOCATION_API_TIMEOUT_DEADLINE', 30000)),
+      },
+      agent: new AgentConfig(Number(get('VISIT_ALLOCATION_API_TIMEOUT_RESPONSE', 30000))),
+    },
     visitScheduler: {
       url: get('VISIT_SCHEDULER_API_URL', 'http://localhost:8080', requiredInProduction),
       timeout: {

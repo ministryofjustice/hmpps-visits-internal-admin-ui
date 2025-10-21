@@ -8,6 +8,7 @@ import {
   PrisonService,
   SessionTemplateService,
   UserService,
+  VisitAllocationService,
   VisitService,
 } from '..'
 
@@ -35,5 +36,8 @@ export const createMockSessionTemplateService = () =>
   new SessionTemplateService(null, null) as jest.Mocked<SessionTemplateService>
 
 export const createMockUserService = () => new UserService(null) as jest.Mocked<UserService>
+
+export const createMockVisitAllocationService = () =>
+  new VisitAllocationService(null, null) as jest.Mocked<VisitAllocationService>
 
 export const createMockVisitService = () => new VisitService(null, null) as jest.Mocked<VisitService>

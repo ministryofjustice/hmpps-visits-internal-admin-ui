@@ -2,6 +2,7 @@ import { Prison, VisitStatsSummary } from '../../@types/visits-admin'
 import { BookerDto, PermittedPrisonerDto } from '../../data/bookerRegistryApiTypes'
 import { ContactDto } from '../../data/prisonerContactRegistryApiTypes'
 import { PrisonContactDetails, PrisonName } from '../../data/prisonRegisterApiTypes'
+import { PrisonNegativeBalanceCountDto } from '../../data/visitAllocationApiTypes'
 import {
   CategoryGroup,
   PrisonDto,
@@ -419,4 +420,9 @@ export default class TestData {
     excludeDate,
     actionedBy,
   })
+
+  static prisonNegativeBalanceCount = ({
+    prisonCode = 'HEI',
+    count = 3,
+  }: Partial<PrisonNegativeBalanceCountDto> = {}): PrisonNegativeBalanceCountDto => ({ prisonCode, count })
 }

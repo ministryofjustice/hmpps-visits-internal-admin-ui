@@ -52,6 +52,7 @@ const apiChecks = [
     `${config.apis.prisonerContactRegistry.url}/health/ping`,
     config.apis.prisonerContactRegistry.agent,
   ),
+  service('visitAllocation', `${config.apis.visitAllocation.url}/health/ping`, config.apis.visitAllocation.agent),
   service('visitScheduler', `${config.apis.visitScheduler.url}/health/ping`, config.apis.visitScheduler.agent),
   ...(config.apis.tokenVerification.enabled
     ? [

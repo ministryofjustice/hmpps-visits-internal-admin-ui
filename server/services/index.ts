@@ -9,6 +9,7 @@ import VisitService from './visitService'
 import BookerService from './bookerService'
 import PrisonerContactsService from './prisonerContactsService'
 import ExcludeDateService from './excludeDateService'
+import VisitAllocationService from './visitAllocationService'
 
 export const services = () => {
   const {
@@ -18,6 +19,7 @@ export const services = () => {
     bookerRegistryApiClientBuilder,
     prisonerContactRegistryApiClientBuilder,
     prisonRegisterApiClientBuilder,
+    visitAllocationApiClientBuilder,
     visitSchedulerApiClientBuilder,
   } = dataAccess()
 
@@ -43,6 +45,8 @@ export const services = () => {
 
   const userService = new UserService(manageUsersApiClient)
 
+  const visitAllocationService = new VisitAllocationService(visitAllocationApiClientBuilder, hmppsAuthClient)
+
   const visitService = new VisitService(visitSchedulerApiClientBuilder, hmppsAuthClient)
 
   return {
@@ -56,6 +60,7 @@ export const services = () => {
     prisonService,
     sessionTemplateService,
     userService,
+    visitAllocationService,
     visitService,
   }
 }
@@ -72,5 +77,6 @@ export {
   PrisonService,
   SessionTemplateService,
   UserService,
+  VisitAllocationService,
   VisitService,
 }
