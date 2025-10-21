@@ -10,6 +10,17 @@ function get<T>(name: string, fallback: T, options = { requireInProduction: fals
   throw new Error(`Missing env var ${name}`)
 }
 
+function translateEnvironment(gitHubEnvironmentName: string = ''): string {
+  switch (gitHubEnvironmentName) {
+    case 'PREPROD':
+      return 'PRE-PRODUCTION'
+    case 'PROD':
+      return ''
+    default:
+      return gitHubEnvironmentName.toUpperCase()
+  }
+}
+
 const requiredInProduction = { requireInProduction: true }
 
 export class AgentConfig {
@@ -128,5 +139,5 @@ export default {
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
-  environmentName: get('ENVIRONMENT_NAME', ''),
+  environmentName: translateEnvironment(get('ENVIRONMENT_NAME', '')),
 }

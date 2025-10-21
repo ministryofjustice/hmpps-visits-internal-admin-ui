@@ -21,7 +21,7 @@ generic-service:
     VISIT_ALLOCATION_API_URL: "https://hmpps-visit-allocation-api-preprod.prison.service.justice.gov.uk"
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler-preprod.prison.service.justice.gov.uk"
     CONTACTS_URL: "https://contacts-preprod.hmpps.service.justice.gov.uk"
-    ENVIRONMENT_NAME: PRE-PRODUCTION
+    ENVIRONMENT_NAME: preprod
 
 generic-prometheus-alerts:
   alertSeverity: visits-alerts-nonprod
