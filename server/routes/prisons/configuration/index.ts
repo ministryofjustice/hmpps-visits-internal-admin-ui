@@ -53,7 +53,7 @@ export default function routes(services: Services): Router {
   )
 
   router.get('/prisons/:prisonId/allocations/reset/confirm', visitAllocationController.view())
-  router.post('/prisons/:prisonId/allocations/reset', visitAllocationController.resetBalances())
+  router.post('/prisons/:prisonId/allocations/reset/confirm', visitAllocationController.resetBalances())
 
   router.post('/prisons/:prisonId/activate', prisonConfig.activate())
   router.post('/prisons/:prisonId/deactivate', prisonConfig.deactivate())

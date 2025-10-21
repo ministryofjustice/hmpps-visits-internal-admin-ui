@@ -24,7 +24,7 @@
       <p>You can reset any negative balances to zero for all prisoners at {{ prison.name }}.</p>
       <p><strong>This action cannot be undone.</strong></p>
 
-      <form action="/prisons/{{ prison.code }}/allocations/reset" data-test="visit-allocation-reset-form" method="POST" class="disable-button-on-submit" novalidate>
+      <form action="/prisons/{{ prison.code }}/allocations/reset/confirm" data-test="visit-allocation-reset-form" method="POST" class="disable-button-on-submit" novalidate>
 
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
