@@ -10,6 +10,8 @@ context('Prison configuration - enabled services', () => {
     cy.task('stubPrisonNames')
     cy.task('stubGetAllPrisons')
     cy.signIn()
+
+    cy.task('stubGetNegativeBalanceCount', {})
   })
 
   describe('Prison enabled services configuration', () => {

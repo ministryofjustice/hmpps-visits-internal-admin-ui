@@ -1,0 +1,46 @@
+{% extends "partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+
+{% set pageHeaderTitle = "Reset negative visit allocation balances" %}
+{% set pageTitle = applicationName + pageHeaderTitle %}
+{% set activePrimaryNav = "prisons" %}
+{% set backLinkHref = "/prisons/" + prison.code + "/configuration" %}
+
+{% block content %}
+  {{ super() }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prison.name }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+      <p>There {{ "is" | pluralise(negativeBalanceCount, "are") }}
+        <span data-test="negative-balance-count"><strong>{{ negativeBalanceCount }} {{ "prisoner" | pluralise(negativeBalanceCount) }}</strong></span>
+        with a negative visit allocation balance. This includes both VOs and PVOs.
+      </p>
+      <p>You can reset any negative balances to zero for all prisoners at {{ prison.name }}.</p>
+      <p><strong>This action cannot be undone.</strong></p>
+
+      <form action="/prisons/{{ prison.code }}/allocations/reset" data-test="visit-allocation-reset-form" method="POST" class="disable-button-on-submit" novalidate>
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukButton({
+          text: "Reset negative balances",
+          classes: "govuk-!-margin-top-4 govuk-button--warning",
+          preventDoubleClick: true,
+          attributes: { "data-test": "visit-allocation-reset" }
+        })}}
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block pageScripts %}
+<script src="/assets/disableButtonOnSubmit.js"></script>
+{% endblock %}

@@ -215,6 +215,26 @@
         attributes: { "data-test": "visitor-config-edit" }
       })}}
 
+
+      <hr class="govuk-section-break govuk-section-break--xl">
+      <h2 class="govuk-heading-m">Visit allocation balances</h2>
+      <p>There {{ "is" | pluralise(negativeBalanceCount, "are") }}
+        <span data-test="negative-balance-count"><strong>{{ negativeBalanceCount }} {{ "prisoner" | pluralise(negativeBalanceCount) }}</strong></span>
+        with a negative visit allocation balance. This includes both VOs and PVOs.
+      </p>
+      
+      {% if negativeBalanceCount > 0 %}
+        <p>You can reset any negative balances to zero for all prisoners at this prison.</p>
+
+        {{ govukButton({
+          text: "Reset negative balances",
+          href: "/prisons/" + prison.code + "/allocations/reset/confirm",
+          classes: "govuk-button--warning",
+          preventDoubleClick: true,
+          attributes: { "data-test": "visit-allocation-reset" }
+        })}}
+      {% endif %}
+
       <hr class="govuk-section-break govuk-section-break--xl">
       <h2 class="govuk-heading-m">Prison status</h2>
 
