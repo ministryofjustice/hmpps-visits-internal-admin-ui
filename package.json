@@ -32,7 +32,7 @@
     "npm": "^11"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^6.0.0",
+    "@ministryofjustice/frontend": "^7.1.0",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
     "bunyan": "^1.8.15",
