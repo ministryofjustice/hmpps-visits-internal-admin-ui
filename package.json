@@ -32,7 +32,7 @@
     "npm": "^11"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^6.0.0",
+    "@ministryofjustice/frontend": "^7.1.0",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
     "bunyan": "^1.8.15",
@@ -76,7 +76,7 @@
     "@types/passport-oauth2": "^1.8.0",
     "@types/superagent": "^8.1.9",
     "@types/supertest": "^6.0.3",
-    "@types/validator": "^13.15.3",
+    "@types/validator": "^13.15.4",
     "audit-ci": "^7.1.0",
     "cheerio": "^1.1.2",
     "concurrently": "^9.2.1",
