@@ -68,6 +68,7 @@ export default {
   apis: {
     hmppsAuth: {
       url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
+      healthPath: '/health/ping',
       externalUrl: get('HMPPS_AUTH_EXTERNAL_URL', get('HMPPS_AUTH_URL', 'http://localhost:9090/auth')),
       timeout: {
         response: Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000)),
@@ -81,6 +82,7 @@ export default {
     },
     manageUsersApi: {
       url: get('MANAGE_USERS_API_URL', 'http://localhost:9091', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('MANAGE_USERS_API_TIMEOUT_RESPONSE', 10000)),
         deadline: Number(get('MANAGE_USERS_API_TIMEOUT_DEADLINE', 10000)),
@@ -89,6 +91,7 @@ export default {
     },
     tokenVerification: {
       url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
         deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 5000)),
@@ -98,6 +101,7 @@ export default {
     },
     bookerRegistry: {
       url: get('BOOKER_REGISTRY_API_URL', 'http://localhost:8080', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('BOOKER_REGISTRY_API_TIMEOUT_RESPONSE', 10000)),
         deadline: Number(get('BOOKER_REGISTRY_API_TIMEOUT_DEADLINE', 10000)),
@@ -106,6 +110,7 @@ export default {
     },
     prisonerContactRegistry: {
       url: get('PRISONER_CONTACT_REGISTRY_API_URL', 'http://localhost:8080', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('PRISONER_CONTACT_REGISTRY_API_TIMEOUT_RESPONSE', 10000)),
         deadline: Number(get('PRISONER_CONTACT_REGISTRY_API_TIMEOUT_DEADLINE', 10000)),
@@ -114,6 +119,7 @@ export default {
     },
     prisonRegister: {
       url: get('PRISON_REGISTER_API_URL', 'http://localhost:8080', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('PRISON_REGISTER_API_TIMEOUT_RESPONSE', 10000)),
         deadline: Number(get('PRISON_REGISTER_API_TIMEOUT_DEADLINE', 10000)),
@@ -123,6 +129,7 @@ export default {
     // 30 second timeouts because bulk resetting VO balances can be slow
     visitAllocation: {
       url: get('VISIT_ALLOCATION_API_URL', 'http://localhost:8080', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('VISIT_ALLOCATION_API_TIMEOUT_RESPONSE', 30000)),
         deadline: Number(get('VISIT_ALLOCATION_API_TIMEOUT_DEADLINE', 30000)),
@@ -131,6 +138,7 @@ export default {
     },
     visitScheduler: {
       url: get('VISIT_SCHEDULER_API_URL', 'http://localhost:8080', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('VISIT_SCHEDULER_API_TIMEOUT_RESPONSE', 10000)),
         deadline: Number(get('VISIT_SCHEDULER_API_TIMEOUT_DEADLINE', 10000)),
