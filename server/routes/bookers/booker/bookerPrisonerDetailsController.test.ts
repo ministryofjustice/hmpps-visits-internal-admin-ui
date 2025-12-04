@@ -2,18 +2,14 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
-import {
-  createMockBookerService,
-  createMockPrisonerContactsService,
-  createMockPrisonService,
-} from '../../../services/testutils/mocks'
+import { createMockBookerService, createMockPrisonService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
+import config from '../../../config'
 
 let app: Express
 let flashData: FlashData
 
 const bookerService = createMockBookerService()
-const prisonerContactsService = createMockPrisonerContactsService()
 const prisonService = createMockPrisonService()
 
 beforeEach(() => {
@@ -22,7 +18,7 @@ beforeEach(() => {
 
   prisonService.getPrisonName.mockResolvedValue('Hewell (HMP)')
 
-  app = appWithAllRoutes({ services: { bookerService, prisonerContactsService, prisonService } })
+  app = appWithAllRoutes({ services: { bookerService, prisonService } })
 })
 
 afterEach(() => {
@@ -31,15 +27,11 @@ afterEach(() => {
 
 describe('Booker prisoner details', () => {
   describe('GET /bookers/booker/{:reference}/prisoner/{:prisonerId}', () => {
-    const contact = TestData.contact()
-    const prisoner = TestData.permittedPrisonerDto({
-      permittedVisitors: [{ visitorId: contact.personId, active: true }],
-    })
+    const prisoner = TestData.permittedPrisonerDto()
     const booker = TestData.bookerDto({ permittedPrisoners: [prisoner] })
 
     beforeEach(() => {
       bookerService.getBookerByReference.mockResolvedValue(booker)
-      prisonerContactsService.getSocialContacts.mockResolvedValue([contact])
     })
 
     it('should render the prisoner details page', () => {
@@ -64,18 +56,13 @@ describe('Booker prisoner details', () => {
           expect($('[data-test=registered-prison-name]').text()).toBe('Hewell (HMP)')
           expect($('[data-test=prisoner-status]').text().trim()).toBe('Active')
 
-          expect($('[data-test=visitor-name-1]').text()).toBe(`${contact.firstName} ${contact.lastName}`)
-          expect($('[data-test=visitor-id-1]').text()).toBe(contact.personId.toString())
-          expect($('[data-test=visitor-dob-1]').text()).toContain('28 July 1986')
-          expect($('[data-test=visitor-approved-1]').text()).toBe('Yes')
-          expect($('[data-test=visitor-status-1]').text().trim()).toBe('Active')
+          expect($('[data-test=linked-visitor-count]').text().trim()).toBe('1')
+
+          expect($('[data-test=staff-service-booker-link]').attr('href')).toBe(
+            `${config.staffServiceUrl}/manage-bookers/${booker.reference}/booker-details`,
+          )
 
           expect(bookerService.getBookerByReference).toHaveBeenCalledWith('user1', booker.reference)
-          expect(prisonerContactsService.getSocialContacts).toHaveBeenCalledWith({
-            username: 'user1',
-            prisonerId: prisoner.prisonerId,
-            approvedOnly: false,
-          })
           expect(prisonService.getPrisonName).toHaveBeenCalledWith('user1', prisoner.prisonCode)
         })
     })

@@ -26,10 +26,7 @@ afterEach(() => {
 
 describe('Booker details', () => {
   describe('GET /bookers/booker/{:reference}', () => {
-    const contact = TestData.contact()
-    const prisoner = TestData.permittedPrisonerDto({
-      permittedVisitors: [{ visitorId: contact.personId, active: true }],
-    })
+    const prisoner = TestData.permittedPrisonerDto()
     const booker = TestData.bookerDto({ permittedPrisoners: [prisoner] })
 
     beforeEach(() => {
@@ -57,7 +54,7 @@ describe('Booker details', () => {
           expect($('[data-test=prison-number-1]').text()).toBe(prisoner.prisonerId)
           expect($('[data-test=prison-name-1]').text()).toBe('Hewell (HMP)')
           expect($('[data-test=prisoner-status-1]').text().trim()).toBe('Active')
-          expect($('[data-test=prisoner-visitors-1]').text().trim()).toBe('1 active')
+          expect($('[data-test=prisoner-visitors-1]').text().trim()).toBe('1')
 
           expect(bookerService.getBookerByReference).toHaveBeenCalledWith('user1', booker.reference)
           expect(prisonService.getPrisonNames).toHaveBeenCalledWith('user1')

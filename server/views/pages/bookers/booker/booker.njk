@@ -28,7 +28,7 @@
       attributes: { "data-test": "prisoner-status-" + loop.index }
     },
     {
-      html: activeOrInactiveCount(prisoner.permittedVisitors),
+      text: prisoner.permittedVisitors | length,
       attributes: { "data-test": "prisoner-visitors-" + loop.index }
     }
     ]), prisonerRows) %}
@@ -64,7 +64,7 @@
           { text: "Prison number" },
           { text: "Prison" },
           { text: "Status" },
-          { text: "Visitors" }
+          { text: "Linked visitors" }
         ],
         rows: prisonerRows
       }) }}

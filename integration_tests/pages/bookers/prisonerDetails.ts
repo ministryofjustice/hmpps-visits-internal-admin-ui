@@ -12,10 +12,4 @@ export default class PrisonerDetailsPage extends Page {
   addPrisoner = (): void => {
     cy.get('[data-test="add-prisoner"]').click()
   }
-
-  getVisitorName = (index: number): PageElement => cy.get(`[data-test="visitor-name-${index.toString()}"]`)
-
-  addVisitor = (): void => {
-    cy.get('[data-test="add-visitor"]').click()
-  }
 }

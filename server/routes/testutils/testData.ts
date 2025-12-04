@@ -1,6 +1,5 @@
 import { Prison, VisitStatsSummary } from '../../@types/visits-admin'
 import { BookerDto, PermittedPrisonerDto } from '../../data/bookerRegistryApiTypes'
-import { ContactDto } from '../../data/prisonerContactRegistryApiTypes'
 import { PrisonContactDetails, PrisonName } from '../../data/prisonRegisterApiTypes'
 import { PrisonNegativeBalanceCountDto } from '../../data/visitAllocationApiTypes'
 import {
@@ -390,28 +389,13 @@ export default class TestData {
     prisonerId = 'A1234BC',
     active = true,
     prisonCode = 'HEI',
-    permittedVisitors = [],
+    permittedVisitors = [{ visitorId: 1234 }],
   }: Partial<PermittedPrisonerDto> = {}): PermittedPrisonerDto => ({
     prisonerId,
     active,
     prisonCode,
     permittedVisitors,
   })
-
-  static contact = ({
-    personId = 1234,
-    firstName = 'Jeanette',
-    lastName = 'Smith',
-    dateOfBirth = '1986-07-28',
-    approvedVisitor = true,
-  }: Partial<ContactDto> = {}): ContactDto =>
-    ({
-      personId,
-      firstName,
-      lastName,
-      dateOfBirth,
-      approvedVisitor,
-    }) as ContactDto
 
   static excludeDateDto = ({
     excludeDate = '2024-12-12',

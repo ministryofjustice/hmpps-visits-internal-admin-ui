@@ -16,11 +16,10 @@ generic-service:
     MANAGE_USERS_API_URL: "https://manage-users-api-dev.hmpps.service.justice.gov.uk"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-dev.prison.service.justice.gov.uk"
     BOOKER_REGISTRY_API_URL: "https://hmpps-prison-visit-booker-registry-dev.prison.service.justice.gov.uk"
-    PRISONER_CONTACT_REGISTRY_API_URL: "https://prisoner-contact-registry-dev.prison.service.justice.gov.uk"
     PRISON_REGISTER_API_URL: "https://prison-register-dev.hmpps.service.justice.gov.uk"
     VISIT_ALLOCATION_API_URL: "https://hmpps-visit-allocation-api-dev.prison.service.justice.gov.uk"
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler-dev.prison.service.justice.gov.uk"
-    CONTACTS_URL: "https://contacts-dev.hmpps.service.justice.gov.uk"
+    STAFF_SERVICE_URL: "https://manage-prison-visits-dev.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: dev
 
 generic-prometheus-alerts:
