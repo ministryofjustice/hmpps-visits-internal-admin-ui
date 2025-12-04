@@ -104,16 +104,13 @@ describe('Search for a booker', () => {
       const booker2 = TestData.bookerDto({
         reference: 'bbbb-cccc-dddd',
         email,
-        permittedPrisoners: [TestData.permittedPrisonerDto({ active: true })],
+        permittedPrisoners: [TestData.permittedPrisonerDto()],
         createdTimestamp: '2025-06-02T09:00:00',
       })
       const booker3 = TestData.bookerDto({
         reference: 'cccc-dddd-eee',
         email,
-        permittedPrisoners: [
-          TestData.permittedPrisonerDto({ active: true }),
-          TestData.permittedPrisonerDto({ active: false }),
-        ],
+        permittedPrisoners: [TestData.permittedPrisonerDto(), TestData.permittedPrisonerDto()],
         createdTimestamp: '2025-06-03T09:00:00',
       })
       bookerService.getBookersByEmailOrReference.mockResolvedValue([booker1, booker2, booker3])
@@ -133,8 +130,7 @@ describe('Search for a booker', () => {
           expect($('[data-test=booker-reference-1] a').attr('href')).toBe(
             `/bookers/booker/${booker3.reference}?from=search-results`,
           )
-          expect($('[data-test=booker-prisoners-1] .govuk-tag').eq(0).text().trim()).toBe('1 active')
-          expect($('[data-test=booker-prisoners-1] .govuk-tag').eq(1).text().trim()).toBe('1 inactive')
+          expect($('[data-test=booker-prisoners-1]').eq(0).text().trim()).toBe('2')
           expect($('[data-test=booker-created-date-1]').text()).toBe('3 June 2025')
 
           expect($('[data-test=booker-email-2]').text()).toBe(email)
@@ -142,7 +138,7 @@ describe('Search for a booker', () => {
           expect($('[data-test=booker-reference-2] a').attr('href')).toBe(
             `/bookers/booker/${booker2.reference}?from=search-results`,
           )
-          expect($('[data-test=booker-prisoners-2] .govuk-tag').eq(0).text().trim()).toBe('1 active')
+          expect($('[data-test=booker-prisoners-2]').eq(0).text().trim()).toBe('1')
           expect($('[data-test=booker-created-date-2]').text()).toBe('2 June 2025')
 
           expect($('[data-test=booker-email-3]').text()).toBe(email)

@@ -56,7 +56,6 @@ context('Booker management', () => {
     bookerDetailsPage.checkOnPage()
     bookerDetailsPage.getPrisonerId(1).contains(prisoner.prisonerId)
     bookerDetailsPage.getPrisonName(1).contains('Hewell (HMP)')
-    bookerDetailsPage.getPrisonerStatus(1).contains('Active')
     bookerDetailsPage.getPrisonerVisitors(1).contains('0')
 
     // Prisoner details page

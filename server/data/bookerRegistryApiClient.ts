@@ -33,7 +33,7 @@ export default class BookerRegistryApiClient {
   async addPrisoner(bookerReference: string, prisonerId: string, prisonCode: string): Promise<PermittedPrisonerDto> {
     return this.restClient.put({
       path: `/public/booker/config/${bookerReference}/prisoner`,
-      data: <CreatePermittedPrisonerDto>{ prisonerId, active: true, prisonCode },
+      data: <CreatePermittedPrisonerDto>{ prisonerId, prisonCode },
     })
   }
 
@@ -42,13 +42,5 @@ export default class BookerRegistryApiClient {
       path: `/public/booker/config/${bookerReference}/prisoner/${prisonerId}/prison`,
       data: <UpdateRegisteredPrisonersPrisonDto>{ prisonId: newPrisonCode },
     })
-  }
-
-  async activatePrisoner(bookerReference: string, prisonerId: string): Promise<void> {
-    await this.restClient.put({ path: `/public/booker/config/${bookerReference}/prisoner/${prisonerId}/activate` })
-  }
-
-  async deactivatePrisoner(bookerReference: string, prisonerId: string): Promise<void> {
-    await this.restClient.put({ path: `/public/booker/config/${bookerReference}/prisoner/${prisonerId}/deactivate` })
   }
 }

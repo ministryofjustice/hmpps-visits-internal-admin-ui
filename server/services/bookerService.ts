@@ -69,20 +69,4 @@ export default class BookerService {
       `Prisoner ${prisonerId} prison changed to ${newPrisonCode} for booker ${bookerReference} by ${username}`,
     )
   }
-
-  async activatePrisoner(username: string, bookerReference: string, prisonerId: string): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
-
-    await bookerRegistryApiClient.activatePrisoner(bookerReference, prisonerId)
-    logger.info(`Prisoner ${prisonerId} activated for booker ${bookerReference} by ${username}`)
-  }
-
-  async deactivatePrisoner(username: string, bookerReference: string, prisonerId: string): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
-
-    await bookerRegistryApiClient.deactivatePrisoner(bookerReference, prisonerId)
-    logger.info(`Prisoner ${prisonerId} deactivated for booker ${bookerReference} by ${username}`)
-  }
 }

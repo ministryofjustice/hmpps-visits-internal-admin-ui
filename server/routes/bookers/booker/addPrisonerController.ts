@@ -15,12 +15,11 @@ export default class AddPrisonerController {
       const { reference } = req.params
       const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
 
-      const hasActivePrisoner = booker.permittedPrisoners.some(prisoner => prisoner.active)
-      if (hasActivePrisoner) {
+      if (booker.permittedPrisoners.length) {
         req.flash('messages', {
           variant: 'information',
-          title: 'Booker has an active prisoner',
-          text: 'This booker already has an active prisoner - cannot add another',
+          title: 'Booker already has a prisoner',
+          text: 'This booker already has a prisoner - cannot add another',
         })
         return res.redirect(`/bookers/booker/${reference}`)
       }

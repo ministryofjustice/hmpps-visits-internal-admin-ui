@@ -21,8 +21,6 @@ export default class BookerDetailsPage extends Page {
 
   getPrisonName = (row: number): PageElement => cy.get(`[data-test="prison-name-${row}"]`)
 
-  getPrisonerStatus = (row: number): PageElement => cy.get(`[data-test="prisoner-status-${row}"]`)
-
   getPrisonerVisitors = (row: number): PageElement => cy.get(`[data-test="prisoner-visitors-${row}"]`)
 
   clearBookerDetails = (): void => {

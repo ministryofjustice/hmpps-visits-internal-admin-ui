@@ -102,23 +102,5 @@ describe('Booker service', () => {
         )
       })
     })
-
-    describe('activatePrisoner', () => {
-      it('should activate prisoner for booker', async () => {
-        bookerRegistryApiClient.activatePrisoner.mockResolvedValue()
-        await bookerService.activatePrisoner('user', booker.reference, prisoner.prisonerId)
-
-        expect(bookerRegistryApiClient.activatePrisoner).toHaveBeenCalledWith(booker.reference, prisoner.prisonerId)
-      })
-    })
-
-    describe('deactivatePrisoner', () => {
-      it('should deactivate prisoner for booker', async () => {
-        bookerRegistryApiClient.deactivatePrisoner.mockResolvedValue()
-        await bookerService.deactivatePrisoner('user', booker.reference, prisoner.prisonerId)
-
-        expect(bookerRegistryApiClient.deactivatePrisoner).toHaveBeenCalledWith(booker.reference, prisoner.prisonerId)
-      })
-    })
   })
 })
