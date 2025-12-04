@@ -7,7 +7,6 @@ import CategoryGroupService from './categoryGroupService'
 import IncentiveGroupService from './incentiveGroupService'
 import VisitService from './visitService'
 import BookerService from './bookerService'
-import PrisonerContactsService from './prisonerContactsService'
 import ExcludeDateService from './excludeDateService'
 import VisitAllocationService from './visitAllocationService'
 
@@ -17,7 +16,6 @@ export const services = () => {
     applicationInfo,
     manageUsersApiClient,
     bookerRegistryApiClientBuilder,
-    prisonerContactRegistryApiClientBuilder,
     prisonRegisterApiClientBuilder,
     visitAllocationApiClientBuilder,
     visitSchedulerApiClientBuilder,
@@ -32,8 +30,6 @@ export const services = () => {
   const incentiveGroupService = new IncentiveGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
 
   const locationGroupService = new LocationGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
-
-  const prisonerContactsService = new PrisonerContactsService(prisonerContactRegistryApiClientBuilder, hmppsAuthClient)
 
   const prisonService = new PrisonService(
     visitSchedulerApiClientBuilder,
@@ -56,7 +52,6 @@ export const services = () => {
     excludeDateService,
     incentiveGroupService,
     locationGroupService,
-    prisonerContactsService,
     prisonService,
     sessionTemplateService,
     userService,
@@ -73,7 +68,6 @@ export {
   ExcludeDateService,
   IncentiveGroupService,
   LocationGroupService,
-  PrisonerContactsService,
   PrisonService,
   SessionTemplateService,
   UserService,

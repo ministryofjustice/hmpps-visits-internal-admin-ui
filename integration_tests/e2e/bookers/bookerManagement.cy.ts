@@ -1,7 +1,6 @@
 import TestData from '../../../server/routes/testutils/testData'
 import IndexPage from '../../pages'
 import AddPrisonerPage from '../../pages/bookers/addPrisoner'
-import AddVisitorPage from '../../pages/bookers/addVisitor'
 import BookerDetailsPage from '../../pages/bookers/bookerDetails'
 import PrisonerDetailsPage from '../../pages/bookers/prisonerDetails'
 import SearchForBookerPage from '../../pages/bookers/searchForBooker'
@@ -10,14 +9,11 @@ import Page from '../../pages/page'
 context('Booker management', () => {
   const booker = TestData.bookerDto()
   const prisoner = TestData.permittedPrisonerDto()
-  const contact = TestData.contact()
-  const bookerWithPrisoner = TestData.bookerDto({ permittedPrisoners: [TestData.permittedPrisonerDto()] })
+  const bookerWithPrisoner = TestData.bookerDto({
+    permittedPrisoners: [TestData.permittedPrisonerDto({ permittedVisitors: [] })],
+  })
   const bookerWithPrisonerAndContacts = TestData.bookerDto({
-    permittedPrisoners: [
-      TestData.permittedPrisonerDto({
-        permittedVisitors: [{ visitorId: TestData.contact().personId, active: true }],
-      }),
-    ],
+    permittedPrisoners: [TestData.permittedPrisonerDto()],
   })
 
   beforeEach(() => {
@@ -38,7 +34,6 @@ context('Booker management', () => {
     // Search for booker
     cy.task('stubGetBookersByEmail', { email: booker.email, bookers: [booker] })
     cy.task('stubGetBookerByReference', { booker })
-    cy.task('stubGetAllSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [] })
     searchForBookerPage.enterBookerSearchTerm(booker.email)
     searchForBookerPage.search()
 
@@ -55,7 +50,6 @@ context('Booker management', () => {
     addPrisonerPage.selectPrison(prisoner.prisonCode)
     cy.task('stubCreateBookerPrisoner', { booker, prisoner })
     cy.task('stubGetBookerByReference', { booker: bookerWithPrisoner })
-    cy.task('stubGetAllSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [contact] })
     addPrisonerPage.addPrisoner()
 
     // Booker details - prisoner added
@@ -63,26 +57,13 @@ context('Booker management', () => {
     bookerDetailsPage.getPrisonerId(1).contains(prisoner.prisonerId)
     bookerDetailsPage.getPrisonName(1).contains('Hewell (HMP)')
     bookerDetailsPage.getPrisonerStatus(1).contains('Active')
-    bookerDetailsPage.getPrisonerVisitors(1).contains('None')
+    bookerDetailsPage.getPrisonerVisitors(1).contains('0')
 
     // Prisoner details page
     bookerDetailsPage.selectPrisoner(prisoner.prisonerId)
     const prisonerDetailsPage = Page.verifyOnPage(PrisonerDetailsPage)
     prisonerDetailsPage.prisonerNumber().contains(prisoner.prisonerId)
     prisonerDetailsPage.prisonName().contains('Hewell (HMP)')
-
-    // Add visitor
-    cy.task('stubGetApprovedSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [contact] })
-    prisonerDetailsPage.addVisitor()
-    const addVisitorPage = Page.verifyOnPage(AddVisitorPage)
-    addVisitorPage.selectVisitorById(contact.personId)
-    cy.task('stubCreateBookerPrisonerVisitor', { booker, prisoner, contact })
-    cy.task('stubGetBookerByReference', { booker: bookerWithPrisonerAndContacts })
-    addVisitorPage.addVisitor()
-
-    // Prisoner details - visitor added
-    prisonerDetailsPage.checkOnPage()
-    prisonerDetailsPage.getVisitorName(1).contains(`${contact.firstName} ${contact.lastName}`)
   })
 
   it('should clear details for an existing booker', () => {
@@ -97,7 +78,6 @@ context('Booker management', () => {
       bookers: [bookerWithPrisonerAndContacts],
     })
     cy.task('stubGetBookerByReference', { booker: bookerWithPrisonerAndContacts })
-    cy.task('stubGetAllSocialContacts', { prisonerId: prisoner.prisonerId, contacts: [contact] })
     searchForBookerPage.enterBookerSearchTerm(booker.email)
     searchForBookerPage.search()
 

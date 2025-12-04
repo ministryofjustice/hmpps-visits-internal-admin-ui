@@ -64,7 +64,11 @@ export default {
     secret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
     expiryMinutes: Number(get('WEB_SESSION_TIMEOUT_IN_MINUTES', 120)),
   },
-  contactsUrl: get('CONTACTS_URL', 'https://contacts-dev.hmpps.service.justice.gov.uk', requiredInProduction),
+  staffServiceUrl: get(
+    'STAFF_SERVICE_URL',
+    'https://manage-prison-visits-dev.prison.service.justice.gov.uk',
+    requiredInProduction,
+  ),
   apis: {
     hmppsAuth: {
       url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
@@ -107,15 +111,6 @@ export default {
         deadline: Number(get('BOOKER_REGISTRY_API_TIMEOUT_DEADLINE', 10000)),
       },
       agent: new AgentConfig(Number(get('BOOKER_REGISTRY_API_TIMEOUT_RESPONSE', 10000))),
-    },
-    prisonerContactRegistry: {
-      url: get('PRISONER_CONTACT_REGISTRY_API_URL', 'http://localhost:8080', requiredInProduction),
-      healthPath: '/health/ping',
-      timeout: {
-        response: Number(get('PRISONER_CONTACT_REGISTRY_API_TIMEOUT_RESPONSE', 10000)),
-        deadline: Number(get('PRISONER_CONTACT_REGISTRY_API_TIMEOUT_DEADLINE', 10000)),
-      },
-      agent: new AgentConfig(Number(get('PRISONER_CONTACT_REGISTRY_API_TIMEOUT_RESPONSE', 10000))),
     },
     prisonRegister: {
       url: get('PRISON_REGISTER_API_URL', 'http://localhost:8080', requiredInProduction),

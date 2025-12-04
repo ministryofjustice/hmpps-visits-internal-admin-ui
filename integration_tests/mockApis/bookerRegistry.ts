@@ -1,7 +1,6 @@
 import { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
 import { BookerDto, PermittedPrisonerDto } from '../../server/data/bookerRegistryApiTypes'
-import { ContactDto } from '../../server/data/prisonerContactRegistryApiTypes'
 
 export default {
   stubGetBookerByReference: ({ booker }: { booker: BookerDto }): SuperAgentRequest => {
@@ -62,36 +61,6 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: prisoner,
-      },
-    })
-  },
-
-  stubCreateBookerPrisonerVisitor: ({
-    booker,
-    prisoner,
-    contact,
-  }: {
-    booker: BookerDto
-    prisoner: PermittedPrisonerDto
-    contact: ContactDto
-  }): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'PUT',
-        url: `/bookerRegistry/public/booker/config/${booker.reference}/prisoner/${prisoner.prisonerId}/visitor`,
-        bodyPatterns: [
-          {
-            equalToJson: {
-              visitorId: contact.personId,
-              active: true,
-            },
-          },
-        ],
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: { visitorId: contact.personId, active: true },
       },
     })
   },

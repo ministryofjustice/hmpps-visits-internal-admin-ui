@@ -1,19 +1,9 @@
 import { RequestHandler } from 'express'
-import { BookerService, PrisonerContactsService, PrisonService } from '../../../services'
-import { ContactDto } from '../../../data/prisonerContactRegistryApiTypes'
-import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { BookerService, PrisonService } from '../../../services'
 
-type Visitor = {
-  visitorId: number
-  name: string
-  dateOfBirth: string
-  approved: string
-  active: boolean
-}
 export default class BookerPrisonerDetailsController {
   public constructor(
     private readonly bookerService: BookerService,
-    private readonly prisonerContactsService: PrisonerContactsService,
     private readonly prisonService: PrisonService,
   ) {}
 
@@ -32,47 +22,12 @@ export default class BookerPrisonerDetailsController {
       const prisonName =
         prisoner && (await this.prisonService.getPrisonName(res.locals.user.username, prisoner.prisonCode))
 
-      let contacts: ContactDto[]
-      try {
-        contacts = prisoner
-          ? await this.prisonerContactsService.getSocialContacts({
-              username: res.locals.user.username,
-              prisonerId: prisoner.prisonerId,
-              approvedOnly: false,
-            })
-          : []
-      } catch (error) {
-        req.flash('errors', responseErrorToFlashMessages(error))
-        contacts = []
-      }
-
-      const visitors: Visitor[] = prisoner?.permittedVisitors.map(visitor => {
-        const matchedContact = contacts.find(contact => contact.personId === visitor.visitorId)
-
-        return matchedContact
-          ? {
-              visitorId: visitor.visitorId,
-              name: `${matchedContact.firstName} ${matchedContact.lastName}`,
-              dateOfBirth: matchedContact.dateOfBirth,
-              approved: matchedContact.approvedVisitor ? 'Yes' : 'No',
-              active: visitor.active,
-            }
-          : {
-              visitorId: visitor.visitorId,
-              name: 'UNKNOWN',
-              dateOfBirth: '',
-              approved: '',
-              active: visitor.active,
-            }
-      })
-
       return res.render('pages/bookers/booker/bookerPrisonerDetails', {
         errors: req.flash('errors'),
         messages: req.flash('messages'),
         booker,
         prisoner,
         prisonName,
-        visitors,
       })
     }
   }

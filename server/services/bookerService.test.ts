@@ -14,7 +14,6 @@ describe('Booker service', () => {
 
   const booker = TestData.bookerDto()
   const prisoner = TestData.permittedPrisonerDto()
-  const visitorId = 1234
 
   beforeEach(() => {
     BookerRegistryApiClientFactory.mockReturnValue(bookerRegistryApiClient)
@@ -119,47 +118,6 @@ describe('Booker service', () => {
         await bookerService.deactivatePrisoner('user', booker.reference, prisoner.prisonerId)
 
         expect(bookerRegistryApiClient.deactivatePrisoner).toHaveBeenCalledWith(booker.reference, prisoner.prisonerId)
-      })
-    })
-  })
-
-  describe('Visitor', () => {
-    describe('addVisitor', () => {
-      it('should add visitor to given prisoner and booker', async () => {
-        bookerRegistryApiClient.addVisitor.mockResolvedValue()
-        await bookerService.addVisitor('user', booker.reference, prisoner.prisonerId, visitorId)
-
-        expect(bookerRegistryApiClient.addVisitor).toHaveBeenCalledWith(
-          booker.reference,
-          prisoner.prisonerId,
-          visitorId,
-        )
-      })
-    })
-
-    describe('activateVisitor', () => {
-      it('should activate visitor for prisoner and booker', async () => {
-        bookerRegistryApiClient.activateVisitor.mockResolvedValue()
-        await bookerService.activateVisitor('user', booker.reference, prisoner.prisonerId, visitorId)
-
-        expect(bookerRegistryApiClient.activateVisitor).toHaveBeenCalledWith(
-          booker.reference,
-          prisoner.prisonerId,
-          visitorId,
-        )
-      })
-    })
-
-    describe('deactivateVisitor', () => {
-      it('should deactivate visitor for prisoner and booker', async () => {
-        bookerRegistryApiClient.deactivateVisitor.mockResolvedValue()
-        await bookerService.deactivateVisitor('user', booker.reference, prisoner.prisonerId, visitorId)
-
-        expect(bookerRegistryApiClient.deactivateVisitor).toHaveBeenCalledWith(
-          booker.reference,
-          prisoner.prisonerId,
-          visitorId,
-        )
       })
     })
   })

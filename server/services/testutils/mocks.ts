@@ -4,7 +4,6 @@ import {
   ExcludeDateService,
   IncentiveGroupService,
   LocationGroupService,
-  PrisonerContactsService,
   PrisonService,
   SessionTemplateService,
   UserService,
@@ -26,9 +25,6 @@ export const createMockIncentiveGroupService = () =>
 
 export const createMockLocationGroupService = () =>
   new LocationGroupService(null, null) as jest.Mocked<LocationGroupService>
-
-export const createMockPrisonerContactsService = () =>
-  new PrisonerContactsService(null, null) as jest.Mocked<PrisonerContactsService>
 
 export const createMockPrisonService = () => new PrisonService(null, null, null) as jest.Mocked<PrisonService>
 

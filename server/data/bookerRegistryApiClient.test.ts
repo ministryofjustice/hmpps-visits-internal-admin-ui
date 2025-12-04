@@ -4,7 +4,6 @@ import TestData from '../routes/testutils/testData'
 import BookerRegistryApiClient from './bookerRegistryApiClient'
 import {
   CreatePermittedPrisonerDto,
-  CreatePermittedVisitorDto,
   SearchBookerDto,
   UpdateRegisteredPrisonersPrisonDto,
 } from './bookerRegistryApiTypes'
@@ -128,55 +127,6 @@ describe('bookerRegistryApiClient', () => {
           .reply(200)
 
         await bookerRegistryApiClient.deactivatePrisoner(booker.reference, prisoner.prisonerId)
-        expect(fakeBookerRegistryApi.isDone()).toBeTruthy()
-      })
-    })
-  })
-
-  describe('Visitor', () => {
-    const visitorId = 1234
-
-    describe('addVisitor', () => {
-      it('should call add visitor for given booker reference and prisoner ID', async () => {
-        fakeBookerRegistryApi
-          .put(`/public/booker/config/${booker.reference}/prisoner/${prisoner.prisonerId}/visitor`, <
-            CreatePermittedVisitorDto
-          >{
-            visitorId,
-            active: true,
-          })
-          .matchHeader('authorization', `Bearer ${token}`)
-          .reply(201)
-
-        await bookerRegistryApiClient.addVisitor(booker.reference, prisoner.prisonerId, visitorId)
-        expect(fakeBookerRegistryApi.isDone()).toBeTruthy()
-      })
-    })
-
-    describe('activateVisitor', () => {
-      it('should call activate visitor for given booker reference, prisoner ID and visitor ID', async () => {
-        fakeBookerRegistryApi
-          .put(
-            `/public/booker/config/${booker.reference}/prisoner/${prisoner.prisonerId}/visitor/${visitorId}/activate`,
-          )
-          .matchHeader('authorization', `Bearer ${token}`)
-          .reply(200)
-
-        await bookerRegistryApiClient.activateVisitor(booker.reference, prisoner.prisonerId, visitorId)
-        expect(fakeBookerRegistryApi.isDone()).toBeTruthy()
-      })
-    })
-
-    describe('deactivateVisitor', () => {
-      it('should call deactivate visitor for given booker reference, prisoner ID and visitor ID', async () => {
-        fakeBookerRegistryApi
-          .put(
-            `/public/booker/config/${booker.reference}/prisoner/${prisoner.prisonerId}/visitor/${visitorId}/deactivate`,
-          )
-          .matchHeader('authorization', `Bearer ${token}`)
-          .reply(200)
-
-        await bookerRegistryApiClient.deactivateVisitor(booker.reference, prisoner.prisonerId, visitorId)
         expect(fakeBookerRegistryApi.isDone()).toBeTruthy()
       })
     })

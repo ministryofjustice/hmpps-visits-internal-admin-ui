@@ -1,8 +1,6 @@
 {% extends "partials/layout.njk" %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {%- from "partials/activeOrInactiveTag.njk" import activeOrInactiveTag -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set pageHeaderTitle = "Prisoner details" %}
 {% set pageTitle = applicationName + " - Manage bookers - " + pageHeaderTitle %}
@@ -49,93 +47,20 @@
           preventDoubleClick: true
         }) }}
 
-        {{ govukButton({
-          text: "View social contacts",
-          href:  contactsUrl + "/prisoner/" + prisoner.prisonerId + "/contacts/list?relationshipStatus=ACTIVE_AND_INACTIVE&relationshipType=S",
-          preventDoubleClick: true
-        }) }}
-
       </form>
     </div>
 
     <h2 class="govuk-heading-m">Visitors</h2>
-    {% if not visitors | length %}
-      <p>No visitors set</p>
-    {% else %}
+    <p>Number of linked visitors: <strong data-test="linked-visitor-count">{{ prisoner.permittedVisitors | length }}</strong></p>
 
-      {% set visitorRows = [] %}
-      {% for visitor in visitors %}
-        {% set visitorAction = "deactivate" if visitor.active else "activate" %}
-        {% set visitorRows = (visitorRows.push([
-          {
-            text: visitor.name,
-            attributes: { "data-test": "visitor-name-" + loop.index }
-          },
-          {
-            text: visitor.visitorId,
-            attributes: { "data-test": "visitor-id-" + loop.index }
-          },
-          {
-            html: (visitor.dateOfBirth | formatDate +
-              '&nbsp(' + visitor.dateOfBirth | displayAge + ')') if visitor.dateOfBirth,
-              attributes: { "data-test": "visitor-dob-" + loop.index }
-          },
-          {
-            text: visitor.approved,
-            attributes: { "data-test": "visitor-approved-" + loop.index }
-          },
-          {
-            html: activeOrInactiveTag(visitor.active),
-            attributes: { "data-test": "visitor-status-" + loop.index }
-          },
-          {
-            html: '<form action="/bookers/booker/' + booker.reference + '/prisoner/' + prisoner.prisonerId + '/' + visitorAction + '-visitor" method="POST" novalidate>' +
-                    '<input type="hidden" name="_csrf" value="' + csrfToken + '">' +
-                    govukButton({
-                      text: visitorAction | capitalize,
-                      name: 'visitorId',
-                      value: visitor.visitorId,
-                      classes: "govuk-button--secondary",
-                      preventDoubleClick: true
-                    }) +
-                  '</form>'
-          }
-          ]), visitorRows) %}
-      {% endfor %}
-
-      {{ govukTable({
-        head: [
-          {
-            text: "Name"
-          },
-          {
-            text: "Visitor ID"
-          },
-          {
-            text: "Date of birth"
-          },
-          {
-            text: "Approved visitor"
-          },
-          {
-            text: "Status"
-          },
-          {
-            text: "Action"
-          }
-        ],
-        rows: visitorRows
-      }) }}
-    {% endif %}
 
     {{ govukButton({
-      href: "/bookers/booker/" + booker.reference + "/prisoner/" + prisoner.prisonerId + "/add-visitor",
-      classes: "govuk-button--secondary" if visitors | length,
-      text: "Add a visitor",
+      text: "Manage booker in staff service",
+      classes: "govuk-!-margin-top-5",
+      href:  staffServiceUrl + "/manage-bookers/" + booker.reference + "/booker-details",
       preventDoubleClick: true,
-      attributes: { "data-test": "add-visitor" }
+      attributes: { "data-test": "staff-service-booker-link" }
     }) }}
-
   </div>
 </div>
 

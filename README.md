@@ -42,8 +42,6 @@ SYSTEM_CLIENT_SECRET=clientsecret
 
 BOOKER_REGISTRY_API_URL="https://hmpps-prison-visit-booker-registry-dev.prison.service.justice.gov.uk"
 
-PRISONER_CONTACT_REGISTRY_API_URL="https://prisoner-contact-registry-dev.prison.service.justice.gov.uk"
-
 PRISON_REGISTER_API_URL="https://prison-register-dev.hmpps.service.justice.gov.uk"
 
 VISIT_ALLOCATION_API_URL="https://hmpps-visit-allocation-api-dev.prison.service.justice.gov.uk"

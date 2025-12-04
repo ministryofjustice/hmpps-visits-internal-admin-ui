@@ -399,11 +399,6 @@ export interface components {
        * @example 5871791
        */
       visitorId: number
-      /**
-       * @description Active / Inactive permitted visitor
-       * @example true
-       */
-      active: boolean
     }
     /** @description Create permitted prisoner with permitted visitors associated with the booker. */
     CreatePermittedVisitorDto: {

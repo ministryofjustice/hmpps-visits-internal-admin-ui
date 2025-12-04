@@ -3,7 +3,6 @@ import config from '../config'
 import {
   BookerDto,
   CreatePermittedPrisonerDto,
-  CreatePermittedVisitorDto,
   PermittedPrisonerDto,
   UpdateRegisteredPrisonersPrisonDto,
 } from './bookerRegistryApiTypes'
@@ -51,26 +50,5 @@ export default class BookerRegistryApiClient {
 
   async deactivatePrisoner(bookerReference: string, prisonerId: string): Promise<void> {
     await this.restClient.put({ path: `/public/booker/config/${bookerReference}/prisoner/${prisonerId}/deactivate` })
-  }
-
-  // Visitor
-
-  async addVisitor(bookerReference: string, prisonerId: string, visitorId: number): Promise<void> {
-    return this.restClient.put({
-      path: `/public/booker/config/${bookerReference}/prisoner/${prisonerId}/visitor`,
-      data: <CreatePermittedVisitorDto>{ visitorId, active: true },
-    })
-  }
-
-  async activateVisitor(bookerReference: string, prisonerId: string, visitorId: number): Promise<void> {
-    await this.restClient.put({
-      path: `/public/booker/config/${bookerReference}/prisoner/${prisonerId}/visitor/${visitorId}/activate`,
-    })
-  }
-
-  async deactivateVisitor(bookerReference: string, prisonerId: string, visitorId: number): Promise<void> {
-    await this.restClient.put({
-      path: `/public/booker/config/${bookerReference}/prisoner/${prisonerId}/visitor/${visitorId}/deactivate`,
-    })
   }
 }

@@ -3,8 +3,6 @@ import { Services } from '../../../services'
 import BookerController from './bookerController'
 import AddPrisonerController from './addPrisonerController'
 import PrisonerStatusController from './prisonerStatusController'
-import AddVisitorController from './addVisitorController'
-import VisitorStatusController from './visitorStatusController'
 import EditPrisonerController from './editPrisonerController'
 import { BOOKER_REFERENCE_REGEX, PRISON_NUMBER_REGEX } from '../../../constants/constants'
 import BookerPrisonerDetailsController from './bookerPrisonerDetailsController'
@@ -13,16 +11,10 @@ export default function routes(services: Services): Router {
   const router = Router()
 
   const booker = new BookerController(services.bookerService, services.prisonService)
-  const bookerPrisonerDetails = new BookerPrisonerDetailsController(
-    services.bookerService,
-    services.prisonerContactsService,
-    services.prisonService,
-  )
+  const bookerPrisonerDetails = new BookerPrisonerDetailsController(services.bookerService, services.prisonService)
   const addPrisoner = new AddPrisonerController(services.bookerService, services.prisonService)
   const editPrisoner = new EditPrisonerController(services.bookerService, services.prisonService)
   const prisonerStatus = new PrisonerStatusController(services.bookerService)
-  const addVisitor = new AddVisitorController(services.bookerService, services.prisonerContactsService)
-  const visitorStatus = new VisitorStatusController(services.bookerService)
 
   // middleware to validate booker reference on all /bookers/booker/{:reference} routes
   router.use('/:reference/', (req, res, next) => {
@@ -52,21 +44,6 @@ export default function routes(services: Services): Router {
 
   router.post('/:reference/prisoner/:prisonerId/activate', prisonerStatus.setStatus('inactive'))
   router.post('/:reference/prisoner/:prisonerId/deactivate', prisonerStatus.setStatus('active'))
-
-  // Booker prisoner visitor routes
-  router.get('/:reference/prisoner/:prisonerId/add-visitor', addVisitor.view())
-  router.post('/:reference/prisoner/:prisonerId/add-visitor', addVisitor.validate(), addVisitor.submit())
-
-  router.post(
-    '/:reference/prisoner/:prisonerId/activate-visitor',
-    visitorStatus.validate(),
-    visitorStatus.setStatus('inactive'),
-  )
-  router.post(
-    '/:reference/prisoner/:prisonerId/deactivate-visitor',
-    visitorStatus.validate(),
-    visitorStatus.setStatus('active'),
-  )
 
   return router
 }

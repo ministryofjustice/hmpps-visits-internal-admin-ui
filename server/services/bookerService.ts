@@ -85,44 +85,4 @@ export default class BookerService {
     await bookerRegistryApiClient.deactivatePrisoner(bookerReference, prisonerId)
     logger.info(`Prisoner ${prisonerId} deactivated for booker ${bookerReference} by ${username}`)
   }
-
-  // Visitor
-
-  async addVisitor(username: string, bookerReference: string, prisonerId: string, visitorId: number): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
-
-    await bookerRegistryApiClient.addVisitor(bookerReference, prisonerId, visitorId)
-    logger.info(`Visitor ${visitorId} added for prisoner ${prisonerId} and booker ${bookerReference} by ${username}`)
-  }
-
-  async activateVisitor(
-    username: string,
-    bookerReference: string,
-    prisonerId: string,
-    visitorId: number,
-  ): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
-
-    await bookerRegistryApiClient.activateVisitor(bookerReference, prisonerId, visitorId)
-    logger.info(
-      `Visitor ${visitorId} activated for prisoner ${prisonerId} and booker ${bookerReference} by ${username}`,
-    )
-  }
-
-  async deactivateVisitor(
-    username: string,
-    bookerReference: string,
-    prisonerId: string,
-    visitorId: number,
-  ): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
-
-    await bookerRegistryApiClient.deactivateVisitor(bookerReference, prisonerId, visitorId)
-    logger.info(
-      `Visitor ${visitorId} deactivated for prisoner ${prisonerId} and booker ${bookerReference} by ${username}`,
-    )
-  }
 }
