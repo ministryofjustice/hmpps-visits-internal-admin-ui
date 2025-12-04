@@ -19,7 +19,7 @@ generic-service:
     PRISON_REGISTER_API_URL: "https://prison-register-preprod.hmpps.service.justice.gov.uk"
     VISIT_ALLOCATION_API_URL: "https://hmpps-visit-allocation-api-preprod.prison.service.justice.gov.uk"
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler-preprod.prison.service.justice.gov.uk"
-    STAFF_SERVICE_URL: "https://manage-prison-visits-preprod.hmpps.service.justice.gov.uk"
+    STAFF_SERVICE_URL: "https://manage-prison-visits-preprod.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: preprod
 
 generic-prometheus-alerts:
