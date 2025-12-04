@@ -2,7 +2,6 @@ import { Router } from 'express'
 import { Services } from '../../../services'
 import BookerController from './bookerController'
 import AddPrisonerController from './addPrisonerController'
-import PrisonerStatusController from './prisonerStatusController'
 import EditPrisonerController from './editPrisonerController'
 import { BOOKER_REFERENCE_REGEX, PRISON_NUMBER_REGEX } from '../../../constants/constants'
 import BookerPrisonerDetailsController from './bookerPrisonerDetailsController'
@@ -14,7 +13,6 @@ export default function routes(services: Services): Router {
   const bookerPrisonerDetails = new BookerPrisonerDetailsController(services.bookerService, services.prisonService)
   const addPrisoner = new AddPrisonerController(services.bookerService, services.prisonService)
   const editPrisoner = new EditPrisonerController(services.bookerService, services.prisonService)
-  const prisonerStatus = new PrisonerStatusController(services.bookerService)
 
   // middleware to validate booker reference on all /bookers/booker/{:reference} routes
   router.use('/:reference/', (req, res, next) => {
@@ -41,9 +39,6 @@ export default function routes(services: Services): Router {
 
   router.get('/:reference/prisoner/:prisonerId/edit', editPrisoner.view())
   router.post('/:reference/prisoner/:prisonerId/edit', editPrisoner.validate(), editPrisoner.submit())
-
-  router.post('/:reference/prisoner/:prisonerId/activate', prisonerStatus.setStatus('inactive'))
-  router.post('/:reference/prisoner/:prisonerId/deactivate', prisonerStatus.setStatus('active'))
 
   return router
 }

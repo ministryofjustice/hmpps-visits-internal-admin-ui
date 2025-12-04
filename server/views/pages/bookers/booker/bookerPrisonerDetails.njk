@@ -1,5 +1,4 @@
 {% extends "partials/layout.njk" %}
-{%- from "partials/activeOrInactiveTag.njk" import activeOrInactiveTag -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageHeaderTitle = "Prisoner details" %}
@@ -23,35 +22,20 @@
 
     <p>
       Prison number: <strong data-test="prisoner-number">{{ prisoner.prisonerId }}</strong>
-      <span data-test="prisoner-status" class="govuk-!-margin-left-3">{{ activeOrInactiveTag(prisoner.active) }}</span>
     </p>
     <p>
       Registered prison: <strong data-test="registered-prison-name">{{ prisonName }}</strong>
     </p>
 
-    <div class="govuk-button-group">
-      {% set prisonerAction = "deactivate" if prisoner.active else "activate" %}
-      <form action="/bookers/booker/{{ booker.reference }}/prisoner/{{ prisoner.prisonerId }}/{{ prisonerAction }}" method="POST" novalidate>
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-
-        {{ govukButton({
-          text: "Change registered prison",
-          classes: "govuk-button--secondary",
-          href: "/bookers/booker/" + booker.reference + "/prisoner/" + prisoner.prisonerId + "/edit",
-          preventDoubleClick: true
-        }) }}
-
-        {{ govukButton({
-          text: prisonerAction | capitalize + " prisoner",
-          classes: "govuk-button--secondary",
-          preventDoubleClick: true
-        }) }}
-
-      </form>
-    </div>
+    {{ govukButton({
+      text: "Change registered prison",
+      classes: "govuk-button--secondary",
+      href: "/bookers/booker/" + booker.reference + "/prisoner/" + prisoner.prisonerId + "/edit",
+      preventDoubleClick: true
+    }) }}
 
     <h2 class="govuk-heading-m">Visitors</h2>
-    <p>Number of linked visitors: <strong data-test="linked-visitor-count">{{ prisoner.permittedVisitors | length }}</strong></p>
+    <p>Number of linked visitors: <strong data-test="linked-visitor-count">{{ prisoner.permittedVisitors | length | default("None", true) }}</strong></p>
 
 
     {{ govukButton({

@@ -74,7 +74,6 @@ describe('bookerRegistryApiClient', () => {
         fakeBookerRegistryApi
           .put(`/public/booker/config/${booker.reference}/prisoner`, <CreatePermittedPrisonerDto>{
             prisonerId: prisoner.prisonerId,
-            active: true,
             prisonCode: prisoner.prisonCode,
           })
           .matchHeader('authorization', `Bearer ${token}`)
@@ -103,30 +102,6 @@ describe('bookerRegistryApiClient', () => {
           .reply(201, prisoner)
 
         await bookerRegistryApiClient.updateRegisteredPrison(booker.reference, prisoner.prisonerId, newPrisonId)
-        expect(fakeBookerRegistryApi.isDone()).toBeTruthy()
-      })
-    })
-
-    describe('activatePrisoner', () => {
-      it('should call activate prisoner for given booker reference and prisoner ID', async () => {
-        fakeBookerRegistryApi
-          .put(`/public/booker/config/${booker.reference}/prisoner/${prisoner.prisonerId}/activate`)
-          .matchHeader('authorization', `Bearer ${token}`)
-          .reply(200)
-
-        await bookerRegistryApiClient.activatePrisoner(booker.reference, prisoner.prisonerId)
-        expect(fakeBookerRegistryApi.isDone()).toBeTruthy()
-      })
-    })
-
-    describe('deactivatePrisoner', () => {
-      it('should call deactivate prisoner for given booker reference and prisoner ID', async () => {
-        fakeBookerRegistryApi
-          .put(`/public/booker/config/${booker.reference}/prisoner/${prisoner.prisonerId}/deactivate`)
-          .matchHeader('authorization', `Bearer ${token}`)
-          .reply(200)
-
-        await bookerRegistryApiClient.deactivatePrisoner(booker.reference, prisoner.prisonerId)
         expect(fakeBookerRegistryApi.isDone()).toBeTruthy()
       })
     })

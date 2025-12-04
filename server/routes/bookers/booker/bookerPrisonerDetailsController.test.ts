@@ -54,7 +54,6 @@ describe('Booker prisoner details', () => {
 
           expect($('[data-test=prisoner-number]').text()).toBe(prisoner.prisonerId)
           expect($('[data-test=registered-prison-name]').text()).toBe('Hewell (HMP)')
-          expect($('[data-test=prisoner-status]').text().trim()).toBe('Active')
 
           expect($('[data-test=linked-visitor-count]').text().trim()).toBe('1')
 

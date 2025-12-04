@@ -184,6 +184,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/public/booker/{bookerReference}/permitted/prisoners/{prisonerId}/permitted/visitors/request': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Submit a request to add a visitor to a booker's prisoner permitted visitor list
+     * @description Submit a request to add a visitor to a booker's prisoner permitted visitor list
+     */
+    post: operations['submitRequestAddVisitorToBookerPrisoner']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/public/booker/config/search': {
     parameters: {
       query?: never
@@ -198,6 +218,26 @@ export interface paths {
      * @description Search for a booker using specific criteria, returns list (list of 1 entry if only 1 booker is found)
      */
     post: operations['searchForBooker']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/public/booker/{bookerReference}/permitted/visitors/requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all active visitor requests for a booker
+     * @description Get all active visitor requests for a booker
+     */
+    get: operations['getActiveVisitorRequests']
+    put?: never
+    post?: never
     delete?: never
     options?: never
     head?: never
@@ -264,6 +304,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/public/booker/{bookerReference}/audit': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get a booker's audit information
+     * @description Get a booker's audit information
+     */
+    get: operations['getBookerAudit']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/public/booker/config/{bookerReference}': {
     parameters: {
       query?: never
@@ -283,6 +343,26 @@ export interface paths {
      * @description Clear bookers details, keeps booker reference and email
      */
     delete: operations['clearBookerDetails']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/public/booker/config/{bookerReference}/prisoner/{prisonerId}/visitor/{visitorId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    /**
+     * unlink booker prisoner visitor
+     * @description unlink booker prisoner visitor
+     */
+    delete: operations['unlinkBookerPrisonerVisitor']
     options?: never
     head?: never
     patch?: never
@@ -365,11 +445,6 @@ export interface components {
        * @example MDI
        */
       prisonCode: string
-      /**
-       * @description Active / Inactive permitted prisoner
-       * @example true
-       */
-      active: boolean
     }
     /** @description Permitted prisoner associated with the booker. */
     PermittedPrisonerDto: {
@@ -378,11 +453,6 @@ export interface components {
        * @example A1234AA
        */
       prisonerId: string
-      /**
-       * @description Active / Inactive permitted prisoner
-       * @example true
-       */
-      active: boolean
       /**
        * @description prison code
        * @example MDI
@@ -409,10 +479,10 @@ export interface components {
        */
       visitorId: number
       /**
-       * @description Active / Inactive permitted visitor
+       * @description A flag (boolean), when set to true will send booker notification of visitor linking
        * @example true
        */
-      active: boolean
+      sendNotificationFlag: boolean
     }
     /** @description Update a prisoner's prison code. */
     UpdateRegisteredPrisonersPrisonDto: {
@@ -421,6 +491,28 @@ export interface components {
        * @example MDI
        */
       prisonId: string
+    }
+    /** @description Visitor request details to add a visitor to a booker prisoner */
+    AddVisitorToBookerPrisonerRequestDto: {
+      /** @description First name of the visitor in request */
+      firstName: string
+      /** @description Last name of the visitor in request */
+      lastName: string
+      /**
+       * Format: date
+       * @description Date of birth of the visitor in request
+       */
+      dateOfBirth: string
+    }
+    BookerValidationErrorResponse: {
+      validationError: string
+      /** Format: int32 */
+      status: number
+      /** Format: int32 */
+      errorCode?: number
+      userMessage?: string
+      developerMessage?: string
+      moreInfo?: string
     }
     /** @description Booker of visits. */
     SearchBookerDto: {
@@ -443,15 +535,75 @@ export interface components {
        */
       createdTimestamp: string
     }
-    BookerPrisonerValidationErrorResponse: {
-      validationError: string
-      /** Format: int32 */
-      status: number
-      /** Format: int32 */
-      errorCode?: number
-      userMessage?: string
-      developerMessage?: string
-      moreInfo?: string
+    BookerPrisonerVisitorRequestDto: {
+      /**
+       * @description Visitor Request reference
+       * @example abc-def-ghi
+       */
+      reference: string
+      /**
+       * @description Booker reference
+       * @example wwe-egg-wwf
+       */
+      bookerReference: string
+      /**
+       * @description Prisoner ID for whom visitor was requested
+       * @example A1234AA
+       */
+      prisonerId: string
+      /**
+       * @description First Name, as entered on visitor request
+       * @example John
+       */
+      firstName: string
+      /**
+       * @description Last Name, as entered on visitor request
+       * @example Smith
+       */
+      lastName: string
+      /**
+       * Format: date
+       * @description Date of birth, as entered on visitor request
+       * @example 2000-01-01
+       */
+      dateOfBirth: string
+      /**
+       * @description Request status
+       * @example REQUESTED
+       * @enum {string}
+       */
+      status: 'REQUESTED' | 'APPROVED' | 'REJECTED'
+    }
+    /** @description Audit entry for booker. */
+    BookerAuditDto: {
+      /** @description Booker reference */
+      reference: string
+      /**
+       * @description Audit Type
+       * @example PRISONER_REGISTERED
+       * @enum {string}
+       */
+      auditType:
+        | 'BOOKER_CREATED'
+        | 'PRISONER_REGISTERED'
+        | 'VISITOR_ADDED_TO_PRISONER'
+        | 'ACTIVATED_PRISONER'
+        | 'DEACTIVATED_PRISONER'
+        | 'ACTIVATED_VISITOR'
+        | 'DEACTIVATED_VISITOR'
+        | 'UNLINK_VISITOR'
+        | 'CLEAR_BOOKER_DETAILS'
+        | 'UPDATE_BOOKER_EMAIL'
+        | 'REGISTER_PRISONER_SEARCH'
+        | 'UPDATE_REGISTERED_PRISONER_PRISON'
+        | 'VISITOR_REQUEST_SUBMITTED'
+      /** @description Audit summary */
+      text: string
+      /**
+       * Format: date-time
+       * @description Timestamp of booker audit entry
+       */
+      createdTimestamp: string
     }
   }
   responses: never
@@ -972,6 +1124,69 @@ export interface operations {
       }
     }
   }
+  submitRequestAddVisitorToBookerPrisoner: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        bookerReference: string
+        prisonerId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AddVisitorToBookerPrisonerRequestDto']
+      }
+    }
+    responses: {
+      /** @description Request submitted to add a visitor to a booker's prisoner permitted visitor list */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': string
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to submit a visitor request */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Booker / Prisoner not found for visitor request */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Visitor request validation failed */
+      422: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['BookerValidationErrorResponse']
+        }
+      }
+    }
+  }
   searchForBooker: {
     parameters: {
       query?: never
@@ -1010,6 +1225,64 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getActiveVisitorRequests: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        bookerReference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns a booker's active visitor requests */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['BookerPrisonerVisitorRequestDto'][]
+        }
+      }
+      /** @description Incorrect request to get booker's active visitor requests */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get booker's awaiting visitor requests. */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Booker not found for booker reference. */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
         }
       }
     }
@@ -1120,7 +1393,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['BookerPrisonerValidationErrorResponse']
+          'application/json': components['schemas']['BookerValidationErrorResponse']
         }
       }
     }
@@ -1181,6 +1454,64 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getBookerAudit: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        bookerReference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns a booker's audit information */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['BookerAuditDto'][]
+        }
+      }
+      /** @description Incorrect request to get booker's audit information */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get booker's audit information */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description The booker does not exist or has no audit history */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
         }
       }
     }
@@ -1273,6 +1604,55 @@ export interface operations {
         }
       }
       /** @description Booker not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  unlinkBookerPrisonerVisitor: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        bookerReference: string
+        prisonerId: string
+        visitorId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successfully unlinked booker prisoner visitor */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Incorrect permissions for this action */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description visitor not found */
       404: {
         headers: {
           [name: string]: unknown

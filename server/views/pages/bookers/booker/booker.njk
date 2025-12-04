@@ -1,6 +1,4 @@
 {% extends "partials/layout.njk" %}
-{%- from "partials/activeOrInactiveCount.njk" import activeOrInactiveCount -%}
-{%- from "partials/activeOrInactiveTag.njk" import activeOrInactiveTag -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
@@ -24,10 +22,6 @@
       attributes: { "data-test": "prison-name-" + loop.index }
     },
     {
-      html: activeOrInactiveTag(prisoner.active),
-      attributes: { "data-test": "prisoner-status-" + loop.index }
-    },
-    {
       text: prisoner.permittedVisitors | length,
       attributes: { "data-test": "prisoner-visitors-" + loop.index }
     }
@@ -38,7 +32,7 @@
 {{ super() }}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
+  <div class="govuk-grid-column-two-thirds">
 
     <h1 class="govuk-heading-l">{{ pageHeaderTitle }}</h1>
 
@@ -63,7 +57,6 @@
         head: [
           { text: "Prison number" },
           { text: "Prison" },
-          { text: "Status" },
           { text: "Linked visitors" }
         ],
         rows: prisonerRows
