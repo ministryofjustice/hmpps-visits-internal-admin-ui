@@ -19,7 +19,7 @@ generic-service:
     PRISON_REGISTER_API_URL: "https://prison-register-dev.hmpps.service.justice.gov.uk"
     VISIT_ALLOCATION_API_URL: "https://hmpps-visit-allocation-api-staging.prison.service.justice.gov.uk"
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler-staging.prison.service.justice.gov.uk"
-    STAFF_SERVICE_URL: "https://manage-prison-visits-dev.hmpps.service.justice.gov.uk"
+    STAFF_SERVICE_URL: "https://manage-prison-visits-staging.hmpps.service.justice.gov.uk"
     ENVIRONMENT_NAME: staging
     APPLICATIONINSIGHTS_CONNECTION_STRING: null # disable App Insights for staging
 
