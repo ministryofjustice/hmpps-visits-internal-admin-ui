@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { PrisonService, LocationGroupService } from '../../../services'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { PrisonReferenceParams } from '../../../@types/requestParameterTypes'
 
 export default class SingleLocationGroupController {
   public constructor(
@@ -8,7 +9,7 @@ export default class SingleLocationGroupController {
     private readonly locationGroupService: LocationGroupService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { reference, prisonId } = req.params
       const { sessionTemplateRef } = req.query
@@ -26,7 +27,7 @@ export default class SingleLocationGroupController {
     }
   }
 
-  public delete(): RequestHandler {
+  public delete(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { reference, prisonId } = req.params
 

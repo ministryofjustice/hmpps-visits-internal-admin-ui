@@ -2,6 +2,7 @@ import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { ExcludeDateService, PrisonService, VisitService } from '../../../services'
 import { formatDate, responseErrorToFlashMessages } from '../../../utils/utils'
+import { PrisonParams } from '../../../@types/requestParameterTypes'
 
 export default class ExcludedDatesController {
   public constructor(
@@ -10,7 +11,7 @@ export default class ExcludedDatesController {
     private readonly excludeDateService: ExcludeDateService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
       const { username } = res.locals.user
@@ -27,7 +28,7 @@ export default class ExcludedDatesController {
     }
   }
 
-  public checkDate(): RequestHandler {
+  public checkDate(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
@@ -51,7 +52,7 @@ export default class ExcludedDatesController {
     }
   }
 
-  public addDate(): RequestHandler {
+  public addDate(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
       const originalUrl = `/prisons/${prisonId}/excluded-dates`
@@ -81,7 +82,7 @@ export default class ExcludedDatesController {
     }
   }
 
-  public removeDate(): RequestHandler {
+  public removeDate(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
       const { excludeDate } = req.body

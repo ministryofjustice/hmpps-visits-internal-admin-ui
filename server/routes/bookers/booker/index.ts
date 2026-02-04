@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import { Services } from '../../../services'
-import BookerController from './bookerController'
 import AddPrisonerController from './addPrisonerController'
+import BookerController from './bookerController'
+import BookerPrisonerDetailsController from './bookerPrisonerDetailsController'
 import EditPrisonerController from './editPrisonerController'
 import { BOOKER_REFERENCE_REGEX, PRISON_NUMBER_REGEX } from '../../../constants/constants'
-import BookerPrisonerDetailsController from './bookerPrisonerDetailsController'
 
 export default function routes(services: Services): Router {
   const router = Router()

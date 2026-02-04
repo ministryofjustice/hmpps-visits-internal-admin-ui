@@ -4,6 +4,7 @@ import { PrisonService, CategoryGroupService } from '../../../services'
 import { CreateCategoryGroupDto } from '../../../data/visitSchedulerApiTypes'
 import prisonerCategories from '../../../constants/prisonerCategories'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { PrisonParams } from '../../../@types/requestParameterTypes'
 
 export default class AddCategoryGroupController {
   public constructor(
@@ -11,7 +12,7 @@ export default class AddCategoryGroupController {
     private readonly categoryGroupService: CategoryGroupService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
@@ -26,7 +27,7 @@ export default class AddCategoryGroupController {
     }
   }
 
-  public submit(): RequestHandler {
+  public submit(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 

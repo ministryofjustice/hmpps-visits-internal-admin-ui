@@ -4,6 +4,7 @@ import { PrisonService, IncentiveGroupService } from '../../../services'
 import { CreateIncentiveGroupDto } from '../../../data/visitSchedulerApiTypes'
 import incentiveLevels from '../../../constants/incentiveLevels'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { PrisonParams } from '../../../@types/requestParameterTypes'
 
 export default class AddIncentiveGroupController {
   public constructor(
@@ -11,7 +12,7 @@ export default class AddIncentiveGroupController {
     private readonly incentiveGroupService: IncentiveGroupService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
@@ -26,7 +27,7 @@ export default class AddIncentiveGroupController {
     }
   }
 
-  public submit(): RequestHandler {
+  public submit(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 
