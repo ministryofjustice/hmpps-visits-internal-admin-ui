@@ -2,6 +2,7 @@ import { RequestHandler } from 'express'
 import { PrisonService, SessionTemplateService } from '../../../services'
 import visitOrderDescriptions from '../../../constants/visitOrderRestriction'
 import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
+import { PrisonReferenceParams } from '../../../@types/requestParameterTypes'
 
 export default class SingleSessionTemplateController {
   public constructor(
@@ -9,7 +10,7 @@ export default class SingleSessionTemplateController {
     private readonly sessionTemplateService: SessionTemplateService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { reference, prisonId } = req.params
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
@@ -37,7 +38,7 @@ export default class SingleSessionTemplateController {
     }
   }
 
-  public activate(): RequestHandler {
+  public activate(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { prisonId, reference } = req.params
 
@@ -52,7 +53,7 @@ export default class SingleSessionTemplateController {
     }
   }
 
-  public deactivate(): RequestHandler {
+  public deactivate(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { prisonId, reference } = req.params
 
@@ -67,7 +68,7 @@ export default class SingleSessionTemplateController {
     }
   }
 
-  public delete(): RequestHandler {
+  public delete(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { reference, prisonId } = req.params
 

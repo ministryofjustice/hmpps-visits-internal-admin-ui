@@ -3,11 +3,12 @@ import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService } from '../../../services'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
 import { PrisonContactDetails } from '../../../data/prisonRegisterApiTypes'
+import { PrisonActionParams, PrisonParams } from '../../../@types/requestParameterTypes'
 
 export default class AddEditContactDetailsController {
   public constructor(private readonly prisonService: PrisonService) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonActionParams> {
     return async (req, res) => {
       const { action, prisonId } = req.params
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
@@ -31,7 +32,7 @@ export default class AddEditContactDetailsController {
     }
   }
 
-  public addSubmit(): RequestHandler {
+  public addSubmit(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 
@@ -76,7 +77,7 @@ export default class AddEditContactDetailsController {
     }
   }
 
-  public editSubmit(): RequestHandler {
+  public editSubmit(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 

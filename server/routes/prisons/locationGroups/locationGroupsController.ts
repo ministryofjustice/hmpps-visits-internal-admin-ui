@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { PrisonService, LocationGroupService } from '../../../services'
+import { PrisonParams } from '../../../@types/requestParameterTypes'
 
 export default class LocationGroupsController {
   public constructor(
@@ -7,7 +8,7 @@ export default class LocationGroupsController {
     private readonly locationGroupService: LocationGroupService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 

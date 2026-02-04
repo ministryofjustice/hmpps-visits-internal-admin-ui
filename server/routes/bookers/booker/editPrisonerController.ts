@@ -2,6 +2,7 @@ import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { BookerService, PrisonService } from '../../../services'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { BookerPrisonerParams } from '../../../@types/requestParameterTypes'
 
 export default class EditPrisonerController {
   public constructor(
@@ -9,7 +10,7 @@ export default class EditPrisonerController {
     private readonly prisonService: PrisonService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<BookerPrisonerParams> {
     return async (req, res) => {
       const { prisonerId, reference } = req.params
 
@@ -36,7 +37,7 @@ export default class EditPrisonerController {
     }
   }
 
-  public submit(): RequestHandler {
+  public submit(): RequestHandler<BookerPrisonerParams> {
     return async (req, res) => {
       const { prisonerId, reference } = req.params
       const { prisonCode }: { prisonCode: string } = req.body

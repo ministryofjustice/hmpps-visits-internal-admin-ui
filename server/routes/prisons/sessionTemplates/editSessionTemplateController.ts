@@ -11,6 +11,7 @@ import {
 import { UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
 import visitOrderDescriptions from '../../../constants/visitOrderRestriction'
+import { PrisonReferenceParams } from '../../../@types/requestParameterTypes'
 
 export default class EditSessionTemplateController {
   public constructor(
@@ -21,7 +22,7 @@ export default class EditSessionTemplateController {
     private readonly locationGroupService: LocationGroupService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { prisonId, reference } = req.params
 
@@ -110,7 +111,7 @@ export default class EditSessionTemplateController {
     }
   }
 
-  public update(): RequestHandler {
+  public update(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { prisonId, reference } = req.params
 

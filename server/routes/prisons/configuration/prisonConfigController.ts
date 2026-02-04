@@ -3,6 +3,7 @@ import { ValidationChain, body, matchedData, validationResult } from 'express-va
 import { PrisonService, VisitAllocationService } from '../../../services'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
 import { UserClientType } from '../../../data/visitSchedulerApiTypes'
+import { PrisonParams } from '../../../@types/requestParameterTypes'
 
 export default class PrisonConfigController {
   private prisonUserClientTypes = ['PUBLIC', 'STAFF'] as const
@@ -12,7 +13,7 @@ export default class PrisonConfigController {
     private readonly visitAllocationService: VisitAllocationService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
       const { username } = res.locals.user
@@ -33,7 +34,7 @@ export default class PrisonConfigController {
     }
   }
 
-  public updateEnabledServices(): RequestHandler {
+  public updateEnabledServices(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 
@@ -77,7 +78,7 @@ export default class PrisonConfigController {
     return [body('enabledServices').toArray().isArray({ max: 2 }).isIn(this.prisonUserClientTypes)]
   }
 
-  public activate(): RequestHandler {
+  public activate(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 
@@ -97,7 +98,7 @@ export default class PrisonConfigController {
     }
   }
 
-  public deactivate(): RequestHandler {
+  public deactivate(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 

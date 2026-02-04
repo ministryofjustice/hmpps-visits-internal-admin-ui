@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { BookerService, PrisonService } from '../../../services'
+import { BookerParams } from '../../../@types/requestParameterTypes'
 
 export default class BookerController {
   public constructor(
@@ -7,7 +8,7 @@ export default class BookerController {
     private readonly prisonService: PrisonService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<BookerParams> {
     return async (req, res) => {
       const { reference } = req.params
       const backLinkHref = req.query.from === 'search-results' ? '/bookers/search/results' : '/bookers'
@@ -26,7 +27,7 @@ export default class BookerController {
     }
   }
 
-  public clear(): RequestHandler {
+  public clear(): RequestHandler<BookerParams> {
     return async (req, res) => {
       const { reference } = req.params
 

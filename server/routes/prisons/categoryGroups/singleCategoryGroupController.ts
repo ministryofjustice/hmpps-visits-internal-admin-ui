@@ -2,6 +2,7 @@ import { RequestHandler } from 'express'
 import { PrisonService, CategoryGroupService } from '../../../services'
 import prisonerCategories from '../../../constants/prisonerCategories'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { PrisonReferenceParams } from '../../../@types/requestParameterTypes'
 
 export default class SingleCategoryGroupController {
   public constructor(
@@ -9,7 +10,7 @@ export default class SingleCategoryGroupController {
     private readonly categoryGroupService: CategoryGroupService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { reference, prisonId } = req.params
       const { sessionTemplateRef } = req.query
@@ -30,7 +31,7 @@ export default class SingleCategoryGroupController {
     }
   }
 
-  public delete(): RequestHandler {
+  public delete(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { reference, prisonId } = req.params
 

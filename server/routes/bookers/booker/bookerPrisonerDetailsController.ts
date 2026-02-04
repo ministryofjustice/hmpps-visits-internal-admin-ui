@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { BookerService, PrisonService } from '../../../services'
+import { BookerPrisonerParams } from '../../../@types/requestParameterTypes'
 
 export default class BookerPrisonerDetailsController {
   public constructor(
@@ -7,7 +8,7 @@ export default class BookerPrisonerDetailsController {
     private readonly prisonService: PrisonService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<BookerPrisonerParams> {
     return async (req, res) => {
       const { prisonerId, reference } = req.params
 

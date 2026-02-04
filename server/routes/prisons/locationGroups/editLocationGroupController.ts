@@ -3,6 +3,7 @@ import { ValidationChain, body, validationResult } from 'express-validator'
 import { PrisonService, LocationGroupService } from '../../../services'
 import { LocationGroup, UpdateLocationGroupDto } from '../../../data/visitSchedulerApiTypes'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { PrisonReferenceParams } from '../../../@types/requestParameterTypes'
 
 export default class EditLocationGroupController {
   public constructor(
@@ -10,7 +11,7 @@ export default class EditLocationGroupController {
     private readonly locationGroupService: LocationGroupService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { reference, prisonId } = req.params
       const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
@@ -26,7 +27,7 @@ export default class EditLocationGroupController {
     }
   }
 
-  public update(): RequestHandler {
+  public update(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { reference, prisonId } = req.params
 

@@ -12,6 +12,7 @@ import { CreateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import daysOfWeek from '../../../constants/daysOfWeek'
 import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
 import visitOrderDescriptions from '../../../constants/visitOrderRestriction'
+import { PrisonParams, PrisonReferenceParams } from '../../../@types/requestParameterTypes'
 
 export default class AddSessionTemplateController {
   public constructor(
@@ -22,7 +23,7 @@ export default class AddSessionTemplateController {
     private readonly locationGroupService: LocationGroupService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 
@@ -53,7 +54,7 @@ export default class AddSessionTemplateController {
     }
   }
 
-  public populateNewFromExisting(): RequestHandler {
+  public populateNewFromExisting(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { prisonId, reference } = req.params
 
@@ -126,7 +127,7 @@ export default class AddSessionTemplateController {
     }
   }
 
-  public add(): RequestHandler {
+  public add(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 

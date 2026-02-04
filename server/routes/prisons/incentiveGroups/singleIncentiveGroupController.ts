@@ -2,6 +2,7 @@ import { RequestHandler } from 'express'
 import { PrisonService, IncentiveGroupService } from '../../../services'
 import incentiveLevels from '../../../constants/incentiveLevels'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { PrisonReferenceParams } from '../../../@types/requestParameterTypes'
 
 export default class SingleIncentiveGroupController {
   public constructor(
@@ -9,7 +10,7 @@ export default class SingleIncentiveGroupController {
     private readonly incentiveGroupService: IncentiveGroupService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { reference, prisonId } = req.params
       const { sessionTemplateRef } = req.query
@@ -33,7 +34,7 @@ export default class SingleIncentiveGroupController {
     }
   }
 
-  public delete(): RequestHandler {
+  public delete(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { reference, prisonId } = req.params
 

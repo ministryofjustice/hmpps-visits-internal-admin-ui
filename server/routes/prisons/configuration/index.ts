@@ -27,7 +27,10 @@ export default function routes(services: Services): Router {
     editBookingWindowController.submit(),
   )
 
-  router.get('/prisons/:prisonId/configuration/contact-details/:action', addEditContactDetailsController.view())
+  router.get(
+    '/prisons/:prisonId/configuration/contact-details/:action{add|edit}',
+    addEditContactDetailsController.view(),
+  )
   router.post(
     '/prisons/:prisonId/configuration/contact-details/add',
     addEditContactDetailsController.validate(),

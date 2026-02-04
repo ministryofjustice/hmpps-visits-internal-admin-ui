@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { CategoryGroupService, PrisonService } from '../../../services'
 import prisonerCategories from '../../../constants/prisonerCategories'
+import { PrisonParams } from '../../../@types/requestParameterTypes'
 
 export default class CategoryGroupsController {
   public constructor(
@@ -8,7 +9,7 @@ export default class CategoryGroupsController {
     private readonly categoryGroupService: CategoryGroupService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 

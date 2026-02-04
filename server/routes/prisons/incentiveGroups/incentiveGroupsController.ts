@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { IncentiveGroupService, PrisonService } from '../../../services'
 import incentiveLevels from '../../../constants/incentiveLevels'
+import { PrisonParams } from '../../../@types/requestParameterTypes'
 
 export default class IncentiveGroupsController {
   public constructor(
@@ -8,7 +9,7 @@ export default class IncentiveGroupsController {
     private readonly incentiveGroupService: IncentiveGroupService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 

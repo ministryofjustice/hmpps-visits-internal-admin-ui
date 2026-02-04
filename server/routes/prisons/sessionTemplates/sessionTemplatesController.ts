@@ -2,6 +2,7 @@ import { RequestHandler } from 'express'
 import { PrisonService, SessionTemplateService } from '../../../services'
 import { SessionTemplate, SessionTemplatesRangeType } from '../../../data/visitSchedulerApiTypes'
 import sessionTemplatesFilterRanges from '../../../constants/sessionTemplatesFilterRanges'
+import { PrisonParams } from '../../../@types/requestParameterTypes'
 
 export default class SessionTemplatesController {
   public constructor(
@@ -9,7 +10,7 @@ export default class SessionTemplatesController {
     private readonly sessionTemplateService: SessionTemplateService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
 

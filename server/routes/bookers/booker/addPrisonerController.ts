@@ -3,6 +3,7 @@ import { ValidationChain, body, validationResult } from 'express-validator'
 import { BookerService, PrisonService } from '../../../services'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
 import { PRISON_NUMBER_REGEX } from '../../../constants/constants'
+import { BookerParams } from '../../../@types/requestParameterTypes'
 
 export default class AddPrisonerController {
   public constructor(
@@ -10,7 +11,7 @@ export default class AddPrisonerController {
     private readonly prisonService: PrisonService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<BookerParams> {
     return async (req, res) => {
       const { reference } = req.params
       const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
@@ -36,7 +37,7 @@ export default class AddPrisonerController {
     }
   }
 
-  public submit(): RequestHandler {
+  public submit(): RequestHandler<BookerParams> {
     return async (req, res) => {
       const { reference } = req.params
       const { prisonerNumber, prisonCode }: { prisonerNumber: string; prisonCode: string } = req.body

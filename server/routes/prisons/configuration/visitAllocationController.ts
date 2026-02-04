@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { PrisonService, VisitAllocationService } from '../../../services'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
+import { PrisonParams } from '../../../@types/requestParameterTypes'
 
 export default class VisitAllocationController {
   public constructor(
@@ -8,7 +9,7 @@ export default class VisitAllocationController {
     private readonly visitAllocationService: VisitAllocationService,
   ) {}
 
-  public view(): RequestHandler {
+  public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
       const { username } = res.locals.user
@@ -29,7 +30,7 @@ export default class VisitAllocationController {
     }
   }
 
-  public resetBalances(): RequestHandler {
+  public resetBalances(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
       const { username } = res.locals.user
