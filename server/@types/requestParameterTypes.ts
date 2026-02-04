@@ -17,6 +17,6 @@ export interface PrisonReferenceParams {
 }
 
 export interface PrisonActionParams {
-  prisonId: 'add' | 'edit'
-  action: string
+  action: 'add' | 'edit'
+  prisonId: string
 }
