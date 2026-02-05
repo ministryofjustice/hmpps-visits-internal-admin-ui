@@ -15,6 +15,7 @@ import sessionTemplates from './integration_tests/mockApis/visitScheduler/sessio
 import visits from './integration_tests/mockApis/visitScheduler/visits'
 
 export default defineConfig({
+  allowCypressEnv: false,
   chromeWebSecurity: false,
   fixturesFolder: 'integration_tests/fixtures',
   screenshotsFolder: 'integration_tests/screenshots',
