@@ -33,7 +33,7 @@
     "npm": "^11"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^8.0.1",
+    "@ministryofjustice/frontend": "^9.0.0",
     "@ministryofjustice/hmpps-monitoring": "1.0.2",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
