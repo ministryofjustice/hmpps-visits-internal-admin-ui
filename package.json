@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@ministryofjustice/eslint-config-hmpps": "^1.0.3",
-    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
+    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.4",
     "@tsconfig/node24": "^24.0.4",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
@@ -107,9 +107,6 @@
     "mocha": {
       "diff": "^8.0.4",
       "serialize-javascript": "^7.0.5"
-    },
-    "@ministryofjustice/hmpps-npm-script-allowlist": {
-      "tar": "^7.5.13"
     }
   }
 }
