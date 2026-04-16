@@ -2,12 +2,12 @@
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
-    "types": ["cypress"],
+    "lib": ["es6", "dom"],
+    "types": ["cypress", "express", "express-session"],
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "rootDir": "./integration_tests",
     "ignoreDeprecations": "6.0"
   },
-  "include": ["**/index.d.ts"]
+  "include": ["**/*.ts"]
 }
