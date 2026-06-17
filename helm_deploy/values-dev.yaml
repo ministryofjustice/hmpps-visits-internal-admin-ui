@@ -21,6 +21,8 @@ generic-service:
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler-dev.prison.service.justice.gov.uk"
     STAFF_SERVICE_URL: "https://manage-prison-visits-dev.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: dev
+    NODE_USE_ENV_PROXY: "1"
+    APPLICATION_INSIGHTS_NO_STATSBEAT: "true"
     
   namespace_secrets:
     hmpps-envoy-https-proxy-env:
