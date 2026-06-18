@@ -55,7 +55,7 @@
     "nunjucks": "^3.2.4",
     "passport": "^0.7.0",
     "passport-oauth2": "^1.8.0",
-    "redis": "^5.12.1",
+    "redis": "^6.0.0",
     "superagent": "^10.3.0",
     "url-value-parser": "^2.2.0",
     "validator": "^13.15.35"
