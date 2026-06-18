@@ -1,23 +1,21 @@
-import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from 'applicationinsights'
-import type { ApplicationInfo } from '../applicationInfo'
+import { initialiseTelemetry, flushTelemetry, telemetry } from '@ministryofjustice/hmpps-azure-telemetry'
+import logger from '../../logger'
 
-export function initialiseAppInsights(): void {
-  if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
-    // eslint-disable-next-line no-console
-    console.log('Enabling azure application insights')
+initialiseTelemetry({
+  serviceName: 'hmpps-visits-internal-admin-ui',
+  serviceVersion: process.env.BUILD_NUMBER || 'unknown',
+  connectionString: process.env.APPLICATIONINSIGHTS_CONNECTION_STRING,
+  debug: process.env.DEBUG_TELEMETRY === 'true',
+})
+  .addFilter(telemetry.processors.filterSpanWherePath(['/health', '/ping', '/info', '/assets/*', '/favicon.ico']))
+  .addModifier(telemetry.processors.enrichSpanNameWithHttpRoute())
+  .startRecording()
 
-    setup().setDistributedTracingMode(DistributedTracingModes.AI_AND_W3C).start()
-  }
+const shutdown = async (signal: string) => {
+  logger.info(`${signal} received, shutting down...`)
+  await flushTelemetry()
+  process.exit(0)
 }
 
-export function buildAppInsightsClient(
-  { applicationName, buildNumber }: ApplicationInfo,
-  overrideName?: string,
-): TelemetryClient {
-  if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
-    defaultClient.context.tags['ai.cloud.role'] = overrideName || applicationName
-    defaultClient.context.tags['ai.application.ver'] = buildNumber
-    return defaultClient
-  }
-  return null
-}
+process.on('SIGTERM', () => shutdown('SIGTERM'))
+process.on('SIGINT', () => shutdown('SIGINT'))
