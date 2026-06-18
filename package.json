@@ -5,7 +5,7 @@
   "repository": "git@github.com:ministryofjustice/hmpps-visits-internal-admin-ui.git",
   "license": "MIT",
   "scripts": {
-    "prepare": "husky",
+    "prepare": "hmpps-precommit-hooks-prepare",
     "copy-views": "cp -R server/views dist/server/",
     "compile-sass": "sass --quiet-deps --no-source-map --load-path=node_modules/govuk-frontend/dist --load-path=node_modules/@ministryofjustice/frontend --load-path=. assets/scss/application.scss:./assets/stylesheets/application.css --style compressed",
     "watch-ts": "tsc -w",
@@ -63,6 +63,7 @@
   "devDependencies": {
     "@ministryofjustice/eslint-config-hmpps": "^1.0.3",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
+    "@ministryofjustice/hmpps-precommit-hooks": "3.0.1",
     "@tsconfig/node24": "^24.0.4",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
@@ -86,7 +87,6 @@
     "cypress": "^15.17.0",
     "cypress-multi-reporters": "^2.0.5",
     "dotenv": "^17.4.2",
-    "husky": "^9.1.7",
     "jest": "^30.4.2",
     "jest-html-reporter": "^4.4.0",
     "jest-junit": "^17.0.0",
