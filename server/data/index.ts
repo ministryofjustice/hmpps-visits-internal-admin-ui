@@ -1,8 +1,3 @@
-/* eslint-disable import/first */
-import applicationInfoSupplier from '../applicationInfo'
-
-const applicationInfo = applicationInfoSupplier()
-
 import HmppsAuthClient from './hmppsAuthClient'
 import ManageUsersApiClient from './manageUsersApiClient'
 import { createRedisClient } from './redisClient'
@@ -13,6 +8,9 @@ import VisitSchedulerApiClient from './visitSchedulerApiClient'
 import config from '../config'
 import BookerRegistryApiClient from './bookerRegistryApiClient'
 import VisitAllocationApiClient from './visitAllocationApiClient'
+import applicationInfoSupplier from '../applicationInfo'
+
+const applicationInfo = applicationInfoSupplier()
 
 type RestClientBuilder<T> = (token: string) => T
 
