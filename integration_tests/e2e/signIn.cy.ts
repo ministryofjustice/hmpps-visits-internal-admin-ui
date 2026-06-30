@@ -8,7 +8,6 @@ context('Sign In', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
-    cy.task('stubManageUser')
   })
 
   it('Unauthenticated user directed to auth', () => {
@@ -68,10 +67,9 @@ context('Sign In', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
 
     cy.task('stubVerifyToken', true)
-    cy.task('stubManageUser', 'bobby brown')
     cy.signIn()
 
-    indexPage.headerUserName().contains('B. Brown')
+    indexPage.headerUserName().contains('J. Smith')
   })
 
   it('User without required role is directed to Authorisation Error page', () => {

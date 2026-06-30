@@ -1,7 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { BadRequest } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockLocationGroupService } from '../../../services/testutils/mocks'
@@ -203,7 +203,10 @@ describe('Add a location group', () => {
       const createLocationGroupDto = TestData.createLocationGroupDto({
         locations: [{ levelOneCode: '1a', levelTwoCode: '2a', levelThreeCode: '3a', levelFourCode: '4a' }],
       })
-      locationGroupService.createLocationGroup.mockRejectedValue(new BadRequest('API error!'))
+      locationGroupService.createLocationGroup.mockRejectedValue({
+        responseStatus: 400,
+        message: 'API error!',
+      } as SanitisedError)
 
       return request(app)
         .post(url)

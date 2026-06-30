@@ -1,7 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { BadRequest } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService } from '../../../services/testutils/mocks'
@@ -111,11 +111,7 @@ describe('Add / edit contact details', () => {
             text: 'Contact details added',
           })
 
-          expect(prisonService.createPrisonContactDetails).toHaveBeenCalledWith(
-            'user1',
-            prison.code,
-            prisonContactDetails,
-          )
+          expect(prisonService.createPrisonContactDetails).toHaveBeenCalledWith(prison.code, prisonContactDetails)
         })
     })
 
@@ -138,11 +134,7 @@ describe('Add / edit contact details', () => {
             text: 'Contact details updated',
           })
 
-          expect(prisonService.updatePrisonContactDetails).toHaveBeenCalledWith(
-            'user1',
-            prison.code,
-            prisonContactDetails,
-          )
+          expect(prisonService.updatePrisonContactDetails).toHaveBeenCalledWith(prison.code, prisonContactDetails)
         })
     })
 
@@ -182,8 +174,14 @@ describe('Add / edit contact details', () => {
       (action: string) => {
         const prisonContactDetails = TestData.prisonContactDetails()
 
-        prisonService.createPrisonContactDetails.mockRejectedValue(new BadRequest('API error!'))
-        prisonService.updatePrisonContactDetails.mockRejectedValue(new BadRequest('API error!'))
+        prisonService.createPrisonContactDetails.mockRejectedValue({
+          responseStatus: 400,
+          message: 'API error!',
+        } as SanitisedError)
+        prisonService.updatePrisonContactDetails.mockRejectedValue({
+          responseStatus: 400,
+          message: 'API error!',
+        } as SanitisedError)
 
         return request(app)
           .post(`${baseUrl}/${action}`)
@@ -237,7 +235,7 @@ describe('Add / edit contact details', () => {
           })
           expect(prisonService.createPrisonContactDetails).not.toHaveBeenCalled()
           expect(prisonService.updatePrisonContactDetails).not.toHaveBeenCalled()
-          expect(prisonService.deletePrisonContactDetails).toHaveBeenCalledWith('user1', prison.code)
+          expect(prisonService.deletePrisonContactDetails).toHaveBeenCalledWith(prison.code)
         })
     })
   })

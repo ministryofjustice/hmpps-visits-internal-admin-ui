@@ -14,7 +14,6 @@ context('Session templates - single', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
-    cy.task('stubManageUser')
     cy.task('stubPrisonNames')
     cy.signIn()
 

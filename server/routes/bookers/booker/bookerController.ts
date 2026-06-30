@@ -14,8 +14,8 @@ export default class BookerController {
       const backLinkHref = req.query.from === 'search-results' ? '/bookers/search/results' : '/bookers'
 
       const [booker, prisonNames] = await Promise.all([
-        this.bookerService.getBookerByReference(res.locals.user.username, reference),
-        this.prisonService.getPrisonNames(res.locals.user.username),
+        this.bookerService.getBookerByReference(reference),
+        this.prisonService.getPrisonNames(),
       ])
 
       return res.render('pages/bookers/booker/booker', {

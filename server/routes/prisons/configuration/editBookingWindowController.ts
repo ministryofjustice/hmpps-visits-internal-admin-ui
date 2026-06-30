@@ -10,7 +10,7 @@ export default class EditBookingWindowController {
   public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
 
       const formValues = {
         policyNoticeDaysMin: prison.policyNoticeDaysMin.toString(),

@@ -1,4 +1,5 @@
-import { BadRequest, NotFound } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
+import { NotFound } from 'http-errors'
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
@@ -149,7 +150,7 @@ describe('Supported prisons', () => {
 
     it('should set a flash error if there is an API error response', () => {
       const expectedError = { msg: '400 Bad Request' }
-      prisonService.createPrison.mockRejectedValue(new BadRequest())
+      prisonService.createPrison.mockRejectedValue({ responseStatus: 400, message: 'Bad Request' } as SanitisedError)
 
       return request(app)
         .post('/prisons')

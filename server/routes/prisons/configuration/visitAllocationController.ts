@@ -12,12 +12,10 @@ export default class VisitAllocationController {
   public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
-      const { username } = res.locals.user
 
       const [prison, negativeBalanceCount] = await Promise.all([
-        this.prisonService.getPrison(res.locals.user.username, prisonId),
+        this.prisonService.getPrison(prisonId),
         this.visitAllocationService.getNegativeBalanceCount({
-          username,
           prisonCode: prisonId,
         }),
       ])

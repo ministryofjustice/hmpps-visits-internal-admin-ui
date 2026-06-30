@@ -123,7 +123,7 @@ describe('Add / Remove excluded date', () => {
           expect($('[data-test="exclude-date"]').text()).toBe('26 December 2023')
           expect($('[data-test="add-date-cancel"]').attr('href')).toBe(`/prisons/${prisonCode}/excluded-dates`)
           expect(visitService.getVisitCountByDate).toHaveBeenCalledTimes(1)
-          expect(visitService.getVisitCountByDate).toHaveBeenCalledWith('user1', prisonCode, date)
+          expect(visitService.getVisitCountByDate).toHaveBeenCalledWith(prisonCode, date)
         })
     })
   })

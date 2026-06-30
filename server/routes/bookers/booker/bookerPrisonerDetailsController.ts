@@ -12,7 +12,7 @@ export default class BookerPrisonerDetailsController {
     return async (req, res) => {
       const { prisonerId, reference } = req.params
 
-      const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
+      const booker = await this.bookerService.getBookerByReference(reference)
 
       const prisoner = booker.permittedPrisoners.find(permittedPrisoner => permittedPrisoner.prisonerId === prisonerId)
 
@@ -20,8 +20,7 @@ export default class BookerPrisonerDetailsController {
         return res.redirect(`/bookers/booker/${reference}`)
       }
 
-      const prisonName =
-        prisoner && (await this.prisonService.getPrisonName(res.locals.user.username, prisoner.prisonCode))
+      const prisonName = prisoner && (await this.prisonService.getPrisonName(prisoner.prisonCode))
 
       return res.render('pages/bookers/booker/bookerPrisonerDetails', {
         errors: req.flash('errors'),

@@ -1,7 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { BadRequest } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
@@ -126,7 +126,7 @@ describe('Prison booking window edit', () => {
 
     it('should handle API errors by setting flash errors and redirecting to same page', () => {
       const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
-      prisonService.updatePrison.mockRejectedValue(new BadRequest('API error!'))
+      prisonService.updatePrison.mockRejectedValue({ responseStatus: 400, message: 'API error!' } as SanitisedError)
 
       return request(app)
         .post(baseUrl)

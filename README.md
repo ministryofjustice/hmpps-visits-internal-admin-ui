@@ -6,14 +6,14 @@
 Allows internal staff to administer prison visit bookings system.
 
 ## Running the app
-The easiest way to run the app is to use docker compose to create the service and all dependencies. 
+The easiest way to run the app is to use docker compose to create the service and all dependencies.
 
 `docker compose pull`
 
 `docker compose up`
 
 ### Dependencies
-The app requires: 
+The app requires:
 * hmpps-auth - for authentication
 * redis - session store and token caching
 * prison-register - look up names of prisons from Prison codes
@@ -31,7 +31,6 @@ Using credentials from the dev namespace, create a `.env` local settings file
 ```bash
 HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
 HMPPS_AUTH_EXTERNAL_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-MANAGE_USERS_API_URL=https://manage-users-api-dev.hmpps.service.justice.gov.uk
 NODE_ENV=development
 
 # Use credentials from the dev namespace for API and SYSTEM client
@@ -74,7 +73,7 @@ Then run the server in test mode by:
 And then either, run tests in headless mode with:
 
 `npm run int-test`
- 
+
 Or run tests with the cypress UI:
 
 `npm run int-test-ui`

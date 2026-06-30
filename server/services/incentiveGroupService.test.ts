@@ -1,26 +1,18 @@
 import IncentiveGroupService from './incentiveGroupService'
 import TestData from '../routes/testutils/testData'
-import { createMockHmppsAuthClient, createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
-
-const token = 'some token'
+import { createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
 
 describe('Incentive level group service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()
 
   let incentiveGroupService: IncentiveGroupService
-
-  const VisitSchedulerApiClientFactory = jest.fn()
 
   const singleIncentiveGroup = TestData.incentiveGroup()
   const incentiveGroups = [TestData.incentiveGroup()]
   const createIncentiveGroupDto = TestData.createIncentiveGroupDto()
 
   beforeEach(() => {
-    VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
-    incentiveGroupService = new IncentiveGroupService(VisitSchedulerApiClientFactory, hmppsAuthClient)
-
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
+    incentiveGroupService = new IncentiveGroupService(visitSchedulerApiClient)
   })
 
   afterEach(() => {
@@ -31,7 +23,7 @@ describe('Incentive level group service', () => {
     it('should return an incentive group', async () => {
       visitSchedulerApiClient.getSingleIncentiveGroup.mockResolvedValue(singleIncentiveGroup)
 
-      const results = await incentiveGroupService.getSingleIncentiveGroup('user', singleIncentiveGroup.reference)
+      const results = await incentiveGroupService.getSingleIncentiveGroup(singleIncentiveGroup.reference)
 
       expect(results).toEqual(singleIncentiveGroup)
       expect(visitSchedulerApiClient.getSingleIncentiveGroup).toHaveBeenCalledWith(singleIncentiveGroup.reference)
@@ -42,7 +34,7 @@ describe('Incentive level group service', () => {
     it('should return an array of all incentive level groups for a prison', async () => {
       visitSchedulerApiClient.getIncentiveGroups.mockResolvedValue(incentiveGroups)
 
-      const results = await incentiveGroupService.getIncentiveGroups('user', 'HEI')
+      const results = await incentiveGroupService.getIncentiveGroups('HEI')
 
       expect(results).toEqual(incentiveGroups)
       expect(visitSchedulerApiClient.getIncentiveGroups).toHaveBeenCalledWith('HEI')

@@ -1,21 +1,21 @@
+import { RestClient, asSystem } from '@ministryofjustice/hmpps-rest-client'
+import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
-import RestClient from './restClient'
+import logger from '../../logger'
 import { PrisonNegativeBalanceCountDto } from './visitAllocationApiTypes'
 
-export default class VisitAllocationApiClient {
-  private restClient: RestClient
-
-  constructor(token: string) {
-    this.restClient = new RestClient('visitAllocationApiClient', config.apis.visitAllocation, token)
+export default class VisitAllocationApiClient extends RestClient {
+  constructor(authenticationClient: AuthenticationClient) {
+    super('Visit Allocation API', config.apis.visitAllocation, logger, authenticationClient)
   }
 
   // admin-controller
 
   async resetNegativeBalances(prisonCode: string): Promise<void> {
-    await this.restClient.post({ path: `/admin/prison/${prisonCode}/reset` })
+    await this.post({ path: `/admin/prison/${prisonCode}/reset` }, asSystem())
   }
 
   async getNegativeBalanceCount(prisonCode: string): Promise<PrisonNegativeBalanceCountDto> {
-    return this.restClient.get({ path: `/admin/prison/${prisonCode}/reset/count` })
+    return this.get({ path: `/admin/prison/${prisonCode}/reset/count` }, asSystem())
   }
 }

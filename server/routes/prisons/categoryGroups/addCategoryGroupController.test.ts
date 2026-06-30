@@ -1,7 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { BadRequest } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockCategoryGroupService } from '../../../services/testutils/mocks'
@@ -125,7 +125,10 @@ describe('Add a category group', () => {
 
     it('should handle API errors by setting flash errors and redirecting to same page', () => {
       const createCategoryGroupDto = TestData.createCategoryGroupDto({ categories: ['C'] })
-      categoryGroupService.createCategoryGroup.mockRejectedValue(new BadRequest('API error!'))
+      categoryGroupService.createCategoryGroup.mockRejectedValue({
+        responseStatus: 400,
+        message: 'API error!',
+      } as SanitisedError)
 
       return request(app)
         .post(url)

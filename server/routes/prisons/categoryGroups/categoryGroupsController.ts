@@ -13,8 +13,8 @@ export default class CategoryGroupsController {
     return async (req, res) => {
       const { prisonId } = req.params
 
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
-      const rawCategoryGroups = await this.categoryGroupService.getCategoryGroups(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
+      const rawCategoryGroups = await this.categoryGroupService.getCategoryGroups(prisonId)
       const categoryGroups = rawCategoryGroups.map(group => {
         return {
           ...group,

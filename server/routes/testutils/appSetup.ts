@@ -1,6 +1,15 @@
-/* eslint-disable import/first */
-// eslint-disable-next-line import/order
+import express, { Express } from 'express'
+import { NotFound } from 'http-errors'
+import { Session, SessionData } from 'express-session'
+import { ValidationError } from 'express-validator'
 import type { ApplicationInfo } from '../../applicationInfo'
+
+import routes from '../index'
+import nunjucksSetup from '../../utils/nunjucksSetup'
+import errorHandler from '../../errorHandler'
+import type { Services } from '../../services'
+import { FlashErrorMessage, FlashFormValues, MoJAlert } from '../../@types/visits-admin'
+import type { HmppsUser } from '../../interfaces/hmppsUser'
 
 const testAppInfo: ApplicationInfo = {
   applicationName: 'test',
@@ -11,31 +20,16 @@ const testAppInfo: ApplicationInfo = {
   branchName: 'main',
 }
 
-jest.mock('../../applicationInfo', () => {
-  return jest.fn(() => testAppInfo)
-})
-
-import express, { Express } from 'express'
-import { NotFound } from 'http-errors'
-import { Session, SessionData } from 'express-session'
-import { ValidationError } from 'express-validator'
-
-import routes from '../index'
-import nunjucksSetup from '../../utils/nunjucksSetup'
-import errorHandler from '../../errorHandler'
-import * as auth from '../../authentication/auth'
-import type { Services } from '../../services'
-import { FlashErrorMessage, FlashFormValues, MoJAlert } from '../../@types/visits-admin'
-
-export const user: Express.User = {
+export const user: HmppsUser = {
   name: 'FIRST LAST',
   userId: 'id',
+  staffId: undefined,
   token: 'token',
   username: 'user1',
   displayName: 'First Last',
-  active: true,
   activeCaseLoadId: 'MDI',
-  authSource: 'NOMIS',
+  authSource: 'nomis',
+  userRoles: [],
 }
 
 export type FlashData = {
@@ -49,7 +43,7 @@ export const flashProvider = jest.fn()
 function appSetup(
   services: Services,
   production: boolean,
-  userSupplier: () => Express.User,
+  userSupplier: () => HmppsUser,
   sessionData: SessionData,
 ): Express {
   const app = express()
@@ -59,10 +53,12 @@ function appSetup(
   nunjucksSetup(app, testAppInfo)
   app.use((req, res, next) => {
     req.session = sessionData as Session & Partial<SessionData>
-    req.user = userSupplier()
+    req.user = userSupplier() as unknown as Express.User
     req.flash = flashProvider
     res.locals = {
-      user: { ...req.user },
+      user: userSupplier(),
+      cspNonce: 'test-nonce',
+      csrfToken: 'test-csrf-token',
     }
     next()
   })
@@ -83,9 +79,8 @@ export function appWithAllRoutes({
 }: {
   production?: boolean
   services?: Partial<Services>
-  userSupplier?: () => Express.User
+  userSupplier?: () => HmppsUser
   sessionData?: SessionData
 }): Express {
-  auth.default.authenticationMiddleware = () => (req, res, next) => next()
   return appSetup(services as Services, production, userSupplier, sessionData)
 }

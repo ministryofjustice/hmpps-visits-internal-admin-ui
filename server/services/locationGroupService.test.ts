@@ -1,16 +1,11 @@
 import LocationGroupService from './locationGroupService'
 import TestData from '../routes/testutils/testData'
-import { createMockHmppsAuthClient, createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
-
-const token = 'some token'
+import { createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
 
 describe('Location group service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()
 
   let locationGroupService: LocationGroupService
-
-  const VisitSchedulerApiClientFactory = jest.fn()
 
   const locationGroups = [TestData.locationGroup()]
   const singleLocationGroup = TestData.locationGroup()
@@ -18,10 +13,7 @@ describe('Location group service', () => {
   const updateLocationGroupDto = TestData.updateLocationGroupDto()
 
   beforeEach(() => {
-    VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
-    locationGroupService = new LocationGroupService(VisitSchedulerApiClientFactory, hmppsAuthClient)
-
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
+    locationGroupService = new LocationGroupService(visitSchedulerApiClient)
   })
 
   afterEach(() => {
@@ -32,7 +24,7 @@ describe('Location group service', () => {
     it('should return an a single location group', async () => {
       visitSchedulerApiClient.getSingleLocationGroup.mockResolvedValue(singleLocationGroup)
 
-      const results = await locationGroupService.getSingleLocationGroup('user', singleLocationGroup.reference)
+      const results = await locationGroupService.getSingleLocationGroup(singleLocationGroup.reference)
 
       expect(results).toEqual(singleLocationGroup)
       expect(visitSchedulerApiClient.getSingleLocationGroup).toHaveBeenCalledWith(singleLocationGroup.reference)
@@ -43,7 +35,7 @@ describe('Location group service', () => {
     it('should return an array of all location groups for a prison', async () => {
       visitSchedulerApiClient.getLocationGroups.mockResolvedValue(locationGroups)
 
-      const results = await locationGroupService.getLocationGroups('user', 'HEI')
+      const results = await locationGroupService.getLocationGroups('HEI')
 
       expect(results).toEqual(locationGroups)
       expect(visitSchedulerApiClient.getLocationGroups).toHaveBeenCalledWith('HEI')

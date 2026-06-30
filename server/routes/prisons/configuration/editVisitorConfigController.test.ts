@@ -1,7 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { BadRequest } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService } from '../../../services/testutils/mocks'
@@ -150,7 +150,7 @@ describe('Edit visitor configuration', () => {
         adultAgeYears: 16,
       })
 
-      prisonService.updatePrison.mockRejectedValue(new BadRequest('API error!'))
+      prisonService.updatePrison.mockRejectedValue({ responseStatus: 400, message: 'API error!' } as SanitisedError)
 
       return request(app)
         .post(url)

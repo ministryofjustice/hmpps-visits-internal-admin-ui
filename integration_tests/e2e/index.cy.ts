@@ -5,7 +5,6 @@ context('Home page', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
-    cy.task('stubManageUser')
     cy.signIn()
   })
 

@@ -15,9 +15,9 @@ export default class SingleCategoryGroupController {
       const { reference, prisonId } = req.params
       const { sessionTemplateRef } = req.query
 
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
 
-      const categoryGroup = await this.categoryGroupService.getSingleCategoryGroup(res.locals.user.username, reference)
+      const categoryGroup = await this.categoryGroupService.getSingleCategoryGroup(reference)
       const categoryGroupValues = categoryGroup.categories.map(category => prisonerCategories[category])
 
       return res.render('pages/prisons/categoryGroups/viewSingleCategoryGroup', {
@@ -36,7 +36,7 @@ export default class SingleCategoryGroupController {
       const { reference, prisonId } = req.params
 
       try {
-        const { name } = await this.categoryGroupService.getSingleCategoryGroup(res.locals.user.username, reference)
+        const { name } = await this.categoryGroupService.getSingleCategoryGroup(reference)
         await this.categoryGroupService.deleteCategoryGroup(res.locals.user.username, reference)
         req.flash('messages', {
           variant: 'success',
