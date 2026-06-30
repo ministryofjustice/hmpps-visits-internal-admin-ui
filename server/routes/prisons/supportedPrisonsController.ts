@@ -9,7 +9,7 @@ export default class SupportedPrisonsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const prisons = await this.prisonService.getAllPrisons(res.locals.user.username)
+      const prisons = await this.prisonService.getAllPrisons()
 
       return res.render('pages/prisons/prisons', {
         errors: req.flash('errors'),
@@ -31,7 +31,7 @@ export default class SupportedPrisonsController {
         .bail()
         .custom(async prisonId => {
           try {
-            newPrisonName = await this.prisonService.getPrisonName(res.locals.user.username, prisonId)
+            newPrisonName = await this.prisonService.getPrisonName(prisonId)
           } catch {
             throw new Error(`Prison '${prisonId}' is not in the prison register`)
           }

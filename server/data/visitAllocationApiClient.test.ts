@@ -1,38 +1,37 @@
 import nock from 'nock'
+import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
 import TestData from '../routes/testutils/testData'
 import VisitAllocationApiClient from './visitAllocationApiClient'
 
 describe('visitAllocationApiClient', () => {
-  let fakeVisitAllocationApi: nock.Scope
+  let mockAuthenticationClient: jest.Mocked<AuthenticationClient>
   let visitAllocationApiClient: VisitAllocationApiClient
-  const token = 'token-1'
 
   const prisonCode = 'HEI'
 
   beforeEach(() => {
-    fakeVisitAllocationApi = nock(config.apis.prisonRegister.url)
-    visitAllocationApiClient = new VisitAllocationApiClient(token)
+    mockAuthenticationClient = {
+      getToken: jest.fn().mockResolvedValue('test-system-token'),
+    } as unknown as jest.Mocked<AuthenticationClient>
+
+    visitAllocationApiClient = new VisitAllocationApiClient(mockAuthenticationClient)
   })
 
   afterEach(() => {
-    if (!nock.isDone()) {
-      nock.cleanAll()
-      throw new Error('Not all nock interceptors were used!')
-    }
-    nock.abortPendingRequests()
     nock.cleanAll()
+    jest.resetAllMocks()
   })
 
   describe('resetNegativeBalances', () => {
     it('should reset negative visit balances for prisoners in given prison', async () => {
-      fakeVisitAllocationApi
+      nock(config.apis.visitAllocation.url)
         .post(`/admin/prison/${prisonCode}/reset`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200)
 
       await visitAllocationApiClient.resetNegativeBalances(prisonCode)
-      expect(fakeVisitAllocationApi.isDone()).toBeTruthy()
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -40,13 +39,15 @@ describe('visitAllocationApiClient', () => {
     it('should get negative balance count for given prison', async () => {
       const prisonNegativeBalanceCount = TestData.prisonNegativeBalanceCount()
 
-      fakeVisitAllocationApi
+      nock(config.apis.visitAllocation.url)
         .get(`/admin/prison/${prisonCode}/reset/count`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, prisonNegativeBalanceCount)
 
       const output = await visitAllocationApiClient.getNegativeBalanceCount(prisonCode)
       expect(output).toStrictEqual(prisonNegativeBalanceCount)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 })

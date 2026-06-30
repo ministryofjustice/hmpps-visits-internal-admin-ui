@@ -14,16 +14,16 @@ export default class EditPrisonerController {
     return async (req, res) => {
       const { prisonerId, reference } = req.params
 
-      const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
+      const booker = await this.bookerService.getBookerByReference(reference)
       const prisoner = booker.permittedPrisoners.find(permittedPrisoner => permittedPrisoner.prisonerId === prisonerId)
 
       if (!prisoner) {
         return res.redirect(`/bookers/booker/${reference}`)
       }
 
-      const currentPrisonName = await this.prisonService.getPrisonName(res.locals.user.username, prisoner.prisonCode)
+      const currentPrisonName = await this.prisonService.getPrisonName(prisoner.prisonCode)
 
-      const prisons = await this.prisonService.getAllPrisons(res.locals.user.username)
+      const prisons = await this.prisonService.getAllPrisons()
       const prisonSelectItems = prisons.map(prison => ({ value: prison.code, text: prison.name }))
 
       return res.render('pages/bookers/booker/editPrisoner', {
@@ -50,7 +50,7 @@ export default class EditPrisonerController {
       }
 
       try {
-        const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
+        const booker = await this.bookerService.getBookerByReference(reference)
 
         await this.bookerService.updateRegisteredPrison(
           res.locals.user.username,

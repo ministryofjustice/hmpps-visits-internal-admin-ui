@@ -15,12 +15,9 @@ export default class SingleIncentiveGroupController {
       const { reference, prisonId } = req.params
       const { sessionTemplateRef } = req.query
 
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
 
-      const incentiveGroup = await this.incentiveGroupService.getSingleIncentiveGroup(
-        res.locals.user.username,
-        reference,
-      )
+      const incentiveGroup = await this.incentiveGroupService.getSingleIncentiveGroup(reference)
       const incentiveLevelValues = incentiveGroup.incentiveLevels.map(level => incentiveLevels[level])
 
       return res.render('pages/prisons/incentiveGroups/viewSingleIncentiveGroup', {
@@ -39,7 +36,7 @@ export default class SingleIncentiveGroupController {
       const { reference, prisonId } = req.params
 
       try {
-        const { name } = await this.incentiveGroupService.getSingleIncentiveGroup(res.locals.user.username, reference)
+        const { name } = await this.incentiveGroupService.getSingleIncentiveGroup(reference)
         await this.incentiveGroupService.deleteIncentiveGroup(res.locals.user.username, reference)
         req.flash('messages', {
           variant: 'success',

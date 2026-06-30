@@ -55,8 +55,8 @@ describe('Booker details', () => {
           expect($('[data-test=prison-name-1]').text()).toBe('Hewell (HMP)')
           expect($('[data-test=prisoner-visitors-1]').text().trim()).toBe('1')
 
-          expect(bookerService.getBookerByReference).toHaveBeenCalledWith('user1', booker.reference)
-          expect(prisonService.getPrisonNames).toHaveBeenCalledWith('user1')
+          expect(bookerService.getBookerByReference).toHaveBeenCalledWith(booker.reference)
+          expect(prisonService.getPrisonNames).toHaveBeenCalledWith()
         })
     })
 

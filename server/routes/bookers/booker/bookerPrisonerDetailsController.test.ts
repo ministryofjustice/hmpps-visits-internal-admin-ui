@@ -61,8 +61,8 @@ describe('Booker prisoner details', () => {
             `${config.staffServiceUrl}/manage-bookers/${booker.reference}/booker-details`,
           )
 
-          expect(bookerService.getBookerByReference).toHaveBeenCalledWith('user1', booker.reference)
-          expect(prisonService.getPrisonName).toHaveBeenCalledWith('user1', prisoner.prisonCode)
+          expect(bookerService.getBookerByReference).toHaveBeenCalledWith(booker.reference)
+          expect(prisonService.getPrisonName).toHaveBeenCalledWith(prisoner.prisonCode)
         })
     })
 

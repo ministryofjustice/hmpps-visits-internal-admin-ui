@@ -1,25 +1,17 @@
 import TestData from '../routes/testutils/testData'
-import { createMockBookerRegistryApiClient, createMockHmppsAuthClient } from '../data/testutils/mocks'
+import { createMockBookerRegistryApiClient } from '../data/testutils/mocks'
 import BookerService from './bookerService'
 
-const token = 'some token'
-
 describe('Booker service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
   const bookerRegistryApiClient = createMockBookerRegistryApiClient()
 
   let bookerService: BookerService
-
-  const BookerRegistryApiClientFactory = jest.fn()
 
   const booker = TestData.bookerDto()
   const prisoner = TestData.permittedPrisonerDto()
 
   beforeEach(() => {
-    BookerRegistryApiClientFactory.mockReturnValue(bookerRegistryApiClient)
-    bookerService = new BookerService(BookerRegistryApiClientFactory, hmppsAuthClient)
-
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
+    bookerService = new BookerService(bookerRegistryApiClient)
   })
 
   afterEach(() => {
@@ -30,7 +22,7 @@ describe('Booker service', () => {
     describe('getBookerByReference', () => {
       it('should get booker details given booker reference', async () => {
         bookerRegistryApiClient.getBookerByReference.mockResolvedValue(booker)
-        const results = await bookerService.getBookerByReference('user', booker.reference)
+        const results = await bookerService.getBookerByReference(booker.reference)
 
         expect(bookerRegistryApiClient.getBookerByReference).toHaveBeenCalledWith(booker.reference)
         expect(results).toStrictEqual(booker)
@@ -40,7 +32,7 @@ describe('Booker service', () => {
     describe('getBookersByEmailOrReference', () => {
       it('should get booker details given email address', async () => {
         bookerRegistryApiClient.getBookersByEmail.mockResolvedValue([booker])
-        const results = await bookerService.getBookersByEmailOrReference('user', booker.email)
+        const results = await bookerService.getBookersByEmailOrReference(booker.email)
 
         expect(bookerRegistryApiClient.getBookersByEmail).toHaveBeenCalledWith(booker.email)
         expect(bookerRegistryApiClient.getBookerByReference).not.toHaveBeenCalled()
@@ -49,7 +41,7 @@ describe('Booker service', () => {
 
       it('should get booker details given reference', async () => {
         bookerRegistryApiClient.getBookerByReference.mockResolvedValue(booker)
-        const results = await bookerService.getBookersByEmailOrReference('user', booker.reference)
+        const results = await bookerService.getBookersByEmailOrReference(booker.reference)
 
         expect(bookerRegistryApiClient.getBookerByReference).toHaveBeenCalledWith(booker.reference)
         expect(bookerRegistryApiClient.getBookersByEmail).not.toHaveBeenCalled()

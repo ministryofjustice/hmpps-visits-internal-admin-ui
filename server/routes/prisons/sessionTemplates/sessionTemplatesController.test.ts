@@ -74,11 +74,7 @@ describe('Session templates listing page', () => {
           expect($('[data-test="template-weekly-frequency"]').text().trim()).toBe('1 week')
           expect($('[data-test="template-groups"]').text().trim()).toBe('None')
 
-          expect(sessionTemplateService.getSessionTemplates).toHaveBeenCalledWith(
-            undefined,
-            prison.code,
-            'CURRENT_OR_FUTURE',
-          )
+          expect(sessionTemplateService.getSessionTemplates).toHaveBeenCalledWith(prison.code, 'CURRENT_OR_FUTURE')
         })
     })
 

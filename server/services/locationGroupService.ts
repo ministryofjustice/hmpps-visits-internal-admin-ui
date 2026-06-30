@@ -1,32 +1,20 @@
 import logger from '../../logger'
-import { RestClientBuilder, VisitSchedulerApiClient, HmppsAuthClient } from '../data'
+import { VisitSchedulerApiClient } from '../data'
 import { LocationGroup, CreateLocationGroupDto, UpdateLocationGroupDto } from '../data/visitSchedulerApiTypes'
 
 export default class LocationGroupService {
-  constructor(
-    private readonly visitSchedulerApiClientFactory: RestClientBuilder<VisitSchedulerApiClient>,
-    private readonly hmppsAuthClient: HmppsAuthClient,
-  ) {}
+  constructor(private readonly visitSchedulerApiClient: VisitSchedulerApiClient) {}
 
-  async getSingleLocationGroup(username: string, reference: string): Promise<LocationGroup> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    return visitSchedulerApiClient.getSingleLocationGroup(reference)
+  async getSingleLocationGroup(reference: string): Promise<LocationGroup> {
+    return this.visitSchedulerApiClient.getSingleLocationGroup(reference)
   }
 
-  async getLocationGroups(username: string, prisonCode: string): Promise<LocationGroup[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    return visitSchedulerApiClient.getLocationGroups(prisonCode)
+  async getLocationGroups(prisonCode: string): Promise<LocationGroup[]> {
+    return this.visitSchedulerApiClient.getLocationGroups(prisonCode)
   }
 
   async createLocationGroup(username: string, createLocationGroupDto: CreateLocationGroupDto): Promise<LocationGroup> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    const locationGroup = await visitSchedulerApiClient.createLocationGroup(createLocationGroupDto)
+    const locationGroup = await this.visitSchedulerApiClient.createLocationGroup(createLocationGroupDto)
     logger.info(
       `Location group '${locationGroup.reference}' created for prison '${createLocationGroupDto.prisonId}' by ${username}`,
     )
@@ -38,19 +26,13 @@ export default class LocationGroupService {
     reference: string,
     updateLocationGroupDto: UpdateLocationGroupDto,
   ): Promise<LocationGroup> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    const locationGroup = await visitSchedulerApiClient.updateLocationGroup(reference, updateLocationGroupDto)
+    const locationGroup = await this.visitSchedulerApiClient.updateLocationGroup(reference, updateLocationGroupDto)
     logger.info(`Location group '${locationGroup.reference}' updated by ${username}`)
     return locationGroup
   }
 
   async deleteLocationGroup(username: string, reference: string): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
     logger.info(`Location group '${reference}' deleted by ${username}`)
-    return visitSchedulerApiClient.deleteLocationGroup(reference)
+    return this.visitSchedulerApiClient.deleteLocationGroup(reference)
   }
 }

@@ -6,34 +6,29 @@ import {
   LocationGroupService,
   PrisonService,
   SessionTemplateService,
-  UserService,
   VisitAllocationService,
   VisitService,
 } from '..'
 
 jest.mock('..')
 
-export const createMockBookerService = () => new BookerService(null, null) as jest.Mocked<BookerService>
+export const createMockBookerService = () => new BookerService(null) as jest.Mocked<BookerService>
 
-export const createMockCategoryGroupService = () =>
-  new CategoryGroupService(null, null) as jest.Mocked<CategoryGroupService>
+export const createMockCategoryGroupService = () => new CategoryGroupService(null) as jest.Mocked<CategoryGroupService>
 
-export const createMockExcludeDateService = () => new ExcludeDateService(null, null) as jest.Mocked<ExcludeDateService>
+export const createMockExcludeDateService = () => new ExcludeDateService(null) as jest.Mocked<ExcludeDateService>
 
 export const createMockIncentiveGroupService = () =>
-  new IncentiveGroupService(null, null) as jest.Mocked<IncentiveGroupService>
+  new IncentiveGroupService(null) as jest.Mocked<IncentiveGroupService>
 
-export const createMockLocationGroupService = () =>
-  new LocationGroupService(null, null) as jest.Mocked<LocationGroupService>
+export const createMockLocationGroupService = () => new LocationGroupService(null) as jest.Mocked<LocationGroupService>
 
-export const createMockPrisonService = () => new PrisonService(null, null, null) as jest.Mocked<PrisonService>
+export const createMockPrisonService = () => new PrisonService(null, null) as jest.Mocked<PrisonService>
 
 export const createMockSessionTemplateService = () =>
-  new SessionTemplateService(null, null) as jest.Mocked<SessionTemplateService>
-
-export const createMockUserService = () => new UserService(null) as jest.Mocked<UserService>
+  new SessionTemplateService(null) as jest.Mocked<SessionTemplateService>
 
 export const createMockVisitAllocationService = () =>
-  new VisitAllocationService(null, null) as jest.Mocked<VisitAllocationService>
+  new VisitAllocationService(null) as jest.Mocked<VisitAllocationService>
 
-export const createMockVisitService = () => new VisitService(null, null) as jest.Mocked<VisitService>
+export const createMockVisitService = () => new VisitService(null) as jest.Mocked<VisitService>

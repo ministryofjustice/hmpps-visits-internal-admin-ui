@@ -1,4 +1,5 @@
 import nock from 'nock'
+import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
 import VisitSchedulerApiClient from './visitSchedulerApiClient'
 import TestData from '../routes/testutils/testData'
@@ -18,22 +19,20 @@ import {
 } from './visitSchedulerApiTypes'
 
 describe('visitSchedulerApiClient', () => {
-  let fakeVisitSchedulerApi: nock.Scope
+  let mockAuthenticationClient: jest.Mocked<AuthenticationClient>
   let visitSchedulerApiClient: VisitSchedulerApiClient
-  const token = 'token-1'
 
   beforeEach(() => {
-    fakeVisitSchedulerApi = nock(config.apis.visitScheduler.url)
-    visitSchedulerApiClient = new VisitSchedulerApiClient(token)
+    mockAuthenticationClient = {
+      getToken: jest.fn().mockResolvedValue('test-system-token'),
+    } as unknown as jest.Mocked<AuthenticationClient>
+
+    visitSchedulerApiClient = new VisitSchedulerApiClient(mockAuthenticationClient)
   })
 
   afterEach(() => {
-    if (!nock.isDone()) {
-      nock.cleanAll()
-      throw new Error('Not all nock interceptors were used!')
-    }
-    nock.abortPendingRequests()
     nock.cleanAll()
+    jest.resetAllMocks()
   })
 
   describe('getBookedVisitsByDate', () => {
@@ -42,7 +41,7 @@ describe('visitSchedulerApiClient', () => {
         totalElements: 1,
       }
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .get(`/visits/search`)
         .query({
           prisonId: 'HEI',
@@ -52,12 +51,14 @@ describe('visitSchedulerApiClient', () => {
           page: '0',
           size: '1000',
         })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, results)
 
       const output = await visitSchedulerApiClient.getBookedVisitsByDate('HEI', '2022-05-23')
 
       expect(output).toEqual(results)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -65,11 +66,16 @@ describe('visitSchedulerApiClient', () => {
     it('should return an array of all supported Prisons', async () => {
       const results = TestData.prisonDtos()
 
-      fakeVisitSchedulerApi.get('/admin/prisons').matchHeader('authorization', `Bearer ${token}`).reply(200, results)
+      nock(config.apis.visitScheduler.url)
+        .get('/admin/prisons')
+        .matchHeader('authorization', 'Bearer test-system-token')
+        .reply(200, results)
 
       const output = await visitSchedulerApiClient.getAllPrisons()
 
       expect(output).toEqual(results)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -77,14 +83,16 @@ describe('visitSchedulerApiClient', () => {
     it('should return details of specified prison', async () => {
       const prison = TestData.prisonDto()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .get(`/admin/prisons/prison/${prison.code}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, prison)
 
       const output = await visitSchedulerApiClient.getPrison(prison.code)
 
       expect(output).toEqual(prison)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -92,7 +100,7 @@ describe('visitSchedulerApiClient', () => {
     it('should add prison to list of supported prisons', async () => {
       const prison = TestData.prisonDto()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .post('/admin/prisons/prison', <PrisonDto>{
           active: prison.active,
           adultAgeYears: prison.adultAgeYears,
@@ -104,12 +112,14 @@ describe('visitSchedulerApiClient', () => {
           policyNoticeDaysMin: prison.policyNoticeDaysMin,
           policyNoticeDaysMax: prison.policyNoticeDaysMax,
         })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(201, prison)
 
       const output = await visitSchedulerApiClient.createPrison(prison)
 
       expect(output).toStrictEqual(prison)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -125,7 +135,7 @@ describe('visitSchedulerApiClient', () => {
         policyNoticeDaysMin: 2,
       })
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .put(`/admin/prisons/prison/${prisonDto.code}`, <UpdatePrisonDto>{
           adultAgeYears: updatePrisonDto.adultAgeYears,
           maxAdultVisitors: updatePrisonDto.maxAdultVisitors,
@@ -134,12 +144,14 @@ describe('visitSchedulerApiClient', () => {
           policyNoticeDaysMin: updatePrisonDto.policyNoticeDaysMin,
           policyNoticeDaysMax: updatePrisonDto.policyNoticeDaysMax,
         })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(201, prisonDto)
 
       const output = await visitSchedulerApiClient.updatePrison(prisonDto.code, updatePrisonDto)
 
       expect(output).toStrictEqual(prisonDto)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -147,14 +159,16 @@ describe('visitSchedulerApiClient', () => {
     it('should return activated prison', async () => {
       const prison = TestData.prisonDto()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .put(`/admin/prisons/prison/${prison.code}/activate`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, prison)
 
       const output = await visitSchedulerApiClient.activatePrison(prison.code)
 
       expect(output).toEqual(prison)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -162,14 +176,16 @@ describe('visitSchedulerApiClient', () => {
     it('should return deactivated prison', async () => {
       const prison = TestData.prisonDto()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .put(`/admin/prisons/prison/${prison.code}/deactivate`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, prison)
 
       const output = await visitSchedulerApiClient.deactivatePrison(prison.code)
 
       expect(output).toEqual(prison)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -180,14 +196,16 @@ describe('visitSchedulerApiClient', () => {
 
       const response: UserClientDto = { active: true, userType: 'STAFF' }
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .put(`/admin/prisons/prison/${prisonCode}/client/${prisonUserClientType}/activate`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, response)
 
       const output = await visitSchedulerApiClient.activatePrisonClientType(prisonCode, prisonUserClientType)
 
       expect(output).toStrictEqual(response)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -198,14 +216,16 @@ describe('visitSchedulerApiClient', () => {
 
       const response: UserClientDto = { active: false, userType: 'STAFF' }
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .put(`/admin/prisons/prison/${prisonCode}/client/${prisonUserClientType}/deactivate`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, response)
 
       const output = await visitSchedulerApiClient.deactivatePrisonClientType(prisonCode, prisonUserClientType)
 
       expect(output).toStrictEqual(response)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -213,14 +233,16 @@ describe('visitSchedulerApiClient', () => {
     it('should make call to get exclude dates for a prison', async () => {
       const excludeDateDto = [TestData.excludeDateDto()]
       const prisonCode = 'HEI'
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .get(`/prisons/prison/${prisonCode}/exclude-date`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, excludeDateDto)
 
       const output = await visitSchedulerApiClient.getExcludeDates(prisonCode)
 
       expect(output).toEqual(excludeDateDto)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -229,14 +251,16 @@ describe('visitSchedulerApiClient', () => {
       const excludeDate = '2023-12-26'
       const prisonCode = 'HEI'
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .put(`/prisons/prison/${prisonCode}/exclude-date/add`, { excludeDate, actionedBy: 'user1' })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, null)
 
       const output = await visitSchedulerApiClient.addExcludeDate(prisonCode, '2023-12-26', 'user1')
 
       expect(output).toEqual(null)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -245,13 +269,13 @@ describe('visitSchedulerApiClient', () => {
       const excludeDate = '2023-12-26'
       const prisonCode = 'HEI'
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .put(`/prisons/prison/${prisonCode}/exclude-date/remove`, { excludeDate, actionedBy: 'user1' })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200)
 
       await visitSchedulerApiClient.removeExcludeDate(prisonCode, excludeDate, 'user1')
-      expect(fakeVisitSchedulerApi.isDone()).toBe(true)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -259,18 +283,20 @@ describe('visitSchedulerApiClient', () => {
     it('should return all session templates for a prison', async () => {
       const sessionTemplates = [TestData.sessionTemplate()]
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .get(`/admin/session-templates`)
         .query({
           prisonCode: 'HEI',
           rangeType: 'ALL',
         })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, sessionTemplates)
 
       const output = await visitSchedulerApiClient.getSessionTemplates('HEI', 'ALL')
 
       expect(output).toEqual(sessionTemplates)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -278,14 +304,16 @@ describe('visitSchedulerApiClient', () => {
     it('should return a session template', async () => {
       const singleSessionTemplate = TestData.sessionTemplate()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .get(`/admin/session-templates/template/${singleSessionTemplate.reference}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, singleSessionTemplate)
 
       const output = await visitSchedulerApiClient.getSingleSessionTemplate(singleSessionTemplate.reference)
 
       expect(output).toEqual(singleSessionTemplate)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -293,14 +321,16 @@ describe('visitSchedulerApiClient', () => {
     it('should return activated prison', async () => {
       const sessionTemplate = TestData.sessionTemplate()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .put(`/admin/session-templates/template/${sessionTemplate.reference}/activate`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, sessionTemplate)
 
       const output = await visitSchedulerApiClient.activateSessionTemplate(sessionTemplate.reference)
 
       expect(output).toEqual(sessionTemplate)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -308,14 +338,16 @@ describe('visitSchedulerApiClient', () => {
     it('should return activated prison', async () => {
       const sessionTemplate = TestData.sessionTemplate({ active: false })
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .put(`/admin/session-templates/template/${sessionTemplate.reference}/deactivate`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, sessionTemplate)
 
       const output = await visitSchedulerApiClient.deactivateSessionTemplate(sessionTemplate.reference)
 
       expect(output).toEqual(sessionTemplate)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -323,13 +355,13 @@ describe('visitSchedulerApiClient', () => {
     it('should make call to remove exclude date from a prison', async () => {
       const sessionTemplate = TestData.sessionTemplate()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .delete(`/admin/session-templates/template/${sessionTemplate.reference}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200)
 
       await visitSchedulerApiClient.deleteSessionTemplate(sessionTemplate.reference)
-      expect(fakeVisitSchedulerApi.isDone()).toBe(true)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -337,7 +369,7 @@ describe('visitSchedulerApiClient', () => {
     it('should add a new session template', async () => {
       const createSessionTemplateDto = TestData.createSessionTemplateDto()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .post('/admin/session-templates/template', <CreateSessionTemplateDto>{
           name: createSessionTemplateDto.name,
           weeklyFrequency: createSessionTemplateDto.weeklyFrequency,
@@ -356,12 +388,14 @@ describe('visitSchedulerApiClient', () => {
           clients: createSessionTemplateDto.clients,
           visitOrderRestriction: 'VO_PVO',
         })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(201, createSessionTemplateDto)
 
       const output = await visitSchedulerApiClient.createSessionTemplate(createSessionTemplateDto)
 
       expect(output).toEqual(createSessionTemplateDto)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -370,7 +404,7 @@ describe('visitSchedulerApiClient', () => {
       const updateSessionTemplateDto = TestData.updateSessionTemplateDto()
       const reference = 'ABC-DEF-GHI'
       const validateRequest = true
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .put(`/admin/session-templates/template/${reference}?&validateRequest=${validateRequest}`, <
           UpdateSessionTemplateDto
         >{
@@ -391,7 +425,7 @@ describe('visitSchedulerApiClient', () => {
           ],
           visitOrderRestriction: 'VO_PVO',
         })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(201, updateSessionTemplateDto)
 
       const output = await visitSchedulerApiClient.updateSessionTemplate(
@@ -401,6 +435,8 @@ describe('visitSchedulerApiClient', () => {
       )
 
       expect(output).toEqual(updateSessionTemplateDto)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -409,16 +445,18 @@ describe('visitSchedulerApiClient', () => {
       const requestVisitStatsDto = TestData.requestVisitStatsDto()
       const sessionTemplateVisitStatsDto = TestData.sessionTemplateVisitStatsDto()
       const reference = 'ABC-DEF-GHI'
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .post(`/admin/session-templates/template/${reference}/stats`, <RequestSessionTemplateVisitStatsDto>{
           visitsFromDate: requestVisitStatsDto.visitsFromDate,
         })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(201, sessionTemplateVisitStatsDto)
 
       const output = await visitSchedulerApiClient.getTemplateStats(requestVisitStatsDto, reference)
 
       expect(output).toEqual(sessionTemplateVisitStatsDto)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -426,14 +464,16 @@ describe('visitSchedulerApiClient', () => {
     it('should return a single location groups', async () => {
       const singleLocationGroup = TestData.locationGroup()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .get(`/admin/location-groups/group/${singleLocationGroup.reference}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, singleLocationGroup)
 
       const output = await visitSchedulerApiClient.getSingleLocationGroup(singleLocationGroup.reference)
 
       expect(output).toEqual(singleLocationGroup)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -442,14 +482,16 @@ describe('visitSchedulerApiClient', () => {
       const prisonCode = 'HEI'
       const locationGroups = [TestData.locationGroup()]
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .get(`/admin/location-groups/${prisonCode}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, locationGroups)
 
       const output = await visitSchedulerApiClient.getLocationGroups('HEI')
 
       expect(output).toEqual(locationGroups)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -458,18 +500,20 @@ describe('visitSchedulerApiClient', () => {
       const createLocationGroupDto = TestData.createLocationGroupDto()
       const singleLocationGroup = TestData.locationGroup()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .post('/admin/location-groups/group', <CreateLocationGroupDto>{
           name: createLocationGroupDto.name,
           prisonId: createLocationGroupDto.prisonId,
           locations: createLocationGroupDto.locations,
         })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(201, singleLocationGroup)
 
       const output = await visitSchedulerApiClient.createLocationGroup(createLocationGroupDto)
 
       expect(output).toEqual(singleLocationGroup)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -478,12 +522,12 @@ describe('visitSchedulerApiClient', () => {
       const updateLocationGroupDto = TestData.updateLocationGroupDto()
       const singleLocationGroup = TestData.locationGroup()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .put(`/admin/location-groups/group/${singleLocationGroup.reference}`, <UpdateLocationGroupDto>{
           name: updateLocationGroupDto.name,
           locations: updateLocationGroupDto.locations,
         })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, singleLocationGroup)
 
       const output = await visitSchedulerApiClient.updateLocationGroup(
@@ -492,6 +536,8 @@ describe('visitSchedulerApiClient', () => {
       )
 
       expect(output).toEqual(singleLocationGroup)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -499,13 +545,13 @@ describe('visitSchedulerApiClient', () => {
     it('should delete a location group', async () => {
       const locationGroup = TestData.locationGroup()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .delete(`/admin/location-groups/group/${locationGroup.reference}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200)
 
       await visitSchedulerApiClient.deleteLocationGroup(locationGroup.reference)
-      expect(fakeVisitSchedulerApi.isDone()).toBe(true)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -513,14 +559,16 @@ describe('visitSchedulerApiClient', () => {
     it('should return a single category group', async () => {
       const getSingleCategoryGroup = TestData.categoryGroup()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .get(`/admin/category-groups/group/${getSingleCategoryGroup.reference}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, getSingleCategoryGroup)
 
       const output = await visitSchedulerApiClient.getSingleCategoryGroup(getSingleCategoryGroup.reference)
 
       expect(output).toEqual(getSingleCategoryGroup)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -529,14 +577,16 @@ describe('visitSchedulerApiClient', () => {
       const prisonCode = 'HEI'
       const categoryGroups = [TestData.categoryGroup()]
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .get(`/admin/category-groups/${prisonCode}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, categoryGroups)
 
       const output = await visitSchedulerApiClient.getCategoryGroups('HEI')
 
       expect(output).toEqual(categoryGroups)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -545,18 +595,20 @@ describe('visitSchedulerApiClient', () => {
       const createCategoryGroupDto = TestData.createCategoryGroupDto()
       const singleCategoryGroup = TestData.categoryGroup()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .post('/admin/category-groups/group', <CreateCategoryGroupDto>{
           categories: createCategoryGroupDto.categories,
           name: createCategoryGroupDto.name,
           prisonId: createCategoryGroupDto.prisonId,
         })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(201, singleCategoryGroup)
 
       const output = await visitSchedulerApiClient.createCategoryGroup(createCategoryGroupDto)
 
       expect(output).toEqual(singleCategoryGroup)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -564,13 +616,13 @@ describe('visitSchedulerApiClient', () => {
     it('should delete a category group', async () => {
       const categoryGroup = TestData.categoryGroup()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .delete(`/admin/category-groups/group/${categoryGroup.reference}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200)
 
       await visitSchedulerApiClient.deleteCategoryGroup(categoryGroup.reference)
-      expect(fakeVisitSchedulerApi.isDone()).toBe(true)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -578,14 +630,16 @@ describe('visitSchedulerApiClient', () => {
     it('should return an incentive level group', async () => {
       const getSingleIncentiveGroup = TestData.incentiveGroup()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .get(`/admin/incentive-groups/group/${getSingleIncentiveGroup.reference}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, getSingleIncentiveGroup)
 
       const output = await visitSchedulerApiClient.getSingleIncentiveGroup(getSingleIncentiveGroup.reference)
 
       expect(output).toEqual(getSingleIncentiveGroup)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -594,14 +648,16 @@ describe('visitSchedulerApiClient', () => {
       const prisonCode = 'HEI'
       const incentiveGroups = [TestData.incentiveGroup()]
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .get(`/admin/incentive-groups/${prisonCode}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200, incentiveGroups)
 
       const output = await visitSchedulerApiClient.getIncentiveGroups('HEI')
 
       expect(output).toEqual(incentiveGroups)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -610,18 +666,20 @@ describe('visitSchedulerApiClient', () => {
       const createIncentiveGroupDto = TestData.createIncentiveGroupDto()
       const singleIncentiveGroup = TestData.incentiveGroup()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .post('/admin/incentive-groups/group', <CreateIncentiveGroupDto>{
           name: createIncentiveGroupDto.name,
           prisonId: createIncentiveGroupDto.prisonId,
           incentiveLevels: createIncentiveGroupDto.incentiveLevels,
         })
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(201, singleIncentiveGroup)
 
       const output = await visitSchedulerApiClient.createIncentiveGroup(createIncentiveGroupDto)
 
       expect(output).toEqual(singleIncentiveGroup)
+
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -629,13 +687,13 @@ describe('visitSchedulerApiClient', () => {
     it('should delete an incentive group', async () => {
       const incentiveGroup = TestData.incentiveGroup()
 
-      fakeVisitSchedulerApi
+      nock(config.apis.visitScheduler.url)
         .delete(`/admin/incentive-groups/group/${incentiveGroup.reference}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', 'Bearer test-system-token')
         .reply(200)
 
       await visitSchedulerApiClient.deleteIncentiveGroup(incentiveGroup.reference)
-      expect(fakeVisitSchedulerApi.isDone()).toBe(true)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 })

@@ -8,7 +8,6 @@ context('Sign In', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
-    cy.task('stubManageUser')
   })
 
   it('Unauthenticated user directed to auth', () => {
@@ -30,7 +29,7 @@ context('Sign In', () => {
   it('Phase banner visible in header', () => {
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
-    indexPage.headerPhaseBanner().should('contain.text', 'DEV')
+    indexPage.headerPhaseBanner().should('contain.text', 'dev')
   })
 
   it('User can sign out', () => {
@@ -68,10 +67,9 @@ context('Sign In', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
 
     cy.task('stubVerifyToken', true)
-    cy.task('stubManageUser', 'bobby brown')
     cy.signIn()
 
-    indexPage.headerUserName().contains('B. Brown')
+    indexPage.headerUserName().contains('J. Smith')
   })
 
   it('User without required role is directed to Authorisation Error page', () => {

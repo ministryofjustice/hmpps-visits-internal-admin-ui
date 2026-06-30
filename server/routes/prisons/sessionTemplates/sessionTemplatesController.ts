@@ -17,13 +17,9 @@ export default class SessionTemplatesController {
       const defaultRange: SessionTemplatesRangeType = 'CURRENT_OR_FUTURE'
       const selectedRange = this.isSessionTemplateRangeType(req.query?.rangeType) ? req.query.rangeType : defaultRange
 
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
 
-      const sessionTemplates = await this.sessionTemplateService.getSessionTemplates(
-        res.locals.username,
-        prisonId,
-        selectedRange,
-      )
+      const sessionTemplates = await this.sessionTemplateService.getSessionTemplates(prisonId, selectedRange)
 
       const sessionTemplatesByDay: Record<SessionTemplate['dayOfWeek'], SessionTemplate[]> = {
         MONDAY: [],

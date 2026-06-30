@@ -1,4 +1,4 @@
-import { BadRequest } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
@@ -310,7 +310,10 @@ describe('Prison configuration', () => {
     })
 
     it('should handle API errors', () => {
-      prisonService.deactivatePrisonClientType.mockRejectedValue(new BadRequest())
+      prisonService.deactivatePrisonClientType.mockRejectedValue({
+        responseStatus: 400,
+        message: 'Bad Request',
+      } as SanitisedError)
       const error = { msg: '400 Bad Request' }
       return request(app)
         .post('/prisons/HEI/update-enabled-services')
@@ -361,7 +364,10 @@ describe('Prison configuration', () => {
       })
 
       it('should set error in flash if API error when activating prison', () => {
-        prisonService.activatePrison.mockRejectedValue(new BadRequest())
+        prisonService.activatePrison.mockRejectedValue({
+          responseStatus: 400,
+          message: 'Bad Request',
+        } as SanitisedError)
         prisonService.getPrisonName.mockResolvedValue(activePrison.name)
 
         const error = { msg: '400 Bad Request' }
@@ -400,7 +406,10 @@ describe('Prison configuration', () => {
       })
 
       it('should set error in flash if API error when deactivating a prison', () => {
-        prisonService.deactivatePrison.mockRejectedValue(new BadRequest())
+        prisonService.deactivatePrison.mockRejectedValue({
+          responseStatus: 400,
+          message: 'Bad Request',
+        } as SanitisedError)
         prisonService.getPrisonName.mockResolvedValue(activePrison.name)
 
         const error = { msg: '400 Bad Request' }

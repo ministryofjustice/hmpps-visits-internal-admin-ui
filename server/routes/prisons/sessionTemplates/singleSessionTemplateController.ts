@@ -13,16 +13,13 @@ export default class SingleSessionTemplateController {
   public view(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { reference, prisonId } = req.params
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
 
-      const sessionTemplate = await this.sessionTemplateService.getSingleSessionTemplate(
-        res.locals.user.username,
-        reference,
-      )
+      const sessionTemplate = await this.sessionTemplateService.getSingleSessionTemplate(reference)
 
       const hideInPublicServices = getPublicClientStatus(sessionTemplate)
 
-      const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
+      const visitStats = await this.sessionTemplateService.getTemplateStats(reference)
 
       const visitOrderValue = visitOrderDescriptions[sessionTemplate.visitOrderRestriction]
 
@@ -73,7 +70,7 @@ export default class SingleSessionTemplateController {
       const { reference, prisonId } = req.params
 
       try {
-        const { name } = await this.sessionTemplateService.getSingleSessionTemplate(res.locals.user.username, reference)
+        const { name } = await this.sessionTemplateService.getSingleSessionTemplate(reference)
         await this.sessionTemplateService.deleteSessionTemplate(res.locals.user.username, reference)
         req.flash('messages', {
           variant: 'success',

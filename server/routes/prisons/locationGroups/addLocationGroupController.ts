@@ -14,7 +14,7 @@ export default class AddLocationGroupController {
   public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
       const formValues = req.flash('formValues')?.[0] || {}
 
       res.render('pages/prisons/locationGroups/addLocationGroup', {

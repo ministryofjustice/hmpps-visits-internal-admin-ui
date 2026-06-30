@@ -1,7 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { BadRequest } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockSessionTemplateService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
@@ -235,7 +235,10 @@ describe('Single session template page', () => {
 
     it('should set error in flash if API error when changing template status', () => {
       // Given
-      sessionTemplateService.activateSessionTemplate.mockRejectedValue(new BadRequest())
+      sessionTemplateService.activateSessionTemplate.mockRejectedValue({
+        responseStatus: 400,
+        message: 'Bad Request',
+      } as SanitisedError)
       const error = { msg: '400 Bad Request' }
 
       // When
@@ -288,7 +291,10 @@ describe('Single session template page', () => {
 
     it('should set error in flash if API error when changing template status', () => {
       // Given
-      sessionTemplateService.deactivateSessionTemplate.mockRejectedValue(new BadRequest())
+      sessionTemplateService.deactivateSessionTemplate.mockRejectedValue({
+        responseStatus: 400,
+        message: 'Bad Request',
+      } as SanitisedError)
       const error = { msg: '400 Bad Request' }
 
       // When
@@ -330,10 +336,7 @@ describe('Single session template page', () => {
             text: `Session template '${sessionTemplate.name}' has been deleted`,
           })
           expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledTimes(1)
-          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(
-            'user1',
-            sessionTemplate.reference,
-          )
+          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(sessionTemplate.reference)
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledTimes(1)
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })
@@ -345,7 +348,10 @@ describe('Single session template page', () => {
       // Given
       const errors = [{ msg: '400 Bad Request' }]
       sessionTemplateService.getSingleSessionTemplate.mockResolvedValue(sessionTemplate)
-      sessionTemplateService.deleteSessionTemplate.mockRejectedValue(new BadRequest())
+      sessionTemplateService.deleteSessionTemplate.mockRejectedValue({
+        responseStatus: 400,
+        message: 'Bad Request',
+      } as SanitisedError)
 
       // When
       const result = request(app).post('/prisons/HEI/session-templates/-afe.dcc.0f/delete')
@@ -357,10 +363,7 @@ describe('Single session template page', () => {
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledWith('errors', errors)
           expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledTimes(1)
-          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(
-            'user1',
-            sessionTemplate.reference,
-          )
+          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(sessionTemplate.reference)
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledTimes(1)
           expect(sessionTemplateService.deleteSessionTemplate).toHaveBeenCalledWith('user1', '-afe.dcc.0f')
         })

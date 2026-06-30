@@ -1,5 +1,4 @@
 import { dataAccess } from '../data'
-import UserService from './userService'
 import PrisonService from './prisonService'
 import SessionTemplateService from './sessionTemplateService'
 import LocationGroupService from './locationGroupService'
@@ -12,51 +11,24 @@ import VisitAllocationService from './visitAllocationService'
 
 export const services = () => {
   const {
-    hmppsAuthClient,
     applicationInfo,
-    manageUsersApiClient,
-    bookerRegistryApiClientBuilder,
-    prisonRegisterApiClientBuilder,
-    visitAllocationApiClientBuilder,
-    visitSchedulerApiClientBuilder,
+    bookerRegistryApiClient,
+    prisonRegisterApiClient,
+    visitAllocationApiClient,
+    visitSchedulerApiClient,
   } = dataAccess()
-
-  const bookerService = new BookerService(bookerRegistryApiClientBuilder, hmppsAuthClient)
-
-  const categoryGroupService = new CategoryGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
-
-  const excludeDateService = new ExcludeDateService(visitSchedulerApiClientBuilder, hmppsAuthClient)
-
-  const incentiveGroupService = new IncentiveGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
-
-  const locationGroupService = new LocationGroupService(visitSchedulerApiClientBuilder, hmppsAuthClient)
-
-  const prisonService = new PrisonService(
-    visitSchedulerApiClientBuilder,
-    prisonRegisterApiClientBuilder,
-    hmppsAuthClient,
-  )
-
-  const sessionTemplateService = new SessionTemplateService(visitSchedulerApiClientBuilder, hmppsAuthClient)
-
-  const userService = new UserService(manageUsersApiClient)
-
-  const visitAllocationService = new VisitAllocationService(visitAllocationApiClientBuilder, hmppsAuthClient)
-
-  const visitService = new VisitService(visitSchedulerApiClientBuilder, hmppsAuthClient)
 
   return {
     applicationInfo,
-    bookerService,
-    categoryGroupService,
-    excludeDateService,
-    incentiveGroupService,
-    locationGroupService,
-    prisonService,
-    sessionTemplateService,
-    userService,
-    visitAllocationService,
-    visitService,
+    bookerService: new BookerService(bookerRegistryApiClient),
+    categoryGroupService: new CategoryGroupService(visitSchedulerApiClient),
+    excludeDateService: new ExcludeDateService(visitSchedulerApiClient),
+    incentiveGroupService: new IncentiveGroupService(visitSchedulerApiClient),
+    locationGroupService: new LocationGroupService(visitSchedulerApiClient),
+    prisonService: new PrisonService(visitSchedulerApiClient, prisonRegisterApiClient),
+    sessionTemplateService: new SessionTemplateService(visitSchedulerApiClient),
+    visitAllocationService: new VisitAllocationService(visitAllocationApiClient),
+    visitService: new VisitService(visitSchedulerApiClient),
   }
 }
 
@@ -70,7 +42,6 @@ export {
   LocationGroupService,
   PrisonService,
   SessionTemplateService,
-  UserService,
   VisitAllocationService,
   VisitService,
 }

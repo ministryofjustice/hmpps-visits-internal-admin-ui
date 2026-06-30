@@ -1,25 +1,17 @@
-import { createMockHmppsAuthClient, createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
+import { createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
 import ExcludeDateService from './excludeDateService'
 
-const token = 'some token'
-
 describe('Exclude date service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()
 
   let excludeDateService: ExcludeDateService
-
-  const VisitSchedulerApiClientFactory = jest.fn()
 
   const excludeDate = '2023-07-06'
   const prisonCode = 'HEI'
   const username = 'user'
 
   beforeEach(() => {
-    VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
-    excludeDateService = new ExcludeDateService(VisitSchedulerApiClientFactory, hmppsAuthClient)
-
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
+    excludeDateService = new ExcludeDateService(visitSchedulerApiClient)
   })
 
   afterEach(() => {

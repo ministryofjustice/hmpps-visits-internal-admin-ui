@@ -1,7 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { BadRequest } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockIncentiveGroupService } from '../../../services/testutils/mocks'
@@ -136,7 +136,10 @@ describe('Add an incentive group', () => {
 
     it('should handle API errors by setting flash errors and redirecting to same page', () => {
       const createIncentiveGroupDto = TestData.createIncentiveGroupDto()
-      incentiveGroupService.createIncentiveGroup.mockRejectedValue(new BadRequest('API error!'))
+      incentiveGroupService.createIncentiveGroup.mockRejectedValue({
+        responseStatus: 400,
+        message: 'API error!',
+      } as SanitisedError)
 
       return request(app)
         .post(url)

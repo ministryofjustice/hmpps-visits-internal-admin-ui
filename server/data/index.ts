@@ -1,43 +1,37 @@
-import HmppsAuthClient from './hmppsAuthClient'
-import ManageUsersApiClient from './manageUsersApiClient'
+import { AuthenticationClient, InMemoryTokenStore, RedisTokenStore } from '@ministryofjustice/hmpps-auth-clients'
 import { createRedisClient } from './redisClient'
-import RedisTokenStore from './tokenStore/redisTokenStore'
-import InMemoryTokenStore from './tokenStore/inMemoryTokenStore'
 import PrisonRegisterApiClient from './prisonRegisterApiClient'
 import VisitSchedulerApiClient from './visitSchedulerApiClient'
 import config from '../config'
 import BookerRegistryApiClient from './bookerRegistryApiClient'
 import VisitAllocationApiClient from './visitAllocationApiClient'
 import applicationInfoSupplier from '../applicationInfo'
+import logger from '../../logger'
 
-const applicationInfo = applicationInfoSupplier()
-
-type RestClientBuilder<T> = (token: string) => T
-
-export const dataAccess = () => ({
-  applicationInfo,
-  hmppsAuthClient: new HmppsAuthClient(
+export const dataAccess = () => {
+  const applicationInfo = applicationInfoSupplier()
+  const hmppsAuthClient = new AuthenticationClient(
+    config.apis.hmppsAuth,
+    logger,
     config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore(),
-  ),
-  manageUsersApiClient: new ManageUsersApiClient(),
-  bookerRegistryApiClientBuilder: ((token: string) =>
-    new BookerRegistryApiClient(token)) as RestClientBuilder<BookerRegistryApiClient>,
-  prisonRegisterApiClientBuilder: ((token: string) =>
-    new PrisonRegisterApiClient(token)) as RestClientBuilder<PrisonRegisterApiClient>,
-  visitAllocationApiClientBuilder: ((token: string) =>
-    new VisitAllocationApiClient(token)) as RestClientBuilder<VisitAllocationApiClient>,
-  visitSchedulerApiClientBuilder: ((token: string) =>
-    new VisitSchedulerApiClient(token)) as RestClientBuilder<VisitSchedulerApiClient>,
-})
+  )
+
+  return {
+    applicationInfo,
+    hmppsAuthClient,
+    bookerRegistryApiClient: new BookerRegistryApiClient(hmppsAuthClient),
+    prisonRegisterApiClient: new PrisonRegisterApiClient(hmppsAuthClient),
+    visitAllocationApiClient: new VisitAllocationApiClient(hmppsAuthClient),
+    visitSchedulerApiClient: new VisitSchedulerApiClient(hmppsAuthClient),
+  }
+}
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
 export {
-  HmppsAuthClient,
-  ManageUsersApiClient,
+  AuthenticationClient,
   BookerRegistryApiClient,
   PrisonRegisterApiClient,
-  type RestClientBuilder,
   VisitAllocationApiClient,
   VisitSchedulerApiClient,
 }

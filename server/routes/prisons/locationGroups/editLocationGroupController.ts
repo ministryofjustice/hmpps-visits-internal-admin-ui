@@ -14,9 +14,9 @@ export default class EditLocationGroupController {
   public view(): RequestHandler<PrisonReferenceParams> {
     return async (req, res) => {
       const { reference, prisonId } = req.params
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
 
-      const locationGroup = await this.locationGroupService.getSingleLocationGroup(res.locals.user.username, reference)
+      const locationGroup = await this.locationGroupService.getSingleLocationGroup(reference)
 
       res.render('pages/prisons/locationGroups/editLocationGroup', {
         errors: req.flash('errors'),

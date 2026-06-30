@@ -29,7 +29,7 @@ export default class BookerSearchController {
         return res.redirect('/bookers')
       }
 
-      const bookers = await this.bookerService.getBookersByEmailOrReference(res.locals.user.username, bookerEmail)
+      const bookers = await this.bookerService.getBookersByEmailOrReference(bookerEmail)
       const bookersByCreatedDesc = bookers.toSorted((a, b) =>
         compareDesc(new Date(a.createdTimestamp), new Date(b.createdTimestamp)),
       )
@@ -49,7 +49,7 @@ export default class BookerSearchController {
       const { search } = matchedData<{ search: string }>(req)
 
       try {
-        const bookers = await this.bookerService.getBookersByEmailOrReference(res.locals.user.username, search)
+        const bookers = await this.bookerService.getBookersByEmailOrReference(search)
 
         if (bookers.length > 1) {
           req.session.bookerEmail = search
