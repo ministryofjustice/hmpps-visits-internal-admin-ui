@@ -17,6 +17,9 @@ npm run lint           # ESLint (zero warnings policy)
 npm run lint-fix       # auto-fix ESLint/Prettier issues
 npm run typecheck      # tsc type-check (app + integration_tests)
 
+# After making code changes, always run `npm run lint-fix` then `npm run lint`
+# to auto-fix formatting and confirm zero warnings before considering a task done.
+
 npm run test           # Jest unit tests (all)
 npx jest path/to/file  # run a single test file
 npx jest -t "test name pattern"  # run tests matching a pattern
