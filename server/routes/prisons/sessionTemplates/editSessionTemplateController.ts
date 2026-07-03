@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { getTime, isValid, parse, parseISO } from 'date-fns'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import {
   PrisonService,
   SessionTemplateService,
@@ -171,7 +172,7 @@ export default class EditSessionTemplateController {
         req.flash('errors', responseErrorToFlashMessages(error))
 
         const formValues = req.body
-        if (error.status === 400) {
+        if ((error as SanitisedError).responseStatus === 400) {
           formValues.requireConfirmation = true
         }
         req.flash('formValues', formValues)

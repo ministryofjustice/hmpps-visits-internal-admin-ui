@@ -1,4 +1,3 @@
-import { NotFound } from 'http-errors'
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
@@ -212,7 +211,7 @@ describe('Search for a booker', () => {
 
     describe('Error handling', () => {
       it('should search for booker by email and redirect to booker search when not found', () => {
-        bookerService.getBookersByEmailOrReference.mockRejectedValue(new NotFound())
+        bookerService.getBookersByEmailOrReference.mockResolvedValue(null)
 
         return request(app)
           .post('/bookers/search')

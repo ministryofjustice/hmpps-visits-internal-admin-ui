@@ -63,7 +63,20 @@ describe('format a sanitised response error as a flash error message', () => {
     expect(flashMessage[0]).toStrictEqual({ msg: '400 Bad Request' })
   })
 
-  it('should render error code and message plus developerMessage id present', () => {
+  it('should render error code and message if error.data is null', () => {
+    const error = <SanitisedError>{
+      responseStatus: 400,
+      message: 'Bad Request',
+      data: null,
+    }
+
+    const flashMessage = responseErrorToFlashMessages(error)
+
+    expect(flashMessage.length).toBe(1)
+    expect(flashMessage[0]).toStrictEqual({ msg: '400 Bad Request' })
+  })
+
+  it('should render error code and message plus developerMessage if present', () => {
     const error = <SanitisedError>{
       responseStatus: 400,
       message: 'Bad Request',

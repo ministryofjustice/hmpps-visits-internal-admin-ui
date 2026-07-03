@@ -3,7 +3,6 @@ import { body, matchedData, ValidationChain, validationResult } from 'express-va
 import validator from 'validator'
 import { compareDesc } from 'date-fns'
 import { BookerService } from '../../services'
-import { responseErrorToFlashMessages } from '../../utils/utils'
 import { BOOKER_REFERENCE_REGEX } from '../../constants/constants'
 
 export default class BookerSearchController {
@@ -48,31 +47,25 @@ export default class BookerSearchController {
       }
       const { search } = matchedData<{ search: string }>(req)
 
-      try {
-        const bookers = await this.bookerService.getBookersByEmailOrReference(search)
+      const bookers = await this.bookerService.getBookersByEmailOrReference(search)
 
-        if (bookers.length > 1) {
-          req.session.bookerEmail = search
-          return res.redirect('/bookers/search/results')
-        }
-
-        const { reference } = bookers[0]
-        return res.redirect(`/bookers/booker/${reference}`)
-      } catch (error) {
+      if (!bookers?.length) {
         req.flash('formValues', req.body)
-
-        if (error.status === 404) {
-          req.flash('messages', {
-            variant: 'information',
-            title: 'No booker found',
-            text: `No existing booker found for: ${search}`,
-          })
-          return res.redirect('/bookers')
-        }
-
-        req.flash('errors', responseErrorToFlashMessages(error))
+        req.flash('messages', {
+          variant: 'information',
+          title: 'No booker found',
+          text: `No existing booker found for: ${search}`,
+        })
         return res.redirect('/bookers')
       }
+
+      if (bookers.length > 1) {
+        req.session.bookerEmail = search
+        return res.redirect('/bookers/search/results')
+      }
+
+      const { reference } = bookers[0]
+      return res.redirect(`/bookers/booker/${reference}`)
     }
   }
 

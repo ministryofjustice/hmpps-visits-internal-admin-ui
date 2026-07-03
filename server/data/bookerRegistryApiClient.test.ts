@@ -41,6 +41,17 @@ describe('bookerRegistryApiClient', () => {
         expect(output).toStrictEqual(booker)
         expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
       })
+
+      it('should return null if booker is not found for given reference', async () => {
+        nock(config.apis.bookerRegistry.url)
+          .get(`/public/booker/config/${booker.reference}`)
+          .matchHeader('authorization', 'Bearer test-system-token')
+          .reply(404)
+
+        const output = await bookerRegistryApiClient.getBookerByReference(booker.reference)
+        expect(output).toBeNull()
+        expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
+      })
     })
 
     describe('getBookersByEmail', () => {
@@ -52,6 +63,17 @@ describe('bookerRegistryApiClient', () => {
 
         const output = await bookerRegistryApiClient.getBookersByEmail(booker.email)
         expect(output).toStrictEqual([booker])
+        expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
+      })
+
+      it('should return null if no bookers are found for given email', async () => {
+        nock(config.apis.bookerRegistry.url)
+          .post('/public/booker/config/search', <SearchBookerDto>{ email: booker.email })
+          .matchHeader('authorization', 'Bearer test-system-token')
+          .reply(404)
+
+        const output = await bookerRegistryApiClient.getBookersByEmail(booker.email)
+        expect(output).toBeNull()
         expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
       })
     })

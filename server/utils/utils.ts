@@ -40,6 +40,7 @@ export const responseErrorToFlashMessages = (error: SanitisedError): FlashErrorM
   const flashError = [{ msg: `${error.responseStatus} ${error.message}` }]
 
   if (
+    error.data &&
     typeof error.data === 'object' &&
     'developerMessage' in error.data &&
     typeof error.data.developerMessage === 'string'
@@ -47,6 +48,7 @@ export const responseErrorToFlashMessages = (error: SanitisedError): FlashErrorM
     flashError.push({ msg: error.data.developerMessage })
   } else if (
     // error.data.validationMessages is an object instead of a string - so deal with it differently
+    error.data &&
     typeof error.data === 'object' &&
     'validationMessages' in error.data &&
     typeof error.data.validationMessages === 'object'

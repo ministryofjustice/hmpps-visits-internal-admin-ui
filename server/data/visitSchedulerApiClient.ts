@@ -239,7 +239,7 @@ export default class VisitSchedulerApiClient extends RestClient {
   ): Promise<SessionTemplate> {
     return this.put(
       {
-        path: `/admin/session-templates/template/${reference}?`,
+        path: `/admin/session-templates/template/${reference}`,
         data: updateSessionTemplateDto,
         query: new URLSearchParams({
           validateRequest: validateRequest.toString(),

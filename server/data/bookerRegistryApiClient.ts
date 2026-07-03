@@ -8,6 +8,7 @@ import {
   PermittedPrisonerDto,
   UpdateRegisteredPrisonersPrisonDto,
 } from './bookerRegistryApiTypes'
+import handleNotFoundErrorAsNull from './handleNotFoundErrorAsNull'
 
 export default class BookerRegistryApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
@@ -16,12 +17,15 @@ export default class BookerRegistryApiClient extends RestClient {
 
   // Booker
 
-  async getBookerByReference(reference: string): Promise<BookerDto> {
-    return this.get({ path: `/public/booker/config/${reference}` }, asSystem())
+  async getBookerByReference(reference: string): Promise<BookerDto | null> {
+    return this.get({ path: `/public/booker/config/${reference}`, errorHandler: handleNotFoundErrorAsNull }, asSystem())
   }
 
-  async getBookersByEmail(email: string): Promise<BookerDto[]> {
-    return this.post({ path: '/public/booker/config/search', data: { email } }, asSystem())
+  async getBookersByEmail(email: string): Promise<BookerDto[] | null> {
+    return this.post(
+      { path: '/public/booker/config/search', data: { email }, errorHandler: handleNotFoundErrorAsNull },
+      asSystem(),
+    )
   }
 
   async clearBookerDetails(bookerReference: string): Promise<BookerDto> {

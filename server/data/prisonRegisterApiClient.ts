@@ -3,6 +3,7 @@ import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients
 import config from '../config'
 import logger from '../../logger'
 import { PrisonContactDetails, PrisonName } from './prisonRegisterApiTypes'
+import handleNotFoundErrorAsNull from './handleNotFoundErrorAsNull'
 
 export default class PrisonRegisterApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
@@ -14,22 +15,16 @@ export default class PrisonRegisterApiClient extends RestClient {
   }
 
   async getPrisonContactDetails(prisonId: string): Promise<PrisonContactDetails | null> {
-    try {
-      return await this.get(
-        {
-          path: `/secure/prisons/id/${prisonId}/department/contact-details`,
-          query: new URLSearchParams({
-            departmentType: 'SOCIAL_VISIT',
-          }).toString(),
-        },
-        asSystem(),
-      )
-    } catch (error) {
-      if (error.responseStatus === 404) {
-        return null
-      }
-      throw error
-    }
+    return this.get<PrisonContactDetails | null>(
+      {
+        path: `/secure/prisons/id/${prisonId}/department/contact-details`,
+        query: new URLSearchParams({
+          departmentType: 'SOCIAL_VISIT',
+        }).toString(),
+        errorHandler: handleNotFoundErrorAsNull,
+      },
+      asSystem(),
+    )
   }
 
   async createPrisonContactDetails(

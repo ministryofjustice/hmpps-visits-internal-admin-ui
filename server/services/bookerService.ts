@@ -7,18 +7,19 @@ export default class BookerService {
 
   // Booker
 
-  async getBookerByReference(reference: string): Promise<BookerDto> {
+  async getBookerByReference(reference: string): Promise<BookerDto | null> {
     return this.bookerRegistryApiClient.getBookerByReference(reference)
   }
 
-  async getBookersByEmailOrReference(search: string): Promise<BookerDto[]> {
+  async getBookersByEmailOrReference(search: string): Promise<BookerDto[] | null> {
     const isEmail = search.indexOf('@') >= 0
 
-    const bookers = isEmail
-      ? await this.bookerRegistryApiClient.getBookersByEmail(search)
-      : [await this.bookerRegistryApiClient.getBookerByReference(search)]
+    if (isEmail) {
+      return this.bookerRegistryApiClient.getBookersByEmail(search)
+    }
 
-    return bookers
+    const booker = await this.bookerRegistryApiClient.getBookerByReference(search)
+    return booker ? [booker] : null
   }
 
   async clearBookerDetails(username: string, bookerReference: string): Promise<BookerDto> {
