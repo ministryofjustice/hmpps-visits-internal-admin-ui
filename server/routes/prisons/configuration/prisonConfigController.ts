@@ -16,12 +16,11 @@ export default class PrisonConfigController {
   public view(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
-      const { username } = res.locals.user
 
       const [prison, prisonContactDetails, negativeBalanceCount] = await Promise.all([
-        this.prisonService.getPrison(res.locals.user.username, prisonId),
-        this.prisonService.getPrisonContactDetails(username, prisonId),
-        this.visitAllocationService.getNegativeBalanceCount({ username, prisonCode: prisonId }),
+        this.prisonService.getPrison(prisonId),
+        this.prisonService.getPrisonContactDetails(prisonId),
+        this.visitAllocationService.getNegativeBalanceCount({ prisonCode: prisonId }),
       ])
 
       return res.render('pages/prisons/configuration/config', {
@@ -84,7 +83,7 @@ export default class PrisonConfigController {
 
       try {
         await this.prisonService.activatePrison(res.locals.user.username, prisonId)
-        const prisonName = await this.prisonService.getPrisonName(res.locals.user.username, prisonId)
+        const prisonName = await this.prisonService.getPrisonName(prisonId)
         req.flash('messages', {
           variant: 'success',
           title: 'Prison activated',
@@ -104,7 +103,7 @@ export default class PrisonConfigController {
 
       try {
         await this.prisonService.deactivatePrison(res.locals.user.username, prisonId)
-        const prisonName = await this.prisonService.getPrisonName(res.locals.user.username, prisonId)
+        const prisonName = await this.prisonService.getPrisonName(prisonId)
         req.flash('messages', {
           variant: 'success',
           title: 'Prison deactivated',

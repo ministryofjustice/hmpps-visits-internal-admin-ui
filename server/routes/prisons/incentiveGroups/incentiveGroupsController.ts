@@ -13,8 +13,8 @@ export default class IncentiveGroupsController {
     return async (req, res) => {
       const { prisonId } = req.params
 
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
-      const rawIncentiveGroups = await this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
+      const rawIncentiveGroups = await this.incentiveGroupService.getIncentiveGroups(prisonId)
 
       const incentiveGroups = rawIncentiveGroups.map(group => {
         return {

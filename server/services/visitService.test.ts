@@ -1,26 +1,18 @@
-import { createMockHmppsAuthClient, createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
+import { createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
 import VisitService from './visitService'
 import { PageVisitDto } from '../data/visitSchedulerApiTypes'
 
-const token = 'some token'
-
 describe('Visit service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()
 
   let visitService: VisitService
-
-  const VisitSchedulerApiClientFactory = jest.fn()
 
   const pageVisitDto: PageVisitDto = {
     totalElements: 1,
   }
 
   beforeEach(() => {
-    VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
-    visitService = new VisitService(VisitSchedulerApiClientFactory, hmppsAuthClient)
-
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
+    visitService = new VisitService(visitSchedulerApiClient)
   })
 
   afterEach(() => {
@@ -31,7 +23,7 @@ describe('Visit service', () => {
     it('should return a count of visits booked on the given date', async () => {
       visitSchedulerApiClient.getBookedVisitsByDate.mockResolvedValue(pageVisitDto)
 
-      const results = await visitService.getVisitCountByDate('user', 'HEI', '2022-05-23')
+      const results = await visitService.getVisitCountByDate('HEI', '2022-05-23')
 
       expect(results).toEqual(pageVisitDto.totalElements)
       expect(visitSchedulerApiClient.getBookedVisitsByDate).toHaveBeenCalledWith('HEI', '2022-05-23')

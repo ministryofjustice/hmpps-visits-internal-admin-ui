@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 import { getTime, isValid, parse, parseISO } from 'date-fns'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import {
   PrisonService,
   SessionTemplateService,
@@ -26,14 +27,11 @@ export default class EditSessionTemplateController {
     return async (req, res) => {
       const { prisonId, reference } = req.params
 
-      const prisonPromise = this.prisonService.getPrison(res.locals.user.username, prisonId)
-      const incentivePromise = this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
-      const categoryPromise = this.categoryGroupService.getCategoryGroups(res.locals.user.username, prisonId)
-      const locationPromise = this.locationGroupService.getLocationGroups(res.locals.user.username, prisonId)
-      const sessionTemplatePromise = this.sessionTemplateService.getSingleSessionTemplate(
-        res.locals.user.username,
-        reference,
-      )
+      const prisonPromise = this.prisonService.getPrison(prisonId)
+      const incentivePromise = this.incentiveGroupService.getIncentiveGroups(prisonId)
+      const categoryPromise = this.categoryGroupService.getCategoryGroups(prisonId)
+      const locationPromise = this.locationGroupService.getLocationGroups(prisonId)
+      const sessionTemplatePromise = this.sessionTemplateService.getSingleSessionTemplate(reference)
 
       const [prison, incentiveGroups, categoryGroups, locationGroups, sessionTemplate] = await Promise.all([
         prisonPromise,
@@ -88,7 +86,7 @@ export default class EditSessionTemplateController {
         ...req.flash('formValues')?.[0],
       }
 
-      const visitStats = await this.sessionTemplateService.getTemplateStats(res.locals.user.username, reference)
+      const visitStats = await this.sessionTemplateService.getTemplateStats(reference)
 
       const visitDates = Object.keys(visitStats.dates)
       const firstDate = visitDates.at(0) ?? ''
@@ -174,7 +172,7 @@ export default class EditSessionTemplateController {
         req.flash('errors', responseErrorToFlashMessages(error))
 
         const formValues = req.body
-        if (error.status === 400) {
+        if ((error as SanitisedError).responseStatus === 400) {
           formValues.requireConfirmation = true
         }
         req.flash('formValues', formValues)

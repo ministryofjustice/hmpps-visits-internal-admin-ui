@@ -11,10 +11,10 @@ export default class AddEditContactDetailsController {
   public view(): RequestHandler<PrisonActionParams> {
     return async (req, res) => {
       const { action, prisonId } = req.params
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
 
       const existingContactDetails: Partial<PrisonContactDetails> =
-        action === 'edit' ? await this.prisonService.getPrisonContactDetails(res.locals.user.username, prison.code) : {}
+        action === 'edit' ? await this.prisonService.getPrisonContactDetails(prison.code) : {}
 
       const formValues = {
         emailAddress: existingContactDetails?.emailAddress,
@@ -58,7 +58,7 @@ export default class AddEditContactDetailsController {
       }
 
       try {
-        await this.prisonService.createPrisonContactDetails(res.locals.user.username, prisonId, {
+        await this.prisonService.createPrisonContactDetails(prisonId, {
           type: 'SOCIAL_VISIT',
           emailAddress,
           phoneNumber,
@@ -95,14 +95,14 @@ export default class AddEditContactDetailsController {
 
       try {
         if (contactDetailsAreEmpty) {
-          await this.prisonService.deletePrisonContactDetails(res.locals.user.username, prisonId)
+          await this.prisonService.deletePrisonContactDetails(prisonId)
           req.flash('messages', {
             variant: 'success',
             title: 'Contact details removed',
             text: 'Contact details removed (all values set to empty)',
           })
         } else {
-          await this.prisonService.updatePrisonContactDetails(res.locals.user.username, prisonId, {
+          await this.prisonService.updatePrisonContactDetails(prisonId, {
             type: 'SOCIAL_VISIT',
             emailAddress,
             phoneNumber,

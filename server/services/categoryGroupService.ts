@@ -1,32 +1,20 @@
-import { RestClientBuilder, VisitSchedulerApiClient, HmppsAuthClient } from '../data'
+import { VisitSchedulerApiClient } from '../data'
 import { CategoryGroup, CreateCategoryGroupDto } from '../data/visitSchedulerApiTypes'
 import logger from '../../logger'
 
 export default class CategoryGroupService {
-  constructor(
-    private readonly visitSchedulerApiClientFactory: RestClientBuilder<VisitSchedulerApiClient>,
-    private readonly hmppsAuthClient: HmppsAuthClient,
-  ) {}
+  constructor(private readonly visitSchedulerApiClient: VisitSchedulerApiClient) {}
 
-  async getSingleCategoryGroup(username: string, reference: string): Promise<CategoryGroup> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    return visitSchedulerApiClient.getSingleCategoryGroup(reference)
+  async getSingleCategoryGroup(reference: string): Promise<CategoryGroup> {
+    return this.visitSchedulerApiClient.getSingleCategoryGroup(reference)
   }
 
-  async getCategoryGroups(username: string, prisonCode: string): Promise<CategoryGroup[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    return visitSchedulerApiClient.getCategoryGroups(prisonCode)
+  async getCategoryGroups(prisonCode: string): Promise<CategoryGroup[]> {
+    return this.visitSchedulerApiClient.getCategoryGroups(prisonCode)
   }
 
   async createCategoryGroup(username: string, createCategoryGrupDto: CreateCategoryGroupDto): Promise<CategoryGroup> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    const categoryGroup = await visitSchedulerApiClient.createCategoryGroup(createCategoryGrupDto)
+    const categoryGroup = await this.visitSchedulerApiClient.createCategoryGroup(createCategoryGrupDto)
     logger.info(
       `Category group '${categoryGroup.reference}' created for prison '${createCategoryGrupDto.prisonId}' by '${username}'`,
     )
@@ -34,10 +22,7 @@ export default class CategoryGroupService {
   }
 
   async deleteCategoryGroup(username: string, reference: string): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
     logger.info(`Category group '${reference}' deleted by '${username}'`)
-
-    return visitSchedulerApiClient.deleteCategoryGroup(reference)
+    return this.visitSchedulerApiClient.deleteCategoryGroup(reference)
   }
 }

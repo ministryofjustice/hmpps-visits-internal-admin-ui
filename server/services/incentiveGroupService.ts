@@ -1,35 +1,23 @@
 import logger from '../../logger'
-import { RestClientBuilder, VisitSchedulerApiClient, HmppsAuthClient } from '../data'
+import { VisitSchedulerApiClient } from '../data'
 import { CreateIncentiveGroupDto, IncentiveGroup } from '../data/visitSchedulerApiTypes'
 
 export default class IncentiveGroupService {
-  constructor(
-    private readonly visitSchedulerApiClientFactory: RestClientBuilder<VisitSchedulerApiClient>,
-    private readonly hmppsAuthClient: HmppsAuthClient,
-  ) {}
+  constructor(private readonly visitSchedulerApiClient: VisitSchedulerApiClient) {}
 
-  async getSingleIncentiveGroup(username: string, reference: string): Promise<IncentiveGroup> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    return visitSchedulerApiClient.getSingleIncentiveGroup(reference)
+  async getSingleIncentiveGroup(reference: string): Promise<IncentiveGroup> {
+    return this.visitSchedulerApiClient.getSingleIncentiveGroup(reference)
   }
 
-  async getIncentiveGroups(username: string, prisonCode: string): Promise<IncentiveGroup[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    return visitSchedulerApiClient.getIncentiveGroups(prisonCode)
+  async getIncentiveGroups(prisonCode: string): Promise<IncentiveGroup[]> {
+    return this.visitSchedulerApiClient.getIncentiveGroups(prisonCode)
   }
 
   async createIncentiveGroup(
     username: string,
     createIncentiveGrupDto: CreateIncentiveGroupDto,
   ): Promise<IncentiveGroup> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    const incentiveGroup = await visitSchedulerApiClient.createIncentiveGroup(createIncentiveGrupDto)
+    const incentiveGroup = await this.visitSchedulerApiClient.createIncentiveGroup(createIncentiveGrupDto)
     logger.info(
       `Incentive level group '${incentiveGroup.reference}' created for prison '${createIncentiveGrupDto.prisonId}' by ${username}`,
     )
@@ -37,10 +25,7 @@ export default class IncentiveGroupService {
   }
 
   async deleteIncentiveGroup(username: string, reference: string): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
     logger.info(`Incentive level group '${reference}' deleted by ${username}`)
-    return visitSchedulerApiClient.deleteIncentiveGroup(reference)
+    return this.visitSchedulerApiClient.deleteIncentiveGroup(reference)
   }
 }

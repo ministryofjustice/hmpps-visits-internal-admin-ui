@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 import logger from '../../logger'
-import { RestClientBuilder, VisitSchedulerApiClient, HmppsAuthClient } from '../data'
+import { VisitSchedulerApiClient } from '../data'
 import {
   CreateSessionTemplateDto,
   RequestSessionTemplateVisitStatsDto,
@@ -11,64 +11,36 @@ import {
 import { VisitStatsSummary } from '../@types/visits-admin'
 
 export default class SessionTemplateService {
-  constructor(
-    private readonly visitSchedulerApiClientFactory: RestClientBuilder<VisitSchedulerApiClient>,
-    private readonly hmppsAuthClient: HmppsAuthClient,
-  ) {}
+  constructor(private readonly visitSchedulerApiClient: VisitSchedulerApiClient) {}
 
-  async getSingleSessionTemplate(username: string, reference: string): Promise<SessionTemplate> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    return visitSchedulerApiClient.getSingleSessionTemplate(reference)
+  async getSingleSessionTemplate(reference: string): Promise<SessionTemplate> {
+    return this.visitSchedulerApiClient.getSingleSessionTemplate(reference)
   }
 
-  async getSessionTemplates(
-    username: string,
-    prisonCode: string,
-    rangeType: SessionTemplatesRangeType,
-  ): Promise<SessionTemplate[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    return visitSchedulerApiClient.getSessionTemplates(prisonCode, rangeType)
+  async getSessionTemplates(prisonCode: string, rangeType: SessionTemplatesRangeType): Promise<SessionTemplate[]> {
+    return this.visitSchedulerApiClient.getSessionTemplates(prisonCode, rangeType)
   }
 
   async activateSessionTemplate(username: string, reference: string): Promise<SessionTemplate> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
     logger.info(`Session template '${reference}' activated by ${username}`)
-
-    return visitSchedulerApiClient.activateSessionTemplate(reference)
+    return this.visitSchedulerApiClient.activateSessionTemplate(reference)
   }
 
   async deactivateSessionTemplate(username: string, reference: string): Promise<SessionTemplate> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
     logger.info(`Session template '${reference}' deactivated by ${username}`)
-
-    return visitSchedulerApiClient.deactivateSessionTemplate(reference)
+    return this.visitSchedulerApiClient.deactivateSessionTemplate(reference)
   }
 
   async deleteSessionTemplate(username: string, reference: string): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
     logger.info(`Session template '${reference}' deleted by ${username}`)
-
-    return visitSchedulerApiClient.deleteSessionTemplate(reference)
+    return this.visitSchedulerApiClient.deleteSessionTemplate(reference)
   }
 
   async createSessionTemplate(
     username: string,
     createSessionTemplateDto: CreateSessionTemplateDto,
   ): Promise<SessionTemplate> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    const sessionTemplate = await visitSchedulerApiClient.createSessionTemplate(createSessionTemplateDto)
+    const sessionTemplate = await this.visitSchedulerApiClient.createSessionTemplate(createSessionTemplateDto)
     logger.info(
       `Session template '${sessionTemplate.reference}' created for prison '${sessionTemplate.prisonId}' by ${username}`,
     )
@@ -81,10 +53,7 @@ export default class SessionTemplateService {
     updateSessionTemplateDto: UpdateSessionTemplateDto,
     validateRequest: boolean,
   ): Promise<SessionTemplate> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
-    const sessionTemplate = await visitSchedulerApiClient.updateSessionTemplate(
+    const sessionTemplate = await this.visitSchedulerApiClient.updateSessionTemplate(
       reference,
       updateSessionTemplateDto,
       validateRequest,
@@ -95,14 +64,11 @@ export default class SessionTemplateService {
     return sessionTemplate
   }
 
-  async getTemplateStats(username: string, reference: string): Promise<VisitStatsSummary> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const visitSchedulerApiClient = this.visitSchedulerApiClientFactory(token)
-
+  async getTemplateStats(reference: string): Promise<VisitStatsSummary> {
     const requestVisitStatsDto: RequestSessionTemplateVisitStatsDto = {
       visitsFromDate: format(new Date(), 'yyyy-MM-dd'),
     }
-    const templateStats = await visitSchedulerApiClient.getTemplateStats(requestVisitStatsDto, reference)
+    const templateStats = await this.visitSchedulerApiClient.getTemplateStats(requestVisitStatsDto, reference)
 
     const dates = new Map<string, { booked?: number; cancelled?: number }>()
 

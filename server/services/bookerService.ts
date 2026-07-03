@@ -1,40 +1,29 @@
 import logger from '../../logger'
-import { BookerRegistryApiClient, HmppsAuthClient, RestClientBuilder } from '../data'
+import { BookerRegistryApiClient } from '../data'
 import { BookerDto, PermittedPrisonerDto } from '../data/bookerRegistryApiTypes'
 
 export default class BookerService {
-  constructor(
-    private readonly bookerRegistryApiClientFactory: RestClientBuilder<BookerRegistryApiClient>,
-    private readonly hmppsAuthClient: HmppsAuthClient,
-  ) {}
+  constructor(private readonly bookerRegistryApiClient: BookerRegistryApiClient) {}
 
   // Booker
 
-  async getBookerByReference(username: string, reference: string): Promise<BookerDto> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
-
-    return bookerRegistryApiClient.getBookerByReference(reference)
+  async getBookerByReference(reference: string): Promise<BookerDto | null> {
+    return this.bookerRegistryApiClient.getBookerByReference(reference)
   }
 
-  async getBookersByEmailOrReference(username: string, search: string): Promise<BookerDto[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
-
+  async getBookersByEmailOrReference(search: string): Promise<BookerDto[] | null> {
     const isEmail = search.indexOf('@') >= 0
 
-    const bookers = isEmail
-      ? await bookerRegistryApiClient.getBookersByEmail(search)
-      : [await bookerRegistryApiClient.getBookerByReference(search)]
+    if (isEmail) {
+      return this.bookerRegistryApiClient.getBookersByEmail(search)
+    }
 
-    return bookers
+    const booker = await this.bookerRegistryApiClient.getBookerByReference(search)
+    return booker ? [booker] : null
   }
 
   async clearBookerDetails(username: string, bookerReference: string): Promise<BookerDto> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
-
-    const booker = await bookerRegistryApiClient.clearBookerDetails(bookerReference)
+    const booker = await this.bookerRegistryApiClient.clearBookerDetails(bookerReference)
     logger.info(`Booker ${bookerReference} cleared by ${username}`)
     return booker
   }
@@ -47,10 +36,7 @@ export default class BookerService {
     prisonerId: string,
     prisonCode: string,
   ): Promise<PermittedPrisonerDto> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
-
-    const permittedPrisonerDto = await bookerRegistryApiClient.addPrisoner(bookerReference, prisonerId, prisonCode)
+    const permittedPrisonerDto = await this.bookerRegistryApiClient.addPrisoner(bookerReference, prisonerId, prisonCode)
     logger.info(`Prisoner ${prisonerId} with prison ${prisonCode} added to booker ${bookerReference} by ${username}`)
     return permittedPrisonerDto
   }
@@ -61,10 +47,7 @@ export default class BookerService {
     prisonerId: string,
     newPrisonCode: string,
   ): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken(username)
-    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
-
-    await bookerRegistryApiClient.updateRegisteredPrison(bookerReference, prisonerId, newPrisonCode)
+    await this.bookerRegistryApiClient.updateRegisteredPrison(bookerReference, prisonerId, newPrisonCode)
     logger.info(
       `Prisoner ${prisonerId} prison changed to ${newPrisonCode} for booker ${bookerReference} by ${username}`,
     )

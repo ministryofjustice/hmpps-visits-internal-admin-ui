@@ -1,7 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { BadRequest } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { appWithAllRoutes, FlashData, flashProvider } from '../../testutils/appSetup'
 import { createMockPrisonService, createMockCategoryGroupService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
@@ -87,7 +87,10 @@ describe('Single category group page', () => {
     })
 
     it('should handle API errors by setting flash errors and redirecting to same page', () => {
-      categoryGroupService.deleteCategoryGroup.mockRejectedValue(new BadRequest('API error!'))
+      categoryGroupService.deleteCategoryGroup.mockRejectedValue({
+        responseStatus: 400,
+        message: 'API error!',
+      } as SanitisedError)
 
       return request(app)
         .post(`/prisons/${prison.code}/category-groups/${categoryGroup.reference}/delete`)

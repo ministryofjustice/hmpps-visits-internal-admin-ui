@@ -16,7 +16,7 @@ export default class ExcludedDatesController {
       const { prisonId } = req.params
       const { username } = res.locals.user
 
-      const prison = await this.prisonService.getPrison(username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
       const blockedDates = await this.excludeDateService.getExcludeDates(username, prisonId)
 
       res.render('pages/prisons/excludedDates/viewExcludedDates', {
@@ -31,7 +31,7 @@ export default class ExcludedDatesController {
   public checkDate(): RequestHandler<PrisonParams> {
     return async (req, res) => {
       const { prisonId } = req.params
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
       const originalUrl = `/prisons/${prisonId}/excluded-dates`
       const errors = validationResult(req)
 
@@ -42,7 +42,7 @@ export default class ExcludedDatesController {
 
       const { excludeDate } = req.body
 
-      const visitCount = await this.visitService.getVisitCountByDate(res.locals.user.username, prisonId, excludeDate)
+      const visitCount = await this.visitService.getVisitCountByDate(prisonId, excludeDate)
 
       return res.render('pages/prisons/excludedDates/viewExcludedDates', {
         prison,

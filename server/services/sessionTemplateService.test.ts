@@ -1,17 +1,12 @@
 import SessionTemplateService from './sessionTemplateService'
 import TestData from '../routes/testutils/testData'
-import { createMockHmppsAuthClient, createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
+import { createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
 import { VisitStatsSummary } from '../@types/visits-admin'
 
-const token = 'some token'
-
 describe('Session template service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()
 
   let sessionTemplateService: SessionTemplateService
-
-  const VisitSchedulerApiClientFactory = jest.fn()
 
   const sessionTemplates = [TestData.sessionTemplate()]
   const singleSessionTemplate = TestData.sessionTemplate()
@@ -19,10 +14,7 @@ describe('Session template service', () => {
   const updateSessionTemplateDto = TestData.updateSessionTemplateDto()
 
   beforeEach(() => {
-    VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
-    sessionTemplateService = new SessionTemplateService(VisitSchedulerApiClientFactory, hmppsAuthClient)
-
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
+    sessionTemplateService = new SessionTemplateService(visitSchedulerApiClient)
   })
 
   afterEach(() => {
@@ -34,7 +26,7 @@ describe('Session template service', () => {
     it('should return a single session template', async () => {
       visitSchedulerApiClient.getSingleSessionTemplate.mockResolvedValue(singleSessionTemplate)
 
-      const results = await sessionTemplateService.getSingleSessionTemplate('user', 'HEI')
+      const results = await sessionTemplateService.getSingleSessionTemplate(singleSessionTemplate.reference)
 
       expect(results).toEqual(singleSessionTemplate)
     })
@@ -44,7 +36,7 @@ describe('Session template service', () => {
     it('should return an array of all session templates for a prison', async () => {
       visitSchedulerApiClient.getSessionTemplates.mockResolvedValue(sessionTemplates)
 
-      const results = await sessionTemplateService.getSessionTemplates('user', 'HEI', 'ALL')
+      const results = await sessionTemplateService.getSessionTemplates('HEI', 'ALL')
 
       expect(results).toEqual(sessionTemplates)
       expect(visitSchedulerApiClient.getSessionTemplates).toHaveBeenCalledWith('HEI', 'ALL')
@@ -135,7 +127,7 @@ describe('Session template service', () => {
       }
 
       visitSchedulerApiClient.getTemplateStats.mockResolvedValue(sessionTemplateVisitStatsDto)
-      const results = await sessionTemplateService.getTemplateStats('user', 'ab-cd-ef')
+      const results = await sessionTemplateService.getTemplateStats('ab-cd-ef')
 
       expect(visitSchedulerApiClient.getTemplateStats).toHaveBeenCalledWith(requestVisitStatsDto, 'ab-cd-ef')
       expect(results).toEqual(expectedResults)
@@ -161,7 +153,7 @@ describe('Session template service', () => {
       }
 
       visitSchedulerApiClient.getTemplateStats.mockResolvedValue(sessionTemplateVisitStatsDto)
-      const results = await sessionTemplateService.getTemplateStats('user', 'ab-cd-ef')
+      const results = await sessionTemplateService.getTemplateStats('ab-cd-ef')
 
       expect(visitSchedulerApiClient.getTemplateStats).toHaveBeenCalledWith(requestVisitStatsDto, 'ab-cd-ef')
       expect(results).toEqual(expectedResults)

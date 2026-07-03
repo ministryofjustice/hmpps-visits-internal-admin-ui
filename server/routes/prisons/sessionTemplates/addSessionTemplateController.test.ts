@@ -394,10 +394,7 @@ describe('Copy a session template', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/session-templates/add`)
         .expect(() => {
-          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(
-            'user1',
-            sessionTemplateToCopy.reference,
-          )
+          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(sessionTemplateToCopy.reference)
           expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFormValues)
         })
     })
@@ -423,10 +420,7 @@ describe('Copy a session template', () => {
         .expect(302)
         .expect('location', `/prisons/${prison.code}/session-templates/add`)
         .expect(() => {
-          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(
-            'user1',
-            sessionTemplateToCopy.reference,
-          )
+          expect(sessionTemplateService.getSingleSessionTemplate).toHaveBeenCalledWith(sessionTemplateToCopy.reference)
           expect(flashProvider).toHaveBeenCalledWith('formValues', { ...expectedFormValues, ...endDateValues })
         })
     })

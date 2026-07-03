@@ -14,9 +14,9 @@ export default class SingleLocationGroupController {
       const { reference, prisonId } = req.params
       const { sessionTemplateRef } = req.query
 
-      const prison = await this.prisonService.getPrison(res.locals.user.username, prisonId)
+      const prison = await this.prisonService.getPrison(prisonId)
 
-      const locationGroup = await this.locationGroupService.getSingleLocationGroup(res.locals.user.username, reference)
+      const locationGroup = await this.locationGroupService.getSingleLocationGroup(reference)
 
       return res.render('pages/prisons/locationGroups/viewSingleLocationGroup', {
         prison,
@@ -32,7 +32,7 @@ export default class SingleLocationGroupController {
       const { reference, prisonId } = req.params
 
       try {
-        const { name } = await this.locationGroupService.getSingleLocationGroup(res.locals.user.username, reference)
+        const { name } = await this.locationGroupService.getSingleLocationGroup(reference)
         await this.locationGroupService.deleteLocationGroup(res.locals.user.username, reference)
         req.flash('messages', {
           variant: 'success',

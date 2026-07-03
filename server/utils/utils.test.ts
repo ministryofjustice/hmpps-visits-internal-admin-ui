@@ -1,6 +1,6 @@
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { SessionTemplate } from '../data/visitSchedulerApiTypes'
 import TestData from '../routes/testutils/testData'
-import { SanitisedError } from '../sanitisedError'
 import {
   convertToTitleCase,
   formatDate,
@@ -53,7 +53,7 @@ describe('format a date', () => {
 describe('format a sanitised response error as a flash error message', () => {
   it('should render error code and message if no developerMessage present', () => {
     const error = <SanitisedError>{
-      status: 400,
+      responseStatus: 400,
       message: 'Bad Request',
     }
 
@@ -63,9 +63,22 @@ describe('format a sanitised response error as a flash error message', () => {
     expect(flashMessage[0]).toStrictEqual({ msg: '400 Bad Request' })
   })
 
-  it('should render error code and message plus developerMessage id present', () => {
+  it('should render error code and message if error.data is null', () => {
     const error = <SanitisedError>{
-      status: 400,
+      responseStatus: 400,
+      message: 'Bad Request',
+      data: null,
+    }
+
+    const flashMessage = responseErrorToFlashMessages(error)
+
+    expect(flashMessage.length).toBe(1)
+    expect(flashMessage[0]).toStrictEqual({ msg: '400 Bad Request' })
+  })
+
+  it('should render error code and message plus developerMessage if present', () => {
+    const error = <SanitisedError>{
+      responseStatus: 400,
       message: 'Bad Request',
       data: {
         developerMessage: 'API message',
@@ -81,7 +94,7 @@ describe('format a sanitised response error as a flash error message', () => {
 
   it('should render error code and message plus validationMessages if present', () => {
     const error = <SanitisedError>{
-      status: 400,
+      responseStatus: 400,
       message: 'Bad Request',
       data: {
         validationMessages: ['API message A', 'API message B'],

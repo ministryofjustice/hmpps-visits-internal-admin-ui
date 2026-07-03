@@ -27,10 +27,10 @@ export default class AddSessionTemplateController {
     return async (req, res) => {
       const { prisonId } = req.params
 
-      const prisonPromise = this.prisonService.getPrison(res.locals.user.username, prisonId)
-      const incentivePromise = this.incentiveGroupService.getIncentiveGroups(res.locals.user.username, prisonId)
-      const categoryPromise = this.categoryGroupService.getCategoryGroups(res.locals.user.username, prisonId)
-      const locationPromise = this.locationGroupService.getLocationGroups(res.locals.user.username, prisonId)
+      const prisonPromise = this.prisonService.getPrison(prisonId)
+      const incentivePromise = this.incentiveGroupService.getIncentiveGroups(prisonId)
+      const categoryPromise = this.categoryGroupService.getCategoryGroups(prisonId)
+      const locationPromise = this.locationGroupService.getLocationGroups(prisonId)
 
       const [prison, incentiveGroups, categoryGroups, locationGroups] = await Promise.all([
         prisonPromise,
@@ -58,10 +58,7 @@ export default class AddSessionTemplateController {
     return async (req, res) => {
       const { prisonId, reference } = req.params
 
-      const sessionTemplate = await this.sessionTemplateService.getSingleSessionTemplate(
-        res.locals.user.username,
-        reference,
-      )
+      const sessionTemplate = await this.sessionTemplateService.getSingleSessionTemplate(reference)
 
       const validFromDateSplit = sessionTemplate.sessionDateRange.validFromDate.split('-')
       const validFromDateYear = validFromDateSplit[0]

@@ -1,4 +1,3 @@
-import { NotFound } from 'http-errors'
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
@@ -149,7 +148,7 @@ describe('Search for a booker', () => {
           expect($('[data-test=booker-prisoners-3]').text().trim()).toBe('None')
           expect($('[data-test=booker-created-date-3]').text()).toBe('1 June 2025')
 
-          expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', email)
+          expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith(email)
         })
     })
 
@@ -172,7 +171,7 @@ describe('Search for a booker', () => {
           .expect('location', `/bookers/booker/${booker.reference}`)
           .expect(() => {
             expect(flashProvider).not.toHaveBeenCalled()
-            expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', booker.email)
+            expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith(booker.email)
             expect(sessionData).toStrictEqual({})
           })
       })
@@ -187,7 +186,7 @@ describe('Search for a booker', () => {
           .expect('location', `/bookers/booker/${booker.reference}`)
           .expect(() => {
             expect(flashProvider).not.toHaveBeenCalled()
-            expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', booker.reference)
+            expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith(booker.reference)
             expect(sessionData).toStrictEqual({})
           })
       })
@@ -204,7 +203,7 @@ describe('Search for a booker', () => {
           .expect('location', '/bookers/search/results')
           .expect(() => {
             expect(flashProvider).not.toHaveBeenCalled()
-            expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', booker.email)
+            expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith(booker.email)
             expect(sessionData).toStrictEqual({ bookerEmail: booker.email })
           })
       })
@@ -212,7 +211,7 @@ describe('Search for a booker', () => {
 
     describe('Error handling', () => {
       it('should search for booker by email and redirect to booker search when not found', () => {
-        bookerService.getBookersByEmailOrReference.mockRejectedValue(new NotFound())
+        bookerService.getBookersByEmailOrReference.mockResolvedValue(null)
 
         return request(app)
           .post('/bookers/search')
@@ -227,7 +226,7 @@ describe('Search for a booker', () => {
               title: 'No booker found',
               text: 'No existing booker found for: user@example.com',
             })
-            expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith('user1', booker.email)
+            expect(bookerService.getBookersByEmailOrReference).toHaveBeenCalledWith(booker.email)
             expect(sessionData).toStrictEqual({})
           })
       })

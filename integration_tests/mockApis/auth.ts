@@ -8,6 +8,7 @@ const createToken = (roles: string[] = []) => {
   // authorities in the session are always prefixed by ROLE.
   const authorities = roles.map(role => (role.startsWith('ROLE_') ? role : `ROLE_${role}`))
   const payload = {
+    name: 'john smith',
     user_name: 'USER1',
     scope: ['read'],
     auth_source: 'nomis',

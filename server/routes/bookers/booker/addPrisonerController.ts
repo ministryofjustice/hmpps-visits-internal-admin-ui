@@ -14,7 +14,7 @@ export default class AddPrisonerController {
   public view(): RequestHandler<BookerParams> {
     return async (req, res) => {
       const { reference } = req.params
-      const booker = await this.bookerService.getBookerByReference(res.locals.user.username, reference)
+      const booker = await this.bookerService.getBookerByReference(reference)
 
       if (booker.permittedPrisoners.length) {
         req.flash('messages', {
@@ -25,7 +25,7 @@ export default class AddPrisonerController {
         return res.redirect(`/bookers/booker/${reference}`)
       }
 
-      const prisons = await this.prisonService.getAllPrisons(res.locals.user.username)
+      const prisons = await this.prisonService.getAllPrisons()
       const prisonSelectItems = prisons.map(prison => ({ value: prison.code, text: prison.name }))
 
       return res.render('pages/bookers/booker/addPrisoner', {

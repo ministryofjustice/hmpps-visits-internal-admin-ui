@@ -1,23 +1,13 @@
 import { NotFound } from 'http-errors'
 import PrisonService from './prisonService'
 import TestData from '../routes/testutils/testData'
-import {
-  createMockHmppsAuthClient,
-  createMockPrisonRegisterApiClient,
-  createMockVisitSchedulerApiClient,
-} from '../data/testutils/mocks'
-
-const token = 'some token'
+import { createMockPrisonRegisterApiClient, createMockVisitSchedulerApiClient } from '../data/testutils/mocks'
 
 describe('Prisons service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
   const prisonRegisterApiClient = createMockPrisonRegisterApiClient()
   const visitSchedulerApiClient = createMockVisitSchedulerApiClient()
 
   let prisonService: PrisonService
-
-  const PrisonRegisterApiClientFactory = jest.fn()
-  const VisitSchedulerApiClientFactory = jest.fn()
 
   const prisonDto = TestData.prisonDto()
   const prison = TestData.prison()
@@ -25,12 +15,9 @@ describe('Prisons service', () => {
   const prisonNames = TestData.prisonNames()
 
   beforeEach(() => {
-    PrisonRegisterApiClientFactory.mockReturnValue(prisonRegisterApiClient)
-    VisitSchedulerApiClientFactory.mockReturnValue(visitSchedulerApiClient)
-    prisonService = new PrisonService(VisitSchedulerApiClientFactory, PrisonRegisterApiClientFactory, hmppsAuthClient)
+    prisonService = new PrisonService(visitSchedulerApiClient, prisonRegisterApiClient)
 
     prisonRegisterApiClient.getPrisonNames.mockResolvedValue(prisonNames)
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
   })
 
   afterEach(() => {
@@ -40,7 +27,7 @@ describe('Prisons service', () => {
   describe('getPrison', () => {
     it('should return a Prison', async () => {
       visitSchedulerApiClient.getPrison.mockResolvedValue(prisonDto)
-      const results = await prisonService.getPrison('user', prisonDto.code)
+      const results = await prisonService.getPrison(prisonDto.code)
 
       expect(visitSchedulerApiClient.getPrison).toHaveBeenCalledWith(prisonDto.code)
       expect(results).toStrictEqual(prison)
@@ -51,7 +38,7 @@ describe('Prisons service', () => {
       const prisonNotInRegister = TestData.prison({ ...prisonDtoNotInRegister, name: 'UNKNOWN' })
 
       visitSchedulerApiClient.getPrison.mockResolvedValue(prisonDtoNotInRegister)
-      const results = await prisonService.getPrison('user', prisonDtoNotInRegister.code)
+      const results = await prisonService.getPrison(prisonDtoNotInRegister.code)
 
       expect(results).toStrictEqual(prisonNotInRegister)
     })
@@ -71,7 +58,7 @@ describe('Prisons service', () => {
       const prisonNotInRegister = TestData.prison({ ...prisonDtoNotInRegister, name: 'UNKNOWN' })
 
       visitSchedulerApiClient.getPrison.mockResolvedValue(prisonDtoNotInRegister)
-      const results = await prisonService.getPrison('user', prisonDtoNotInRegister.code)
+      const results = await prisonService.getPrison(prisonDtoNotInRegister.code)
 
       expect(visitSchedulerApiClient.getPrison).toHaveBeenCalledWith('XYZ')
       expect(results).toStrictEqual(prisonNotInRegister)
@@ -85,7 +72,7 @@ describe('Prisons service', () => {
     it('should return an array of all supported Prisons', async () => {
       visitSchedulerApiClient.getAllPrisons.mockResolvedValue(allPrisonDtos)
 
-      const results = await prisonService.getAllPrisons('user')
+      const results = await prisonService.getAllPrisons()
 
       expect(results).toStrictEqual(allPrisons)
     })
@@ -94,7 +81,7 @@ describe('Prisons service', () => {
       const unsortedPrisonDtos = [allPrisonDtos[2], allPrisonDtos[0], allPrisonDtos[1]]
       visitSchedulerApiClient.getAllPrisons.mockResolvedValue(unsortedPrisonDtos)
 
-      const results = await prisonService.getAllPrisons('user')
+      const results = await prisonService.getAllPrisons()
 
       expect(results).toStrictEqual(allPrisons)
     })
@@ -119,7 +106,7 @@ describe('Prisons service', () => {
       it('should return prison SOCIAL_VISIT contact details from the Prison Register', async () => {
         prisonRegisterApiClient.getPrisonContactDetails.mockResolvedValue(prisonContactDetails)
 
-        const results = await prisonService.getPrisonContactDetails('user', prison.code)
+        const results = await prisonService.getPrisonContactDetails(prison.code)
         expect(results).toStrictEqual(prisonContactDetails)
         expect(prisonRegisterApiClient.getPrisonContactDetails).toHaveBeenCalledWith('HEI')
       })
@@ -129,7 +116,7 @@ describe('Prisons service', () => {
       it('should create prison SOCIAL_VISIT contact details for selected prison', async () => {
         prisonRegisterApiClient.createPrisonContactDetails.mockResolvedValue(prisonContactDetails)
 
-        const results = await prisonService.createPrisonContactDetails('user', prison.code, prisonContactDetails)
+        const results = await prisonService.createPrisonContactDetails(prison.code, prisonContactDetails)
         expect(results).toStrictEqual(prisonContactDetails)
         expect(prisonRegisterApiClient.createPrisonContactDetails).toHaveBeenCalledWith('HEI', prisonContactDetails)
       })
@@ -137,11 +124,7 @@ describe('Prisons service', () => {
       it('should create prison SOCIAL_VISIT contact details for selected prison - with empty values sent as NULL', async () => {
         prisonRegisterApiClient.createPrisonContactDetails.mockResolvedValue(prisonContactDetailsNulls)
 
-        const results = await prisonService.createPrisonContactDetails(
-          'user',
-          prison.code,
-          prisonContactDetailsEmptyStrings,
-        )
+        const results = await prisonService.createPrisonContactDetails(prison.code, prisonContactDetailsEmptyStrings)
         expect(results).toStrictEqual(prisonContactDetailsNulls)
         expect(prisonRegisterApiClient.createPrisonContactDetails).toHaveBeenCalledWith(
           'HEI',
@@ -152,7 +135,7 @@ describe('Prisons service', () => {
 
     describe('deletePrisonContactDetails', () => {
       it('should delete prison SOCIAL_VISIT contact details for selected prison', async () => {
-        await prisonService.deletePrisonContactDetails('user', prison.code)
+        await prisonService.deletePrisonContactDetails(prison.code)
         expect(prisonRegisterApiClient.deletePrisonContactDetails).toHaveBeenCalledWith('HEI')
       })
     })
@@ -161,7 +144,7 @@ describe('Prisons service', () => {
       it('should update prison SOCIAL_VISIT contact details for selected prison', async () => {
         prisonRegisterApiClient.updatePrisonContactDetails.mockResolvedValue(prisonContactDetails)
 
-        const results = await prisonService.updatePrisonContactDetails('user', prison.code, prisonContactDetails)
+        const results = await prisonService.updatePrisonContactDetails(prison.code, prisonContactDetails)
         expect(results).toStrictEqual(prisonContactDetails)
         expect(prisonRegisterApiClient.updatePrisonContactDetails).toHaveBeenCalledWith('HEI', prisonContactDetails)
       })
@@ -169,11 +152,7 @@ describe('Prisons service', () => {
       it('should update prison SOCIAL_VISIT contact details for selected prison - with empty values sent as NULL', async () => {
         prisonRegisterApiClient.updatePrisonContactDetails.mockResolvedValue(prisonContactDetailsNulls)
 
-        const results = await prisonService.updatePrisonContactDetails(
-          'user',
-          prison.code,
-          prisonContactDetailsEmptyStrings,
-        )
+        const results = await prisonService.updatePrisonContactDetails(prison.code, prisonContactDetailsEmptyStrings)
         expect(results).toStrictEqual(prisonContactDetailsNulls)
         expect(prisonRegisterApiClient.updatePrisonContactDetails).toHaveBeenCalledWith(
           'HEI',
@@ -194,18 +173,18 @@ describe('Prisons service', () => {
 
   describe('getPrisonName', () => {
     it('should return prison name for given prison ID', async () => {
-      const results = await prisonService.getPrisonName('user', prisonNames[0].prisonId)
+      const results = await prisonService.getPrisonName(prisonNames[0].prisonId)
       expect(results).toBe(prisonNames[0].prisonName)
     })
 
     it('should throw a 404 error if no name found for prison ID', async () => {
-      await expect(prisonService.getPrisonName('user', 'XYZ')).rejects.toThrow(NotFound)
+      await expect(prisonService.getPrisonName('XYZ')).rejects.toThrow(NotFound)
     })
   })
 
   describe('getPrisonNames', () => {
     it('should return all prison names', async () => {
-      const results = await prisonService.getPrisonNames('user')
+      const results = await prisonService.getPrisonNames()
       expect(results[prisonNames[0].prisonId]).toBe(prisonNames[0].prisonName)
       expect(results[prisonNames[1].prisonId]).toBe(prisonNames[1].prisonName)
     })
@@ -243,8 +222,8 @@ describe('Prisons service', () => {
     it('should call Prison register API to get all prison names and then use internal cache for subsequent calls', async () => {
       const results = []
 
-      results[0] = await prisonService.getPrisonName('user', prisonNames[0].prisonId)
-      results[1] = await prisonService.getPrisonName('user', prisonNames[0].prisonId)
+      results[0] = await prisonService.getPrisonName(prisonNames[0].prisonId)
+      results[1] = await prisonService.getPrisonName(prisonNames[0].prisonId)
 
       expect(results[0]).toEqual(prisonNames[0].prisonName)
       expect(results[1]).toEqual(prisonNames[0].prisonName)
@@ -257,10 +236,10 @@ describe('Prisons service', () => {
       const A_DAY_IN_MS = 24 * 60 * 60 * 1000
       const results = []
 
-      results[0] = await prisonService.getPrisonName('user', prisonNames[0].prisonId)
-      results[1] = await prisonService.getPrisonName('user', prisonNames[0].prisonId)
+      results[0] = await prisonService.getPrisonName(prisonNames[0].prisonId)
+      results[1] = await prisonService.getPrisonName(prisonNames[0].prisonId)
       jest.advanceTimersByTime(A_DAY_IN_MS)
-      results[2] = await prisonService.getPrisonName('user', prisonNames[0].prisonId)
+      results[2] = await prisonService.getPrisonName(prisonNames[0].prisonId)
 
       expect(results[0]).toEqual(prisonNames[0].prisonName)
       expect(results[1]).toEqual(prisonNames[0].prisonName)
