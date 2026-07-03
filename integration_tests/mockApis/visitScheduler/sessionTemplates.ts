@@ -141,7 +141,7 @@ export default {
     return stubFor({
       request: {
         method: 'PUT',
-        url: `/visitScheduler/admin/session-templates/template/${reference}?&validateRequest=${validateRequest}`,
+        url: `/visitScheduler/admin/session-templates/template/${reference}?validateRequest=${validateRequest}`,
         bodyPatterns: [
           {
             equalToJson: {
