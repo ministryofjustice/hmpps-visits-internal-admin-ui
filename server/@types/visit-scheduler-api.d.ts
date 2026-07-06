@@ -1779,13 +1779,7 @@ export interface components {
        * @enum {string}
        */
       applicationMethodType:
-        | 'PHONE'
-        | 'WEBSITE'
-        | 'EMAIL'
-        | 'IN_PERSON'
-        | 'NOT_KNOWN'
-        | 'NOT_APPLICABLE'
-        | 'BY_PRISONER'
+        'PHONE' | 'WEBSITE' | 'EMAIL' | 'IN_PERSON' | 'NOT_KNOWN' | 'NOT_APPLICABLE' | 'BY_PRISONER'
       /** @description flag to determine if visit should be a request or instant booking */
       isRequestBooking?: boolean
       /**
@@ -1802,13 +1796,7 @@ export interface components {
        * @enum {string}
        */
       applicationMethodType:
-        | 'PHONE'
-        | 'WEBSITE'
-        | 'EMAIL'
-        | 'IN_PERSON'
-        | 'NOT_KNOWN'
-        | 'NOT_APPLICABLE'
-        | 'BY_PRISONER'
+        'PHONE' | 'WEBSITE' | 'EMAIL' | 'IN_PERSON' | 'NOT_KNOWN' | 'NOT_APPLICABLE' | 'BY_PRISONER'
       /** @description Outcome - status and text */
       cancelOutcome: components['schemas']['OutcomeDto']
       /**
@@ -2123,13 +2111,7 @@ export interface components {
        * @enum {string}
        */
       applicationMethodType:
-        | 'PHONE'
-        | 'WEBSITE'
-        | 'EMAIL'
-        | 'IN_PERSON'
-        | 'NOT_KNOWN'
-        | 'NOT_APPLICABLE'
-        | 'BY_PRISONER'
+        'PHONE' | 'WEBSITE' | 'EMAIL' | 'IN_PERSON' | 'NOT_KNOWN' | 'NOT_APPLICABLE' | 'BY_PRISONER'
       /** @description Visit reference */
       bookingReference?: string
       /**
@@ -2620,12 +2602,7 @@ export interface components {
       prisonerNumber: string
       /** @enum {string} */
       reasonType:
-        | 'TEMPORARY_ABSENCE_RELEASE'
-        | 'RELEASED_TO_HOSPITAL'
-        | 'RELEASED'
-        | 'SENT_TO_COURT'
-        | 'TRANSFERRED'
-        | 'UNKNOWN'
+        'TEMPORARY_ABSENCE_RELEASE' | 'RELEASED_TO_HOSPITAL' | 'RELEASED' | 'SENT_TO_COURT' | 'TRANSFERRED' | 'UNKNOWN'
     }
     PrisonerRestrictionChangeNotificationDto: {
       prisonerNumber: string
@@ -3207,13 +3184,7 @@ export interface components {
        * @enum {string}
        */
       visitSubStatus:
-        | 'APPROVED'
-        | 'AUTO_APPROVED'
-        | 'REQUESTED'
-        | 'REJECTED'
-        | 'AUTO_REJECTED'
-        | 'WITHDRAWN'
-        | 'CANCELLED'
+        'APPROVED' | 'AUTO_APPROVED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN' | 'CANCELLED'
       /**
        * @description Visit Type
        * @example SOCIAL
@@ -3258,11 +3229,7 @@ export interface components {
        * @enum {string}
        */
       attributeName:
-        | 'VISITOR_RESTRICTION'
-        | 'VISITOR_RESTRICTION_ID'
-        | 'VISITOR_ID'
-        | 'PAIRED_VISIT'
-        | 'APPOINTMENT_INSTANCE_ID'
+        'VISITOR_RESTRICTION' | 'VISITOR_RESTRICTION_ID' | 'VISITOR_ID' | 'PAIRED_VISIT' | 'APPOINTMENT_INSTANCE_ID'
       /**
        * @description Value of the attribute associated with the notification event
        * @example BAN
@@ -3372,13 +3339,7 @@ export interface components {
        * @enum {string}
        */
       visitSubStatus:
-        | 'APPROVED'
-        | 'AUTO_APPROVED'
-        | 'REQUESTED'
-        | 'REJECTED'
-        | 'AUTO_REJECTED'
-        | 'WITHDRAWN'
-        | 'CANCELLED'
+        'APPROVED' | 'AUTO_APPROVED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN' | 'CANCELLED'
       /** @description Timeslot for the visit */
       visitTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
