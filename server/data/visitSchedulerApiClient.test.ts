@@ -8,7 +8,6 @@ import {
   CreateIncentiveGroupDto,
   CreateLocationGroupDto,
   CreateSessionTemplateDto,
-  PageVisitDto,
   PrisonDto,
   UserClientDto,
   UserClientType,
@@ -33,33 +32,6 @@ describe('visitSchedulerApiClient', () => {
   afterEach(() => {
     nock.cleanAll()
     jest.resetAllMocks()
-  })
-
-  describe('getBookedVisitsByDate', () => {
-    it('should return visits booked on given date', async () => {
-      const results: PageVisitDto = {
-        totalElements: 1,
-      }
-
-      nock(config.apis.visitScheduler.url)
-        .get(`/visits/search`)
-        .query({
-          prisonId: 'HEI',
-          visitStartDate: '2022-05-23',
-          visitEndDate: '2022-05-23',
-          visitStatus: 'BOOKED',
-          page: '0',
-          size: '1000',
-        })
-        .matchHeader('authorization', 'Bearer test-system-token')
-        .reply(200, results)
-
-      const output = await visitSchedulerApiClient.getBookedVisitsByDate('HEI', '2022-05-23')
-
-      expect(output).toEqual(results)
-
-      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
-    })
   })
 
   describe('getAllPrisons', () => {
@@ -229,56 +201,6 @@ describe('visitSchedulerApiClient', () => {
     })
   })
 
-  describe('getExcludeDates', () => {
-    it('should make call to get exclude dates for a prison', async () => {
-      const excludeDateDto = [TestData.excludeDateDto()]
-      const prisonCode = 'HEI'
-      nock(config.apis.visitScheduler.url)
-        .get(`/prisons/prison/${prisonCode}/exclude-date`)
-        .matchHeader('authorization', 'Bearer test-system-token')
-        .reply(200, excludeDateDto)
-
-      const output = await visitSchedulerApiClient.getExcludeDates(prisonCode)
-
-      expect(output).toEqual(excludeDateDto)
-
-      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
-    })
-  })
-
-  describe('addExcludedDate', () => {
-    it('should make call to add exclude date to a prison and return the PrisonDto', async () => {
-      const excludeDate = '2023-12-26'
-      const prisonCode = 'HEI'
-
-      nock(config.apis.visitScheduler.url)
-        .put(`/prisons/prison/${prisonCode}/exclude-date/add`, { excludeDate, actionedBy: 'user1' })
-        .matchHeader('authorization', 'Bearer test-system-token')
-        .reply(200, null)
-
-      const output = await visitSchedulerApiClient.addExcludeDate(prisonCode, '2023-12-26', 'user1')
-
-      expect(output).toEqual(null)
-
-      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
-    })
-  })
-
-  describe('removeExcludedDate', () => {
-    it('should make call to remove exclude date from a prison', async () => {
-      const excludeDate = '2023-12-26'
-      const prisonCode = 'HEI'
-
-      nock(config.apis.visitScheduler.url)
-        .put(`/prisons/prison/${prisonCode}/exclude-date/remove`, { excludeDate, actionedBy: 'user1' })
-        .matchHeader('authorization', 'Bearer test-system-token')
-        .reply(200)
-
-      await visitSchedulerApiClient.removeExcludeDate(prisonCode, excludeDate, 'user1')
-      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
-    })
-  })
-
   describe('getSessionTemplates', () => {
     it('should return all session templates for a prison', async () => {
       const sessionTemplates = [TestData.sessionTemplate()]
@@ -352,7 +274,7 @@ describe('visitSchedulerApiClient', () => {
   })
 
   describe('deleteSessionTemplate', () => {
-    it('should make call to remove exclude date from a prison', async () => {
+    it('should delete session template', async () => {
       const sessionTemplate = TestData.sessionTemplate()
 
       nock(config.apis.visitScheduler.url)

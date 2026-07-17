@@ -5,9 +5,6 @@ export type CategoryGroup = components['schemas']['SessionCategoryGroupDto']
 export type CreateCategoryGroupDto = components['schemas']['CreateCategoryGroupDto']
 export type PrisonerCategories = CategoryGroup['categories'][number]
 
-// Exclude dates
-export type ExcludeDateDto = components['schemas']['ExcludeDateDto']
-
 // Incentive groups
 export type IncentiveGroup = components['schemas']['SessionIncentiveLevelGroupDto']
 export type CreateIncentiveGroupDto = components['schemas']['CreateIncentiveGroupDto']
@@ -33,6 +30,3 @@ export type RequestSessionTemplateVisitStatsDto = components['schemas']['Request
 export type SessionCapacity = components['schemas']['SessionCapacityDto']
 export type SessionTemplateVisitStatsDto = components['schemas']['SessionTemplateVisitStatsDto']
 export type VisitOrderRestrictions = components['schemas']['SessionTemplateDto']['visitOrderRestriction']
-
-// Visits
-export type PageVisitDto = components['schemas']['PageVisitDto']

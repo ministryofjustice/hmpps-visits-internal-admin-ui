@@ -57,7 +57,7 @@ describe('Prison configuration', () => {
             expect($('[data-test="prison-status"]').text().trim()).toBe('Active')
             expect($('[data-test="prison-clients"]').text().trim()).toBe('Staff')
 
-            expect($('.moj-sub-navigation__item').length).toBe(6)
+            expect($('.moj-sub-navigation__item').length).toBe(5)
             expect($('.moj-sub-navigation__link[aria-current]').text()).toBe('Configuration')
             expect($('.moj-sub-navigation__link[aria-current]').attr('href')).toBe('/prisons/HEI/configuration')
 
