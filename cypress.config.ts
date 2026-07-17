@@ -11,7 +11,6 @@ import visitAllocation from './integration_tests/mockApis/visitAllocation'
 import visitScheduler from './integration_tests/mockApis/visitScheduler/visitScheduler'
 import prisons from './integration_tests/mockApis/visitScheduler/prisons'
 import sessionTemplates from './integration_tests/mockApis/visitScheduler/sessionTemplates'
-import visits from './integration_tests/mockApis/visitScheduler/visits'
 
 export default defineConfig({
   allowCypressEnv: false,
@@ -42,7 +41,6 @@ export default defineConfig({
         ...locationGroups,
         ...prisons,
         ...sessionTemplates,
-        ...visits,
         ...visitAllocation,
         ...visitScheduler,
       })

@@ -32,8 +32,6 @@ export default abstract class Page {
   // Sub-navigation sections
   getSessionTemplatesTab = (): PageElement => cy.get('[data-test="tab-session-templates"]')
 
-  getExcludedDatesTab = (): PageElement => cy.get('[data-test="tab-excluded-dates"]')
-
   getCategoryGroupsTab = (): PageElement => cy.get('[data-test="tab-category-groups"]')
 
   getIncentiveGroupsTab = (): PageElement => cy.get('[data-test="tab-incentive-groups"]')

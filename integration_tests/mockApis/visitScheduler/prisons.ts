@@ -1,13 +1,7 @@
 import { SuperAgentRequest } from 'superagent'
 import { stubFor } from '../wiremock'
 import TestData from '../../../server/routes/testutils/testData'
-import {
-  ExcludeDateDto,
-  PrisonDto,
-  UserClientDto,
-  UserClientType,
-  UpdatePrisonDto,
-} from '../../../server/data/visitSchedulerApiTypes'
+import { PrisonDto, UserClientDto, UserClientType, UpdatePrisonDto } from '../../../server/data/visitSchedulerApiTypes'
 
 export default {
   stubGetAllPrisons: (prisons: PrisonDto[] = TestData.prisonDtos()): SuperAgentRequest => {
@@ -156,75 +150,6 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: TestData.prisonDto({ active: false }),
-      },
-    })
-  },
-  stubGetExcludeDates: ({
-    prisonCode,
-    excludeDates,
-  }: {
-    prisonCode: string
-    excludeDates: ExcludeDateDto
-  }): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        url: `/visitScheduler/prisons/prison/${prisonCode}/exclude-date`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: excludeDates,
-      },
-    })
-  },
-  stubAddExcludeDate: ({
-    prisonCode,
-    excludeDate,
-    actionedBy = 'user1',
-  }: {
-    prisonCode: string
-    excludeDate: string
-    actionedBy: string
-  }): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'PUT',
-        url: `/visitScheduler/prisons/prison/${prisonCode}/exclude-date/add`,
-        bodyPatterns: [
-          {
-            equalToJson: { excludeDate, actionedBy },
-          },
-        ],
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      },
-    })
-  },
-  stubRemoveExcludeDate: ({
-    prisonCode,
-    excludeDate,
-    actionedBy = 'user1',
-  }: {
-    prisonCode: string
-    excludeDate: string
-    actionedBy: string
-  }): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'PUT',
-        url: `/visitScheduler/prisons/prison/${prisonCode}/exclude-date/remove`,
-        bodyPatterns: [
-          {
-            equalToJson: { excludeDate, actionedBy },
-          },
-        ],
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       },
     })
   },

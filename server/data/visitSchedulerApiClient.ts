@@ -16,34 +16,15 @@ import {
   UpdateSessionTemplateDto,
   RequestSessionTemplateVisitStatsDto,
   SessionTemplateVisitStatsDto,
-  PageVisitDto,
   UpdatePrisonDto,
   UserClientType,
   UserClientDto,
-  ExcludeDateDto,
   UpdateLocationGroupDto,
 } from './visitSchedulerApiTypes'
 
 export default class VisitSchedulerApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
     super('Visit Scheduler API', config.apis.visitScheduler, logger, authenticationClient)
-  }
-
-  async getBookedVisitsByDate(prisonId: string, date: string): Promise<PageVisitDto> {
-    return this.get(
-      {
-        path: `/visits/search`,
-        query: new URLSearchParams({
-          prisonId,
-          visitStartDate: date,
-          visitEndDate: date,
-          visitStatus: 'BOOKED',
-          page: '0',
-          size: '1000',
-        }).toString(),
-      },
-      asSystem(),
-    )
   }
 
   async getAllPrisons(): Promise<PrisonDto[]> {
@@ -132,41 +113,6 @@ export default class VisitSchedulerApiClient extends RestClient {
     return this.put(
       {
         path: `/admin/prisons/prison/${prisonCode}/client/${type}/deactivate`,
-      },
-      asSystem(),
-    )
-  }
-
-  async getExcludeDates(prisonCode: string): Promise<ExcludeDateDto[]> {
-    return this.get(
-      {
-        path: `/prisons/prison/${prisonCode}/exclude-date`,
-      },
-      asSystem(),
-    )
-  }
-
-  async addExcludeDate(prisonCode: string, excludeDate: string, username: string): Promise<void> {
-    return this.put(
-      {
-        path: `/prisons/prison/${prisonCode}/exclude-date/add`,
-        data: {
-          excludeDate,
-          actionedBy: username,
-        },
-      },
-      asSystem(),
-    )
-  }
-
-  async removeExcludeDate(prisonCode: string, excludeDate: string, username: string): Promise<void> {
-    await this.put(
-      {
-        path: `/prisons/prison/${prisonCode}/exclude-date/remove`,
-        data: {
-          excludeDate,
-          actionedBy: username,
-        },
       },
       asSystem(),
     )

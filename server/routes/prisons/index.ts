@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { Services } from '../../services'
 import SupportedPrisonsController from './supportedPrisonsController'
-import excludedDatesRoutes from './excludedDates'
 import prisonStatusRoutes from './configuration'
 import sessionTemplatesRoutes from './sessionTemplates'
 import locationGroupsRoutes from './locationGroups'
@@ -16,7 +15,6 @@ export default function routes(services: Services): Router {
   router.get('/prisons', supportedPrisons.view())
   router.post('/prisons', supportedPrisons.addPrison())
 
-  router.use(excludedDatesRoutes(services))
   router.use(categoryGroupsRoutes(services))
   router.use(locationGroupsRoutes(services))
   router.use(prisonStatusRoutes(services))

@@ -16,7 +16,6 @@ import {
   RequestSessionTemplateVisitStatsDto,
   SessionTemplateVisitStatsDto,
   UpdatePrisonDto,
-  ExcludeDateDto,
   UpdateLocationGroupDto,
 } from '../../data/visitSchedulerApiTypes'
 
@@ -393,14 +392,6 @@ export default class TestData {
     prisonerId,
     prisonCode,
     permittedVisitors,
-  })
-
-  static excludeDateDto = ({
-    excludeDate = '2024-12-12',
-    actionedBy = 'User one',
-  }: Partial<ExcludeDateDto> = {}): ExcludeDateDto => ({
-    excludeDate,
-    actionedBy,
   })
 
   static prisonNegativeBalanceCount = ({

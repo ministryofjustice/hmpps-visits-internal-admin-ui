@@ -2,7 +2,7 @@
 
 ## Project overview
 
-An internal admin UI for the HMPPS Visit Someone in Prison (VSiP) service. Staff use it to manage prisons, visit session templates, location/category/incentive groups, excluded dates, booker accounts, and visit allocations. Built on the [hmpps-template-typescript](https://github.com/ministryofjustice/hmpps-template-typescript) pattern.
+An internal admin UI for the HMPPS Visit Someone in Prison (VSiP) service. Staff use it to manage prisons, visit session templates, location/category/incentive groups, booker accounts, and visit allocations. Built on the [hmpps-template-typescript](https://github.com/ministryofjustice/hmpps-template-typescript) pattern.
 
 **Stack:** Node.js 24 / Express 5 / TypeScript / Nunjucks (views) / GovUK Frontend + MoJ Frontend design system / Jest (unit) / Cypress (integration) / Redis (sessions/token cache)
 
