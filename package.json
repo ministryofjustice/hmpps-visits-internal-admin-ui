@@ -86,7 +86,7 @@
     "@types/validator": "^13.15.10",
     "audit-ci": "^7.1.0",
     "cheerio": "^1.2.0",
-    "concurrently": "^10.0.3",
+    "concurrently": "^10.0.4",
     "cypress": "^15.19.0",
     "cypress-multi-reporters": "^2.0.5",
     "dotenv": "^17.4.2",
@@ -94,20 +94,20 @@
     "jest-html-reporter": "^4.4.0",
     "jest-junit": "^17.0.0",
     "jsonwebtoken": "^9.0.3",
-    "lint-staged": "^17.1.1",
+    "lint-staged": "^17.2.0",
     "mocha-junit-reporter": "^2.2.1",
     "nock": "^14.0.16",
     "nodemon": "^3.1.14",
     "prettier": "^3.9.6",
     "prettier-plugin-jinja-template": "^2.2.0",
-    "sass": "^1.101.3",
+    "sass": "^1.102.0",
     "supertest": "^7.2.2",
-    "ts-jest": "^29.4.11",
+    "ts-jest": "^29.4.12",
     "typescript": "^6.0.3"
   },
   "overrides": {
     "@opentelemetry/core": "2.10.0",
-    "brace-expansion": "5.0.8",
+    "brace-expansion": "5.0.9",
     "mocha": {
       "diff": "^8.0.4",
       "serialize-javascript": "^7.0.7"
