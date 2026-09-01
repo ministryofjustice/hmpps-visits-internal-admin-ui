@@ -11,10 +11,11 @@
 }
 
 .vsip-add-location-group {
+  margin-bottom: govuk-spacing(3);
+
   .moj-add-another__item .govuk-form-group {
     display: inline-block;
     max-width: 80%;
-    margin-bottom: govuk-spacing(3);
 
     .govuk-label {
       font-weight: bold;
@@ -28,7 +29,9 @@
 
   .moj-add-another__remove-button,
   .moj-add-another__remove-button:active {
+    position: absolute;
     bottom: 0;
+    right: 0;
     top: unset;
   }
 

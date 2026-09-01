@@ -10,7 +10,7 @@ export default class AddLocationGroupPage extends Page {
   }
 
   enterLevelOneCode = (index: number, code: string): void => {
-    cy.get(`#location\\[${index}\\]\\[levelOneCode\\]`).type(code)
+    cy.get(`#location\\[${index}\\]\\[levelOneCode\\]`).type(code, { force: true })
   }
 
   enterLevelTwoCode = (index: number, code: string): void => {
@@ -26,7 +26,7 @@ export default class AddLocationGroupPage extends Page {
   }
 
   addAnotherLevel = (): void => {
-    cy.get('[data-test="add-location-level"]').click()
+    cy.get('.moj-add-another__add-button-container > .govuk-button').click()
   }
 
   addGroup = (): void => {

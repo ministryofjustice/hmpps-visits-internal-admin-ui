@@ -27,25 +27,9 @@ Install dependencies using `npm run setup`, ensuring you are using `node v24.x` 
 
 Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json` and the CircleCI build config.
 
-Using credentials from the dev namespace, create a `.env` local settings file
+Using credentials from the dev namespace, create a [`.env`](.env) local settings file:
 ```bash
-HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-HMPPS_AUTH_EXTERNAL_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-NODE_ENV=development
-
-# Use credentials from the dev namespace for API and SYSTEM client
-API_CLIENT_ID=clientid
-API_CLIENT_SECRET=clientsecret
-SYSTEM_CLIENT_ID=clientid
-SYSTEM_CLIENT_SECRET=clientsecret
-
-BOOKER_REGISTRY_API_URL="https://hmpps-prison-visit-booker-registry-dev.prison.service.justice.gov.uk"
-
-PRISON_REGISTER_API_URL="https://prison-register-dev.hmpps.service.justice.gov.uk"
-
-VISIT_ALLOCATION_API_URL="https://hmpps-visit-allocation-api-dev.prison.service.justice.gov.uk"
-
-VISIT_SCHEDULER_API_URL="https://visit-scheduler-dev.prison.service.justice.gov.uk"
+cp example.env .env
 ```
 
 And then, to build the assets and start the app with nodemon:

@@ -1,0 +1,124 @@
+{%- from "govuk/components/input/macro.njk" import govukInput -%}
+{%- from "govuk/components/fieldset/macro.njk" import govukFieldset -%}
+{%- from "govuk/components/error-message/macro.njk" import govukErrorMessage -%}
+{%- from "moj/components/add-another/macro.njk" import mojAddAnother -%}
+
+{% macro addAnotherLocationGroup(locations, errors) %}
+  {% set locationItems = [] %}
+
+  {% for locationRow in range(0, locations.length or 1) %}
+
+    {% set levelOneError = errors | findError("location[" + locationRow + "].levelOneCode") %}
+    {% set levelTwoError = errors | findError("location[" + locationRow + "].levelTwoCode") %}
+    {% set levelThreeError = errors | findError("location[" + locationRow + "].levelThreeCode") %}
+    {% set levelFourError = errors | findError("location[" + locationRow + "].levelFourCode") %}
+
+    {% set locationFields %}
+
+      {{ govukErrorMessage({
+        id: "location[" + locationRow + "].levelOneCode-error",
+        text: levelOneError.text
+      }) if levelOneError }}
+      {{ govukErrorMessage({
+        id: "location[" + locationRow + "].levelTwoCode-error",
+        text: levelTwoError.text
+      }) if levelTwoError }}
+      {{ govukErrorMessage({
+        id: "location[" + locationRow + "].levelThreeCode-error",
+        text: levelThreeError.text
+      }) if levelThreeError }}
+      {{ govukErrorMessage({
+        id: "location[" + locationRow + "].levelFourCode-error",
+        text: levelFourError.text
+      }) if levelFourError }}
+
+      {{ govukInput({
+        label: {
+          text: "One"
+        },
+        id: "location[" + locationRow + "][levelOneCode]",
+        name: "location[" + locationRow + "][levelOneCode]",
+        value: locations[locationRow].levelOneCode,
+        classes: "govuk-input--error" if levelOneError,
+        autocomplete: "off",
+        attributes: {
+          "data-name": "location[%index%][levelOneCode]",
+          "data-id": "location[%index%][levelOneCode]"
+        }
+      }) }}
+
+      {{ govukInput({
+        label: {
+          text: "Two"
+        },
+        id: "location[" + locationRow + "][levelTwoCode]",
+        name: "location[" + locationRow + "][levelTwoCode]",
+        value: locations[locationRow].levelTwoCode,
+        classes: "govuk-input--error" if levelTwoError,
+        autocomplete: "off",
+        attributes: {
+          "data-name": "location[%index%][levelTwoCode]",
+          "data-id": "location[%index%][levelTwoCode]"
+        }
+      }) }}
+
+      {{ govukInput({
+        label: {
+          text: "Three"
+        },
+        id: "location[" + locationRow + "][levelThreeCode]",
+        name: "location[" + locationRow + "][levelThreeCode]",
+        value: locations[locationRow].levelThreeCode,
+        classes: "govuk-input--error" if levelThreeError,
+        autocomplete: "off",
+        attributes: {
+          "data-name": "location[%index%][levelThreeCode]",
+          "data-id": "location[%index%][levelThreeCode]"
+        }
+      }) }}
+
+      {{ govukInput({
+        label: {
+          text: "Four"
+        },
+        id: "location[" + locationRow + "][levelFourCode]",
+        name: "location[" + locationRow + "][levelFourCode]",
+        value: locations[locationRow].levelFourCode,
+        classes: "govuk-input--error" if levelFourError,
+        autocomplete: "off",
+        attributes: {
+          "data-name": "location[%index%][levelFourCode]",
+          "data-id": "location[%index%][levelFourCode]"
+        }
+      }) }}
+
+    {% endset %}
+
+    {% set locationItems = locationItems .concat({
+        fieldset: {
+          legend: {
+            text: "Location " + (locationRow + 1)
+          },
+          html: locationFields
+        }
+      }) %}
+
+  {% endfor %}
+
+  {{ mojAddAnother({
+    id: "location",
+    itemLabel: "Location",
+    layout: 'inline',
+    items: locationItems,
+    addAnotherButtonText: "Add another %{itemLabel}",
+    itemLegendText: {
+      text: "%{itemLabel} %{number}"
+    },
+    removeButtonSuffixText: " %{itemLabel} %{number}",
+    fieldLabelSuffixText: " for %{itemLabel} %{number}",
+    attributes: {
+      "data-test": "add-location-level"
+    },
+    classes: "vsip-add-location-group"
+  }) }}
+{% endmacro %}
