@@ -111,7 +111,7 @@
     "js-yaml": "5.4.1",
     "mocha": {
       "diff": "^8.0.4",
-      "serialize-javascript": "^7.1.0"
+      "serialize-javascript": "^7.1.1"
     },
     "shell-quote": "1.10.0"
   }
