@@ -309,6 +309,8 @@ describe('visitSchedulerApiClient', () => {
           locationGroupReferences: [],
           clients: createSessionTemplateDto.clients,
           visitOrderRestriction: 'VO_PVO',
+          isAgeRestricted: false,
+          ageRestriction: null,
         })
         .matchHeader('authorization', 'Bearer test-system-token')
         .reply(201, createSessionTemplateDto)

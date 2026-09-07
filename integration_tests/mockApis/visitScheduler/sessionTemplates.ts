@@ -117,6 +117,8 @@ export default {
               locationGroupReferences: sessionTemplate.permittedLocationGroups.map(group => group.reference),
               clients: sessionTemplate.clients,
               visitOrderRestriction: sessionTemplate.visitOrderRestriction,
+              isAgeRestricted: sessionTemplate.isAgeRestricted,
+              ageRestriction: sessionTemplate.ageRestriction,
             },
           },
         ],

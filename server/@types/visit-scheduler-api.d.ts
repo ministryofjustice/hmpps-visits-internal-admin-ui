@@ -540,66 +540,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/admin/session-templates/template/{reference}/exclude-date': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * Get exclude dates for a session template.
-     * @description Get exclude dates for a session template.
-     */
-    get: operations['getPrisonExcludeDates_1']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/admin/session-templates/template/{reference}/exclude-date/add': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    /**
-     * Add exclude date to a session.
-     * @description Add exclude date to a session.
-     */
-    put: operations['addSessionExcludeDate']
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/admin/session-templates/template/{reference}/exclude-date/remove': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    /**
-     * Remove exclude date for a session template.
-     * @description Remove exclude date for a session template.
-     */
-    put: operations['removeSessionTemplateExcludeDate']
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/admin/session-templates/template/{reference}/matching/': {
     parameters: {
       query?: never
@@ -754,6 +694,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/prisons/{prisonCode}/config/session-templates/exclude-dates/future': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all current or future exclude dates by session for a prison.
+     * @description Get all current or future exclude dates by session for a prison. Returns only sessions that are blocked in the future.
+     */
+    get: operations['getFutureExcludedSessionsForPrison']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/public/booker/{bookerReference}/visits/booked/future': {
     parameters: {
       query?: never
@@ -827,6 +787,66 @@ export interface paths {
      */
     get: operations['getVisitEventsByBookerReference']
     put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/session-templates/{reference}/exclude-date': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get exclude dates for a session template.
+     * @description Get exclude dates for a session template.
+     */
+    get: operations['getSessionExcludeDates']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/session-templates/{reference}/exclude-date/add': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Add exclude date to a session.
+     * @description Add exclude date to a session.
+     */
+    put: operations['addSessionExcludeDate']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/session-templates/{reference}/exclude-date/remove': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Remove exclude date for a session template.
+     * @description Remove exclude date for a session template.
+     */
+    put: operations['removeSessionTemplateExcludeDate']
     post?: never
     delete?: never
     options?: never
@@ -1042,6 +1062,23 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/visits/notification/contact/restriction/upserted': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** To notify VSiP that a contact's global restriction has been created / updated */
+    post: operations['notifyVSiPThatContactRestrictionUpserted']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/visits/notification/court-video-appointment/cancelled-or-deleted': {
     parameters: {
       query?: never
@@ -1110,7 +1147,7 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/visits/notification/person/restriction/upserted': {
+  '/visits/notification/prisoner/alert/created': {
     parameters: {
       query?: never
       header?: never
@@ -1119,8 +1156,42 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** To notify VSiP that an upsert for a person/visitor restriction has taken place */
-    post: operations['notifyVSiPThatPersonRestrictionUpserted']
+    /** To notify VSiP that a prisoner alert has been added */
+    post: operations['notifyVSiPThatPrisonerAlertCreated']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/notification/prisoner/alert/deleted': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** To notify VSiP that a prisoner alert has been deleted */
+    post: operations['notifyVSiPThatPrisonerAlertDeleted']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/notification/prisoner/alert/updated': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** To notify VSiP that a prisoner alert has been updated */
+    post: operations['notifyVSiPThatPrisonerAlertUpdated']
     delete?: never
     options?: never
     head?: never
@@ -1138,6 +1209,23 @@ export interface paths {
     put?: never
     /** To notify VSiP that a prisoner alert has been created or updated */
     post: operations['notifyVSiPThatPrisonerAlertCreatedUpdated']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/notification/prisoner/contact/restriction/upserted': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** To notify VSiP that a prisoner contact restriction has been created / updated */
+    post: operations['notifyVSiPThatPrisonerContactRestrictionUpserted']
     delete?: never
     options?: never
     head?: never
@@ -1249,23 +1337,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/visits/notification/visitor/restriction/upserted': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    /** To notify VSiP that a change to a visitor restriction has taken place */
-    post: operations['notifyVSiPThatVisitorRestrictionUpserted']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/visits/notification/visitor/unapproved': {
     parameters: {
       query?: never
@@ -1351,6 +1422,60 @@ export interface paths {
     /** To notify VSiP that a message / email has been sent to GOV.UK notify */
     put: operations['notifyMessageCreated']
     post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/prisoner/merge': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Endpoint to handle a prisoner merge event. */
+    post: operations['notifyVSiPOfPrisonerMerge']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/prisoner/merge/batch': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Endpoint to handle multiple prisoner merge events. */
+    post: operations['notifyVSiPOfPrisonerMerges']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visits/prisoner/{prisonerNumber}/visitors/last-approved-date': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Get last approved dates for visits booked for a prisoner, given a list of nomis person Ids
+     * @description Get last approved dates for visits booked for a prisoner for a list of visitors(nomis person Ids), returns NULL if no visits found
+     */
+    post: operations['getLastApprovedDatesForVisitors']
     delete?: never
     options?: never
     head?: never
@@ -1615,18 +1740,27 @@ export interface components {
        * @description booker reference
        * @example asd-aed-vhj
        */
-      bookerReference?: string
+      bookerReference?: string | null
       /**
        * @description User Name
        * @example AS/ALED
        */
-      userName?: string
+      userName?: string | null
       /**
        * @description User type
        * @example STAFF
        * @enum {string}
        */
       userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+    }
+    AdditionalSessionConflictInfoDto: {
+      /**
+       * @description Attribute Name
+       * @enum {string}
+       */
+      attributeName: 'PRISONER_NUMBER' | 'CONFLICT_TYPE' | 'REFERENCE'
+      /** @description Attribute value */
+      attributeValue: string
     }
     /** @description Application */
     ApplicationDto: {
@@ -1678,7 +1812,7 @@ export interface components {
        * @description session template Reference
        * @example dfs-wjs-eqr
        */
-      sessionTemplateReference?: string
+      sessionTemplateReference?: string | null
       /**
        * Format: date-time
        * @description The date and time of the visit
@@ -1692,7 +1826,7 @@ export interface components {
        */
       userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
       /** @description Contact associated with the application */
-      visitContact?: components['schemas']['ContactDto']
+      visitContact?: components['schemas']['ContactDto'] | null
       /** @description Visit Notes */
       visitNotes: components['schemas']['VisitNoteDto'][]
       /**
@@ -1708,7 +1842,7 @@ export interface components {
        */
       visitType: 'SOCIAL'
       /** @description Additional support associated with the application */
-      visitorSupport?: components['schemas']['VisitorSupportDto']
+      visitorSupport?: components['schemas']['VisitorSupportDto'] | null
       /** @description List of visitors associated with the application */
       visitors: components['schemas']['VisitorDto'][]
     }
@@ -1721,12 +1855,12 @@ export interface components {
       description: string
     }
     ApplicationValidationErrorResponse: {
-      developerMessage?: string
+      developerMessage?: string | null
       /** Format: int32 */
-      errorCode?: number
+      errorCode?: number | null
       /** Format: int32 */
       status: number
-      userMessage?: string
+      userMessage?: string | null
       validationErrors: (
         | 'APPLICATION_INVALID_PRISONER_NOT_FOUND'
         | 'APPLICATION_INVALID_PRISON_PRISONER_MISMATCH'
@@ -1739,6 +1873,7 @@ export interface components {
         | 'APPLICATION_INVALID_VISIT_DATE_BLOCKED'
         | 'APPLICATION_INVALID_SESSION_DATE_BLOCKED'
         | 'APPLICATION_INVALID_USER_TYPE'
+        | 'APPLICATION_INVALID_REMAND_VISIT_LIMIT_FOR_WEEK_REACHED'
       )[]
     }
     ApproveRejectionVisitRequestBodyDto: {
@@ -1746,6 +1881,11 @@ export interface components {
       actionedBy: string
       /** @description Reference of the visit for approval */
       visitReference: string
+      /**
+       * @description Reason for rejecting a visit request
+       * @enum {string|null}
+       */
+      visitRequestRejectionReason?: 'NO_VISIT_ALLOWANCE' | 'ALERT_OR_RESTRICTION' | null
     }
     /** @description Visit Session */
     AvailableVisitSessionDto: {
@@ -1768,6 +1908,11 @@ export interface components {
       sessionTemplateReference: string
       /** @description Session time slot */
       sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
+      /**
+       * @description Session vo restriction
+       * @enum {string}
+       */
+      visitOrderRestriction: 'VO_PVO' | 'VO' | 'PVO' | 'NONE'
     }
     BookingRequestDto: {
       /** @description Username for user who actioned this request */
@@ -1781,12 +1926,27 @@ export interface components {
       applicationMethodType:
         'PHONE' | 'WEBSITE' | 'EMAIL' | 'IN_PERSON' | 'NOT_KNOWN' | 'NOT_APPLICABLE' | 'BY_PRISONER'
       /** @description flag to determine if visit should be a request or instant booking */
-      isRequestBooking?: boolean
+      isRequestBooking?: boolean | null
       /**
        * @description User type for user who actioned this request
        * @enum {string}
        */
       userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+      /** @description Set of visitor details - includes Person ID (nomis) of the visitor and their age (in years) at the time of booking */
+      visitorDetails?: components['schemas']['BookingRequestVisitorDetailsDto'][] | null
+    }
+    /** @description Visitor Details passed while making a booking */
+    BookingRequestVisitorDetailsDto: {
+      /**
+       * Format: int32
+       * @description Age of the visitor while making the booking, null if not available
+       */
+      visitorAge?: number | null
+      /**
+       * Format: int64
+       * @description Person ID (nomis) of the visitor
+       */
+      visitorId: number
     }
     CancelVisitDto: {
       /** @description Username for user who actioned this request */
@@ -1812,9 +1972,9 @@ export interface components {
       /**
        * @description Session Restriction
        * @example OPEN
-       * @enum {string}
+       * @enum {string|null}
        */
-      applicationRestriction?: 'OPEN' | 'CLOSED'
+      applicationRestriction?: 'OPEN' | 'CLOSED' | null
       /**
        * Format: date
        * @description The date for the visit
@@ -1827,11 +1987,11 @@ export interface components {
        */
       sessionTemplateReference: string
       /** @description Contact associated with the visit */
-      visitContact?: components['schemas']['ContactDto']
+      visitContact?: components['schemas']['ContactDto'] | null
       /** @description additional support associated with the visit, if null support will not be updated */
-      visitorSupport?: components['schemas']['ApplicationSupportDto']
+      visitorSupport?: components['schemas']['ApplicationSupportDto'] | null
       /** @description List of visitors associated with the visit */
-      visitors?: components['schemas']['VisitorDto'][]
+      visitors?: components['schemas']['VisitorDto'][] | null
     }
     /** @description Contact */
     ContactDto: {
@@ -1839,7 +1999,14 @@ export interface components {
        * @description Contact Email Address
        * @example email@example.com
        */
-      email?: string
+      email?: string | null
+      /**
+       * @description The language in which your correspondence will be sent
+       * @default en
+       * @example en
+       * @enum {string}
+       */
+      languagePreference: 'en' | 'cy'
       /**
        * @description Contact Name
        * @example John Smith
@@ -1849,7 +2016,13 @@ export interface components {
        * @description Contact Phone Number
        * @example 01234 567890
        */
-      telephone?: string
+      telephone?: string | null
+    }
+    ContactRestrictionUpsertedNotificationDto: {
+      /** Format: int64 */
+      contactId: number
+      /** Format: int64 */
+      restrictionId: number
     }
     CourtVideoAppointmentNotificationDto: {
       appointmentInstanceId: string
@@ -1888,9 +2061,9 @@ export interface components {
        */
       userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
       /** @description Contact associated with the visit */
-      visitContact?: components['schemas']['ContactDto']
+      visitContact?: components['schemas']['ContactDto'] | null
       /** @description additional support associated with the visit */
-      visitorSupport?: components['schemas']['ApplicationSupportDto']
+      visitorSupport?: components['schemas']['ApplicationSupportDto'] | null
       /** @description List of visitors associated with the visit */
       visitors: components['schemas']['VisitorDto'][]
     }
@@ -1950,7 +2123,7 @@ export interface components {
        * @description Contact Phone Number
        * @example 01234 567890
        */
-      telephone?: string
+      telephone?: string | null
     }
     CreateLegacyDataRequestDto: {
       /**
@@ -1975,8 +2148,14 @@ export interface components {
       prisonId: string
     }
     CreateSessionTemplateDto: {
+      /**
+       * Format: int32
+       * @description Minimum required age for attending the session
+       * @example 18
+       */
+      ageRestriction: number
       /** @description list of group references for allowed prisoner category groups */
-      categoryGroupReferences?: string[]
+      categoryGroupReferences?: string[] | null
       /** @description Session template user clients. */
       clients: components['schemas']['UserClientDto'][]
       /**
@@ -1986,15 +2165,20 @@ export interface components {
        */
       dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
       /** @description list of group references for allowed prisoner incentive levels */
-      incentiveLevelGroupReferences?: string[]
+      incentiveLevelGroupReferences?: string[] | null
       /** @description Determines behaviour of category groups. True equates to these category groups being included, false equates to them being excluded. */
       includeCategoryGroupType: boolean
       /** @description Determines behaviour of incentive groups. True equates to these incentive groups being included, false equates to them being excluded. */
       includeIncentiveGroupType: boolean
       /** @description Determines behaviour of location groups. True equates to these location groups being included, false equates to them being excluded. */
       includeLocationGroupType: boolean
+      /**
+       * @description Determines if the age restriction is enabled for this session
+       * @example true
+       */
+      isAgeRestricted: boolean
       /** @description list of group references for permitted session location groups */
-      locationGroupReferences?: string[]
+      locationGroupReferences?: string[] | null
       /**
        * @description Name for Session template
        * @example Monday Xmas
@@ -2090,17 +2274,17 @@ export interface components {
        */
       visitType: 'SOCIAL'
       /** @description Additional support associated with the visit */
-      visitorSupport?: components['schemas']['VisitorSupportDto']
+      visitorSupport?: components['schemas']['VisitorSupportDto'] | null
       /** @description List of visitors associated with the visit */
-      visitors?: components['schemas']['VisitorDto'][]
+      visitors?: components['schemas']['VisitorDto'][] | null
     }
     ErrorResponse: {
-      developerMessage?: string
+      developerMessage?: string | null
       /** Format: int32 */
-      errorCode?: number
+      errorCode?: number | null
       /** Format: int32 */
       status: number
-      userMessage?: string
+      userMessage?: string | null
     }
     /** @description Event Audit */
     EventAuditDto: {
@@ -2113,7 +2297,7 @@ export interface components {
       applicationMethodType:
         'PHONE' | 'WEBSITE' | 'EMAIL' | 'IN_PERSON' | 'NOT_KNOWN' | 'NOT_APPLICABLE' | 'BY_PRISONER'
       /** @description Visit reference */
-      bookingReference?: string
+      bookingReference?: string | null
       /**
        * Format: date-time
        * @description event creat date and time
@@ -2128,9 +2312,9 @@ export interface components {
       /** @description Notify history for the event */
       notifyHistory: components['schemas']['NotifyHistoryDto'][]
       /** @description Session template used for this event */
-      sessionTemplateReference?: string
+      sessionTemplateReference?: string | null
       /** @description Notes added against the event */
-      text?: string
+      text?: string | null
       /**
        * @description The type of event
        * @enum {string}
@@ -2163,6 +2347,10 @@ export interface components {
         | 'CANCELLED_NON_ASSOCIATION_VISIT_EVENT'
         | 'IGNORED_NON_ASSOCIATION_VISIT_NOTIFICATIONS_EVENT'
         | 'PAIRED_VISIT_CANCELLED_IGNORED_OR_UPDATED_EVENT'
+        | 'PRISONER_ALERT_CREATED_EVENT'
+        | 'PRISONER_ALERT_UPDATED_EVENT'
+        | 'PRISONER_ALERT_DELETED_EVENT'
+        | 'PRISONER_MERGED'
     }
     /** @description Prison exclude date */
     ExcludeDateDto: {
@@ -2183,13 +2371,13 @@ export interface components {
     /** @description Migrate visit request */
     MigrateVisitRequestDto: {
       /** @description Username for user who actioned this request */
-      actionedBy?: string
+      actionedBy?: string | null
       /**
        * Format: date-time
        * @description The date and time of when the visit was created in NOMIS
        * @example 2018-12-01T13:45:00
        */
-      createDateTime?: string
+      createDateTime?: string | null
       /**
        * Format: date-time
        * @description The finishing date and time of the visit
@@ -2197,17 +2385,17 @@ export interface components {
        */
       endTimestamp: string
       /** @description Create legacy data */
-      legacyData?: components['schemas']['CreateLegacyDataRequestDto']
+      legacyData?: components['schemas']['CreateLegacyDataRequestDto'] | null
       /**
        * Format: date-time
        * @description The date and time of when the visit was modified in NOMIS
        * @example 2018-12-10T13:45:00
        */
-      modifyDateTime?: string
+      modifyDateTime?: string | null
       /**
        * @description Outcome Status
        * @default NOT_RECORDED
-       * @enum {string}
+       * @enum {string|null}
        */
       outcomeStatus:
         | 'ADMINISTRATIVE_CANCELLATION'
@@ -2232,6 +2420,7 @@ export interface components {
         | 'DETAILS_CHANGED_AFTER_BOOKING'
         | 'BOOKER_CANCELLED'
         | 'REQUESTED_VISIT_WITHDRAWN'
+        | null
       /**
        * @description Prison Id
        * @example MDI
@@ -2249,9 +2438,9 @@ export interface components {
        */
       startTimestamp: string
       /** @description Contact associated with the visit */
-      visitContact?: components['schemas']['CreateLegacyContactOnVisitRequestDto']
+      visitContact?: components['schemas']['CreateLegacyContactOnVisitRequestDto'] | null
       /** @description Visit notes */
-      visitNotes?: components['schemas']['VisitNoteDto'][]
+      visitNotes?: components['schemas']['VisitNoteDto'][] | null
       /**
        * @description Visit Restriction
        * @example OPEN
@@ -2276,7 +2465,7 @@ export interface components {
        */
       visitType: 'SOCIAL'
       /** @description List of visitors associated with the visit */
-      visitors?: components['schemas']['VisitorDto'][]
+      visitors?: components['schemas']['VisitorDto'][] | null
     }
     MigratedCancelVisitDto: {
       /** @description Username for user who actioned this request */
@@ -2318,7 +2507,7 @@ export interface components {
        * Format: date-time
        * @description The timestamp for the final update of the notification (when delivered or ultimately failed)
        */
-      completedAt?: string
+      completedAt?: string | null
       /**
        * Format: date-time
        * @description The timestamp for when the vsip notification service sent the notification to gov notify
@@ -2340,7 +2529,7 @@ export interface components {
        * Format: date-time
        * @description The timestamp for when gov notify sent the notification
        */
-      sentAt?: string
+      sentAt?: string | null
       /** @description The email or phone number the notification was sent to */
       sentTo: string
       /** @description The final status of the notification */
@@ -2391,12 +2580,12 @@ export interface components {
        * Format: date-time
        * @description Notification Completed At
        */
-      completedAt?: string
+      completedAt?: string | null
       /**
        * Format: date-time
        * @description Notification Created At
        */
-      createdAt?: string
+      createdAt?: string | null
       /**
        * Format: int64
        * @description The event audit id the notify event is associated with
@@ -2413,9 +2602,9 @@ export interface components {
        * Format: date-time
        * @description Notification Sent At
        */
-      sentAt?: string
+      sentAt?: string | null
       /** @description The email or phone number the notification was sent to */
-      sentTo?: string
+      sentTo?: string | null
       /**
        * @description Notification Status
        * @enum {string}
@@ -2456,7 +2645,7 @@ export interface components {
        * @description Outcome text
        * @example Because he got covid
        */
-      text?: string
+      text?: string | null
     }
     PageVisitDto: {
       content?: components['schemas']['VisitDto'][]
@@ -2510,7 +2699,7 @@ export interface components {
        * @description Level four location code
        * @example 001
        */
-      levelFourCode?: string
+      levelFourCode?: string | null
       /**
        * @description Level one location code
        * @example w
@@ -2520,22 +2709,12 @@ export interface components {
        * @description Level three location code
        * @example 1
        */
-      levelThreeCode?: string
+      levelThreeCode?: string | null
       /**
        * @description Level two location code
        * @example c
        */
-      levelTwoCode?: string
-    }
-    PersonRestrictionUpsertedNotificationDto: {
-      prisonerNumber: string
-      restrictionId: string
-      restrictionType: string
-      /** Format: date */
-      validFromDate: string
-      /** Format: date */
-      validToDate?: string
-      visitorId: string
+      levelTwoCode?: string | null
     }
     /** @description Prison dto */
     PrisonDto: {
@@ -2550,7 +2729,7 @@ export interface components {
        */
       adultAgeYears: number
       /** @description prison user client */
-      clients: components['schemas']['UserClientDto'][]
+      clients: components['schemas']['PrisonUserClientDto'][]
       /**
        * @description prison code
        * @example BHI
@@ -2583,6 +2762,44 @@ export interface components {
        * @example 2
        */
       policyNoticeDaysMin: number
+      /**
+       * Format: int32
+       * @description The limit per prison week, the number of remand visits that can be booked per week
+       * @default 3
+       */
+      remandVisitLimitPerWeek: number
+      /**
+       * @description The week day of which the prison week starts on. Enum value, any day of the week MONDAY - SUNDAY
+       * @default MONDAY
+       * @enum {string}
+       */
+      weekStartDay: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
+    }
+    /** @description Prison / Session Template user client dto */
+    PrisonUserClientDto: {
+      /**
+       * @description is prison user client active
+       * @example true
+       */
+      active: boolean
+      /**
+       * Format: int32
+       * @description maximum number of days notice from the current date to booked a visit
+       * @example 28
+       */
+      policyNoticeDaysMax: number
+      /**
+       * Format: int32
+       * @description minimum number of days notice from the current date to booked a visit
+       * @example 2
+       */
+      policyNoticeDaysMin: number
+      /**
+       * @description User type
+       * @example STAFF
+       * @enum {string}
+       */
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
     }
     PrisonerAlertCreatedUpdatedNotificationDto: {
       activeAlerts: string[]
@@ -2590,6 +2807,37 @@ export interface components {
       alertsRemoved: string[]
       description: string
       prisonerNumber: string
+    }
+    PrisonerAlertNotificationDto: {
+      alertCode: string
+      alertUuid: string
+      description: string
+      prisonerNumber: string
+    }
+    PrisonerContactRestrictionUpsertedNotificationDto: {
+      /** Format: int64 */
+      contactId: number
+      /** Format: int64 */
+      prisonerContactId: number
+      prisonerNumber: string
+      /** Format: int64 */
+      restrictionId: number
+    }
+    PrisonerMergeNotificationDto: {
+      /**
+       * @description New Prisoner Number post merge
+       * @example A1234BC
+       */
+      newPrisonerNumber: string
+      /**
+       * @description Removed Prisoner Number post merge
+       * @example A5678YZ
+       */
+      oldPrisonerNumber: string
+    }
+    PrisonerMergeNotificationsDto: {
+      /** @description Prisoner merge notifications */
+      prisonerMergeNotifications: components['schemas']['PrisonerMergeNotificationDto'][]
     }
     PrisonerReceivedNotificationDto: {
       prisonCode: string
@@ -2609,7 +2857,7 @@ export interface components {
       /** Format: date */
       validFromDate: string
       /** Format: date */
-      validToDate?: string
+      validToDate?: string | null
     }
     RequestSessionTemplateVisitStatsDto: {
       /**
@@ -2623,7 +2871,7 @@ export interface components {
        * @description Visits to date - for stats
        * @example 2019-11-30
        */
-      visitsToDate?: string
+      visitsToDate?: string | null
     }
     /** @description Session Capacity */
     SessionCapacityDto: {
@@ -2671,6 +2919,25 @@ export interface components {
        */
       reference: string
     }
+    SessionConflictDto: {
+      /** @description Session Conflict attributes */
+      additionalAttributes: components['schemas']['AdditionalSessionConflictInfoDto'][][]
+      /**
+       * @description Session Conflict
+       * @example NON_ASSOCIATION
+       * @enum {string}
+       */
+      sessionConflict:
+        | 'NON_ASSOCIATION'
+        | 'DOUBLE_BOOKING_OR_RESERVATION'
+        | 'SESSION_DATE_BLOCKED'
+        | 'PRISON_DATE_BLOCKED'
+        | 'REMAND_VISITS_LIMIT_REACHED'
+        | 'NO_VO_BALANCE'
+        | 'NO_PVO_BALANCE'
+        | 'NO_VO_OR_PVO_BALANCE'
+        | 'AGE_RESTRICTION'
+    }
     SessionDateRangeDto: {
       /**
        * Format: date
@@ -2683,7 +2950,7 @@ export interface components {
        * @description The end of the Validity period for the session template
        * @example 2019-12-02
        */
-      validToDate?: string
+      validToDate?: string | null
     }
     SessionIncentiveLevelGroupDto: {
       /** @description list of allowed incentive levels for group */
@@ -2723,6 +2990,8 @@ export interface components {
       areLocationGroupsInclusive: boolean
       /** @description The capacity for the session */
       capacity: components['schemas']['SessionCapacityDto']
+      /** @description Flag to indicate if the session is excluded for the date. True will indicate that the session is excluded. */
+      isSessionExcluded: boolean
       /**
        * @description prisoner category groups
        * @example Category A Prisoners
@@ -2748,6 +3017,11 @@ export interface components {
       /** @description The time slot of the generated visit session(s) */
       sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
+       * @description Session vo restriction
+       * @enum {string}
+       */
+      visitOrderRestriction: 'VO_PVO' | 'VO' | 'PVO' | 'NONE'
+      /**
        * @description visit room name
        * @example Visits Room
        */
@@ -2765,12 +3039,25 @@ export interface components {
        */
       weeklyFrequency: number
     }
+    /** @description Session schedule that has future date exclusions */
+    SessionScheduleWithDateExclusionsDto: {
+      /** @description Future exclude dates for the session. */
+      excludeDates: components['schemas']['ExcludeDateDto'][]
+      /** @description Session schedule details that have future date exclusions */
+      sessionSchedule: components['schemas']['SessionScheduleDto']
+    }
     SessionTemplateDto: {
       /**
        * @description is session template active
        * @example true
        */
       active: boolean
+      /**
+       * Format: int32
+       * @description Minimum required age for attending the session
+       * @example 18
+       */
+      ageRestriction: number
       /** @description User Client's for the session template */
       clients: components['schemas']['UserClientDto'][]
       /**
@@ -2785,6 +3072,11 @@ export interface components {
       includeIncentiveGroupType: boolean
       /** @description Determines behaviour of location groups. True equates to these location groups being included, false equates to them being excluded. */
       includeLocationGroupType: boolean
+      /**
+       * @description Determines if the age restriction is enabled for this session
+       * @example true
+       */
+      isAgeRestricted: boolean
       /**
        * @description name
        * @example Monday Session
@@ -2854,7 +3146,7 @@ export interface components {
        */
       cancelCount: number
       /** @description count of cancelled visits by date */
-      cancelVisitsByDate?: components['schemas']['SessionTemplateVisitCountsDto'][]
+      cancelVisitsByDate?: components['schemas']['SessionTemplateVisitCountsDto'][] | null
       /** @description Minimum Session Capacity */
       minimumCapacity: components['schemas']['SessionCapacityDto']
       /**
@@ -2864,7 +3156,7 @@ export interface components {
        */
       visitCount: number
       /** @description count of visits by date */
-      visitsByDate?: components['schemas']['SessionTemplateVisitCountsDto'][]
+      visitsByDate?: components['schemas']['SessionTemplateVisitCountsDto'][] | null
     }
     SessionTimeSlotDto: {
       /**
@@ -2935,78 +3227,101 @@ export interface components {
        * Format: int32
        * @description Age of adults in years
        */
-      adultAgeYears?: number
+      adultAgeYears?: number | null
+      /** @description prison user client */
+      clients?: components['schemas']['PrisonUserClientDto'][] | null
       /**
        * Format: int32
        * @description Max number of adults
        */
-      maxAdultVisitors?: number
+      maxAdultVisitors?: number | null
       /**
        * Format: int32
        * @description Max number of children, if -1 then no limit is applied
        */
-      maxChildVisitors?: number
+      maxChildVisitors?: number | null
       /**
        * Format: int32
        * @description Max number of total visitors
        */
-      maxTotalVisitors?: number
+      maxTotalVisitors?: number | null
       /**
        * Format: int32
        * @description maximum number of days notice from the current date to booked a visit
        * @example 28
        */
-      policyNoticeDaysMax?: number
+      policyNoticeDaysMax?: number | null
       /**
        * Format: int32
        * @description minimum number of days notice from the current date to booked a visit
        * @example 2
        */
-      policyNoticeDaysMin?: number
+      policyNoticeDaysMin?: number | null
+      /**
+       * Format: int32
+       * @description The limit per prison week, the number of remand visits that can be booked per week
+       */
+      remandVisitLimitPerWeek?: number | null
+      /**
+       * @description The week day of which the prison week starts on. Enum value, any day of the week MONDAY - SUNDAY
+       * @enum {string|null}
+       */
+      weekStartDay?: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY' | null
     }
     UpdateSessionTemplateDto: {
+      /**
+       * Format: int32
+       * @description Minimum required age for attending the session
+       * @example 18
+       */
+      ageRestriction?: number | null
       /** @description list of group references for allowed prisoner category groups */
-      categoryGroupReferences?: string[]
+      categoryGroupReferences?: string[] | null
       /** @description Session template user clients. */
-      clients?: components['schemas']['UserClientDto'][]
+      clients?: components['schemas']['UserClientDto'][] | null
       /** @description list of group references for allowed prisoner incentive levels */
-      incentiveLevelGroupReferences?: string[]
+      incentiveLevelGroupReferences?: string[] | null
       /** @description Determines behaviour of category groups. True equates to these category groups being included, false equates to them being excluded. */
-      includeCategoryGroupType?: boolean
+      includeCategoryGroupType?: boolean | null
       /** @description Determines behaviour of incentive groups. True equates to these incentive groups being included, false equates to them being excluded. */
-      includeIncentiveGroupType?: boolean
+      includeIncentiveGroupType?: boolean | null
       /** @description Determines behaviour of location groups. True equates to these location groups being included, false equates to them being excluded. */
-      includeLocationGroupType?: boolean
+      includeLocationGroupType?: boolean | null
+      /**
+       * @description Determines if the age restriction is enabled for this session
+       * @example true
+       */
+      isAgeRestricted?: boolean | null
       /** @description list of group references for permitted session location groups */
-      locationGroupReferences?: string[]
+      locationGroupReferences?: string[] | null
       /**
        * @description Name for Session template
        * @example Monday Xmas
        */
-      name: string
+      name: string | null
       /** @description The open and closed capacity of the session template */
-      sessionCapacity?: components['schemas']['SessionCapacityDto']
+      sessionCapacity?: components['schemas']['SessionCapacityDto'] | null
       /** @description The start and end date of the Validity period for the session template */
-      sessionDateRange?: components['schemas']['SessionDateRangeDto']
+      sessionDateRange?: components['schemas']['SessionDateRangeDto'] | null
       /** @description The start and end time of the generated visit session(s) */
-      sessionTimeSlot?: components['schemas']['SessionTimeSlotDto']
+      sessionTimeSlot?: components['schemas']['SessionTimeSlotDto'] | null
       /**
        * @description The type of visit order restriction, defaults to VO_PVO (Either allowed)
        * @example PVO
-       * @enum {string}
+       * @enum {string|null}
        */
-      visitOrderRestriction?: 'VO_PVO' | 'VO' | 'PVO' | 'NONE'
+      visitOrderRestriction?: 'VO_PVO' | 'VO' | 'PVO' | 'NONE' | null
       /**
        * @description Visit Room
        * @example Visits Main Hall
        */
-      visitRoom?: string
+      visitRoom?: string | null
       /**
        * Format: int32
        * @description number of weeks until the weekly day is repeated
        * @example 1
        */
-      weeklyFrequency?: number
+      weeklyFrequency?: number | null
     }
     UpdateVisitFromExternalSystemDto: {
       /**
@@ -3043,9 +3358,9 @@ export interface components {
        */
       visitType: 'SOCIAL'
       /** @description Additional support associated with the visit */
-      visitorSupport?: components['schemas']['VisitorSupportDto']
+      visitorSupport?: components['schemas']['VisitorSupportDto'] | null
       /** @description List of visitors associated with the visit */
-      visitors?: components['schemas']['VisitorDto'][]
+      visitors?: components['schemas']['VisitorDto'][] | null
     }
     /** @description Prison / Session Template user client dto */
     UserClientDto: {
@@ -3070,7 +3385,7 @@ export interface components {
        * @description Application Reference
        * @example dfs-wjs-eqr
        */
-      applicationReference?: string
+      applicationReference?: string | null
       /**
        * Format: date-time
        * @description The visit created date and time
@@ -3088,7 +3403,7 @@ export interface components {
        * @description Date the visit was first booked or migrated
        * @example 2018-12-01T13:45:00
        */
-      firstBookedDateTime?: string
+      firstBookedDateTime?: string | null
       /**
        * Format: date-time
        * @description The visit modified date and time
@@ -3098,7 +3413,7 @@ export interface components {
       /**
        * @description Outcome Status
        * @example VISITOR_CANCELLED
-       * @enum {string}
+       * @enum {string|null}
        */
       outcomeStatus?:
         | 'ADMINISTRATIVE_CANCELLATION'
@@ -3123,6 +3438,7 @@ export interface components {
         | 'DETAILS_CHANGED_AFTER_BOOKING'
         | 'BOOKER_CANCELLED'
         | 'REQUESTED_VISIT_WITHDRAWN'
+        | null
       /**
        * @description Prison Id
        * @example MDI
@@ -3142,7 +3458,7 @@ export interface components {
        * @description session template Reference
        * @example dfs-wjs-eqr
        */
-      sessionTemplateReference?: string
+      sessionTemplateReference?: string | null
       /**
        * Format: date-time
        * @description The date and time of the visit
@@ -3158,7 +3474,7 @@ export interface components {
       /** @description Contact associated with the visit */
       visitContact: components['schemas']['ContactDto']
       /** @description External system details associated with the visit */
-      visitExternalSystemDetails?: components['schemas']['VisitExternalSystemDetailsDto']
+      visitExternalSystemDetails?: components['schemas']['VisitExternalSystemDetailsDto'] | null
       /** @description Visit Notes */
       visitNotes: components['schemas']['VisitNoteDto'][]
       /**
@@ -3192,7 +3508,7 @@ export interface components {
        */
       visitType: 'SOCIAL'
       /** @description Additional support associated with the visit */
-      visitorSupport?: components['schemas']['VisitorSupportDto']
+      visitorSupport?: components['schemas']['VisitorSupportDto'] | null
       /** @description List of visitors associated with the visit */
       visitors: components['schemas']['VisitorDto'][]
     }
@@ -3201,12 +3517,12 @@ export interface components {
        * @description Client name
        * @example client_name
        */
-      clientName?: string
+      clientName?: string | null
       /**
        * @description Client visit reference
        * @example Reference ID in the client system
        */
-      clientVisitReference?: string
+      clientVisitReference?: string | null
     }
     /** @description VisitNote */
     VisitNoteDto: {
@@ -3229,7 +3545,13 @@ export interface components {
        * @enum {string}
        */
       attributeName:
-        'VISITOR_RESTRICTION' | 'VISITOR_RESTRICTION_ID' | 'VISITOR_ID' | 'PAIRED_VISIT' | 'APPOINTMENT_INSTANCE_ID'
+        | 'VISITOR_RESTRICTION'
+        | 'VISITOR_RESTRICTION_ID'
+        | 'VISITOR_ID'
+        | 'PAIRED_VISIT'
+        | 'APPOINTMENT_INSTANCE_ID'
+        | 'ALERT_CODE'
+        | 'ALERT_UUID'
       /**
        * @description Value of the attribute associated with the notification event
        * @example BAN
@@ -3263,6 +3585,8 @@ export interface components {
         | 'SESSION_VISITS_BLOCKED_FOR_DATE'
         | 'PRISONER_RECEIVED_EVENT'
         | 'PRISONER_ALERTS_UPDATED_EVENT'
+        | 'PRISONER_ALERT_CREATED_EVENT'
+        | 'PRISONER_ALERT_UPDATED_EVENT'
         | 'PERSON_RESTRICTION_UPSERTED_EVENT'
         | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
         | 'VISITOR_UNAPPROVED_EVENT'
@@ -3351,7 +3675,7 @@ export interface components {
     }
     VisitRequestSummaryDto: {
       /** @description Name of the main contact for the visit request */
-      mainContact?: string
+      mainContact?: string | null
       /** @description ID of the prisoner who is being visited */
       prisonNumber: string
       /** @description First name of the prisoner who is being visited */
@@ -3382,7 +3706,7 @@ export interface components {
        * @description The count of closed visit bookings already reserved or booked for this session
        * @example 1
        */
-      closedVisitBookedCount?: number
+      closedVisitBookedCount?: number | null
       /**
        * Format: int32
        * @description The number of closed visits which may take place within this session
@@ -3400,7 +3724,7 @@ export interface components {
        * @description The count of open visit bookings already reserved or booked for this session
        * @example 1
        */
-      openVisitBookedCount?: number
+      openVisitBookedCount?: number | null
       /**
        * Format: int32
        * @description The number of concurrent visits which may take place within this session
@@ -3413,7 +3737,7 @@ export interface components {
        */
       prisonId: string
       /** @description Session conflicts */
-      sessionConflicts: ('NON_ASSOCIATION' | 'DOUBLE_BOOKING_OR_RESERVATION')[]
+      sessionConflicts: components['schemas']['SessionConflictDto'][]
       /**
        * @description Session Template Reference
        * @example v9d.7ed.7u
@@ -3425,6 +3749,11 @@ export interface components {
        * @example 2020-11-01T12:00:00
        */
       startTimestamp: string
+      /**
+       * @description Session vo restriction
+       * @enum {string}
+       */
+      visitOrderRestriction: 'VO_PVO' | 'VO' | 'PVO' | 'NONE'
       /**
        * @description Visit Room
        * @example Visits Main Hall
@@ -3453,16 +3782,25 @@ export interface components {
        * @description true if visitor is the contact for the visit otherwise false
        * @example true
        */
-      visitContact?: boolean
+      visitContact?: boolean | null
     }
-    VisitorRestrictionUpsertedNotificationDto: {
-      restrictionId: string
-      restrictionType: string
-      /** Format: date */
-      validFromDate: string
-      /** Format: date */
-      validToDate?: string
-      visitorId: string
+    VisitorLastApprovedDateDto: {
+      /**
+       * Format: date
+       * @description Last approved visit date
+       * @example 2025-11-01
+       */
+      lastApprovedVisitDate?: string | null
+      /**
+       * Format: int64
+       * @description Nomis Person Id
+       * @example 1234
+       */
+      nomisPersonId: number
+    }
+    VisitorLastApprovedDatesRequestDto: {
+      /** @description List of Nomis Person Ids for whom last visit approved date is needed */
+      nomisPersonIds: number[]
     }
     /** @description Visitor support */
     VisitorSupportDto: {
@@ -4511,7 +4849,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['UserClientDto']
+          'application/json': components['schemas']['PrisonUserClientDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -4569,7 +4907,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['UserClientDto']
+          'application/json': components['schemas']['PrisonUserClientDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -5265,164 +5603,6 @@ export interface operations {
       }
     }
   }
-  getPrisonExcludeDates_1: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description session template reference
-         * @example abc-def-ghi
-         */
-        reference: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description session template's exclude dates returned */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ExcludeDateDto'][]
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to get exclude dates for a session template */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  addSessionExcludeDate: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description session template reference
-         * @example qqw-rew-aws
-         */
-        reference: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ExcludeDateDto']
-      }
-    }
-    responses: {
-      /** @description successfully added exclude date to a session */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': string[]
-        }
-      }
-      /** @description exclude date provided already exists for session or session can't be found */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to add exclude dates to a prison */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  removeSessionTemplateExcludeDate: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description prison id
-         * @example BHI
-         */
-        reference: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ExcludeDateDto']
-      }
-    }
-    responses: {
-      /** @description successfully removed exclude date for a session template */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': string[]
-        }
-      }
-      /** @description exclude date does not exist for session template or session template can't be found */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to remove exclude date for a session template */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
   getMatchingSessionTemplatesOnUpdate: {
     parameters: {
       query?: never
@@ -5558,10 +5738,12 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          /** @example [
+          /**
+           * @example [
            *       "HEI",
            *       "MDI"
-           *     ] */
+           *     ]
+           */
           'application/json': string[]
         }
       }
@@ -5869,6 +6051,50 @@ export interface operations {
       }
     }
   }
+  getFutureExcludedSessionsForPrison: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description prison code
+         * @example BHI
+         */
+        prisonCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description All sessions that are blocked - current or future are returned, returns an empty list if no sessions are blocked in the future (including today's sessions) */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SessionScheduleWithDateExclusionsDto'][]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get sessions that are blocked in the future */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   getFuturePublicBookedVisitsByBookerReference: {
     parameters: {
       query?: never
@@ -6081,6 +6307,164 @@ export interface operations {
       }
     }
   }
+  getSessionExcludeDates: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description session template reference
+         * @example abc-def-ghi
+         */
+        reference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description session template's exclude dates returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ExcludeDateDto'][]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get exclude dates for a session template */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  addSessionExcludeDate: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description session template reference
+         * @example qqw-rew-aws
+         */
+        reference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ExcludeDateDto']
+      }
+    }
+    responses: {
+      /** @description successfully added exclude date to a session */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': string[]
+        }
+      }
+      /** @description exclude date provided already exists for session or session can't be found */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to add exclude dates to a prison */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  removeSessionTemplateExcludeDate: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description prison id
+         * @example BHI
+         */
+        reference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ExcludeDateDto']
+      }
+    }
+    responses: {
+      /** @description successfully removed exclude date for a session template */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': string[]
+        }
+      }
+      /** @description exclude date does not exist for session template or session template can't be found */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to remove exclude date for a session template */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   getVisitBookingSessions: {
     parameters: {
       query: {
@@ -6114,6 +6498,11 @@ export interface operations {
          * @example STAFF
          */
         userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        /**
+         * @description youngestVisitorAge
+         * @example 18
+         */
+        youngestVisitorAge?: number
       }
       header?: never
       path?: never
@@ -6130,7 +6519,7 @@ export interface operations {
           'application/json': components['schemas']['VisitSessionDto'][]
         }
       }
-      /** @description Incorrect request to Get visit sessions  */
+      /** @description Incorrect request to Get visit sessions */
       400: {
         headers: {
           [name: string]: unknown
@@ -6268,7 +6657,7 @@ export interface operations {
           'application/json': components['schemas']['SessionCapacityDto']
         }
       }
-      /** @description Incorrect request  */
+      /** @description Incorrect request */
       400: {
         headers: {
           [name: string]: unknown
@@ -6286,7 +6675,7 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Capacity not found  */
+      /** @description Capacity not found */
       404: {
         headers: {
           [name: string]: unknown
@@ -6771,6 +7160,121 @@ export interface operations {
       }
     }
   }
+  notifyVSiPThatContactRestrictionUpserted: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ContactRestrictionUpsertedNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of change */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   notifyVSiPThatCourtVideoAppointmentCancelledDeleted: {
     parameters: {
       query?: never
@@ -6795,7 +7299,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -6809,10 +7312,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -6828,17 +7329,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
@@ -6915,7 +7414,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -6929,10 +7427,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -6948,17 +7444,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
@@ -7035,7 +7529,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -7049,10 +7542,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -7068,17 +7559,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
@@ -7155,7 +7644,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -7169,10 +7657,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -7188,17 +7674,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
@@ -7251,7 +7735,7 @@ export interface operations {
       }
     }
   }
-  notifyVSiPThatPersonRestrictionUpserted: {
+  notifyVSiPThatPrisonerAlertCreated: {
     parameters: {
       query?: never
       header?: never
@@ -7260,7 +7744,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['PersonRestrictionUpsertedNotificationDto']
+        'application/json': components['schemas']['PrisonerAlertNotificationDto']
       }
     }
     responses: {
@@ -7275,7 +7759,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -7289,10 +7772,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -7308,137 +7789,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
-            | '422 UNPROCESSABLE_ENTITY'
-            | '423 LOCKED'
-            | '424 FAILED_DEPENDENCY'
-            | '425 TOO_EARLY'
-            | '426 UPGRADE_REQUIRED'
-            | '428 PRECONDITION_REQUIRED'
-            | '429 TOO_MANY_REQUESTS'
-            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
-            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
-            | '500 INTERNAL_SERVER_ERROR'
-            | '501 NOT_IMPLEMENTED'
-            | '502 BAD_GATEWAY'
-            | '503 SERVICE_UNAVAILABLE'
-            | '504 GATEWAY_TIMEOUT'
-            | '505 HTTP_VERSION_NOT_SUPPORTED'
-            | '506 VARIANT_ALSO_NEGOTIATES'
-            | '507 INSUFFICIENT_STORAGE'
-            | '508 LOOP_DETECTED'
-            | '509 BANDWIDTH_LIMIT_EXCEEDED'
-            | '510 NOT_EXTENDED'
-            | '511 NETWORK_AUTHENTICATION_REQUIRED'
-        }
-      }
-      /** @description Incorrect request to notify VSiP of change */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to notify VSiP of change */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  notifyVSiPThatPrisonerAlertCreatedUpdated: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['PrisonerAlertCreatedUpdatedNotificationDto']
-      }
-    }
-    responses: {
-      /** @description notification has completed successfully */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json':
-            | '100 CONTINUE'
-            | '101 SWITCHING_PROTOCOLS'
-            | '102 PROCESSING'
-            | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
-            | '200 OK'
-            | '201 CREATED'
-            | '202 ACCEPTED'
-            | '203 NON_AUTHORITATIVE_INFORMATION'
-            | '204 NO_CONTENT'
-            | '205 RESET_CONTENT'
-            | '206 PARTIAL_CONTENT'
-            | '207 MULTI_STATUS'
-            | '208 ALREADY_REPORTED'
-            | '226 IM_USED'
-            | '300 MULTIPLE_CHOICES'
-            | '301 MOVED_PERMANENTLY'
-            | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
-            | '303 SEE_OTHER'
-            | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
-            | '307 TEMPORARY_REDIRECT'
-            | '308 PERMANENT_REDIRECT'
-            | '400 BAD_REQUEST'
-            | '401 UNAUTHORIZED'
-            | '402 PAYMENT_REQUIRED'
-            | '403 FORBIDDEN'
-            | '404 NOT_FOUND'
-            | '405 METHOD_NOT_ALLOWED'
-            | '406 NOT_ACCEPTABLE'
-            | '407 PROXY_AUTHENTICATION_REQUIRED'
-            | '408 REQUEST_TIMEOUT'
-            | '409 CONFLICT'
-            | '410 GONE'
-            | '411 LENGTH_REQUIRED'
-            | '412 PRECONDITION_FAILED'
-            | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
-            | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
-            | '415 UNSUPPORTED_MEDIA_TYPE'
-            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
-            | '417 EXPECTATION_FAILED'
-            | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
@@ -7491,6 +7850,466 @@ export interface operations {
       }
     }
   }
+  notifyVSiPThatPrisonerAlertDeleted: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerAlertNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of alert */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of alert */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPThatPrisonerAlertUpdated: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerAlertNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of alert */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of alert */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPThatPrisonerAlertCreatedUpdated: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerAlertCreatedUpdatedNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of alert */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of alert */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPThatPrisonerContactRestrictionUpserted: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerContactRestrictionUpsertedNotificationDto']
+      }
+    }
+    responses: {
+      /** @description notification has completed successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of change */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   notifyVSiPThatPrisonerReceivedChanged: {
     parameters: {
       query?: never
@@ -7515,7 +8334,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -7529,10 +8347,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -7548,17 +8364,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
@@ -7635,7 +8449,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -7649,10 +8462,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -7668,17 +8479,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
@@ -7755,7 +8564,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -7769,10 +8577,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -7788,17 +8594,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
@@ -7985,7 +8789,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -7999,10 +8802,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -8018,137 +8819,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
-            | '422 UNPROCESSABLE_ENTITY'
-            | '423 LOCKED'
-            | '424 FAILED_DEPENDENCY'
-            | '425 TOO_EARLY'
-            | '426 UPGRADE_REQUIRED'
-            | '428 PRECONDITION_REQUIRED'
-            | '429 TOO_MANY_REQUESTS'
-            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
-            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
-            | '500 INTERNAL_SERVER_ERROR'
-            | '501 NOT_IMPLEMENTED'
-            | '502 BAD_GATEWAY'
-            | '503 SERVICE_UNAVAILABLE'
-            | '504 GATEWAY_TIMEOUT'
-            | '505 HTTP_VERSION_NOT_SUPPORTED'
-            | '506 VARIANT_ALSO_NEGOTIATES'
-            | '507 INSUFFICIENT_STORAGE'
-            | '508 LOOP_DETECTED'
-            | '509 BANDWIDTH_LIMIT_EXCEEDED'
-            | '510 NOT_EXTENDED'
-            | '511 NETWORK_AUTHENTICATION_REQUIRED'
-        }
-      }
-      /** @description Incorrect request to notify VSiP of change */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to notify VSiP of change */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  notifyVSiPThatVisitorRestrictionUpserted: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['VisitorRestrictionUpsertedNotificationDto']
-      }
-    }
-    responses: {
-      /** @description notification has completed successfully */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json':
-            | '100 CONTINUE'
-            | '101 SWITCHING_PROTOCOLS'
-            | '102 PROCESSING'
-            | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
-            | '200 OK'
-            | '201 CREATED'
-            | '202 ACCEPTED'
-            | '203 NON_AUTHORITATIVE_INFORMATION'
-            | '204 NO_CONTENT'
-            | '205 RESET_CONTENT'
-            | '206 PARTIAL_CONTENT'
-            | '207 MULTI_STATUS'
-            | '208 ALREADY_REPORTED'
-            | '226 IM_USED'
-            | '300 MULTIPLE_CHOICES'
-            | '301 MOVED_PERMANENTLY'
-            | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
-            | '303 SEE_OTHER'
-            | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
-            | '307 TEMPORARY_REDIRECT'
-            | '308 PERMANENT_REDIRECT'
-            | '400 BAD_REQUEST'
-            | '401 UNAUTHORIZED'
-            | '402 PAYMENT_REQUIRED'
-            | '403 FORBIDDEN'
-            | '404 NOT_FOUND'
-            | '405 METHOD_NOT_ALLOWED'
-            | '406 NOT_ACCEPTABLE'
-            | '407 PROXY_AUTHENTICATION_REQUIRED'
-            | '408 REQUEST_TIMEOUT'
-            | '409 CONFLICT'
-            | '410 GONE'
-            | '411 LENGTH_REQUIRED'
-            | '412 PRECONDITION_FAILED'
-            | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
-            | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
-            | '415 UNSUPPORTED_MEDIA_TYPE'
-            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
-            | '417 EXPECTATION_FAILED'
-            | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
@@ -8225,7 +8904,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -8239,10 +8917,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -8258,17 +8934,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
@@ -8333,6 +9007,8 @@ export interface operations {
           | 'SESSION_VISITS_BLOCKED_FOR_DATE'
           | 'PRISONER_RECEIVED_EVENT'
           | 'PRISONER_ALERTS_UPDATED_EVENT'
+          | 'PRISONER_ALERT_CREATED_EVENT'
+          | 'PRISONER_ALERT_UPDATED_EVENT'
           | 'PERSON_RESTRICTION_UPSERTED_EVENT'
           | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
           | 'VISITOR_UNAPPROVED_EVENT'
@@ -8393,6 +9069,8 @@ export interface operations {
           | 'SESSION_VISITS_BLOCKED_FOR_DATE'
           | 'PRISONER_RECEIVED_EVENT'
           | 'PRISONER_ALERTS_UPDATED_EVENT'
+          | 'PRISONER_ALERT_CREATED_EVENT'
+          | 'PRISONER_ALERT_UPDATED_EVENT'
           | 'PERSON_RESTRICTION_UPSERTED_EVENT'
           | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
           | 'VISITOR_UNAPPROVED_EVENT'
@@ -8465,7 +9143,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -8479,10 +9156,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -8498,17 +9173,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
@@ -8576,7 +9249,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -8590,10 +9262,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -8609,17 +9279,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
@@ -8653,6 +9321,289 @@ export interface operations {
         }
       }
       /** @description Incorrect permissions to notify VSiP of change */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPOfPrisonerMerge: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerMergeNotificationDto']
+      }
+    }
+    responses: {
+      /** @description Prisoner merge has completed successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of a prisoner merge. */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of a prisoner merge. */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  notifyVSiPOfPrisonerMerges: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerMergeNotificationsDto']
+      }
+    }
+    responses: {
+      /** @description Prisoner merges have been processed (individual failures are logged and do not stop processing) */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json':
+            | '100 CONTINUE'
+            | '101 SWITCHING_PROTOCOLS'
+            | '102 PROCESSING'
+            | '103 EARLY_HINTS'
+            | '200 OK'
+            | '201 CREATED'
+            | '202 ACCEPTED'
+            | '203 NON_AUTHORITATIVE_INFORMATION'
+            | '204 NO_CONTENT'
+            | '205 RESET_CONTENT'
+            | '206 PARTIAL_CONTENT'
+            | '207 MULTI_STATUS'
+            | '208 ALREADY_REPORTED'
+            | '226 IM_USED'
+            | '300 MULTIPLE_CHOICES'
+            | '301 MOVED_PERMANENTLY'
+            | '302 FOUND'
+            | '303 SEE_OTHER'
+            | '304 NOT_MODIFIED'
+            | '307 TEMPORARY_REDIRECT'
+            | '308 PERMANENT_REDIRECT'
+            | '400 BAD_REQUEST'
+            | '401 UNAUTHORIZED'
+            | '402 PAYMENT_REQUIRED'
+            | '403 FORBIDDEN'
+            | '404 NOT_FOUND'
+            | '405 METHOD_NOT_ALLOWED'
+            | '406 NOT_ACCEPTABLE'
+            | '407 PROXY_AUTHENTICATION_REQUIRED'
+            | '408 REQUEST_TIMEOUT'
+            | '409 CONFLICT'
+            | '410 GONE'
+            | '411 LENGTH_REQUIRED'
+            | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
+            | '413 PAYLOAD_TOO_LARGE'
+            | '414 URI_TOO_LONG'
+            | '415 UNSUPPORTED_MEDIA_TYPE'
+            | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+            | '417 EXPECTATION_FAILED'
+            | '418 I_AM_A_TEAPOT'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
+            | '422 UNPROCESSABLE_ENTITY'
+            | '423 LOCKED'
+            | '424 FAILED_DEPENDENCY'
+            | '425 TOO_EARLY'
+            | '426 UPGRADE_REQUIRED'
+            | '428 PRECONDITION_REQUIRED'
+            | '429 TOO_MANY_REQUESTS'
+            | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+            | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+            | '500 INTERNAL_SERVER_ERROR'
+            | '501 NOT_IMPLEMENTED'
+            | '502 BAD_GATEWAY'
+            | '503 SERVICE_UNAVAILABLE'
+            | '504 GATEWAY_TIMEOUT'
+            | '505 HTTP_VERSION_NOT_SUPPORTED'
+            | '506 VARIANT_ALSO_NEGOTIATES'
+            | '507 INSUFFICIENT_STORAGE'
+            | '508 LOOP_DETECTED'
+            | '509 BANDWIDTH_LIMIT_EXCEEDED'
+            | '510 NOT_EXTENDED'
+            | '511 NETWORK_AUTHENTICATION_REQUIRED'
+        }
+      }
+      /** @description Incorrect request to notify VSiP of prisoner merges. */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to notify VSiP of prisoner merges. */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getLastApprovedDatesForVisitors: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonerNumber: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['VisitorLastApprovedDatesRequestDto']
+      }
+    }
+    responses: {
+      /** @description Returns the passed list of visitors with their last approved dates (or null) for visits booked for a prisoner */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['VisitorLastApprovedDateDto'][]
+        }
+      }
+      /** @description Incorrect request to get last approved dates booked for a prisoner */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get last approved dates for a visitor list */
       403: {
         headers: {
           [name: string]: unknown

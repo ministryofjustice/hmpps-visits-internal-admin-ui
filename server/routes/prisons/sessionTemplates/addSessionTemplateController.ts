@@ -174,6 +174,8 @@ export default class AddSessionTemplateController {
           { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
         ],
         visitOrderRestriction: req.body.visitOrderRestriction,
+        isAgeRestricted: false,
+        ageRestriction: null,
       }
 
       try {

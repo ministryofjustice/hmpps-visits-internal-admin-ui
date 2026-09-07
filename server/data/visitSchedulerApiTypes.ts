@@ -17,6 +17,7 @@ export type UpdateLocationGroupDto = components['schemas']['UpdateLocationGroupD
 
 // Prison
 export type PrisonDto = components['schemas']['PrisonDto']
+export type PrisonUserClientDto = components['schemas']['PrisonUserClientDto']
 export type UserClientType = components['schemas']['UserClientDto']['userType']
 export type UserClientDto = components['schemas']['UserClientDto']
 export type UpdatePrisonDto = components['schemas']['UpdatePrisonDto']
