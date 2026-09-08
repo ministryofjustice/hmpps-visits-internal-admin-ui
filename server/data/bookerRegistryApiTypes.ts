@@ -8,4 +8,4 @@ export type PermittedPrisonerDto = components['schemas']['PermittedPrisonerDto']
 
 export type SearchBookerDto = components['schemas']['SearchBookerDto']
 
-export type UpdateRegisteredPrisonersPrisonDto = components['schemas']['UpdateRegisteredPrisonersPrisonDto']
+export type UpdateRegisteredPrisonerPrisonDto = components['schemas']['UpdateRegisteredPrisonerPrisonDto']

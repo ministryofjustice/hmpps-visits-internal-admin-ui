@@ -1889,6 +1889,8 @@ export interface components {
     }
     /** @description Visit Session */
     AvailableVisitSessionDto: {
+      /** @description Session conflicts */
+      sessionConflicts: 'AGE_RESTRICTION'[]
       /**
        * Format: date
        * @description Session date
@@ -2153,7 +2155,7 @@ export interface components {
        * @description Minimum required age for attending the session
        * @example 18
        */
-      ageRestriction: number
+      ageRestriction?: number | null
       /** @description list of group references for allowed prisoner category groups */
       categoryGroupReferences?: string[] | null
       /** @description Session template user clients. */
@@ -2176,7 +2178,7 @@ export interface components {
        * @description Determines if the age restriction is enabled for this session
        * @example true
        */
-      isAgeRestricted: boolean
+      isAgeRestricted?: boolean | null
       /** @description list of group references for permitted session location groups */
       locationGroupReferences?: string[] | null
       /**
@@ -6582,6 +6584,11 @@ export interface operations {
          * @example STAFF
          */
         userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        /**
+         * @description youngestVisitorAge
+         * @example 18
+         */
+        youngestVisitorAge?: number
       }
       header?: never
       path?: never

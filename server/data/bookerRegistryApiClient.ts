@@ -6,7 +6,7 @@ import {
   BookerDto,
   CreatePermittedPrisonerDto,
   PermittedPrisonerDto,
-  UpdateRegisteredPrisonersPrisonDto,
+  UpdateRegisteredPrisonerPrisonDto,
 } from './bookerRegistryApiTypes'
 import handleNotFoundErrorAsNull from './handleNotFoundErrorAsNull'
 
@@ -48,7 +48,7 @@ export default class BookerRegistryApiClient extends RestClient {
     await this.put(
       {
         path: `/public/booker/config/${bookerReference}/prisoner/${prisonerId}/prison`,
-        data: <UpdateRegisteredPrisonersPrisonDto>{ prisonId: newPrisonCode },
+        data: <UpdateRegisteredPrisonerPrisonDto>{ prisonId: newPrisonCode },
       },
       asSystem(),
     )
