@@ -348,6 +348,8 @@ describe('visitSchedulerApiClient', () => {
             { active: true, userType: 'STAFF' },
           ],
           visitOrderRestriction: 'VO_PVO',
+          isAgeRestricted: false,
+          ageRestriction: null,
         })
         .matchHeader('authorization', 'Bearer test-system-token')
         .reply(201, updateSessionTemplateDto)

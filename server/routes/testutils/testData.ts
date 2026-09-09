@@ -260,6 +260,8 @@ export default class TestData {
     locationGroupReferences = [TestData.locationGroup().reference],
     clients = [this.userClientDto({ userType: 'PUBLIC' }), this.userClientDto({ userType: 'STAFF' })],
     visitOrderRestriction = 'VO_PVO',
+    isAgeRestricted = false,
+    ageRestriction = null,
   }: Partial<UpdateSessionTemplateDto> = {}): UpdateSessionTemplateDto =>
     ({
       name,
@@ -274,6 +276,8 @@ export default class TestData {
       incentiveLevelGroupReferences,
       locationGroupReferences,
       visitOrderRestriction,
+      isAgeRestricted,
+      ageRestriction,
     }) as UpdateSessionTemplateDto
 
   static createCategoryGroupDto = ({

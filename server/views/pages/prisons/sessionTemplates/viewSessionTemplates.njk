@@ -84,12 +84,24 @@
             {%- for sessionTemplate in sessionTemplates -%}
               {% set hasPublicClient = (sessionTemplate.clients | selectattr("active") | groupby("userType"))["PUBLIC"] | length %}
 
-              {% set sessionActiveHtml %}
-                {{ govukTag({
-                  text: "Active" if sessionTemplate.active else "Inactive",
-                  classes: "govuk-tag--blue" if sessionTemplate.active else "govuk-tag--grey"
-                }) }}
-              {% endset %}
+              {% set sessionStatusHtml -%}
+                <ul class="govuk-list">
+                  <li>
+                    {{ govukTag({
+                      text: "Active" if sessionTemplate.active else "Inactive",
+                      classes: "govuk-tag--blue" if sessionTemplate.active else "govuk-tag--grey"
+                    }) }}
+                  </li>
+
+                  {% if not hasPublicClient %}
+                    <li>Not public</li>
+                  {% endif %}
+
+                  {% if sessionTemplate.isAgeRestricted %}
+                    <li>Min age: {{ sessionTemplate.ageRestriction }}</li>
+                  {% endif %}
+                </ul>
+              {%- endset %}
 
               {%- set groupsListWithCount = [
                 groupCountIfNotEmpty(sessionTemplate.prisonerCategoryGroups, 'Category') | trim,
@@ -104,9 +116,7 @@
                   attributes: { "data-test": "template-name" }
                 },
                 {
-                  html: sessionActiveHtml +
-                    ('<br><div class="govuk-!-margin-top-3">Not public</div>' if not hasPublicClient) +
-                    ('<br><div class="govuk-!-margin-top-3">Min age: ' + sessionTemplate.ageRestriction + '</div>' if sessionTemplate.isAgeRestricted),
+                  html: sessionStatusHtml,
                   classes: "nowrap",
                   attributes: { "data-test": "template-status"}
                 },
