@@ -11,6 +11,8 @@ context('Session templates - update', () => {
       { active: true, userType: 'STAFF' },
       { active: false, userType: 'PUBLIC' },
     ],
+    isAgeRestricted: true,
+    ageRestriction: 16,
   })
   const categoryGroups = TestData.categoryGroup()
   const incentiveGroups = TestData.incentiveGroup()
@@ -58,6 +60,8 @@ context('Session templates - update', () => {
         { active: true, userType: 'PUBLIC' },
       ],
       visitOrderRestriction: 'VO_PVO',
+      isAgeRestricted: false,
+      ageRestriction: null,
     }
     const returnedUpdatedSessionTemplate: SessionTemplate = {
       ...sessionTemplate,
@@ -75,6 +79,8 @@ context('Session templates - update', () => {
         { active: true, userType: 'STAFF' },
         { active: true, userType: 'PUBLIC' },
       ],
+      isAgeRestricted: false,
+      ageRestriction: null,
     }
     updateSessionTemplatePage.enterName(returnedUpdatedSessionTemplate.name)
     updateSessionTemplatePage.enterValidFromDate(returnedUpdatedSessionTemplate.sessionDateRange.validFromDate)
@@ -86,6 +92,7 @@ context('Session templates - update', () => {
     updateSessionTemplatePage.addIncentiveGroups([incentiveGroups])
     updateSessionTemplatePage.addLocationGroups([locationGroups])
     updateSessionTemplatePage.setHiddenFromPublic(false)
+    updateSessionTemplatePage.uncheckAgeRestriction()
 
     // Submit form to update template
     cy.task('stubUpdateSessionTemplate', {
@@ -102,5 +109,6 @@ context('Session templates - update', () => {
       .contains(`Session template '${returnedUpdatedSessionTemplate.name}' has been updated`)
     viewSingleSessionTemplatePage.getReference().contains(returnedUpdatedSessionTemplate.reference)
     viewSingleSessionTemplatePage.getPublicVisibility().contains('No')
+    viewSingleSessionTemplatePage.getAgeRestriction().contains('No')
   })
 })

@@ -159,6 +159,8 @@ export default {
               locationGroupReferences: sessionTemplate.locationGroupReferences,
               clients: sessionTemplate.clients,
               visitOrderRestriction: sessionTemplate.visitOrderRestriction,
+              isAgeRestricted: sessionTemplate.isAgeRestricted,
+              ageRestriction: sessionTemplate.ageRestriction,
             },
           },
         ],

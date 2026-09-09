@@ -74,6 +74,10 @@ export default class UpdateSessionTemplatePage extends Page {
     }
   }
 
+  uncheckAgeRestriction = (): void => {
+    cy.get('#isAgeRestricted').uncheck()
+  }
+
   updateTemplate = (): void => {
     cy.get('[data-test="submit"]').click()
   }
