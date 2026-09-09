@@ -101,6 +101,6 @@ context('Session templates - update', () => {
       .successMessage()
       .contains(`Session template '${returnedUpdatedSessionTemplate.name}' has been updated`)
     viewSingleSessionTemplatePage.getReference().contains(returnedUpdatedSessionTemplate.reference)
-    viewSingleSessionTemplatePage.getPublicVisbility().contains('No')
+    viewSingleSessionTemplatePage.getPublicVisibility().contains('No')
   })
 })

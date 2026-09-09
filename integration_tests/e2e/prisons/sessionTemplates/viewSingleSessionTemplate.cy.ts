@@ -53,6 +53,7 @@ context('Session templates - single', () => {
     viewSingleSessionTemplatePage.getCategoryGroups().contains('None')
     viewSingleSessionTemplatePage.getIncentiveGroups().contains('None')
     viewSingleSessionTemplatePage.getLocationGroups().contains('None')
-    viewSingleSessionTemplatePage.getPublicVisbility().contains('No')
+    viewSingleSessionTemplatePage.getPublicVisibility().contains('No')
+    viewSingleSessionTemplatePage.getAgeRestriction().contains('No')
   })
 })
