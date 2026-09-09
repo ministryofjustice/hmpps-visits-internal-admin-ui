@@ -104,7 +104,10 @@
                   attributes: { "data-test": "template-name" }
                 },
                 {
-                  html: sessionActiveHtml + ('<br><div class="govuk-!-margin-top-3">Not&nbsp;public</div>' if not hasPublicClient),
+                  html: sessionActiveHtml +
+                    ('<br><div class="govuk-!-margin-top-3">Not public</div>' if not hasPublicClient) +
+                    ('<br><div class="govuk-!-margin-top-3">Min age: ' + sessionTemplate.ageRestriction + '</div>' if sessionTemplate.isAgeRestricted),
+                  classes: "nowrap",
                   attributes: { "data-test": "template-status"}
                 },
                 {
@@ -182,7 +185,7 @@
       {% else %}
         <p>There are no session templates for this prison matching the selected filter.</p>
       {% endif %}
-        
+
     </div>
   </div>
 {% endblock %}

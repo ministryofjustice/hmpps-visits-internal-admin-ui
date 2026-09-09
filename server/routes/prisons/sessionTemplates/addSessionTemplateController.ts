@@ -13,6 +13,7 @@ import daysOfWeek from '../../../constants/daysOfWeek'
 import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
 import visitOrderDescriptions from '../../../constants/visitOrderRestriction'
 import { PrisonParams, PrisonReferenceParams } from '../../../@types/requestParameterTypes'
+import config from '../../../config'
 
 export default class AddSessionTemplateController {
   public constructor(
@@ -117,6 +118,8 @@ export default class AddSessionTemplateController {
         locationGroupReferences,
         hideInPublicServices,
         visitOrderRestriction: sessionTemplate.visitOrderRestriction,
+        isAgeRestricted: sessionTemplate.isAgeRestricted ? 'yes' : undefined,
+        ageRestriction: sessionTemplate.ageRestriction?.toString(),
       }
 
       req.flash('formValues', formValues)
@@ -174,8 +177,14 @@ export default class AddSessionTemplateController {
           { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
         ],
         visitOrderRestriction: req.body.visitOrderRestriction,
-        isAgeRestricted: false,
-        ageRestriction: null,
+        isAgeRestricted: req.body.isAgeRestricted === 'yes',
+        ageRestriction: req.body.isAgeRestricted === 'yes' ? parseInt(req.body.ageRestriction, 10) : null,
+      }
+
+      // TODO remove when feature flag removed (ensures new properties aren't sent if not enabled)
+      if (!config.features.ageRestrictions.enabled) {
+        delete createSessionTemplateDto.isAgeRestricted
+        delete createSessionTemplateDto.ageRestriction
       }
 
       try {
@@ -301,6 +310,12 @@ export default class AddSessionTemplateController {
         .toArray()
         .if(body('hasLocationGroups').equals('yes'))
         .isArray({ min: 1 }),
+
+      body(['ageRestriction'])
+        .if(body('isAgeRestricted').equals('yes'))
+        .trim()
+        .isInt({ min: 0, max: 25 }) // TODO awaiting confirmation of values
+        .withMessage('Enter an age in years between 0 and 25'),
     ]
   }
 }

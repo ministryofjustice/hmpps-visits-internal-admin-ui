@@ -99,7 +99,7 @@
             },
             classes: "test-template-reference"
           },
-          { 
+          {
             key: {
               text: "Day of week"
             },
@@ -109,7 +109,7 @@
             classes: "test-template-dayOfWeek"
 
           },
-          { 
+          {
             key: {
               text: "Start time"
             },
@@ -118,7 +118,7 @@
             },
             classes: "test-template-startTime"
           },
-          { 
+          {
             key: {
               text: "End time"
             },
@@ -136,7 +136,7 @@
             },
             classes: "test-template-visitOrderRestriction"
           },
-          { 
+          {
             key: {
               text: "Open capacity"
             },
@@ -145,7 +145,7 @@
             },
             classes: "test-template-openCapacity"
           },
-          { 
+          {
             key: {
               text: "Closed capacity"
             },
@@ -154,7 +154,7 @@
             },
             classes: "test-template-closedCapacity"
           },
-          { 
+          {
             key: {
               text: "Valid from"
             },
@@ -163,7 +163,7 @@
             },
             classes: "test-template-validFromDate"
           },
-          { 
+          {
             key: {
               text: "Valid to"
             },
@@ -173,7 +173,7 @@
             },
             classes: "test-template-validToDate"
           },
-          { 
+          {
             key: {
               text: "Visit room"
             },
@@ -182,16 +182,16 @@
             },
             classes: "test-template-visitRoom"
           },
-          { 
+          {
             key: {
-              text: "Weekly frequency" 
+              text: "Weekly frequency"
             },
             value: {
               text: sessionTemplate.weeklyFrequency
             },
             classes: "test-template-weeklyFrequency"
           },
-          { 
+          {
             key: {
               text: "Category groups"
             },
@@ -200,7 +200,7 @@
             },
             classes: "test-template-categoryGroups"
           },
-          { 
+          {
             key: {
               text: "Incentive level groups"
             },
@@ -209,7 +209,7 @@
             },
             classes: "test-template-incentiveGroups"
           },
-          { 
+          {
             key: {
               text: "Location groups"
             },
@@ -218,7 +218,7 @@
             },
             classes: "test-template-locationGroups"
           },
-          { 
+          {
             key: {
               text: "Hidden in public services"
             },
@@ -226,6 +226,18 @@
               text: hideInPublicServices | capitalize
             },
             classes: "test-template-hideInPublicServices"
+          },
+          {
+            key: {
+              text: "Age-restricted"
+            },
+            value: {
+              text:
+                ("Yes – minimum visitor age is " + sessionTemplate.ageRestriction + " " +("year" | pluralise(sessionTemplate.ageRestriction)))
+                if sessionTemplate.isAgeRestricted
+                else "No"
+            },
+            classes: "test-template-age-restricted"
           }
         ]
       }) }}

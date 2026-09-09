@@ -331,6 +331,43 @@
           ]
         }) }}
 
+        {%- set ageRestrictionHtml %}
+          {{ govukInput({
+            label: {
+              text: "What is the minimum age requirement for visitors?",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Enter a value in years, for example, 18."
+            },
+            classes: "govuk-input--width-2",
+            id: "ageRestriction",
+            name: "ageRestriction",
+            value: formValues.ageRestriction,
+            autocomplete: "off",
+            errorMessage: errors | findError('ageRestriction')
+          }) }}
+        {% endset -%}
+        {{ govukCheckboxes({
+          name: "isAgeRestricted",
+          fieldset: {
+            legend: {
+              text: "Is this session age-restricted?",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          items: [
+            {
+              text: "Yes",
+              value: "yes",
+              conditional: {
+              html: ageRestrictionHtml
+            },
+              checked: formValues.isAgeRestricted === "yes"
+            }
+          ]
+        }) if features.ageRestrictions.enabled }}
+
         {{ govukButton({
           text: "Add",
           attributes: { "data-test": "submit" },

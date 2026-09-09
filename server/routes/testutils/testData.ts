@@ -221,7 +221,7 @@ export default class TestData {
     incentiveLevelGroupReferences = [],
     includeLocationGroupType = true,
     locationGroupReferences = [],
-    clients = [this.prisonUserClientDto({ userType: 'PUBLIC' }), this.prisonUserClientDto({ userType: 'STAFF' })],
+    clients = [this.userClientDto({ userType: 'STAFF' }), this.userClientDto({ userType: 'PUBLIC' })],
     visitOrderRestriction = 'VO_PVO',
     isAgeRestricted = false,
     ageRestriction = null,

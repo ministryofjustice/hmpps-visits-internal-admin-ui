@@ -67,6 +67,7 @@ describe('Single session template page', () => {
           expect($('.test-template-categoryGroups').text()).toContain('None')
           expect($('.test-template-incentiveGroups').text()).toContain('None')
           expect($('.test-template-hideInPublicServices').text()).toContain('No')
+          expect($('.test-template-age-restricted').text()).toContain('No')
 
           // actions
           expect($('[data-test="template-change-status-form"]').attr('action')).toBe(
@@ -182,6 +183,19 @@ describe('Single session template page', () => {
           expect($('.test-template-categoryGroups li a').eq(0).attr('href')).toBe(
             '/prisons/HEI/category-groups/cat-1-ref?sessionTemplateRef=-afe.dcc.0f',
           )
+        })
+    })
+
+    it('should show age restriction if set', () => {
+      sessionTemplate.isAgeRestricted = true
+      sessionTemplate.ageRestriction = 18
+
+      return request(app)
+        .get('/prisons/HEI/session-templates/-afe.dcc.0f')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('.test-template-age-restricted').text()).toContain('Yes – minimum visitor age is 18 years')
         })
     })
 
