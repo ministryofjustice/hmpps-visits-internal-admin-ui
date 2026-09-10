@@ -286,8 +286,8 @@ export default class EditSessionTemplateController {
       body(['ageRestriction'])
         .if(body('isAgeRestricted').equals('yes'))
         .trim()
-        .isInt({ min: 0, max: 25 }) // TODO awaiting confirmation of values
-        .withMessage('Enter an age in years between 0 and 25'),
+        .isInt({ min: 0 })
+        .withMessage('Enter an age in years greater than 0'),
     ]
   }
 }
