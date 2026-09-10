@@ -13,6 +13,7 @@ import { UpdateSessionTemplateDto } from '../../../data/visitSchedulerApiTypes'
 import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
 import visitOrderDescriptions from '../../../constants/visitOrderRestriction'
 import { PrisonReferenceParams } from '../../../@types/requestParameterTypes'
+import config from '../../../config'
 
 export default class EditSessionTemplateController {
   public constructor(
@@ -69,6 +70,7 @@ export default class EditSessionTemplateController {
         validToDateDay,
         validToDateMonth,
         validToDateYear,
+        visitOrderRestriction: sessionTemplate.visitOrderRestriction,
         openCapacity: sessionTemplate.sessionCapacity.open.toString(),
         closedCapacity: sessionTemplate.sessionCapacity.closed.toString(),
         visitRoom: sessionTemplate.visitRoom,
@@ -82,7 +84,9 @@ export default class EditSessionTemplateController {
         locationGroupBehaviour: sessionTemplate.includeLocationGroupType ? 'include' : 'exclude',
         locationGroupReferences,
         hideInPublicServices,
-        visitOrderRestriction: sessionTemplate.visitOrderRestriction,
+        isAgeRestricted: sessionTemplate.isAgeRestricted ? 'yes' : undefined,
+        ageRestriction: sessionTemplate.isAgeRestricted ? sessionTemplate.ageRestriction?.toString() : undefined,
+
         ...req.flash('formValues')?.[0],
       }
 
@@ -154,7 +158,16 @@ export default class EditSessionTemplateController {
           { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
         ],
         visitOrderRestriction: req.body.visitOrderRestriction,
+        isAgeRestricted: req.body.isAgeRestricted === 'yes',
+        ageRestriction: req.body.isAgeRestricted === 'yes' ? parseInt(req.body.ageRestriction, 10) : null,
       }
+
+      // TODO remove when feature flag removed (ensures new properties aren't sent if not enabled)
+      if (!config.features.ageRestrictions.enabled) {
+        delete updateSessionTemplateDto.isAgeRestricted
+        delete updateSessionTemplateDto.ageRestriction
+      }
+
       try {
         const { name } = await this.sessionTemplateService.updateSessionTemplate(
           res.locals.user.username,
@@ -269,6 +282,12 @@ export default class EditSessionTemplateController {
         .toArray()
         .if(body('hasLocationGroups').equals('yes'))
         .isArray({ min: 1 }),
+
+      body(['ageRestriction'])
+        .if(body('isAgeRestricted').equals('yes'))
+        .trim()
+        .isInt({ min: 0 })
+        .withMessage('Enter an age in years greater than 0'),
     ]
   }
 }

@@ -92,7 +92,23 @@ describe('Session templates listing page', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('[data-test="template-status"]').text().trim()).toMatch(/Active\s+Not\spublic/)
+          expect($('[data-test="template-status"]').text().trim()).toContain('Not public')
+        })
+    })
+
+    it('should show label if a template is age-restricted', () => {
+      const sessionTemplate = TestData.sessionTemplate({
+        isAgeRestricted: true,
+        ageRestriction: 18,
+      })
+      sessionTemplateService.getSessionTemplates.mockResolvedValue([sessionTemplate])
+
+      return request(app)
+        .get(`/prisons/${prison.code}/session-templates`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="template-status"]').text()).toContain('Min age: 18')
         })
     })
   })

@@ -17,25 +17,43 @@ import {
   SessionTemplateVisitStatsDto,
   UpdatePrisonDto,
   UpdateLocationGroupDto,
+  PrisonUserClientDto,
+  UserClientDto,
 } from '../../data/visitSchedulerApiTypes'
 
-const publicAndStaffClientsActive: CreateSessionTemplateDto['clients'] = [
-  { active: true, userType: 'PUBLIC' },
-  { active: true, userType: 'STAFF' },
-]
-
 export default class TestData {
+  static userClientDto = ({ active = true, userType = 'STAFF' }: Partial<UserClientDto> = {}): UserClientDto =>
+    ({
+      active,
+      userType,
+    }) as UserClientDto
+
+  static prisonUserClientDto = ({
+    active = true,
+    policyNoticeDaysMax = 28,
+    policyNoticeDaysMin = 2,
+    userType = 'STAFF',
+  }: Partial<PrisonUserClientDto> = {}): PrisonUserClientDto =>
+    ({
+      active,
+      policyNoticeDaysMax,
+      policyNoticeDaysMin,
+      userType,
+    }) as PrisonUserClientDto
+
   // PrisonDto from Visit Scheduler
   static prisonDto = ({
     active = true,
     adultAgeYears = 18,
-    clients = [{ active: true, userType: 'STAFF' }],
+    clients = [{ active: true, policyNoticeDaysMax: 28, policyNoticeDaysMin: 2, userType: 'STAFF' }],
     code = 'HEI',
     maxAdultVisitors = 3,
     maxChildVisitors = 3,
     maxTotalVisitors = 6,
     policyNoticeDaysMin = 2,
     policyNoticeDaysMax = 28,
+    remandVisitLimitPerWeek = 3,
+    weekStartDay = 'MONDAY',
   }: Partial<PrisonDto> = {}): PrisonDto =>
     ({
       active,
@@ -47,6 +65,8 @@ export default class TestData {
       maxTotalVisitors,
       policyNoticeDaysMin,
       policyNoticeDaysMax,
+      remandVisitLimitPerWeek,
+      weekStartDay,
     }) as PrisonDto
 
   static updatePrisonDto = ({
@@ -70,7 +90,7 @@ export default class TestData {
   static prison = ({
     active = true,
     adultAgeYears = 18,
-    clients = [{ active: true, userType: 'STAFF' }],
+    clients = [{ active: true, policyNoticeDaysMax: 28, policyNoticeDaysMin: 2, userType: 'STAFF' }],
     code = 'HEI',
     maxAdultVisitors = 3,
     maxChildVisitors = 3,
@@ -78,6 +98,8 @@ export default class TestData {
     name = 'Hewell (HMP)',
     policyNoticeDaysMin = 2,
     policyNoticeDaysMax = 28,
+    remandVisitLimitPerWeek = 3,
+    weekStartDay = 'MONDAY',
   }: Partial<Prison> = {}): Prison =>
     ({
       active,
@@ -90,6 +112,8 @@ export default class TestData {
       name,
       policyNoticeDaysMin,
       policyNoticeDaysMax,
+      remandVisitLimitPerWeek,
+      weekStartDay,
     }) as Prison
 
   // Array of Visit scheduler PrisonDto
@@ -98,7 +122,7 @@ export default class TestData {
       this.prisonDto(),
       this.prisonDto({
         code: 'PNI',
-        clients: publicAndStaffClientsActive,
+        clients: [this.prisonUserClientDto({ userType: 'PUBLIC' }), this.prisonUserClientDto({ userType: 'STAFF' })],
       }),
       this.prisonDto({ active: false, code: 'WWI', clients: [] }),
     ] as PrisonDto[],
@@ -111,7 +135,7 @@ export default class TestData {
       this.prison({
         code: 'PNI',
         name: 'Preston (HMP & YOI)',
-        clients: publicAndStaffClientsActive,
+        clients: [this.prisonUserClientDto({ userType: 'PUBLIC' }), this.prisonUserClientDto({ userType: 'STAFF' })],
       }),
       this.prison({ active: false, code: 'WWI', name: 'Wandsworth (HMP & YOI)', clients: [] }),
     ] as Prison[],
@@ -153,8 +177,10 @@ export default class TestData {
     visitType = 'SOCIAL',
     weeklyFrequency = 1,
     active = true,
-    clients = publicAndStaffClientsActive,
+    clients = [this.userClientDto({ userType: 'PUBLIC' }), this.userClientDto({ userType: 'STAFF' })],
     visitOrderRestriction = 'VO_PVO',
+    isAgeRestricted = false,
+    ageRestriction = null,
   }: Partial<SessionTemplate> = {}): SessionTemplate =>
     ({
       dayOfWeek,
@@ -176,6 +202,8 @@ export default class TestData {
       active,
       clients,
       visitOrderRestriction,
+      isAgeRestricted,
+      ageRestriction,
     }) as SessionTemplate
 
   static createSessionTemplateDto = ({
@@ -193,8 +221,10 @@ export default class TestData {
     incentiveLevelGroupReferences = [],
     includeLocationGroupType = true,
     locationGroupReferences = [],
-    clients = publicAndStaffClientsActive,
+    clients = [this.userClientDto({ userType: 'STAFF' }), this.userClientDto({ userType: 'PUBLIC' })],
     visitOrderRestriction = 'VO_PVO',
+    isAgeRestricted = false,
+    ageRestriction = null,
   }: Partial<CreateSessionTemplateDto> = {}): CreateSessionTemplateDto =>
     ({
       name,
@@ -213,6 +243,8 @@ export default class TestData {
       locationGroupReferences,
       clients,
       visitOrderRestriction,
+      isAgeRestricted,
+      ageRestriction,
     }) as CreateSessionTemplateDto
 
   static updateSessionTemplateDto = ({
@@ -226,8 +258,10 @@ export default class TestData {
     incentiveLevelGroupReferences = [TestData.incentiveGroup().reference],
     includeLocationGroupType = true,
     locationGroupReferences = [TestData.locationGroup().reference],
-    clients = publicAndStaffClientsActive,
+    clients = [this.userClientDto({ userType: 'PUBLIC' }), this.userClientDto({ userType: 'STAFF' })],
     visitOrderRestriction = 'VO_PVO',
+    isAgeRestricted = false,
+    ageRestriction = null,
   }: Partial<UpdateSessionTemplateDto> = {}): UpdateSessionTemplateDto =>
     ({
       name,
@@ -242,6 +276,8 @@ export default class TestData {
       incentiveLevelGroupReferences,
       locationGroupReferences,
       visitOrderRestriction,
+      isAgeRestricted,
+      ageRestriction,
     }) as UpdateSessionTemplateDto
 
   static createCategoryGroupDto = ({

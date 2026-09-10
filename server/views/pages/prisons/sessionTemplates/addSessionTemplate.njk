@@ -331,6 +331,8 @@
           ]
         }) }}
 
+        {% include './includes/ageRestriction.njk' %}
+
         {{ govukButton({
           text: "Add",
           attributes: { "data-test": "submit" },

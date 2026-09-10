@@ -4,6 +4,66 @@
  */
 
 export interface paths {
+  '/visitor-requests/{requestReference}/withdraw': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Withdraw visitor request.
+     * @description Withdraw a pending visitor request.
+     */
+    put: operations['withdrawVisitorRequest']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visitor-requests/{requestReference}/reject': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Reject visitor request.
+     * @description Reject a visitor request.
+     */
+    put: operations['rejectVisitorRequest']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visitor-requests/{requestReference}/approve': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Approve visitor request and link visitor to booker's prisoner.
+     * @description Approve visitor request and link visitor to booker's prisoner.
+     */
+    put: operations['approveVisitorRequest']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/register/auth': {
     parameters: {
       query?: never
@@ -17,6 +77,74 @@ export interface paths {
      * @description Creates a booker to allow access to public visits  if it does not exist and / or returns the booker reference for the given auth details.
      */
     put: operations['bookerAuthorisation']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/queue-admin/retry-dlq/{dlqName}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['retryDlq']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/queue-admin/retry-all-dlqs': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['retryAllDlqs']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/queue-admin/purge-queue/{queueName}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['purgeQueue']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/public/booker/{bookerReference}/permitted/prisoners/{prisonerId}/prison': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update a permitted prisoner's registered prison code
+     * @description Update a permitted prisoner's registered prison code
+     */
+    put: operations['updatePermittedPrisonerPrison']
     post?: never
     delete?: never
     options?: never
@@ -84,46 +212,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/public/booker/config/{bookerReference}/prisoner/{prisonerId}/visitor/{visitorId}/deactivate': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    /**
-     * deactivate booker prisoner visitor
-     * @description deactivate booker prisoner visitor
-     */
-    put: operations['deactivateBookerPrisonerVisitor']
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/public/booker/config/{bookerReference}/prisoner/{prisonerId}/visitor/{visitorId}/activate': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    /**
-     * activate booker prisoner visitor
-     * @description activate booker prisoner visitor
-     */
-    put: operations['activateBookerPrisonerVisitor']
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/public/booker/config/{bookerReference}/prisoner/{prisonerId}/prison': {
     parameters: {
       query?: never
@@ -134,6 +222,7 @@ export interface paths {
     get?: never
     /**
      * Update a registered prisoner's prison code
+     * @deprecated
      * @description Update a registered prisoner's prison code
      */
     put: operations['updateBookerPrisonerPrison']
@@ -144,7 +233,7 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/public/booker/config/{bookerReference}/prisoner/{prisonerId}/deactivate': {
+  '/public/prisoner/merge': {
     parameters: {
       query?: never
       header?: never
@@ -152,19 +241,19 @@ export interface paths {
       cookie?: never
     }
     get?: never
+    put?: never
     /**
-     * deactivate booker prisoner
-     * @description deactivate booker prisoners
+     * Manually merge a prisoner number
+     * @description Updates records from an old prisoner number to a new prisoner number.
      */
-    put: operations['deactivateBookerPrisoner']
-    post?: never
+    post: operations['mergePrisoner']
     delete?: never
     options?: never
     head?: never
     patch?: never
     trace?: never
   }
-  '/public/booker/config/{bookerReference}/prisoner/{prisonerId}/activate': {
+  '/public/prisoner/merge/batch': {
     parameters: {
       query?: never
       header?: never
@@ -172,12 +261,12 @@ export interface paths {
       cookie?: never
     }
     get?: never
+    put?: never
     /**
-     * activate booker prisoner
-     * @description activate booker prisoner
+     * Manually merge prisoner numbers in a batch
+     * @description Processes each prisoner number merge in its own transaction.
      */
-    put: operations['activateBookerPrisoner']
-    post?: never
+    post: operations['mergePrisoners']
     delete?: never
     options?: never
     head?: never
@@ -204,6 +293,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/public/booker/config/{bookerReference}/prisoner/{prisonerId}/visitor/{visitorId}/unlink': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * unlink booker prisoner visitor
+     * @description unlink booker prisoner visitor
+     */
+    post: operations['unlinkBookerPrisonerVisitor']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/public/booker/config/search': {
     parameters: {
       query?: never
@@ -218,6 +327,42 @@ export interface paths {
      * @description Search for a booker using specific criteria, returns list (list of 1 entry if only 1 booker is found)
      */
     post: operations['searchForBooker']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visitor-requests/{requestReference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get a single visitor request, given a request reference
+     * @description Get a single visitor request, given a request reference
+     */
+    get: operations['getSingleVisitorRequest']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/queue-admin/get-dlq-messages/{dlqName}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getDlqMessages']
+    put?: never
+    post?: never
     delete?: never
     options?: never
     head?: never
@@ -348,21 +493,41 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/public/booker/config/{bookerReference}/prisoner/{prisonerId}/visitor/{visitorId}': {
+  '/prison/{prisonCode}/visitor-requests': {
     parameters: {
       query?: never
       header?: never
       path?: never
       cookie?: never
     }
-    get?: never
+    /**
+     * Get a list of all active visitor requests for a prison via prison code
+     * @description Get a list of all active visitor requests for a prison via prison code
+     */
+    get: operations['getVisitorRequestsByPrisonCode']
     put?: never
     post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/prison/{prisonCode}/visitor-requests/count': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
-     * unlink booker prisoner visitor
-     * @description unlink booker prisoner visitor
+     * Get a count of all visitor requests for a prison via prison code
+     * @description Get a count of all visitor requests for a prison via prison code
      */
-    delete: operations['unlinkBookerPrisonerVisitor']
+    get: operations['getVisitorRequestsCountByPrisonCode']
+    put?: never
+    post?: never
+    delete?: never
     options?: never
     head?: never
     patch?: never
@@ -372,14 +537,115 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
-    ErrorResponseDto: {
+    ErrorResponse: {
       /** Format: int32 */
       status: number
       /** Format: int32 */
-      errorCode?: number
-      userMessage?: string
-      developerMessage?: string
-      moreInfo?: string
+      errorCode?: number | null
+      userMessage?: string | null
+      developerMessage?: string | null
+      moreInfo?: string | null
+    }
+    WithdrawVisitorRequestDto: {
+      /**
+       * @description Reference of booker who rejected the visitor
+       * @example ab-cd-ef-gh
+       */
+      bookerReference: string
+    }
+    PrisonVisitorRequestDto: {
+      /**
+       * @description Visitor Request reference
+       * @example abc-def-ghi
+       */
+      reference: string
+      /**
+       * @description Booker reference
+       * @example wwe-egg-wwf
+       */
+      bookerReference: string
+      /**
+       * @description Booker email
+       * @example test@test.com
+       */
+      bookerEmail: string
+      /**
+       * @description Prisoner ID for whom visitor was requested
+       * @example A1234AA
+       */
+      prisonerId: string
+      /**
+       * @description First Name, as entered on visitor request
+       * @example John
+       */
+      firstName: string
+      /**
+       * @description Last Name, as entered on visitor request
+       * @example Smith
+       */
+      lastName: string
+      /**
+       * Format: date
+       * @description Date of birth, as entered on visitor request
+       * @example 2000-01-01
+       */
+      dateOfBirth: string
+      /**
+       * Format: date
+       * @description Date request was submitted
+       * @example 2025-10-28
+       */
+      requestedOn: string
+      /**
+       * Format: int64
+       * @description If approved, this field will contain the visitorId who was added to the booker prisoner
+       * @example 123456
+       */
+      visitorId: number | null
+      /**
+       * @description If rejected, this field will contain the rejection reason
+       * @example REJECTED
+       * @enum {string|null}
+       */
+      rejectionReason: 'ALREADY_LINKED' | 'REJECT' | null
+      /**
+       * @description The current status of the request
+       * @example REQUESTED
+       * @enum {string}
+       */
+      status: 'REQUESTED' | 'APPROVED' | 'AUTO_APPROVED' | 'REJECTED' | 'WITHDRAWN'
+      /**
+       * @description The language in which your correspondence will be sent
+       * @example en
+       * @enum {string}
+       */
+      languagePreference: 'en' | 'cy'
+    }
+    RejectVisitorRequestDto: {
+      /**
+       * @description Rejection Reason type
+       * @example ALREADY_LINKED
+       * @enum {string}
+       */
+      rejectionReason: 'ALREADY_LINKED' | 'REJECT'
+      /**
+       * @description STAFF username who rejected the visitor
+       * @example ABC123D
+       */
+      actionedBy: string
+    }
+    ApproveVisitorRequestDto: {
+      /**
+       * Format: int64
+       * @description Identifier for this contact (Person in NOMIS)
+       * @example 5871791
+       */
+      visitorId: number
+      /**
+       * @description STAFF username who approved the visitor
+       * @example ABC123D
+       */
+      actionedBy: string
     }
     /** @description Auth detail Dto */
     AuthDetailDto: {
@@ -388,21 +654,52 @@ export interface components {
       /** @description auth email */
       email: string
       /** @description auth phone number */
-      phoneNumber?: string
+      phoneNumber?: string | null
     }
     /** @description Booker reference Object, to be used with all other api call for booker information */
     BookerReference: {
       /** @description This value is the booker reference and should be used to acquire booker information */
       value: string
     }
-    ErrorResponse: {
+    RetryDlqResult: {
       /** Format: int32 */
-      status: number
+      messagesFoundCount: number
+    }
+    PurgeQueueResult: {
       /** Format: int32 */
-      errorCode?: number
-      userMessage?: string
-      developerMessage?: string
-      moreInfo?: string
+      messagesFoundCount: number
+    }
+    /** @description Update a prisoner's prison code. */
+    UpdateRegisteredPrisonerPrisonDto: {
+      /**
+       * @description Prison Id
+       * @example MDI
+       */
+      prisonId: string
+    }
+    /** @description Permitted prisoner associated with the booker. */
+    PermittedPrisonerDto: {
+      /**
+       * @description prisoner Id
+       * @example A1234AA
+       */
+      prisonerId: string
+      /**
+       * @description prison code
+       * @example MDI
+       */
+      prisonCode: string
+      /** @description Permitted visitors */
+      permittedVisitors: components['schemas']['PermittedVisitorDto'][]
+    }
+    /** @description Permitted visitor associated with the permitted prisoner. */
+    PermittedVisitorDto: {
+      /**
+       * Format: int64
+       * @description Identifier for this contact (Person in NOMIS)
+       * @example 5871791
+       */
+      visitorId: number
     }
     /** @description Details to register a prisoner to a booker. */
     RegisterPrisonerRequestDto: {
@@ -446,30 +743,6 @@ export interface components {
        */
       prisonCode: string
     }
-    /** @description Permitted prisoner associated with the booker. */
-    PermittedPrisonerDto: {
-      /**
-       * @description prisoner Id
-       * @example A1234AA
-       */
-      prisonerId: string
-      /**
-       * @description prison code
-       * @example MDI
-       */
-      prisonCode: string
-      /** @description Permitted visitors */
-      permittedVisitors: components['schemas']['PermittedVisitorDto'][]
-    }
-    /** @description Permitted visitor associated with the permitted prisoner. */
-    PermittedVisitorDto: {
-      /**
-       * Format: int64
-       * @description Identifier for this contact (Person in NOMIS)
-       * @example 5871791
-       */
-      visitorId: number
-    }
     /** @description Create permitted prisoner with permitted visitors associated with the booker. */
     CreatePermittedVisitorDto: {
       /**
@@ -482,15 +755,30 @@ export interface components {
        * @description A flag (boolean), when set to true will send booker notification of visitor linking
        * @example true
        */
-      sendNotificationFlag: boolean
-    }
-    /** @description Update a prisoner's prison code. */
-    UpdateRegisteredPrisonersPrisonDto: {
+      sendNotificationFlag: boolean | null
       /**
-       * @description Prison Id
-       * @example MDI
+       * @description STAFF username who registered the visitor
+       * @example ABC123D
        */
-      prisonId: string
+      actionedBy: string
+    }
+    /** @description Prisoner merge request with old and new prisoner numbers. */
+    PrisonerMergeRequestDto: {
+      /**
+       * @description Old prisoner number to replace.
+       * @example A1234AA
+       */
+      oldPrisonerNumber: string
+      /**
+       * @description New prisoner number to update records to.
+       * @example B1234BB
+       */
+      newPrisonerNumber: string
+    }
+    /** @description Batch prisoner merge request. */
+    PrisonerMergeBatchRequestDto: {
+      /** @description Prisoner merges to process. */
+      prisonerMerges: components['schemas']['PrisonerMergeRequestDto'][]
     }
     /** @description Visitor request details to add a visitor to a booker prisoner */
     AddVisitorToBookerPrisonerRequestDto: {
@@ -503,16 +791,68 @@ export interface components {
        * @description Date of birth of the visitor in request
        */
       dateOfBirth: string
+      /**
+       * @description The language in which your correspondence will be sent
+       * @default en
+       * @enum {string}
+       */
+      languagePreference: 'en' | 'cy'
     }
     BookerValidationErrorResponse: {
       validationError: string
       /** Format: int32 */
       status: number
       /** Format: int32 */
-      errorCode?: number
-      userMessage?: string
-      developerMessage?: string
-      moreInfo?: string
+      errorCode?: number | null
+      userMessage?: string | null
+      developerMessage?: string | null
+      moreInfo?: string | null
+    }
+    CreateVisitorRequestResponseDto: {
+      /**
+       * @description Reference of newly created visitor request
+       * @example abc-def-ghi
+       */
+      reference: string
+      /**
+       * @description Status of newly created visitor request
+       * @example AUTO_APPROVED
+       * @enum {string}
+       */
+      status: 'REQUESTED' | 'APPROVED' | 'AUTO_APPROVED' | 'REJECTED' | 'WITHDRAWN'
+      /**
+       * @description Reference of booker who submitted the request
+       * @example abc-def-ghi
+       */
+      bookerReference: string
+      /**
+       * @description The id of the booker's prisoner for the visitor request
+       * @example AA123456
+       */
+      prisonerId: string
+      /**
+       * @description The registered prison code of the booker's prisoner for the visitor request
+       * @example HEI
+       */
+      prisonId: string
+      /**
+       * Format: int64
+       * @description Identifier for a matched contact (Person in NOMIS), NULL if an automatic match for the visitor request was not found
+       */
+      visitorId?: number | null
+      /**
+       * @description The language in which your correspondence will be sent
+       * @example en
+       * @enum {string}
+       */
+      languagePreference: 'en' | 'cy'
+    }
+    ActionedByDto: {
+      /**
+       * @description STAFF username
+       * @example ABC123D
+       */
+      username: string
     }
     /** @description Booker of visits. */
     SearchBookerDto: {
@@ -524,7 +864,7 @@ export interface components {
       /** @description This is the booker reference and should be used to acquire booker information */
       reference: string
       /** @description auth reference/sub */
-      oneLoginSub: string
+      oneLoginSub: string | null
       /** @description auth email */
       email: string
       /** @description Permitted prisoners list */
@@ -534,6 +874,19 @@ export interface components {
        * @description The time of booker account creation
        */
       createdTimestamp: string
+    }
+    DlqMessage: {
+      body: {
+        [key: string]: unknown
+      }
+      messageId: string
+    }
+    GetDlqResult: {
+      /** Format: int32 */
+      messagesFoundCount: number
+      /** Format: int32 */
+      messagesReturnedCount: number
+      messages: components['schemas']['DlqMessage'][]
     }
     BookerPrisonerVisitorRequestDto: {
       /**
@@ -572,7 +925,19 @@ export interface components {
        * @example REQUESTED
        * @enum {string}
        */
-      status: 'REQUESTED' | 'APPROVED' | 'REJECTED'
+      status: 'REQUESTED' | 'APPROVED' | 'AUTO_APPROVED' | 'REJECTED' | 'WITHDRAWN'
+      /**
+       * Format: date
+       * @description Date when the visitor request was added
+       * @example 2026-05-01
+       */
+      requestedOn: string
+      /**
+       * @description The language in which your correspondence will be sent
+       * @example en
+       * @enum {string}
+       */
+      languagePreference: 'en' | 'cy'
     }
     /** @description Audit entry for booker. */
     BookerAuditDto: {
@@ -587,6 +952,10 @@ export interface components {
         | 'BOOKER_CREATED'
         | 'PRISONER_REGISTERED'
         | 'VISITOR_ADDED_TO_PRISONER'
+        | 'VISITOR_REQUEST_APPROVED_FOR_PRISONER'
+        | 'VISITOR_REQUEST_AUTO_APPROVED_FOR_PRISONER'
+        | 'VISITOR_REQUEST_REJECTED_FOR_PRISONER'
+        | 'VISITOR_REQUEST_WITHDRAWN_FOR_PRISONER'
         | 'ACTIVATED_PRISONER'
         | 'DEACTIVATED_PRISONER'
         | 'ACTIVATED_VISITOR'
@@ -605,6 +974,14 @@ export interface components {
        */
       createdTimestamp: string
     }
+    VisitorRequestsCountByPrisonCodeDto: {
+      /**
+       * Format: int32
+       * @description Count of visitor requests for prison
+       * @example 5
+       */
+      count: number
+    }
   }
   responses: never
   parameters: never
@@ -614,6 +991,192 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  withdrawVisitorRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['WithdrawVisitorRequestDto']
+      }
+    }
+    responses: {
+      /** @description Visit request withdrawn, no visitor will be linked to booker's prisoner */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonVisitorRequestDto']
+        }
+      }
+      /** @description Incorrect request to withdraw a pending visitor request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to withdraw visitor request */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Pending visitor request not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  rejectVisitorRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RejectVisitorRequestDto']
+      }
+    }
+    responses: {
+      /** @description Visit request rejected, no visitor linked to booker's prisoner */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonVisitorRequestDto']
+        }
+      }
+      /** @description Incorrect request to reject visitor request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to reject visitor request */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Booker or visitor request not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  approveVisitorRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ApproveVisitorRequestDto']
+      }
+    }
+    responses: {
+      /** @description Visit request approved and visitor linked to booker's prisoner */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonVisitorRequestDto']
+        }
+      }
+      /** @description Incorrect request to approve visitor request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to approve visitor request */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Booker or visitor request not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   bookerAuthorisation: {
     parameters: {
       query?: never
@@ -642,7 +1205,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -651,7 +1214,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions for this action */
@@ -660,7 +1223,134 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  retryDlq: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        dlqName: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['RetryDlqResult']
+        }
+      }
+    }
+  }
+  retryAllDlqs: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['RetryDlqResult'][]
+        }
+      }
+    }
+  }
+  purgeQueue: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        queueName: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PurgeQueueResult']
+        }
+      }
+    }
+  }
+  updatePermittedPrisonerPrison: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        bookerReference: string
+        prisonerId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateRegisteredPrisonerPrisonDto']
+      }
+    }
+    responses: {
+      /** @description Permitted prisoner's registered prison code was updated successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PermittedPrisonerDto']
+        }
+      }
+      /** @description Validation failure, incorrect request to update permitted prisoner's registered prison code */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions for this action */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description booker / prisoner not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
@@ -764,7 +1454,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions for this action */
@@ -773,7 +1463,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description The booker does not exist */
@@ -782,7 +1472,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
@@ -836,7 +1526,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions for this action */
@@ -845,7 +1535,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description The booker or the booker prisoner does not exist */
@@ -854,109 +1544,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
-        }
-      }
-    }
-  }
-  deactivateBookerPrisonerVisitor: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        bookerReference: string
-        prisonerId: string
-        visitorId: number
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Have deactivated booker prisoner visitor */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['PermittedVisitorDto']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
-        }
-      }
-      /** @description Incorrect permissions for this action */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
-        }
-      }
-      /** @description visitor not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
-        }
-      }
-    }
-  }
-  activateBookerPrisonerVisitor: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        bookerReference: string
-        prisonerId: string
-        visitorId: number
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Have activated booker prisoner visitor */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['PermittedVisitorDto']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
-        }
-      }
-      /** @description Incorrect permissions for this action */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
-        }
-      }
-      /** @description Visitor not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
@@ -973,11 +1561,11 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['UpdateRegisteredPrisonersPrisonDto']
+        'application/json': components['schemas']['UpdateRegisteredPrisonerPrisonDto']
       }
     }
     responses: {
-      /** @description Registered prisoner's prison code wasupdated successfully */
+      /** @description Registered prisoner's prison code was updated successfully */
       200: {
         headers: {
           [name: string]: unknown
@@ -992,7 +1580,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -1001,7 +1589,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions for this action */
@@ -1010,7 +1598,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description booker / prisoner not found */
@@ -1019,30 +1607,38 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  deactivateBookerPrisoner: {
+  mergePrisoner: {
     parameters: {
       query?: never
       header?: never
-      path: {
-        bookerReference: string
-        prisonerId: string
-      }
+      path?: never
       cookie?: never
     }
-    requestBody?: never
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerMergeRequestDto']
+      }
+    }
     responses: {
-      /** @description Have deactivated booker prisoner */
+      /** @description Prisoner number merge processed */
       200: {
         headers: {
           [name: string]: unknown
         }
+        content?: never
+      }
+      /** @description Incorrect request to merge a prisoner number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
-          '*/*': components['schemas']['PermittedPrisonerDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -1051,48 +1647,47 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Incorrect permissions for this action */
+      /** @description Incorrect permissions to merge a prisoner number */
       403: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
-        }
-      }
-      /** @description Prisoner not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  activateBookerPrisoner: {
+  mergePrisoners: {
     parameters: {
       query?: never
       header?: never
-      path: {
-        bookerReference: string
-        prisonerId: string
-      }
+      path?: never
       cookie?: never
     }
-    requestBody?: never
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerMergeBatchRequestDto']
+      }
+    }
     responses: {
-      /** @description Have activated booker prisoner */
+      /** @description Prisoner number merges processed */
       200: {
         headers: {
           [name: string]: unknown
         }
+        content?: never
+      }
+      /** @description Incorrect request to merge prisoner numbers */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
-          '*/*': components['schemas']['PermittedPrisonerDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -1101,25 +1696,16 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Incorrect permissions for this action */
+      /** @description Incorrect permissions to merge prisoner numbers */
       403: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
-        }
-      }
-      /** @description Prisoner not found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
@@ -1146,7 +1732,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': string
+          '*/*': components['schemas']['CreateVisitorRequestResponseDto']
         }
       }
       /** @description Unauthorized to access this endpoint */
@@ -1183,6 +1769,59 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['BookerValidationErrorResponse']
+        }
+      }
+    }
+  }
+  unlinkBookerPrisonerVisitor: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        bookerReference: string
+        prisonerId: string
+        visitorId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ActionedByDto']
+      }
+    }
+    responses: {
+      /** @description Successfully unlinked booker prisoner visitor */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions for this action */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description visitor not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
@@ -1225,6 +1864,88 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getSingleVisitorRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestReference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description single request successfully returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonVisitorRequestDto']
+        }
+      }
+      /** @description Incorrect request to get a single visitor request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get a single visitor request */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Booker not found or visitor request not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getDlqMessages: {
+    parameters: {
+      query?: {
+        maxMessages?: number
+      }
+      header?: never
+      path: {
+        dlqName: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['GetDlqResult']
         }
       }
     }
@@ -1282,20 +2003,14 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
   getPermittedPrisonersForBooker: {
     parameters: {
-      query?: {
-        /**
-         * @description Returns active / inactive permitted prisoners or returns all permitted prisoners if this parameter is not passed.
-         * @example true
-         */
-        active?: boolean
-      }
+      query?: never
       header?: never
       path: {
         /**
@@ -1400,13 +2115,7 @@ export interface operations {
   }
   getPermittedVisitorsForPrisoner: {
     parameters: {
-      query?: {
-        /**
-         * @description Returns active / inactive permitted visitors for a permitted prisoner or returns all permitted visitors for the permitted prisoner if this parameter is not passed.
-         * @example true
-         */
-        active?: boolean
-      }
+      query?: never
       header?: never
       path: {
         bookerReference: string
@@ -1511,7 +2220,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
@@ -1542,7 +2251,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions for this action */
@@ -1551,7 +2260,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Booker not found */
@@ -1560,7 +2269,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
@@ -1591,7 +2300,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions for this action */
@@ -1600,7 +2309,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Booker not found */
@@ -1609,30 +2318,39 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  unlinkBookerPrisonerVisitor: {
+  getVisitorRequestsByPrisonCode: {
     parameters: {
       query?: never
       header?: never
       path: {
-        bookerReference: string
-        prisonerId: string
-        visitorId: number
+        prisonCode: string
       }
       cookie?: never
     }
     requestBody?: never
     responses: {
-      /** @description Successfully unlinked booker prisoner visitor */
+      /** @description list successfully returned */
       200: {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          '*/*': components['schemas']['PrisonVisitorRequestDto'][]
+        }
+      }
+      /** @description Incorrect request to get list of active visitor requests for prison. */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
@@ -1640,25 +2358,65 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Incorrect permissions for this action */
+      /** @description Incorrect permissions to get list of active visitor requests for prison */
       403: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description visitor not found */
-      404: {
+    }
+  }
+  getVisitorRequestsCountByPrisonCode: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Count successfully returned */
+      200: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['ErrorResponseDto']
+          '*/*': components['schemas']['VisitorRequestsCountByPrisonCodeDto']
+        }
+      }
+      /** @description Incorrect request to get count of visitor requests for prison. */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get count of visitor requests for prison */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }

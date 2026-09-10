@@ -45,6 +45,8 @@ context('Session templates - add', () => {
       { active: true, userType: 'STAFF' },
       { active: false, userType: 'PUBLIC' },
     ],
+    isAgeRestricted: true,
+    ageRestriction: 16,
   })
 
   beforeEach(() => {
@@ -88,6 +90,7 @@ context('Session templates - add', () => {
     addSessionTemplatePage.addIncentiveGroups([incentiveLevelGroupOne, incentiveLevelGroupTwo])
     addSessionTemplatePage.addLocationGroups([locationGroupOne, locationGroupTwo])
     addSessionTemplatePage.setHiddenFromPublic(true)
+    addSessionTemplatePage.setAgeRestriction(16)
 
     // Submit form to add template
     cy.task('stubCreateSessionTemplate', { sessionTemplate })
@@ -121,6 +124,7 @@ context('Session templates - add', () => {
     viewSingleSessionTemplatePage.checkOnPage()
     viewSingleSessionTemplatePage.successMessage().contains(`Session template '${newTemplateName}' has been created`)
     viewSingleSessionTemplatePage.getReference().contains(sessionTemplate.reference)
-    viewSingleSessionTemplatePage.getPublicVisbility().contains('Yes')
+    viewSingleSessionTemplatePage.getPublicVisibility().contains('Yes')
+    viewSingleSessionTemplatePage.getAgeRestriction().contains('Yes – minimum visitor age is 16 years')
   })
 })

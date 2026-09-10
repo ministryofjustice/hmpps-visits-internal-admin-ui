@@ -86,6 +86,11 @@ export default class AddSessionTemplatePage extends Page {
     }
   }
 
+  setAgeRestriction = (ageRestriction: number): void => {
+    cy.get('#isAgeRestricted').check()
+    cy.get('#ageRestriction').type(ageRestriction.toString())
+  }
+
   addTemplate = (): void => {
     cy.get('[data-test="submit"]').click()
   }

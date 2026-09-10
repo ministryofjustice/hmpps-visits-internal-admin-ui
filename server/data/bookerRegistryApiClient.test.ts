@@ -6,7 +6,7 @@ import BookerRegistryApiClient from './bookerRegistryApiClient'
 import {
   CreatePermittedPrisonerDto,
   SearchBookerDto,
-  UpdateRegisteredPrisonersPrisonDto,
+  UpdateRegisteredPrisonerPrisonDto,
 } from './bookerRegistryApiTypes'
 
 describe('bookerRegistryApiClient', () => {
@@ -119,7 +119,7 @@ describe('bookerRegistryApiClient', () => {
 
         nock(config.apis.bookerRegistry.url)
           .put(`/public/booker/config/${booker.reference}/prisoner/${prisoner.prisonerId}/prison`, <
-            UpdateRegisteredPrisonersPrisonDto
+            UpdateRegisteredPrisonerPrisonDto
           >{
             prisonId: newPrisonId,
           })

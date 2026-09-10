@@ -71,13 +71,15 @@ export default class PrisonService {
     const prison: PrisonDto = {
       active: false,
       adultAgeYears: 18,
-      clients: [{ active: true, userType: 'STAFF' }],
+      clients: [{ active: true, policyNoticeDaysMax: 28, policyNoticeDaysMin: 2, userType: 'STAFF' }],
       code: prisonCode,
       maxAdultVisitors: 3,
       maxChildVisitors: 3,
       maxTotalVisitors: 6,
       policyNoticeDaysMin: 2,
       policyNoticeDaysMax: 28,
+      remandVisitLimitPerWeek: 3,
+      weekStartDay: 'MONDAY',
     }
 
     logger.info(`Prison ${prisonCode} created by ${username}`)

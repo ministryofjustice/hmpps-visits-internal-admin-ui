@@ -257,7 +257,9 @@
             }
           ]
         }) }}
-        
+
+        {% include './includes/ageRestriction.njk' %}
+
         {{ govukCheckboxes({
           name: "ignoreVisitValidationErrors",
           fieldset: {

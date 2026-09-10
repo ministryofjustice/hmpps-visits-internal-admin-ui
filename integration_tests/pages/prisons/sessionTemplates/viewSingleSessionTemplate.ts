@@ -39,7 +39,9 @@ export default class ViewSingleSessionTemplatePage extends Page {
 
   getLocationGroups = (): PageElement => cy.get('.test-template-locationGroups')
 
-  getPublicVisbility = (): PageElement => cy.get('.test-template-hideInPublicServices')
+  getPublicVisibility = (): PageElement => cy.get('.test-template-hideInPublicServices')
+
+  getAgeRestriction = (): PageElement => cy.get('.test-template-age-restricted')
 
   // Actions
   getTemplateStatusButton = (): PageElement => cy.get('[data-test=session-template-change-status-button]')

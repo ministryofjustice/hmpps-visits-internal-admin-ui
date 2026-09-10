@@ -4,6 +4,38 @@
  */
 
 export interface paths {
+  '/visits/allocation/prisoner/{prisonerId}/balance': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Endpoint to get a prisoners current balance.
+     * @description Takes a prisoner id and return their current visit order balance.
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_VISIT_ALLOCATION_API__NOMIS_API
+     *     * ROLE_VISIT_ALLOCATION_API__HMPPS_MANAGE_PRISON_VISITS_ORCHESTRATION
+     *     * ROLE_VISIT_ALLOCATION_API__VISIT_SCHEDULER
+     */
+    get: operations['getPrisonerBalance']
+    /**
+     * Endpoint to allow STAFF to manually adjust a prisoner's VO and / or PVO balance.
+     * @description Endpoint to allow STAFF to manually adjust a prisoner's VO and / or PVO balance.
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_VISIT_ALLOCATION_API__HMPPS_MANAGE_PRISON_VISITS_ORCHESTRATION
+     */
+    put: operations['adjustPrisonerVOBalance']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/queue-admin/retry-dlq/{dlqName}': {
     parameters: {
       query?: never
@@ -149,7 +181,7 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/visits/allocation/prisoner/{prisonerId}/balance': {
+  '/visits/allocation/prisoner/{prisonerId}/visit-order-history': {
     parameters: {
       query?: never
       header?: never
@@ -157,13 +189,13 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Endpoint to get a prisoners current balance.
-     * @description Takes a prisoner id and return their current visit order balance.
+     * Endpoint to get visit order history for a prisoner.
+     * @description Returns visit order history for a prisoner on or after supplied fromDate.
      *
      *     Requires one of the following roles:
-     *     * ROLE_VISIT_ALLOCATION_API__NOMIS_API
+     *     * ROLE_VISIT_ALLOCATION_API__HMPPS_MANAGE_PRISON_VISITS_ORCHESTRATION
      */
-    get: operations['getPrisonerBalance']
+    get: operations['getPrisonerVisitOrderHistory']
     put?: never
     post?: never
     delete?: never
@@ -265,6 +297,64 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
+    ErrorResponse: {
+      /** Format: int32 */
+      status: number
+      errorCode?: string | null
+      userMessage?: string | null
+      developerMessage?: string | null
+      moreInfo?: string | null
+    }
+    PrisonerBalanceAdjustmentDto: {
+      /**
+       * Format: int32
+       * @description VOs that need to be added or removed (can be negative, negative denotes REMOVE)
+       * @example 5
+       */
+      voAmount?: number | null
+      /**
+       * Format: int32
+       * @description PVOs that need to be added or removed (can be negative, negative denotes REMOVE)
+       * @example 5
+       */
+      pvoAmount?: number | null
+      /**
+       * @description Adjustment Reason Type
+       * @enum {string}
+       */
+      adjustmentReasonType:
+        | 'GOVERNOR_ADJUSTMENT'
+        | 'BALANCE_TRANSFER_FROM_PREVIOUS_PRISON'
+        | 'CORRECTIVE_ACTION'
+        | 'EXCHANGE_FOR_PIN_PHONE_CREDIT'
+        | 'OTHER'
+      /** @description Adjustment Reason Text */
+      adjustmentReasonText?: string | null
+      /**
+       * @description Staff user ID
+       * @example ABC1234
+       */
+      userName: string
+    }
+    PrisonerBalanceDto: {
+      /**
+       * @description nomsNumber of the prisoner
+       * @example AA123456
+       */
+      prisonerId: string
+      /**
+       * Format: int32
+       * @description The current VO balance (can be negative)
+       * @example 5
+       */
+      voBalance: number
+      /**
+       * Format: int32
+       * @description The current PVO balance (can be negative)
+       * @example 2
+       */
+      pvoBalance: number
+    }
     RetryDlqResult: {
       /** Format: int32 */
       messagesFoundCount: number
@@ -272,14 +362,6 @@ export interface components {
     PurgeQueueResult: {
       /** Format: int32 */
       messagesFoundCount: number
-    }
-    ErrorResponse: {
-      /** Format: int32 */
-      status: number
-      errorCode?: string
-      userMessage?: string
-      developerMessage?: string
-      moreInfo?: string
     }
     VisitAllocationPrisonerSyncDto: {
       /**
@@ -292,25 +374,25 @@ export interface components {
        * @description The previous VO balance (can be negative)
        * @example 5
        */
-      oldVoBalance?: number
+      oldVoBalance?: number | null
       /**
        * Format: int32
        * @description The change of the VO balance (can be negative)
        * @example 5
        */
-      changeToVoBalance?: number
+      changeToVoBalance?: number | null
       /**
        * Format: int32
        * @description The previous PVO balance (can be negative)
        * @example 2
        */
-      oldPvoBalance?: number
+      oldPvoBalance?: number | null
       /**
        * Format: int32
        * @description The change of the PVO balance (can be negative)
        * @example 5
        */
-      changeToPvoBalance?: number
+      changeToPvoBalance?: number | null
       /**
        * Format: date
        * @description The date which the change was made
@@ -344,7 +426,7 @@ export interface components {
        * @description Additional information on the sync reason
        * @example Manually adjusted for phone credit
        */
-      comment?: string
+      comment?: string | null
     }
     VisitAllocationPrisonerMigrationDto: {
       /**
@@ -369,7 +451,7 @@ export interface components {
        * @description The date which the last iep allocation was given
        * @example 2025-02-28
        */
-      lastVoAllocationDate?: string
+      lastVoAllocationDate?: string | null
     }
     VisitAllocationEventJobDto: {
       /**
@@ -384,24 +466,76 @@ export interface components {
        */
       totalActivePrisons: number
     }
-    PrisonerBalanceDto: {
+    VisitOrderHistoryAttributesDto: {
+      /**
+       * @description Visit order history attribute type
+       * @example VISIT_REFERENCE
+       * @enum {string}
+       */
+      attributeType:
+        | 'VISIT_REFERENCE'
+        | 'INCENTIVE_LEVEL'
+        | 'OLD_PRISONER_ID'
+        | 'NEW_PRISONER_ID'
+        | 'ADJUSTMENT_REASON_TYPE'
+        | 'VISIT_ORDER_TYPE_USED'
+      /** @description Visit order history attribute value */
+      attributeValue: string
+    }
+    VisitOrderHistoryDto: {
       /**
        * @description nomsNumber of the prisoner
        * @example AA123456
        */
       prisonerId: string
       /**
+       * @description Visit Order History Type
+       * @example VO_ALLOCATION
+       * @enum {string}
+       */
+      visitOrderHistoryType:
+        | 'MIGRATION'
+        | 'VO_ACCUMULATION'
+        | 'VO_ALLOCATION'
+        | 'VO_AND_PVO_ALLOCATION'
+        | 'PVO_ALLOCATION'
+        | 'VO_EXPIRATION'
+        | 'VO_AND_PVO_EXPIRATION'
+        | 'PVO_EXPIRATION'
+        | 'ALLOCATION_USED_BY_VISIT'
+        | 'ALLOCATION_REFUNDED_BY_VISIT_CANCELLED'
+        | 'PRISONER_BALANCE_RESET'
+        | 'SYNC_FROM_NOMIS'
+        | 'ALLOCATION_ADDED_AFTER_PRISONER_MERGE'
+        | 'ADMIN_RESET_NEGATIVE_BALANCE'
+        | 'MANUAL_PRISONER_BALANCE_ADJUSTMENT'
+      /**
+       * Format: date-time
+       * @description Visit order history created data and time
+       * @example 2018-12-01T13:45:00
+       */
+      createdTimeStamp: string
+      /**
        * Format: int32
-       * @description The current VO balance (can be negative)
+       * @description VO balance after the visit order event
        * @example 5
        */
       voBalance: number
       /**
        * Format: int32
-       * @description The current PVO balance (can be negative)
-       * @example 2
+       * @description PVO balance after the visit order event
+       * @example 5
        */
       pvoBalance: number
+      /**
+       * @description Username for who triggered the event, SYSTEM if system generated or STAFF username if STAFF event (e.g. manual adjustment)
+       * @example SYSTEM
+       */
+      userName: string
+      /** @description Comment added by STAFF, null if SYSTEM event or if no comment was entered by STAFF */
+      comment?: string | null
+      /** @description Key, value combination of attributes */
+      attributes: components['schemas']['VisitOrderHistoryAttributesDto'][]
     }
     PrisonerDetailedBalanceDto: {
       /**
@@ -409,6 +543,12 @@ export interface components {
        * @example AA123456
        */
       prisonerId: string
+      /**
+       * Format: int32
+       * @description The total of available and accumulated VO balance - any negative VO balance
+       * @example 5
+       */
+      voBalance: number
       /**
        * Format: int32
        * @description The current available VO balance
@@ -429,6 +569,12 @@ export interface components {
       negativeVos: number
       /**
        * Format: int32
+       * @description The total of available PVO balance - any negative VO balance
+       * @example 5
+       */
+      pvoBalance: number
+      /**
+       * Format: int32
        * @description The current available PVO balance
        * @example 5
        */
@@ -447,10 +593,22 @@ export interface components {
       lastVoAllocatedDate: string
       /**
        * Format: date
+       * @description The next likely VO allocation date
+       * @example 2025-01-01
+       */
+      nextVoAllocationDate: string
+      /**
+       * Format: date
        * @description The date PVOs were last allocated to the prisoner
        * @example 2025-01-01
        */
-      lastPvoAllocatedDate?: string
+      lastPvoAllocatedDate?: string | null
+      /**
+       * Format: date
+       * @description The next likely PVO allocation date
+       * @example 2025-01-01
+       */
+      nextPvoAllocationDate?: string | null
     }
     VisitAllocationPrisonerAdjustmentResponseDto: {
       /**
@@ -463,25 +621,25 @@ export interface components {
        * @description previous VO balance of prisoner (can be negative)
        * @example 2
        */
-      voBalance?: number
+      voBalance?: number | null
       /**
        * Format: int32
        * @description change to previous VO balance (can be negative)
        * @example -1
        */
-      changeToVoBalance?: number
+      changeToVoBalance?: number | null
       /**
        * Format: int32
        * @description previous PVO balance of prisoner (can be negative)
        * @example 1
        */
-      pvoBalance?: number
+      pvoBalance?: number | null
       /**
        * Format: int32
        * @description change to previous PVO balance (can be negative)
        * @example -1
        */
-      changeToPvoBalance?: number
+      changeToPvoBalance?: number | null
       /**
        * @description type of change applied
        * @example SYNC
@@ -497,6 +655,7 @@ export interface components {
         | 'ALLOCATION_ADDED_AFTER_PRISONER_MERGE'
         | 'PRISONER_BALANCE_RESET'
         | 'ADMIN_RESET_NEGATIVE_BALANCE'
+        | 'MANUAL_PRISONER_BALANCE_ADJUSTMENT'
       /**
        * @description user who applied change [If system -> SYSTEM, if user -> username]
        * @example JSMITH
@@ -517,7 +676,7 @@ export interface components {
        * @description additional information of change applied
        * @example Gave prisoner extra VO
        */
-      comment?: string
+      comment?: string | null
     }
     DlqMessage: {
       body: {
@@ -554,6 +713,125 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  getPrisonerBalance: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description prisonerId
+         * @example AA123456
+         */
+        prisonerId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Prisoner balance returned. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonerBalanceDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint. */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get prisoner balance. */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Prisoner balance not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  adjustPrisonerVOBalance: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description prisonerId
+         * @example AA123456
+         */
+        prisonerId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerBalanceAdjustmentDto']
+      }
+    }
+    responses: {
+      /** @description Prisoner VO and / or PVO balance adjusted successfully. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonerBalanceDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint. */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to adjust prisoner balance. */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Prisoner balance not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Adjust prisoner balance validation failed. */
+      422: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   retryDlq: {
     parameters: {
       query?: never
@@ -778,9 +1056,11 @@ export interface operations {
       }
     }
   }
-  getPrisonerBalance: {
+  getPrisonerVisitOrderHistory: {
     parameters: {
-      query?: never
+      query: {
+        fromDate: string
+      }
       header?: never
       path: {
         /**
@@ -793,13 +1073,13 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Prisoner balance returned. */
+      /** @description Prisoner visit order history returned from the date supplied, empty list if no history. */
       200: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['PrisonerBalanceDto']
+          '*/*': components['schemas']['VisitOrderHistoryDto'][]
         }
       }
       /** @description Unauthorized to access this endpoint. */
@@ -813,15 +1093,6 @@ export interface operations {
       }
       /** @description Incorrect permissions to get prisoner balance. */
       403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Prisoner balance not found */
-      404: {
         headers: {
           [name: string]: unknown
         }
