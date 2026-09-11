@@ -74,16 +74,14 @@ export default class TestData {
     maxAdultVisitors,
     maxChildVisitors,
     maxTotalVisitors,
-    policyNoticeDaysMin,
-    policyNoticeDaysMax,
+    clients,
   }: Partial<UpdatePrisonDto> = {}): UpdatePrisonDto =>
     ({
       adultAgeYears,
       maxAdultVisitors,
       maxChildVisitors,
       maxTotalVisitors,
-      policyNoticeDaysMin,
-      policyNoticeDaysMax,
+      clients,
     }) as UpdatePrisonDto
 
   // Prison (with name)

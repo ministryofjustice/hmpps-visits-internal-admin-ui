@@ -104,8 +104,13 @@ describe('Prison configuration', () => {
       it('should display prison booking windows information and edit action', () => {
         const prison = TestData.prison({
           clients: [
-            { active: true, userType: 'STAFF', policyNoticeDaysMin: 2, policyNoticeDaysMax: 28 },
-            { active: false, userType: 'PUBLIC', policyNoticeDaysMin: 1, policyNoticeDaysMax: 14 },
+            TestData.prisonUserClientDto(),
+            TestData.prisonUserClientDto({
+              active: false,
+              userType: 'PUBLIC',
+              policyNoticeDaysMin: 1,
+              policyNoticeDaysMax: 14,
+            }),
           ],
         })
         prisonService.getPrison.mockResolvedValue(prison)
@@ -118,8 +123,7 @@ describe('Prison configuration', () => {
             expect($('[data-test="min-days-staff"]').text()).toBe('2 days')
             expect($('[data-test="max-days-staff"]').text()).toBe('28 days')
 
-            expect($('[data-test="service-type-public"]').text().trim()).toContain('PUBLIC')
-            expect($('[data-test="service-type-public"]').text().trim()).toContain('(not enabled)')
+            expect($('[data-test="service-type-public"]').text().trim()).toMatch(/PUBLIC\s+\(not enabled\)/)
             expect($('[data-test="min-days-public"]').text()).toBe('1 day')
             expect($('[data-test="max-days-public"]').text()).toBe('14 days')
 

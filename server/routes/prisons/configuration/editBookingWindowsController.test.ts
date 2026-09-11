@@ -12,7 +12,17 @@ let flashData: FlashData
 
 const prisonService = createMockPrisonService()
 
-const prison = TestData.prison()
+const prison = TestData.prison({
+  clients: [
+    TestData.prisonUserClientDto(),
+    TestData.prisonUserClientDto({
+      active: false,
+      userType: 'PUBLIC',
+      policyNoticeDaysMin: 1,
+      policyNoticeDaysMax: 14,
+    }),
+  ],
+})
 
 beforeEach(() => {
   flashData = {}
@@ -41,8 +51,15 @@ describe('Prison booking windows edit', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('h1').text().trim()).toContain('Edit prison booking windows')
-          expect($('#policyNoticeDaysMin').val()).toBe('2')
-          expect($('#policyNoticeDaysMax').val()).toBe('28')
+
+          expect($('h2').text().trim()).toMatch(/Booking windows:\s+STAFF/)
+          expect($('input[name="minDays[STAFF]"]').val()).toBe('2')
+          expect($('input[name="maxDays[STAFF]"]').val()).toBe('28')
+
+          expect($('h2').text().trim()).toMatch(/Booking windows:\s+PUBLIC\s+\(not enabled\)/)
+          expect($('input[name="minDays[PUBLIC]"]').val()).toBe('1')
+          expect($('input[name="maxDays[PUBLIC]"]').val()).toBe('14')
+
           expect($('[data-test="submit"]').text().trim()).toBe('Update')
         })
         .expect(() => {
@@ -55,12 +72,21 @@ describe('Prison booking windows edit', () => {
     prisonService.getPrison.mockResolvedValue(prison)
 
     it('should send valid data to edit booking windows and redirect to view template', () => {
-      const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
+      const updatePrisonDto = TestData.updatePrisonDto({
+        clients: [
+          TestData.prisonUserClientDto({ policyNoticeDaysMin: 1, policyNoticeDaysMax: 10 }),
+          TestData.prisonUserClientDto({
+            active: false,
+            userType: 'PUBLIC',
+            policyNoticeDaysMin: 2,
+            policyNoticeDaysMax: 15,
+          }),
+        ],
+      })
 
       return request(app)
         .post(baseUrl)
-        .send(`policyNoticeDaysMin=${updatePrisonDto.policyNoticeDaysMin}`)
-        .send(`policyNoticeDaysMax=${updatePrisonDto.policyNoticeDaysMax}`)
+        .send({ minDays: { STAFF: 1, PUBLIC: 2 }, maxDays: { STAFF: 10, PUBLIC: 15 } })
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
@@ -75,19 +101,16 @@ describe('Prison booking windows edit', () => {
     })
 
     it('should set validation errors when min and max are too low', () => {
-      const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: -1, policyNoticeDaysMax: 0 })
-
       const expectedValidationErrors = [
-        expect.objectContaining({ path: 'policyNoticeDaysMin', msg: 'Enter a min booking window value of at least 0' }),
-        expect.objectContaining({ path: 'policyNoticeDaysMax', msg: 'Enter a max booking window value of at least 1' }),
+        expect.objectContaining({ path: 'minDays.STAFF', msg: 'Enter a minimum booking window value of at least 0' }),
+        expect.objectContaining({ path: 'maxDays.STAFF', msg: 'Enter a maximum booking window value of at least 1' }),
       ]
 
-      const expectedFormValues = updatePrisonDto
+      const expectedFormValues = { minDays: { STAFF: -1 }, maxDays: { STAFF: 0 } }
 
       return request(app)
         .post(baseUrl)
-        .send(`policyNoticeDaysMin=${updatePrisonDto.policyNoticeDaysMin}`)
-        .send(`policyNoticeDaysMax=${updatePrisonDto.policyNoticeDaysMax}`)
+        .send({ minDays: { STAFF: -1 }, maxDays: { STAFF: 0 } })
         .expect(302)
         .expect('Location', `/prisons/HEI/configuration/booking-windows/edit`)
         .expect(() => {
@@ -99,21 +122,18 @@ describe('Prison booking windows edit', () => {
     })
 
     it('should set validation errors when min is greater than max', () => {
-      const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 1 })
-
       const expectedValidationErrors = [
         expect.objectContaining({
-          path: 'policyNoticeDaysMin',
-          msg: 'Enter a min window less than or equal to the max',
+          path: 'minDays.STAFF',
+          msg: 'Enter a minimum window less than or equal to the maximum',
         }),
       ]
 
-      const expectedFormValues = updatePrisonDto
+      const expectedFormValues = { minDays: { STAFF: 10 }, maxDays: { STAFF: 1 } }
 
       return request(app)
         .post(baseUrl)
-        .send(`policyNoticeDaysMin=${updatePrisonDto.policyNoticeDaysMin}`)
-        .send(`policyNoticeDaysMax=${updatePrisonDto.policyNoticeDaysMax}`)
+        .send({ minDays: { STAFF: 10 }, maxDays: { STAFF: 1 } })
         .expect(302)
         .expect('Location', `/prisons/HEI/configuration/booking-windows/edit`)
         .expect(() => {
@@ -125,20 +145,21 @@ describe('Prison booking windows edit', () => {
     })
 
     it('should handle API errors by setting flash errors and redirecting to same page', () => {
-      const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
       prisonService.updatePrison.mockRejectedValue({ responseStatus: 400, message: 'API error!' } as SanitisedError)
 
       return request(app)
         .post(baseUrl)
-        .send(`policyNoticeDaysMin=${updatePrisonDto.policyNoticeDaysMin}`)
-        .send(`policyNoticeDaysMax=${updatePrisonDto.policyNoticeDaysMax}`)
+        .send({ minDays: { STAFF: 2, PUBLIC: 1 }, maxDays: { STAFF: 28, PUBLIC: 14 } })
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration/booking-windows/edit`)
         .expect(() => {
-          expect(prisonService.updatePrison).toHaveBeenCalledWith('user1', prison.code, updatePrisonDto)
+          expect(prisonService.updatePrison).toHaveBeenCalledWith('user1', prison.code, { clients: prison.clients })
           expect(flashProvider.mock.calls.length).toBe(2)
           expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
-          expect(flashProvider).toHaveBeenCalledWith('formValues', updatePrisonDto)
+          expect(flashProvider).toHaveBeenCalledWith('formValues', {
+            minDays: { STAFF: 2, PUBLIC: 1 },
+            maxDays: { STAFF: 28, PUBLIC: 14 },
+          })
         })
     })
   })

@@ -45,8 +45,6 @@ export default {
               maxAdultVisitors: prison.maxAdultVisitors,
               maxChildVisitors: prison.maxChildVisitors,
               maxTotalVisitors: prison.maxTotalVisitors,
-              policyNoticeDaysMin: prison.policyNoticeDaysMin,
-              policyNoticeDaysMax: prison.policyNoticeDaysMax,
             },
           },
         ],
@@ -71,14 +69,7 @@ export default {
         url: `/visitScheduler/admin/prisons/prison/${prisonDto.code}`,
         bodyPatterns: [
           {
-            equalToJson: {
-              adultAgeYears: updatePrisonDto.adultAgeYears,
-              maxAdultVisitors: updatePrisonDto.maxAdultVisitors,
-              maxChildVisitors: updatePrisonDto.maxChildVisitors,
-              maxTotalVisitors: updatePrisonDto.maxTotalVisitors,
-              policyNoticeDaysMin: updatePrisonDto.policyNoticeDaysMin,
-              policyNoticeDaysMax: updatePrisonDto.policyNoticeDaysMax,
-            },
+            equalToJson: updatePrisonDto,
           },
         ],
       },

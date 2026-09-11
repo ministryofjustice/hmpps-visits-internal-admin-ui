@@ -3,6 +3,7 @@ import { validationResult, ValidationChain, body } from 'express-validator'
 import { PrisonService } from '../../../services'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
 import { PrisonParams } from '../../../@types/requestParameterTypes'
+import { UserClientType } from '../../../data/visitSchedulerApiTypes'
 
 export default class EditBookingWindowsController {
   public constructor(private readonly prisonService: PrisonService) {}
@@ -12,9 +13,17 @@ export default class EditBookingWindowsController {
       const { prisonId } = req.params
       const prison = await this.prisonService.getPrison(prisonId)
 
+      const minDays = {} as Record<UserClientType, number>
+      const maxDays = {} as Record<UserClientType, number>
+
+      prison.clients.forEach(client => {
+        minDays[client.userType] = client.policyNoticeDaysMin
+        maxDays[client.userType] = client.policyNoticeDaysMax
+      })
+
       const formValues = {
-        policyNoticeDaysMin: prison.policyNoticeDaysMin.toString(),
-        policyNoticeDaysMax: prison.policyNoticeDaysMax.toString(),
+        minDays,
+        maxDays,
         ...req.flash('formValues')?.[0],
       }
 
@@ -40,16 +49,24 @@ export default class EditBookingWindowsController {
         return res.redirect(originalUrl)
       }
 
-      const { policyNoticeDaysMin, policyNoticeDaysMax }: { policyNoticeDaysMin: number; policyNoticeDaysMax: number } =
+      const { minDays, maxDays }: { minDays: Record<UserClientType, number>; maxDays: Record<UserClientType, number> } =
         req.body
 
       try {
-        await this.prisonService.updatePrison(res.locals.user.username, prisonId, {
-          policyNoticeDaysMin,
-          policyNoticeDaysMax,
-        })
-        req.flash('messages', { variant: 'success', title: 'Booking windows updated', text: 'Booking windows updated' })
+        // Get the current prison 'client' configuration
+        const { clients } = await this.prisonService.getPrison(prisonId)
 
+        // Set new values
+        const updatedClients = clients.map(client => ({
+          ...client,
+          policyNoticeDaysMin: minDays[client.userType],
+          policyNoticeDaysMax: maxDays[client.userType],
+        }))
+
+        // Update prison
+        await this.prisonService.updatePrison(res.locals.user.username, prisonId, { clients: updatedClients })
+
+        req.flash('messages', { variant: 'success', title: 'Booking windows updated', text: 'Booking windows updated' })
         return res.redirect(`/prisons/${prisonId}/configuration`)
       } catch (error) {
         req.flash('errors', responseErrorToFlashMessages(error))
@@ -61,23 +78,25 @@ export default class EditBookingWindowsController {
 
   public validate(): ValidationChain[] {
     return [
-      body('policyNoticeDaysMin')
+      body('minDays.*')
         .trim()
         .toInt()
         .isInt({ min: 0 })
-        .withMessage('Enter a min booking window value of at least 0'),
-      body('policyNoticeDaysMax')
+        .withMessage('Enter a minimum booking window value of at least 0'),
+
+      body('maxDays.*')
         .trim()
         .toInt()
         .isInt({ min: 1 })
-        .withMessage('Enter a max booking window value of at least 1'),
-      body(['policyNoticeDaysMin']).custom((_value, { req }) => {
-        const {
-          policyNoticeDaysMin,
-          policyNoticeDaysMax,
-        }: { policyNoticeDaysMin: number; policyNoticeDaysMax: number } = req.body
-        if (policyNoticeDaysMin > policyNoticeDaysMax) {
-          throw new Error('Enter a min window less than or equal to the max')
+        .withMessage('Enter a maximum booking window value of at least 1'),
+
+      // Check that the minimum days is less than or equal to the maximum days
+      body(['minDays.*']).custom((minDays: number, meta) => {
+        const { req, pathValues } = meta
+        const maxDays = req.body.maxDays[pathValues[0]?.toString()] as number
+
+        if (minDays > maxDays) {
+          throw new Error('Enter a minimum window less than or equal to the maximum')
         }
         return true
       }),

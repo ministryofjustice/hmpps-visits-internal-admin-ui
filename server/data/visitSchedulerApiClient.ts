@@ -69,14 +69,7 @@ export default class VisitSchedulerApiClient extends RestClient {
     return this.put(
       {
         path: `/admin/prisons/prison/${prisonCode}`,
-        data: <UpdatePrisonDto>{
-          adultAgeYears: updatePrison.adultAgeYears,
-          maxAdultVisitors: updatePrison.maxAdultVisitors,
-          maxChildVisitors: updatePrison.maxChildVisitors,
-          maxTotalVisitors: updatePrison.maxTotalVisitors,
-          policyNoticeDaysMin: updatePrison.policyNoticeDaysMin,
-          policyNoticeDaysMax: updatePrison.policyNoticeDaysMax,
-        },
+        data: updatePrison,
       },
       asSystem(),
     )
