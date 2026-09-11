@@ -1,3 +1,4 @@
+import { UserClientType } from '../../../../server/data/visitSchedulerApiTypes'
 import Page, { PageElement } from '../../page'
 
 export default class PrisonBookingWindowsPage extends Page {
@@ -5,18 +6,18 @@ export default class PrisonBookingWindowsPage extends Page {
     super(`${prisonName} Edit prison booking windows`)
   }
 
-  getMinBookingWindow = (): PageElement => cy.get('#policyNoticeDaysMin')
+  getMinBookingWindow = (service: UserClientType): PageElement => cy.get(`input[name="minDays[${service}]"]`)
 
-  getMaxBookingWindow = (): PageElement => cy.get('#policyNoticeDaysMax')
+  getMaxBookingWindow = (service: UserClientType): PageElement => cy.get(`input[name="maxDays[${service}]"]`)
 
-  enterMinBookingWindow = (value: string): void => {
-    cy.get('#policyNoticeDaysMin').clear()
-    cy.get('#policyNoticeDaysMin').type(value)
+  enterMinBookingWindow = (service: UserClientType, value: string): void => {
+    cy.get(`input[name="minDays[${service}]"]`).clear()
+    cy.get(`input[name="minDays[${service}]"]`).type(value)
   }
 
-  enterMaxBookingWindow = (value: string): void => {
-    cy.get('#policyNoticeDaysMax').clear()
-    cy.get('#policyNoticeDaysMax').type(value)
+  enterMaxBookingWindow = (service: UserClientType, value: string): void => {
+    cy.get(`input[name="maxDays[${service}]"]`).clear()
+    cy.get(`input[name="maxDays[${service}]"]`).type(value)
   }
 
   submit = (): void => {

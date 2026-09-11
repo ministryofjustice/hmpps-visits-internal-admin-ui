@@ -39,14 +39,26 @@ context('Prison configuration - booking windows', () => {
     prisonConfigPage.getMinBookingWindow('PUBLIC').contains(1)
     prisonConfigPage.getMaxBookingWindow('PUBLIC').contains(14)
 
-    // edit booking window
+    // edit booking window - form should be pre-populated with current values
     prisonConfigPage.editBookingWindows()
     const prisonBookingWindowPage = Page.verifyOnPageTitle(PrisonBookingWindowsPage, TestData.prison().name)
-    prisonBookingWindowPage.getMinBookingWindow().should('have.value', prisonDto.policyNoticeDaysMin)
-    prisonBookingWindowPage.getMaxBookingWindow().should('have.value', prisonDto.policyNoticeDaysMax)
+    prisonBookingWindowPage.getMinBookingWindow('STAFF').should('have.value', 2)
+    prisonBookingWindowPage.getMaxBookingWindow('STAFF').should('have.value', 28)
+    prisonBookingWindowPage.getMinBookingWindow('PUBLIC').should('have.value', 1)
+    prisonBookingWindowPage.getMaxBookingWindow('PUBLIC').should('have.value', 14)
 
     // update min / max values and submit
-    const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
+    const updatePrisonDto = TestData.updatePrisonDto({
+      clients: [
+        TestData.prisonUserClientDto({ policyNoticeDaysMin: 1, policyNoticeDaysMax: 29 }),
+        TestData.prisonUserClientDto({
+          active: false,
+          userType: 'PUBLIC',
+          policyNoticeDaysMin: 2,
+          policyNoticeDaysMax: 15,
+        }),
+      ],
+    })
     cy.task('stubUpdatePrison', { prisonDto: { ...prisonDto, ...updatePrisonDto }, updatePrisonDto })
     cy.task('stubGetPrison', {
       ...{
@@ -55,26 +67,29 @@ context('Prison configuration - booking windows', () => {
           TestData.prisonUserClientDto({
             active: true,
             userType: 'STAFF',
-            policyNoticeDaysMin: 10,
-            policyNoticeDaysMax: 20,
+            policyNoticeDaysMin: 1,
+            policyNoticeDaysMax: 29,
           }),
           TestData.prisonUserClientDto({
             active: false,
             userType: 'PUBLIC',
-            policyNoticeDaysMin: 1,
-            policyNoticeDaysMax: 14,
+            policyNoticeDaysMin: 2,
+            policyNoticeDaysMax: 15,
           }),
         ],
       },
     })
-    prisonBookingWindowPage.enterMinBookingWindow(updatePrisonDto.policyNoticeDaysMin.toString())
-    prisonBookingWindowPage.enterMaxBookingWindow(updatePrisonDto.policyNoticeDaysMax.toString())
+
+    prisonBookingWindowPage.enterMinBookingWindow('STAFF', '1')
+    prisonBookingWindowPage.enterMaxBookingWindow('STAFF', '29')
+    prisonBookingWindowPage.enterMinBookingWindow('PUBLIC', '2')
+    prisonBookingWindowPage.enterMaxBookingWindow('PUBLIC', '15')
     prisonBookingWindowPage.submit()
 
     // new values should be on config page
-    prisonConfigPage.getMinBookingWindow('STAFF').contains(10)
-    prisonConfigPage.getMaxBookingWindow('STAFF').contains(20)
-    prisonConfigPage.getMinBookingWindow('PUBLIC').contains(1)
-    prisonConfigPage.getMaxBookingWindow('PUBLIC').contains(14)
+    prisonConfigPage.getMinBookingWindow('STAFF').contains(1)
+    prisonConfigPage.getMaxBookingWindow('STAFF').contains(29)
+    prisonConfigPage.getMinBookingWindow('PUBLIC').contains(2)
+    prisonConfigPage.getMaxBookingWindow('PUBLIC').contains(15)
   })
 })
