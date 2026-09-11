@@ -37,15 +37,7 @@ export default {
         url: '/visitScheduler/admin/prisons/prison',
         bodyPatterns: [
           {
-            equalToJson: {
-              active: prison.active,
-              adultAgeYears: prison.adultAgeYears,
-              clients: prison.clients,
-              code: prison.code,
-              maxAdultVisitors: prison.maxAdultVisitors,
-              maxChildVisitors: prison.maxChildVisitors,
-              maxTotalVisitors: prison.maxTotalVisitors,
-            },
+            equalToJson: prison,
           },
         ],
       },
