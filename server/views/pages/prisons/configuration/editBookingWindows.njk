@@ -1,0 +1,87 @@
+{% extends "partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/input/macro.njk" import govukInput -%}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% set pageHeaderTitle = action | capitalize + " Edit prison booking windows" %}
+{% set pageTitle = applicationName + " - Edit prison booking windows - " + pageHeaderTitle %}
+{% set activePrimaryNav = "prisons" %}
+{% set backLinkHref = "/prisons/" + prison.code + "/configuration" %}
+
+{% block content %}
+  {{ super() }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ prison.name }}</span>
+        {{ pageHeaderTitle }}
+      </h1>
+
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      <form action="/prisons/{{ prison.code }}/configuration/booking-windows/edit" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {% for client in prison.clients %}
+          <h2 class="govuk-heading-m">
+            Booking windows:
+            {{ govukTag({
+              text: client.userType,
+              classes: "govuk-tag--green" if client.userType == "STAFF" else "govuk-tag--purple"
+            }) }}
+            {{ "(not enabled)" if not client.active }}
+          </h2>
+
+          {{ govukInput({
+            label: {
+              text: "Minimum",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Enter a minimum value in days"
+            },
+            id: "minDays." + client.userType,
+            name: "minDays[" + client.userType + "]",
+            classes: "govuk-input--width-2",
+            value: formValues.minDays[client.userType],
+            autocomplete: "off",
+            spellcheck: false,
+            errorMessage: errors | findError("minDays." + client.userType)
+          }) }}
+
+          {{ govukInput({
+            label: {
+              text: "Maximum",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Enter a maximum value in days"
+            },
+            id: "maxDays." + client.userType,
+            name: "maxDays[" + client.userType + "]",
+            classes: "govuk-input--width-2",
+            value: formValues.maxDays[client.userType],
+            autocomplete: "off",
+            spellcheck: false,
+            errorMessage: errors | findError("maxDays." + client.userType)
+          }) }}
+        {% endfor %}
+
+        {{ govukButton({
+          text: "Update",
+          attributes: { "data-test": "submit" },
+          preventDoubleClick: true
+        }) }}
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

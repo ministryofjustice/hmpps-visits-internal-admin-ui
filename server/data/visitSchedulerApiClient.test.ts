@@ -8,7 +8,6 @@ import {
   CreateIncentiveGroupDto,
   CreateLocationGroupDto,
   CreateSessionTemplateDto,
-  PrisonDto,
   UserClientDto,
   UserClientType,
   RequestSessionTemplateVisitStatsDto,
@@ -73,17 +72,7 @@ describe('visitSchedulerApiClient', () => {
       const prison = TestData.prisonDto()
 
       nock(config.apis.visitScheduler.url)
-        .post('/admin/prisons/prison', <PrisonDto>{
-          active: prison.active,
-          adultAgeYears: prison.adultAgeYears,
-          clients: prison.clients,
-          code: prison.code,
-          maxAdultVisitors: prison.maxAdultVisitors,
-          maxChildVisitors: prison.maxChildVisitors,
-          maxTotalVisitors: prison.maxTotalVisitors,
-          policyNoticeDaysMin: prison.policyNoticeDaysMin,
-          policyNoticeDaysMax: prison.policyNoticeDaysMax,
-        })
+        .post('/admin/prisons/prison', prison)
         .matchHeader('authorization', 'Bearer test-system-token')
         .reply(201, prison)
 
