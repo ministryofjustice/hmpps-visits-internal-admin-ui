@@ -4,6 +4,7 @@
 {% from "components/subNavigation.njk" import subNavigation %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set pageHeaderTitle = prison.name %}
 {% set pageTitle = applicationName + " - Configuration - " + pageHeaderTitle %}
@@ -30,45 +31,62 @@
       {{ subNavigation(prison.code, "config") }}
     </div>
   </div>
-  
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      <h2 class="govuk-heading-m">Booking window</h2>
+      <h2 class="govuk-heading-m">Booking windows</h2>
 
      <p class="govuk-body">Booking windows are counted in full days. For example, if the minimum window is 2 days and someone makes a request on Monday, the earliest available session will be Thursday (Tuesday and Wednesday are skipped).</p>
 
      <p class="govuk-body">If the minimum window is set to 0 days, visits can be booked for the next day.</p>
 
-      {{ govukSummaryList({
-        rows: [
+      {# Build prison client rows for booking windows #}
+      {% set prisonClientRows = [] %}
+      {% for client in prison.clients %}
+        {% set serviceType = client.userType | lower %}
+        {% set prisonClientRows = (prisonClientRows.push([
           {
-            key: {
-              text: "Min booking window"
-            },
-            value: {
-              text: prison.policyNoticeDaysMin + (" day" | pluralise(prison.policyNoticeDaysMin)),
-              classes: "test-policy-notice-days-min"
-            }
+            html: govukTag({
+              text: client.userType,
+              classes: "govuk-tag--green" if client.userType == "STAFF" else "govuk-tag--purple"
+            }) +
+            (" (not enabled)" if not client.active),
+            classes: "nowrap",
+            attributes: { "data-test": "service-type-" + serviceType }
           },
           {
-            key: {
-              text: "Max booking window"
-            },
-            value: {
-              text: prison.policyNoticeDaysMax + (" day" | pluralise(prison.policyNoticeDaysMin)),
-              classes: "test-policy-notice-days-max"
-            }
+            text: client.policyNoticeDaysMin + (" day" | pluralise(client.policyNoticeDaysMin)),
+            attributes: { "data-test": "min-days-" + serviceType }
+          },
+          {
+            text: client.policyNoticeDaysMax + (" day" | pluralise(client.policyNoticeDaysMax)),
+            attributes: { "data-test": "max-days-" + serviceType }
           }
-        ]
+        ]), prisonClientRows) %}
+      {% endfor %}
+
+      {{ govukTable({
+        head: [
+          {
+            text: "Service"
+          },
+          {
+            text: "Minimum window"
+          },
+          {
+            text: "Maximum window"
+          }
+        ],
+        rows: prisonClientRows
       }) }}
 
       {{ govukButton({
-        text: "Edit booking window",
+        text: "Edit booking windows",
         classes: "govuk-!-margin-0",
-        href: "/prisons/" + prison.code + "/configuration/booking-window/edit",
+        href: "/prisons/" + prison.code + "/configuration/booking-windows/edit",
         preventDoubleClick: true,
-        attributes: { "data-test": "booking-window-edit" }
+        attributes: { "data-test": "booking-windows-edit" }
       })}}
 
       <hr class="govuk-section-break govuk-section-break--xl">
@@ -222,7 +240,7 @@
         <span data-test="negative-balance-count"><strong>{{ negativeBalanceCount }} {{ "prisoner" | pluralise(negativeBalanceCount) }}</strong></span>
         with a negative visit allocation balance. This includes both VOs and PVOs.
       </p>
-      
+
       {% if negativeBalanceCount > 0 %}
         <p>You can reset any negative balances to zero for all prisoners at this prison.</p>
 

@@ -3,8 +3,8 @@
 {%- from "govuk/components/input/macro.njk" import govukInput -%}
 {% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
 
-{% set pageHeaderTitle = action | capitalize + " Edit prison booking window" %}
-{% set pageTitle = applicationName + " - Edit prison booking window - " + pageHeaderTitle %}
+{% set pageHeaderTitle = action | capitalize + " Edit prison booking windows" %}
+{% set pageTitle = applicationName + " - Edit prison booking windows - " + pageHeaderTitle %}
 {% set activePrimaryNav = "prisons" %}
 {% set backLinkHref = "/prisons/" + prison.code + "/configuration" %}
 
@@ -25,7 +25,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
-      <form action="/prisons/{{ prison.code }}/configuration/booking-window/edit" method="POST" novalidate>
+      <form action="/prisons/{{ prison.code }}/configuration/booking-windows/edit" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukInput({

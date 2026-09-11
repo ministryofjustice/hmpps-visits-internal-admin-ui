@@ -4,7 +4,7 @@ import { PrisonService } from '../../../services'
 import { responseErrorToFlashMessages } from '../../../utils/utils'
 import { PrisonParams } from '../../../@types/requestParameterTypes'
 
-export default class EditBookingWindowController {
+export default class EditBookingWindowsController {
   public constructor(private readonly prisonService: PrisonService) {}
 
   public view(): RequestHandler<PrisonParams> {
@@ -18,7 +18,7 @@ export default class EditBookingWindowController {
         ...req.flash('formValues')?.[0],
       }
 
-      return res.render('pages/prisons/configuration/editBookingWindow', {
+      return res.render('pages/prisons/configuration/editBookingWindows', {
         errors: req.flash('errors'),
         prison,
         formValues,
@@ -31,7 +31,7 @@ export default class EditBookingWindowController {
     return async (req, res) => {
       const { prisonId } = req.params
 
-      const originalUrl = `/prisons/${prisonId}/configuration/booking-window/edit`
+      const originalUrl = `/prisons/${prisonId}/configuration/booking-windows/edit`
 
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
@@ -48,7 +48,7 @@ export default class EditBookingWindowController {
           policyNoticeDaysMin,
           policyNoticeDaysMax,
         })
-        req.flash('messages', { variant: 'success', title: 'Booking window updated', text: 'Booking window updated' })
+        req.flash('messages', { variant: 'success', title: 'Booking windows updated', text: 'Booking windows updated' })
 
         return res.redirect(`/prisons/${prisonId}/configuration`)
       } catch (error) {

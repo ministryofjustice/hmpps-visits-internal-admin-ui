@@ -20,13 +20,15 @@ export default class PrisonConfigPage extends Page {
 
   prisonClientsLabel = (): PageElement => cy.get('[data-test=prison-clients]')
 
-  // Booking window
-  getMinBookingWindow = (): PageElement => cy.get('.test-policy-notice-days-min')
+  // Booking windows
+  getMinBookingWindow = (service: UserClientType): PageElement =>
+    cy.get(`[data-test="min-days-${service.toLocaleLowerCase()}"]`)
 
-  getMaxBookingWindow = (): PageElement => cy.get('.test-policy-notice-days-max')
+  getMaxBookingWindow = (service: UserClientType): PageElement =>
+    cy.get(`[data-test="max-days-${service.toLocaleLowerCase()}"]`)
 
-  editBookingWindow = (): void => {
-    cy.get('[data-test="booking-window-edit"]').contains('Edit booking window').click()
+  editBookingWindows = (): void => {
+    cy.get('[data-test="booking-windows-edit"]').contains('Edit booking windows').click()
   }
 
   // Contact details

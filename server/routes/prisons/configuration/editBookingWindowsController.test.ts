@@ -27,11 +27,11 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Prison booking window edit', () => {
-  const baseUrl = `/prisons/HEI/configuration/booking-window/edit`
+describe('Prison booking windows edit', () => {
+  const baseUrl = `/prisons/HEI/configuration/booking-windows/edit`
 
-  describe('GET /prisons/{:prisonId}/configuration/booking-window/edit', () => {
-    it('should render edit booking window form', () => {
+  describe('GET /prisons/{:prisonId}/configuration/booking-windows/edit', () => {
+    it('should render edit booking windows form', () => {
       prisonService.getPrison.mockResolvedValue(prison)
 
       return request(app)
@@ -40,7 +40,7 @@ describe('Prison booking window edit', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('h1').text().trim()).toContain('Edit prison booking window')
+          expect($('h1').text().trim()).toContain('Edit prison booking windows')
           expect($('#policyNoticeDaysMin').val()).toBe('2')
           expect($('#policyNoticeDaysMax').val()).toBe('28')
           expect($('[data-test="submit"]').text().trim()).toBe('Update')
@@ -51,10 +51,10 @@ describe('Prison booking window edit', () => {
     })
   })
 
-  describe('POST /prisons/{:prisonId}/configuration/booking-window/edit', () => {
+  describe('POST /prisons/{:prisonId}/configuration/booking-windows/edit', () => {
     prisonService.getPrison.mockResolvedValue(prison)
 
-    it('should send valid data to edit booking window and redirect to view template', () => {
+    it('should send valid data to edit booking windows and redirect to view template', () => {
       const updatePrisonDto = TestData.updatePrisonDto({ policyNoticeDaysMin: 10, policyNoticeDaysMax: 20 })
 
       return request(app)
@@ -67,8 +67,8 @@ describe('Prison booking window edit', () => {
           expect(flashProvider.mock.calls.length).toBe(1)
           expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
             variant: 'success',
-            title: 'Booking window updated',
-            text: 'Booking window updated',
+            title: 'Booking windows updated',
+            text: 'Booking windows updated',
           })
           expect(prisonService.updatePrison).toHaveBeenCalledWith('user1', prison.code, updatePrisonDto)
         })
@@ -89,7 +89,7 @@ describe('Prison booking window edit', () => {
         .send(`policyNoticeDaysMin=${updatePrisonDto.policyNoticeDaysMin}`)
         .send(`policyNoticeDaysMax=${updatePrisonDto.policyNoticeDaysMax}`)
         .expect(302)
-        .expect('Location', `/prisons/HEI/configuration/booking-window/edit`)
+        .expect('Location', `/prisons/HEI/configuration/booking-windows/edit`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(2)
           expect(flashProvider).toHaveBeenCalledWith('errors', expect.arrayContaining(expectedValidationErrors))
@@ -115,7 +115,7 @@ describe('Prison booking window edit', () => {
         .send(`policyNoticeDaysMin=${updatePrisonDto.policyNoticeDaysMin}`)
         .send(`policyNoticeDaysMax=${updatePrisonDto.policyNoticeDaysMax}`)
         .expect(302)
-        .expect('Location', `/prisons/HEI/configuration/booking-window/edit`)
+        .expect('Location', `/prisons/HEI/configuration/booking-windows/edit`)
         .expect(() => {
           expect(flashProvider.mock.calls.length).toBe(2)
           expect(flashProvider).toHaveBeenCalledWith('errors', expect.arrayContaining(expectedValidationErrors))
@@ -133,7 +133,7 @@ describe('Prison booking window edit', () => {
         .send(`policyNoticeDaysMin=${updatePrisonDto.policyNoticeDaysMin}`)
         .send(`policyNoticeDaysMax=${updatePrisonDto.policyNoticeDaysMax}`)
         .expect(302)
-        .expect('Location', `/prisons/${prison.code}/configuration/booking-window/edit`)
+        .expect('Location', `/prisons/${prison.code}/configuration/booking-windows/edit`)
         .expect(() => {
           expect(prisonService.updatePrison).toHaveBeenCalledWith('user1', prison.code, updatePrisonDto)
           expect(flashProvider.mock.calls.length).toBe(2)
