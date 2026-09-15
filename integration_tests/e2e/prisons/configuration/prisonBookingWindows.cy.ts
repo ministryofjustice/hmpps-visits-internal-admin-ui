@@ -28,7 +28,7 @@ context('Prison configuration - booking windows', () => {
     ],
   })
 
-  it('should should update prison booking windows', () => {
+  it('should update prison booking windows', () => {
     cy.task('stubGetPrison', prisonDto)
 
     // prison config page - should have current booking window values
