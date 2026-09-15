@@ -51,11 +51,11 @@ describe('Prison booking windows edit', () => {
           const $ = cheerio.load(res.text)
           expect($('h1').text().trim()).toContain('Edit prison booking windows')
 
-          expect($('h2').text().trim()).toMatch(/Booking windows:\s+STAFF/)
+          expect($('legend').eq(0).text().trim()).toMatch(/Booking windows:\s+STAFF/)
           expect($('input[name="minDays[STAFF]"]').val()).toBe('2')
           expect($('input[name="maxDays[STAFF]"]').val()).toBe('28')
 
-          expect($('h2').text().trim()).toMatch(/Booking windows:\s+PUBLIC\s+\(not enabled\)/)
+          expect($('legend').eq(1).text().trim()).toMatch(/Booking windows:\s+PUBLIC\s+\(not enabled\)/)
           expect($('input[name="minDays[PUBLIC]"]').val()).toBe('1')
           expect($('input[name="maxDays[PUBLIC]"]').val()).toBe('14')
 
