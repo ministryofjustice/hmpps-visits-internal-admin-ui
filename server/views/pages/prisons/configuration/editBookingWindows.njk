@@ -30,7 +30,11 @@
       <form action="/prisons/{{ prison.code }}/configuration/booking-windows/edit" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-        {% for client in prison.clients %}
+        {% set prisonClients =
+          [prison.staffPrisonUserClient]
+          .concat([prison.publicPrisonUserClient] if prison.publicPrisonUserClient else [])
+        %}
+        {% for client in prisonClients %}
           {% call govukFieldset({
             legend: {
               html:

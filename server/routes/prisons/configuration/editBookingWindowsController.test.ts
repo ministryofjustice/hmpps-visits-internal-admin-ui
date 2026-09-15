@@ -13,14 +13,11 @@ let flashData: FlashData
 const prisonService = createMockPrisonService()
 
 const prison = TestData.prison({
-  clients: [
-    TestData.staffPrisonUserClientDto(),
-    TestData.publicPrisonUserClientDto({
-      active: false,
-      policyNoticeDaysMin: 3,
-      policyNoticeDaysMax: 14,
-    }),
-  ],
+  publicPrisonUserClient: TestData.publicPrisonUserClientDto({
+    active: false,
+    policyNoticeDaysMin: 3,
+    policyNoticeDaysMax: 14,
+  }),
 })
 
 beforeEach(() => {
@@ -151,7 +148,9 @@ describe('Prison booking windows edit', () => {
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration/booking-windows/edit`)
         .expect(() => {
-          expect(prisonService.updatePrison).toHaveBeenCalledWith('user1', prison.code, { clients: prison.clients })
+          expect(prisonService.updatePrison).toHaveBeenCalledWith('user1', prison.code, {
+            clients: [prison.staffPrisonUserClient, prison.publicPrisonUserClient],
+          })
           expect(flashProvider.mock.calls.length).toBe(2)
           expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
           expect(flashProvider).toHaveBeenCalledWith('formValues', {

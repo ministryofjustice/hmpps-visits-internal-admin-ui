@@ -16,7 +16,9 @@ const prisonService = createMockPrisonService()
 const visitAllocationService = createMockVisitAllocationService()
 
 const activePrison = TestData.prison()
+const activePrisonDto = TestData.prisonDto()
 const inactivePrison = TestData.prison({ active: false })
+const inactivePrisonDto = TestData.prisonDto({ active: false })
 const prisonContactDetails = TestData.prisonContactDetails()
 const negativeBalanceCount = TestData.prisonNegativeBalanceCount()
 
@@ -103,14 +105,11 @@ describe('Prison configuration', () => {
     describe('Prison booking windows', () => {
       it('should display prison booking windows information and edit action', () => {
         const prison = TestData.prison({
-          clients: [
-            TestData.staffPrisonUserClientDto(),
-            TestData.publicPrisonUserClientDto({
-              active: false,
-              policyNoticeDaysMin: 1,
-              policyNoticeDaysMax: 14,
-            }),
-          ],
+          publicPrisonUserClient: TestData.publicPrisonUserClientDto({
+            active: false,
+            policyNoticeDaysMin: 1,
+            policyNoticeDaysMax: 14,
+          }),
         })
         prisonService.getPrison.mockResolvedValue(prison)
         return request(app)
@@ -361,7 +360,7 @@ describe('Prison configuration', () => {
   describe('Change prison status', () => {
     describe('Activate a prison', () => {
       it('should activate prison and set flash message', () => {
-        prisonService.activatePrison.mockResolvedValue(activePrison)
+        prisonService.activatePrison.mockResolvedValue(activePrisonDto)
         prisonService.getPrisonName.mockResolvedValue(activePrison.name)
 
         return request(app)
@@ -403,7 +402,7 @@ describe('Prison configuration', () => {
 
     describe('Deactivate a prison', () => {
       it('should deactivate prison and set flash message', () => {
-        prisonService.deactivatePrison.mockResolvedValue(inactivePrison)
+        prisonService.deactivatePrison.mockResolvedValue(inactivePrisonDto)
         prisonService.getPrisonName.mockResolvedValue(activePrison.name)
 
         return request(app)

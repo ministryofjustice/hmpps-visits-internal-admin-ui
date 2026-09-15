@@ -1,7 +1,13 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
-{% macro prisonClientTags(clients) -%}
-  {% set activeClients = (clients | groupby("active"))["true"] %}
+{% macro prisonClientTags(prison) -%}
+  {%- set staffPrisonUserClient = prison.staffPrisonUserClient -%}
+  {%- set publicPrisonUserClient = prison.publicPrisonUserClient -%}
+
+  {%- set activeClients = []
+    .concat([staffPrisonUserClient] if staffPrisonUserClient.active else [])
+    .concat([publicPrisonUserClient] if publicPrisonUserClient and publicPrisonUserClient.active else [])
+  -%}
 
   {{- govukTag({ text: "None", classes: "govuk-tag--grey" }) if not activeClients | length -}}
 

@@ -1,11 +1,24 @@
 import { NotFound } from 'http-errors'
 import { PrisonRegisterApiClient, VisitSchedulerApiClient } from '../data'
-import { PrisonDto, UserClientDto, UserClientType, UpdatePrisonDto } from '../data/visitSchedulerApiTypes'
+import {
+  PrisonDto,
+  PrisonUserClientDto,
+  PublicPrisonUserClientDto,
+  StaffPrisonUserClientDto,
+  UpdatePrisonDto,
+  UserClientDto,
+  UserClientType,
+} from '../data/visitSchedulerApiTypes'
 import logger from '../../logger'
-import { Prison } from '../@types/visits-admin'
 import { PrisonContactDetails } from '../data/prisonRegisterApiTypes'
 
 const A_DAY_IN_MS = 24 * 60 * 60 * 1000
+
+export interface Prison extends Omit<PrisonDto, 'clients'> {
+  name: string
+  staffPrisonUserClient: StaffPrisonUserClientDto
+  publicPrisonUserClient: PublicPrisonUserClientDto | null
+}
 
 export default class PrisonService {
   constructor(
@@ -19,24 +32,21 @@ export default class PrisonService {
   private lastUpdated = 0
 
   async getPrison(prisonId: string): Promise<Prison> {
-    await this.refreshPrisonNames()
-    const prisonDto = await this.visitSchedulerApiClient.getPrison(prisonId)
-    const name = this.prisonNames[prisonId] || 'UNKNOWN'
+    const [prisonDto] = await Promise.all([this.visitSchedulerApiClient.getPrison(prisonId), this.refreshPrisonNames()])
 
-    return { ...prisonDto, name }
+    return this.buildPrison(prisonDto)
   }
 
   async getAllPrisons(): Promise<Prison[]> {
-    const prisons = await this.visitSchedulerApiClient.getAllPrisons()
-    const prisonNames = await this.getPrisonNames()
+    const [prisonDtos] = await Promise.all([this.visitSchedulerApiClient.getAllPrisons(), this.refreshPrisonNames()])
 
-    const allPrisonsWithNames: Prison[] = prisons.map(prison => {
-      return { ...prison, name: prisonNames[prison.code] }
+    const allPrisons: Prison[] = prisonDtos.map(prison => {
+      return this.buildPrison(prison)
     })
 
-    allPrisonsWithNames.sort((a, b) => a.name.localeCompare(b.name))
+    allPrisons.sort((a, b) => a.name.localeCompare(b.name))
 
-    return allPrisonsWithNames
+    return allPrisons
   }
 
   async getPrisonContactDetails(prisonCode: string): Promise<PrisonContactDetails | null> {
@@ -146,5 +156,31 @@ export default class PrisonService {
       phoneNumber: contactDetails.phoneNumber || null,
       webAddress: contactDetails.webAddress || null,
     }
+  }
+
+  private buildPrison(prisonDto: PrisonDto): Prison {
+    return {
+      active: prisonDto.active,
+      adultAgeYears: prisonDto.adultAgeYears,
+      code: prisonDto.code,
+      maxAdultVisitors: prisonDto.maxAdultVisitors,
+      maxChildVisitors: prisonDto.maxChildVisitors,
+      maxTotalVisitors: prisonDto.maxTotalVisitors,
+      policyNoticeDaysMin: prisonDto.policyNoticeDaysMin,
+      policyNoticeDaysMax: prisonDto.policyNoticeDaysMax,
+      remandVisitLimitPerWeek: prisonDto.remandVisitLimitPerWeek,
+      weekStartDay: prisonDto.weekStartDay,
+      name: this.prisonNames[prisonDto.code] || 'UNKNOWN',
+      staffPrisonUserClient: this.getPrisonUserClient(prisonDto.clients, 'STAFF'),
+      publicPrisonUserClient: this.getPrisonUserClient(prisonDto.clients, 'PUBLIC'),
+    }
+  }
+
+  private getPrisonUserClient(clients: PrisonUserClientDto[], userType: 'STAFF'): StaffPrisonUserClientDto
+
+  private getPrisonUserClient(clients: PrisonUserClientDto[], userType: 'PUBLIC'): PublicPrisonUserClientDto | null
+
+  private getPrisonUserClient(clients: PrisonUserClientDto[], userType: 'STAFF' | 'PUBLIC') {
+    return clients.find(client => client.userType === userType) ?? null
   }
 }

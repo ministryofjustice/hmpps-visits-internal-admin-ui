@@ -16,7 +16,9 @@ export default class EditBookingWindowsController {
       const minDays = {} as Record<UserClientType, number>
       const maxDays = {} as Record<UserClientType, number>
 
-      prison.clients.forEach(client => {
+      const { staffPrisonUserClient, publicPrisonUserClient } = prison
+      const clients = [staffPrisonUserClient, publicPrisonUserClient].filter(Boolean)
+      clients.forEach(client => {
         minDays[client.userType] = client.policyNoticeDaysMin
         maxDays[client.userType] = client.policyNoticeDaysMax
       })
@@ -54,10 +56,10 @@ export default class EditBookingWindowsController {
 
       try {
         // Get the current prison 'client' configuration
-        const { clients } = await this.prisonService.getPrison(prisonId)
+        const { staffPrisonUserClient, publicPrisonUserClient } = await this.prisonService.getPrison(prisonId)
 
         // Set new values
-        const updatedClients = clients.map(client => ({
+        const updatedClients = [staffPrisonUserClient, publicPrisonUserClient].filter(Boolean).map(client => ({
           ...client,
           policyNoticeDaysMin: minDays[client.userType],
           policyNoticeDaysMax: maxDays[client.userType],
@@ -78,22 +80,31 @@ export default class EditBookingWindowsController {
 
   public validate(): ValidationChain[] {
     return [
-      // Tidy all fields
-      body(['minDays.*', 'maxDays.*']).trim().toInt(),
-
       // STAFF client values
-      body('minDays.STAFF').isInt({ min: 0 }).withMessage('Enter a minimum booking window value of at least 0'),
-      body('maxDays.STAFF').isInt({ min: 1 }).withMessage('Enter a maximum booking window value of at least 1'),
+      body('minDays.STAFF')
+        .trim()
+        .isInt({ min: 0 })
+        .withMessage('Enter a minimum booking window value of at least 0')
+        .toInt(),
+      body('maxDays.STAFF')
+        .trim()
+        .isInt({ min: 1 })
+        .withMessage('Enter a maximum booking window value of at least 1')
+        .toInt(),
 
-      // PUBLIC client values (may not be a public client)
+      // PUBLIC client values - may not be a public client so .optional()
       body('minDays.PUBLIC')
+        .trim()
         .optional({ values: 'falsy' })
         .isInt({ min: 2 })
-        .withMessage('Enter a minimum booking window value of at least 2'),
+        .withMessage('Enter a minimum booking window value of at least 2')
+        .toInt(),
       body('maxDays.PUBLIC')
+        .trim()
         .optional({ values: 'falsy' })
         .isInt({ min: 1 })
-        .withMessage('Enter a maximum booking window value of at least 1'),
+        .withMessage('Enter a maximum booking window value of at least 1')
+        .toInt(),
 
       // Check that the minimum days is less than or equal to the maximum days
       body(['minDays.*']).custom((minDays: number, meta) => {

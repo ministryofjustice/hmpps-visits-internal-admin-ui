@@ -42,8 +42,12 @@
      <p class="govuk-body">If the minimum window is set to 0 days, visits can be booked for the next day.</p>
 
       {# Build prison client rows for booking windows #}
+      {% set prisonClients =
+        [prison.staffPrisonUserClient]
+        .concat([prison.publicPrisonUserClient] if prison.publicPrisonUserClient else [])
+      %}
       {% set prisonClientRows = [] %}
-      {% for client in prison.clients %}
+      {% for client in prisonClients %}
         {% set serviceType = client.userType | lower %}
         {% set prisonClientRows = (prisonClientRows.push([
           {
@@ -156,19 +160,18 @@
 
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-        {% set prisonClientsByType = prison.clients | groupby("userType") %}
         {{ govukCheckboxes({
           name: "enabledServices",
           items: [
             {
               value: "STAFF",
               text: "Staff",
-              checked: prisonClientsByType["STAFF"][0]["active"]
+              checked: prison.staffPrisonUserClient.active
             },
             {
               value: "PUBLIC",
               text: "Public",
-              checked: prisonClientsByType["PUBLIC"][0]["active"]
+              checked: prison.publicPrisonUserClient and prison.publicPrisonUserClient.active
             }
           ]
         }) }}

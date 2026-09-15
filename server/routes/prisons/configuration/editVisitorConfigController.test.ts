@@ -14,6 +14,7 @@ let flashData: FlashData
 const prisonService = createMockPrisonService()
 
 const prison = TestData.prison()
+const prisonDto = TestData.prisonDto()
 
 beforeEach(() => {
   flashData = {}
@@ -89,7 +90,7 @@ describe('Edit visitor configuration', () => {
         maxChildVisitors: 3,
         adultAgeYears: 16,
       })
-      prisonService.updatePrison.mockResolvedValue(prison)
+      prisonService.updatePrison.mockResolvedValue(prisonDto)
 
       return request(app)
         .post(url)

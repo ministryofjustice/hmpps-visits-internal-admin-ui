@@ -1,4 +1,4 @@
-import { Prison, VisitStatsSummary } from '../../@types/visits-admin'
+import { VisitStatsSummary } from '../../@types/visits-admin'
 import { BookerDto, PermittedPrisonerDto } from '../../data/bookerRegistryApiTypes'
 import { PrisonContactDetails, PrisonName } from '../../data/prisonRegisterApiTypes'
 import { PrisonNegativeBalanceCountDto } from '../../data/visitAllocationApiTypes'
@@ -21,6 +21,7 @@ import {
   PublicPrisonUserClientDto,
   UserClientDto,
 } from '../../data/visitSchedulerApiTypes'
+import type { Prison } from '../../services/prisonService'
 
 export default class TestData {
   static userClientDto = ({ active = true, userType = 'STAFF' }: Partial<UserClientDto> = {}): UserClientDto =>
@@ -51,7 +52,7 @@ export default class TestData {
     userType: 'PUBLIC',
   })
 
-  // PrisonDto from Visit Scheduler
+  // PrisonDto - raw data from Visit Scheduler
   static prisonDto = ({
     active = true,
     adultAgeYears = 18,
@@ -94,11 +95,12 @@ export default class TestData {
       clients,
     }) as UpdatePrisonDto
 
-  // Prison (with name)
+  // Prison (type defined for service with name and user clients)
   static prison = ({
     active = true,
     adultAgeYears = 18,
-    clients = [{ active: true, policyNoticeDaysMax: 28, policyNoticeDaysMin: 2, userType: 'STAFF' }],
+    staffPrisonUserClient: staffUserClient = this.staffPrisonUserClientDto(),
+    publicPrisonUserClient: publicUserClient = null,
     code = 'HEI',
     maxAdultVisitors = 3,
     maxChildVisitors = 3,
@@ -112,7 +114,8 @@ export default class TestData {
     ({
       active,
       adultAgeYears,
-      clients,
+      staffPrisonUserClient: staffUserClient,
+      publicPrisonUserClient: publicUserClient,
       code,
       maxAdultVisitors,
       maxChildVisitors,
@@ -143,13 +146,15 @@ export default class TestData {
       this.prison({
         code: 'PNI',
         name: 'Preston (HMP & YOI)',
-        clients: [this.staffPrisonUserClientDto(), this.publicPrisonUserClientDto()], // STAFF + PUBLIC
+        staffPrisonUserClient: this.staffPrisonUserClientDto(), // STAFF + PUBLIC
+        publicPrisonUserClient: this.publicPrisonUserClientDto(),
       }),
       this.prison({
         active: false,
         code: 'WWI',
         name: 'Wandsworth (HMP & YOI)',
-        clients: [this.staffPrisonUserClientDto({ active: false })], // None active
+        staffPrisonUserClient: this.staffPrisonUserClientDto({ active: false }), // None active
+        publicPrisonUserClient: null,
       }),
     ] as Prison[],
   } = {}): Prison[] => prisons

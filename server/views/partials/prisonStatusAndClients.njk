@@ -6,5 +6,5 @@
     classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey",
     attributes: { "data-test": "prison-status" }
   }) }}
-  and enabled for <span data-test="prison-clients">{{ prisonClientTags(prison.clients) }}</span>
+  and enabled for <span data-test="prison-clients">{{ prisonClientTags(prison) }}</span>
 </p>
