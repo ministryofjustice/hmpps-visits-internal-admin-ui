@@ -26,7 +26,7 @@ context('Supported prisons', () => {
 
     supportedPrisonsPage.getPrisonNameByCode('PNI').contains('Preston')
     supportedPrisonsPage.getPrisonStatusByCode('PNI').contains('Active')
-    supportedPrisonsPage.getPrisonClientsByCode('PNI').contains('Public Staff')
+    supportedPrisonsPage.getPrisonClientsByCode('PNI').contains('Staff Public')
 
     supportedPrisonsPage.getPrisonNameByCode('WWI').contains('Wandsworth')
     supportedPrisonsPage.getPrisonStatusByCode('WWI').contains('Inactive')
