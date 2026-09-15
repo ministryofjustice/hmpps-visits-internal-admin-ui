@@ -14,10 +14,9 @@ const prisonService = createMockPrisonService()
 
 const prison = TestData.prison({
   clients: [
-    TestData.prisonUserClientDto(),
-    TestData.prisonUserClientDto({
+    TestData.staffPrisonUserClientDto(),
+    TestData.publicPrisonUserClientDto({
       active: false,
-      userType: 'PUBLIC',
       policyNoticeDaysMin: 1,
       policyNoticeDaysMax: 14,
     }),
@@ -74,10 +73,9 @@ describe('Prison booking windows edit', () => {
     it('should send valid data to edit booking windows and redirect to view template', () => {
       const updatePrisonDto = TestData.updatePrisonDto({
         clients: [
-          TestData.prisonUserClientDto({ policyNoticeDaysMin: 1, policyNoticeDaysMax: 10 }),
-          TestData.prisonUserClientDto({
+          TestData.staffPrisonUserClientDto({ policyNoticeDaysMin: 1, policyNoticeDaysMax: 10 }),
+          TestData.publicPrisonUserClientDto({
             active: false,
-            userType: 'PUBLIC',
             policyNoticeDaysMin: 2,
             policyNoticeDaysMax: 15,
           }),

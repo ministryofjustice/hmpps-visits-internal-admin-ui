@@ -104,10 +104,9 @@ describe('Prison configuration', () => {
       it('should display prison booking windows information and edit action', () => {
         const prison = TestData.prison({
           clients: [
-            TestData.prisonUserClientDto(),
-            TestData.prisonUserClientDto({
+            TestData.staffPrisonUserClientDto(),
+            TestData.publicPrisonUserClientDto({
               active: false,
-              userType: 'PUBLIC',
               policyNoticeDaysMin: 1,
               policyNoticeDaysMax: 14,
             }),

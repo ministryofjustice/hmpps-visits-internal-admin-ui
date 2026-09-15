@@ -19,10 +19,9 @@ context('Prison configuration - booking windows', () => {
 
   const prisonDto = TestData.prisonDto({
     clients: [
-      TestData.prisonUserClientDto(), // default is STAFF, min 2; max 28 day windows
-      TestData.prisonUserClientDto({
+      TestData.staffPrisonUserClientDto(), // default is STAFF, min 2; max 28 day windows
+      TestData.publicPrisonUserClientDto({
         active: false,
-        userType: 'PUBLIC',
         policyNoticeDaysMin: 1,
         policyNoticeDaysMax: 14,
       }),
@@ -50,10 +49,9 @@ context('Prison configuration - booking windows', () => {
     // update min / max values and submit
     const updatePrisonDto = TestData.updatePrisonDto({
       clients: [
-        TestData.prisonUserClientDto({ policyNoticeDaysMin: 1, policyNoticeDaysMax: 29 }),
-        TestData.prisonUserClientDto({
+        TestData.staffPrisonUserClientDto({ policyNoticeDaysMin: 1, policyNoticeDaysMax: 29 }),
+        TestData.publicPrisonUserClientDto({
           active: false,
-          userType: 'PUBLIC',
           policyNoticeDaysMin: 2,
           policyNoticeDaysMax: 15,
         }),
@@ -64,15 +62,13 @@ context('Prison configuration - booking windows', () => {
       ...{
         ...prisonDto,
         clients: [
-          TestData.prisonUserClientDto({
+          TestData.staffPrisonUserClientDto({
             active: true,
-            userType: 'STAFF',
             policyNoticeDaysMin: 1,
             policyNoticeDaysMax: 29,
           }),
-          TestData.prisonUserClientDto({
+          TestData.publicPrisonUserClientDto({
             active: false,
-            userType: 'PUBLIC',
             policyNoticeDaysMin: 2,
             policyNoticeDaysMax: 15,
           }),

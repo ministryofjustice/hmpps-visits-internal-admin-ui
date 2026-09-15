@@ -17,7 +17,8 @@ import {
   SessionTemplateVisitStatsDto,
   UpdatePrisonDto,
   UpdateLocationGroupDto,
-  PrisonUserClientDto,
+  StaffPrisonUserClientDto,
+  PublicPrisonUserClientDto,
   UserClientDto,
 } from '../../data/visitSchedulerApiTypes'
 
@@ -28,18 +29,27 @@ export default class TestData {
       userType,
     }) as UserClientDto
 
-  static prisonUserClientDto = ({
+  static staffPrisonUserClientDto = ({
     active = true,
     policyNoticeDaysMax = 28,
     policyNoticeDaysMin = 2,
-    userType = 'STAFF',
-  }: Partial<PrisonUserClientDto> = {}): PrisonUserClientDto =>
-    ({
-      active,
-      policyNoticeDaysMax,
-      policyNoticeDaysMin,
-      userType,
-    }) as PrisonUserClientDto
+  }: Partial<StaffPrisonUserClientDto> = {}): StaffPrisonUserClientDto => ({
+    active,
+    policyNoticeDaysMax,
+    policyNoticeDaysMin,
+    userType: 'STAFF',
+  })
+
+  static publicPrisonUserClientDto = ({
+    active = true,
+    policyNoticeDaysMax = 28,
+    policyNoticeDaysMin = 2,
+  }: Partial<PublicPrisonUserClientDto> = {}): PublicPrisonUserClientDto => ({
+    active,
+    policyNoticeDaysMax,
+    policyNoticeDaysMin,
+    userType: 'PUBLIC',
+  })
 
   // PrisonDto from Visit Scheduler
   static prisonDto = ({
@@ -117,25 +127,30 @@ export default class TestData {
   // Array of Visit scheduler PrisonDto
   static prisonDtos = ({
     prisons = [
-      this.prisonDto(),
+      this.prisonDto(), // STAFF
       this.prisonDto({
         code: 'PNI',
-        clients: [this.prisonUserClientDto({ userType: 'PUBLIC' }), this.prisonUserClientDto({ userType: 'STAFF' })],
+        clients: [this.staffPrisonUserClientDto(), this.publicPrisonUserClientDto()], // STAFF + PUBLIC
       }),
-      this.prisonDto({ active: false, code: 'WWI', clients: [] }),
+      this.prisonDto({ active: false, code: 'WWI', clients: [this.staffPrisonUserClientDto({ active: false })] }), // None active
     ] as PrisonDto[],
   } = {}): PrisonDto[] => prisons
 
   // Array of Prisons
   static prisons = ({
     prisons = [
-      this.prison(),
+      this.prison(), // STAFF
       this.prison({
         code: 'PNI',
         name: 'Preston (HMP & YOI)',
-        clients: [this.prisonUserClientDto({ userType: 'PUBLIC' }), this.prisonUserClientDto({ userType: 'STAFF' })],
+        clients: [this.staffPrisonUserClientDto(), this.publicPrisonUserClientDto()], // STAFF + PUBLIC
       }),
-      this.prison({ active: false, code: 'WWI', name: 'Wandsworth (HMP & YOI)', clients: [] }),
+      this.prison({
+        active: false,
+        code: 'WWI',
+        name: 'Wandsworth (HMP & YOI)',
+        clients: [this.staffPrisonUserClientDto({ active: false })], // None active
+      }),
     ] as Prison[],
   } = {}): Prison[] => prisons
 

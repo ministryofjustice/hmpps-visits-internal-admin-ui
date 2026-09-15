@@ -62,7 +62,7 @@ describe('Supported prisons', () => {
           expect($('[data-test="prison-status"]').eq(2).text().trim()).toBe('Inactive')
 
           expect($('[data-test="prison-clients"]').eq(0).text().trim()).toBe('Staff')
-          expect($('[data-test="prison-clients"]').eq(1).text().trim()).toMatch(/Public\s+Staff/)
+          expect($('[data-test="prison-clients"]').eq(1).text().trim()).toMatch(/Staff\s+Public/)
           expect($('[data-test="prison-clients"]').eq(2).text().trim()).toBe('None')
         })
     })
