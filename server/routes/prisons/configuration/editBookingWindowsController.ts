@@ -78,15 +78,20 @@ export default class EditBookingWindowsController {
 
   public validate(): ValidationChain[] {
     return [
-      body('minDays.*')
-        .trim()
-        .toInt()
-        .isInt({ min: 0 })
-        .withMessage('Enter a minimum booking window value of at least 0'),
+      // Tidy all fields
+      body(['minDays.*', 'maxDays.*']).trim().toInt(),
 
-      body('maxDays.*')
-        .trim()
-        .toInt()
+      // STAFF client values
+      body('minDays.STAFF').isInt({ min: 0 }).withMessage('Enter a minimum booking window value of at least 0'),
+      body('maxDays.STAFF').isInt({ min: 1 }).withMessage('Enter a maximum booking window value of at least 1'),
+
+      // PUBLIC client values (may not be a public client)
+      body('minDays.PUBLIC')
+        .optional({ values: 'falsy' })
+        .isInt({ min: 2 })
+        .withMessage('Enter a minimum booking window value of at least 2'),
+      body('maxDays.PUBLIC')
+        .optional({ values: 'falsy' })
         .isInt({ min: 1 })
         .withMessage('Enter a maximum booking window value of at least 1'),
 

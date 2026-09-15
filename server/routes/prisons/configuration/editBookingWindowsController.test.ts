@@ -17,7 +17,7 @@ const prison = TestData.prison({
     TestData.staffPrisonUserClientDto(),
     TestData.publicPrisonUserClientDto({
       active: false,
-      policyNoticeDaysMin: 1,
+      policyNoticeDaysMin: 3,
       policyNoticeDaysMax: 14,
     }),
   ],
@@ -56,7 +56,7 @@ describe('Prison booking windows edit', () => {
           expect($('input[name="maxDays[STAFF]"]').val()).toBe('28')
 
           expect($('legend').eq(1).text().trim()).toMatch(/Booking windows:\s+PUBLIC\s+\(not enabled\)/)
-          expect($('input[name="minDays[PUBLIC]"]').val()).toBe('1')
+          expect($('input[name="minDays[PUBLIC]"]').val()).toBe('3')
           expect($('input[name="maxDays[PUBLIC]"]').val()).toBe('14')
 
           expect($('[data-test="submit"]').text().trim()).toBe('Update')
@@ -147,7 +147,7 @@ describe('Prison booking windows edit', () => {
 
       return request(app)
         .post(baseUrl)
-        .send({ minDays: { STAFF: 2, PUBLIC: 1 }, maxDays: { STAFF: 28, PUBLIC: 14 } })
+        .send({ minDays: { STAFF: 2, PUBLIC: 3 }, maxDays: { STAFF: 28, PUBLIC: 14 } })
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration/booking-windows/edit`)
         .expect(() => {
@@ -155,7 +155,7 @@ describe('Prison booking windows edit', () => {
           expect(flashProvider.mock.calls.length).toBe(2)
           expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
           expect(flashProvider).toHaveBeenCalledWith('formValues', {
-            minDays: { STAFF: 2, PUBLIC: 1 },
+            minDays: { STAFF: 2, PUBLIC: 3 },
             maxDays: { STAFF: 28, PUBLIC: 14 },
           })
         })

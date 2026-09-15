@@ -22,7 +22,7 @@ context('Prison configuration - booking windows', () => {
       TestData.staffPrisonUserClientDto(), // default is STAFF, min 2; max 28 day windows
       TestData.publicPrisonUserClientDto({
         active: false,
-        policyNoticeDaysMin: 1,
+        policyNoticeDaysMin: 3,
         policyNoticeDaysMax: 14,
       }),
     ],
@@ -35,7 +35,7 @@ context('Prison configuration - booking windows', () => {
     const prisonConfigPage = PrisonConfigPage.goTo(prisonCode)
     prisonConfigPage.getMinBookingWindow('STAFF').contains(2)
     prisonConfigPage.getMaxBookingWindow('STAFF').contains(28)
-    prisonConfigPage.getMinBookingWindow('PUBLIC').contains(1)
+    prisonConfigPage.getMinBookingWindow('PUBLIC').contains(3)
     prisonConfigPage.getMaxBookingWindow('PUBLIC').contains(14)
 
     // edit booking window - form should be pre-populated with current values
@@ -43,7 +43,7 @@ context('Prison configuration - booking windows', () => {
     const prisonBookingWindowPage = Page.verifyOnPageTitle(PrisonBookingWindowsPage, TestData.prison().name)
     prisonBookingWindowPage.getMinBookingWindow('STAFF').should('have.value', 2)
     prisonBookingWindowPage.getMaxBookingWindow('STAFF').should('have.value', 28)
-    prisonBookingWindowPage.getMinBookingWindow('PUBLIC').should('have.value', 1)
+    prisonBookingWindowPage.getMinBookingWindow('PUBLIC').should('have.value', 3)
     prisonBookingWindowPage.getMaxBookingWindow('PUBLIC').should('have.value', 14)
 
     // update min / max values and submit
