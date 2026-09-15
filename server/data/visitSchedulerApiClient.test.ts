@@ -92,8 +92,6 @@ describe('visitSchedulerApiClient', () => {
         maxAdultVisitors: 2,
         maxChildVisitors: 4,
         maxTotalVisitors: 6,
-        policyNoticeDaysMax: 28,
-        policyNoticeDaysMin: 2,
       })
 
       nock(config.apis.visitScheduler.url)
@@ -102,8 +100,6 @@ describe('visitSchedulerApiClient', () => {
           maxAdultVisitors: updatePrisonDto.maxAdultVisitors,
           maxChildVisitors: updatePrisonDto.maxChildVisitors,
           maxTotalVisitors: updatePrisonDto.maxTotalVisitors,
-          policyNoticeDaysMin: updatePrisonDto.policyNoticeDaysMin,
-          policyNoticeDaysMax: updatePrisonDto.policyNoticeDaysMax,
         })
         .matchHeader('authorization', 'Bearer test-system-token')
         .reply(201, prisonDto)
