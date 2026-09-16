@@ -109,9 +109,10 @@ export default class EditBookingWindowsController {
       // Check that the minimum days is less than or equal to the maximum days
       body(['minDays.*']).custom((minDays: number, meta) => {
         const { req, pathValues } = meta
-        const maxDays = req.body.maxDays[pathValues[0]?.toString()] as number
+        const clientKey = pathValues[0]?.toString()
+        const maxDays = req.body?.maxDays?.[clientKey]
 
-        if (minDays > maxDays) {
+        if (maxDays !== undefined && minDays > maxDays) {
           throw new Error('Enter a minimum window less than or equal to the maximum')
         }
         return true

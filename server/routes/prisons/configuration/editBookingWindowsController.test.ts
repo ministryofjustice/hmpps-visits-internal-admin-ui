@@ -37,9 +37,7 @@ describe('Prison booking windows edit', () => {
   const baseUrl = `/prisons/HEI/configuration/booking-windows/edit`
 
   describe('GET /prisons/{:prisonId}/configuration/booking-windows/edit', () => {
-    it('should render edit booking windows form', () => {
-      prisonService.getPrison.mockResolvedValue(prison)
-
+    it('should render edit booking windows form (STAFF and PUBLIC clients)', () => {
       return request(app)
         .get(baseUrl)
         .expect(200)
@@ -62,12 +60,36 @@ describe('Prison booking windows edit', () => {
           expect(prisonService.getPrison).toHaveBeenCalledTimes(1)
         })
     })
+
+    it('should render edit booking windows form (STAFF client only)', () => {
+      prisonService.getPrison.mockResolvedValue({ ...prison, publicPrisonUserClient: null })
+
+      return request(app)
+        .get(baseUrl)
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('h1').text().trim()).toContain('Edit prison booking windows')
+
+          expect($('legend').eq(0).text().trim()).toMatch(/Booking windows:\s+STAFF/)
+          expect($('input[name="minDays[STAFF]"]').val()).toBe('2')
+          expect($('input[name="maxDays[STAFF]"]').val()).toBe('28')
+
+          expect($('legend').eq(1).length).toBe(0)
+          expect($('input[name="minDays[PUBLIC]"]').length).toBe(0)
+          expect($('input[name="maxDays[PUBLIC]"]').length).toBe(0)
+
+          expect($('[data-test="submit"]').text().trim()).toBe('Update')
+        })
+        .expect(() => {
+          expect(prisonService.getPrison).toHaveBeenCalledTimes(1)
+        })
+    })
   })
 
   describe('POST /prisons/{:prisonId}/configuration/booking-windows/edit', () => {
-    prisonService.getPrison.mockResolvedValue(prison)
-
-    it('should send valid data to edit booking windows and redirect to view template', () => {
+    it('should send valid data to edit booking windows and redirect to view template (STAFF and PUBLIC clients)', () => {
       const updatePrisonDto = TestData.updatePrisonDto({
         clients: [
           TestData.staffPrisonUserClientDto({ policyNoticeDaysMin: 1, policyNoticeDaysMax: 10 }),
@@ -82,6 +104,29 @@ describe('Prison booking windows edit', () => {
       return request(app)
         .post(baseUrl)
         .send({ minDays: { STAFF: 1, PUBLIC: 2 }, maxDays: { STAFF: 10, PUBLIC: 15 } })
+        .expect(302)
+        .expect('Location', `/prisons/${prison.code}/configuration`)
+        .expect(() => {
+          expect(flashProvider.mock.calls.length).toBe(1)
+          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
+            variant: 'success',
+            title: 'Booking windows updated',
+            text: 'Booking windows updated',
+          })
+          expect(prisonService.updatePrison).toHaveBeenCalledWith('user1', prison.code, updatePrisonDto)
+        })
+    })
+
+    it('should send valid data to edit booking windows and redirect to view template (STAFF client only)', () => {
+      prisonService.getPrison.mockResolvedValue({ ...prison, publicPrisonUserClient: null })
+
+      const updatePrisonDto = TestData.updatePrisonDto({
+        clients: [TestData.staffPrisonUserClientDto({ policyNoticeDaysMin: 1, policyNoticeDaysMax: 10 })],
+      })
+
+      return request(app)
+        .post(baseUrl)
+        .send({ minDays: { STAFF: 1 }, maxDays: { STAFF: 10 } })
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
@@ -129,6 +174,29 @@ describe('Prison booking windows edit', () => {
       return request(app)
         .post(baseUrl)
         .send({ minDays: { STAFF: 10 }, maxDays: { STAFF: 1 } })
+        .expect(302)
+        .expect('Location', `/prisons/HEI/configuration/booking-windows/edit`)
+        .expect(() => {
+          expect(flashProvider.mock.calls.length).toBe(2)
+          expect(flashProvider).toHaveBeenCalledWith('errors', expect.arrayContaining(expectedValidationErrors))
+          expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFormValues)
+          expect(prisonService.updatePrison).not.toHaveBeenCalled()
+        })
+    })
+
+    it('should set validation errors when PUBLIC min is less than 2', () => {
+      const expectedValidationErrors = [
+        expect.objectContaining({
+          path: 'minDays.PUBLIC',
+          msg: 'Enter a minimum booking window value of at least 2',
+        }),
+      ]
+
+      const expectedFormValues = { minDays: { STAFF: 10, PUBLIC: 1 }, maxDays: { STAFF: 1, PUBLIC: 14 } }
+
+      return request(app)
+        .post(baseUrl)
+        .send({ minDays: { STAFF: 10, PUBLIC: 1 }, maxDays: { STAFF: 1, PUBLIC: 14 } })
         .expect(302)
         .expect('Location', `/prisons/HEI/configuration/booking-windows/edit`)
         .expect(() => {

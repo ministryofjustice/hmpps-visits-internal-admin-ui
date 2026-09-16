@@ -21,7 +21,10 @@ export type PrisonUserClientDto = components['schemas']['PrisonUserClientDto']
 export type StaffPrisonUserClientDto = PrisonUserClientDto & { userType: 'STAFF' }
 export type PublicPrisonUserClientDto = PrisonUserClientDto & { userType: 'PUBLIC' }
 export type PrisonDto = Omit<components['schemas']['PrisonDto'], 'clients'> & {
-  clients: [StaffPrisonUserClientDto] | [StaffPrisonUserClientDto, PublicPrisonUserClientDto]
+  clients:
+    | [StaffPrisonUserClientDto]
+    | [StaffPrisonUserClientDto, PublicPrisonUserClientDto]
+    | [PublicPrisonUserClientDto, StaffPrisonUserClientDto]
 }
 export type UserClientType = components['schemas']['UserClientDto']['userType']
 export type UserClientDto = components['schemas']['UserClientDto']
