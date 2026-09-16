@@ -107,7 +107,7 @@ describe('Prison configuration', () => {
         const prison = TestData.prison({
           publicPrisonUserClient: TestData.publicPrisonUserClientDto({
             active: false,
-            policyNoticeDaysMin: 1,
+            policyNoticeDaysMin: 3,
             policyNoticeDaysMax: 14,
           }),
         })
@@ -122,7 +122,7 @@ describe('Prison configuration', () => {
             expect($('[data-test="max-days-staff"]').text()).toBe('28 days')
 
             expect($('[data-test="service-type-public"]').text().trim()).toMatch(/PUBLIC\s+\(not enabled\)/)
-            expect($('[data-test="min-days-public"]').text()).toBe('1 day')
+            expect($('[data-test="min-days-public"]').text()).toBe('3 days')
             expect($('[data-test="max-days-public"]').text()).toBe('14 days')
 
             expect($('[data-test="booking-windows-edit"]').length).toBe(1)

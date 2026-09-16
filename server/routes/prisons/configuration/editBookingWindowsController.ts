@@ -95,13 +95,13 @@ export default class EditBookingWindowsController {
       // PUBLIC client values - may not be a public client so .optional()
       body('minDays.PUBLIC')
         .trim()
-        .optional({ values: 'falsy' })
+        .optional({ values: 'undefined' })
         .isInt({ min: 2 })
         .withMessage('Enter a minimum booking window value of at least 2')
         .toInt(),
       body('maxDays.PUBLIC')
         .trim()
-        .optional({ values: 'falsy' })
+        .optional({ values: 'undefined' })
         .isInt({ min: 1 })
         .withMessage('Enter a maximum booking window value of at least 1')
         .toInt(),
