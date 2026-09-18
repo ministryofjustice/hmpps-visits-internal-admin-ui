@@ -13,14 +13,14 @@ export default class EditBookingWindowsController {
       const { prisonId } = req.params
       const prison = await this.prisonService.getPrison(prisonId)
 
-      const minDays = {} as Record<UserClientType, number>
-      const maxDays = {} as Record<UserClientType, number>
+      const minDays = {} as Record<UserClientType, string>
+      const maxDays = {} as Record<UserClientType, string>
 
       const { staffPrisonUserClient, publicPrisonUserClient } = prison
       const clients = [staffPrisonUserClient, publicPrisonUserClient].filter(Boolean)
       clients.forEach(client => {
-        minDays[client.userType] = client.policyNoticeDaysMin
-        maxDays[client.userType] = client.policyNoticeDaysMax
+        minDays[client.userType] = client.policyNoticeDaysMin.toString()
+        maxDays[client.userType] = client.policyNoticeDaysMax.toString()
       })
 
       const formValues = {
@@ -51,7 +51,7 @@ export default class EditBookingWindowsController {
         return res.redirect(originalUrl)
       }
 
-      const { minDays, maxDays }: { minDays: Record<UserClientType, number>; maxDays: Record<UserClientType, number> } =
+      const { minDays, maxDays }: { minDays: Record<UserClientType, string>; maxDays: Record<UserClientType, string> } =
         req.body
 
       try {
@@ -59,16 +59,16 @@ export default class EditBookingWindowsController {
         const { staffPrisonUserClient, publicPrisonUserClient } = await this.prisonService.getPrison(prisonId)
 
         // Update STAFF client
-        staffPrisonUserClient.policyNoticeDaysMin = minDays.STAFF
-        staffPrisonUserClient.policyNoticeDaysMax = maxDays.STAFF
+        staffPrisonUserClient.policyNoticeDaysMin = parseInt(minDays.STAFF, 10)
+        staffPrisonUserClient.policyNoticeDaysMax = parseInt(maxDays.STAFF, 10)
 
         // If prison has a PUBLIC client, update its values
         if (publicPrisonUserClient) {
           if (minDays.PUBLIC === undefined || maxDays.PUBLIC === undefined) {
             throw new Error('Missing PUBLIC client booking window values')
           }
-          publicPrisonUserClient.policyNoticeDaysMin = minDays.PUBLIC
-          publicPrisonUserClient.policyNoticeDaysMax = maxDays.PUBLIC
+          publicPrisonUserClient.policyNoticeDaysMin = parseInt(minDays.PUBLIC, 10)
+          publicPrisonUserClient.policyNoticeDaysMax = parseInt(maxDays.PUBLIC, 10)
         }
 
         // Update prison
@@ -88,40 +88,41 @@ export default class EditBookingWindowsController {
 
   public validate(): ValidationChain[] {
     return [
-      // STAFF client values
+      // STAFF client values - minimum
       body('minDays.STAFF')
         .trim()
         .isInt({ min: 0 })
         .withMessage('Enter a minimum booking window value of at least 0')
-        .toInt(),
-      body('maxDays.STAFF')
-        .trim()
-        .isInt({ min: 1 })
-        .withMessage('Enter a maximum booking window value of at least 1')
-        .toInt(),
+        .bail()
+        .if(body('maxDays.STAFF').exists().isInt())
+        .custom((minDays, { req }) => {
+          return parseInt(minDays, 10) <= parseInt(req.body.maxDays.STAFF, 10)
+        })
+        .withMessage('Enter a minimum window less than or equal to the maximum'),
+
+      // STAFF client values - maximum
+      body('maxDays.STAFF').trim().isInt({ min: 1 }).withMessage('Enter a maximum booking window value of at least 1'),
 
       // PUBLIC client values - may not be a public client so .optional() (and also checked in route handler)
+      // Minimum
       body('minDays.PUBLIC')
         .trim()
         .optional()
         .isInt({ min: 2 })
         .withMessage('Enter a minimum booking window value of at least 2')
-        .toInt(),
+        .bail()
+        .if(body('maxDays.PUBLIC').exists().isInt())
+        .custom((minDays, { req }) => {
+          return parseInt(minDays, 10) <= parseInt(req.body.maxDays.PUBLIC, 10)
+        })
+        .withMessage('Enter a minimum window less than or equal to the maximum'),
+
+      // Maximum
       body('maxDays.PUBLIC')
         .trim()
         .optional()
         .isInt({ min: 1 })
-        .withMessage('Enter a maximum booking window value of at least 1')
-        .toInt(),
-
-      // Minimum days cannot be greater than the maximum days (for given client type)
-      body(['minDays.STAFF', 'minDays.PUBLIC'])
-        .custom((minDays: number, { req, path }) => {
-          const maxDays = path === 'minDays.STAFF' ? req.body.maxDays?.STAFF : req.body.maxDays?.PUBLIC
-
-          return maxDays === undefined || minDays <= maxDays
-        })
-        .withMessage('Enter a minimum window less than or equal to the maximum'),
+        .withMessage('Enter a maximum booking window value of at least 1'),
     ]
   }
 }

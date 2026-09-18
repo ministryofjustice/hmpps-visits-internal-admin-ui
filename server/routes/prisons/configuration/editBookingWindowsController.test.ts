@@ -103,7 +103,7 @@ describe('Prison booking windows edit', () => {
 
       return request(app)
         .post(baseUrl)
-        .send({ minDays: { STAFF: 1, PUBLIC: 2 }, maxDays: { STAFF: 10, PUBLIC: 15 } })
+        .send({ minDays: { STAFF: '1', PUBLIC: '2' }, maxDays: { STAFF: '10', PUBLIC: '15' } })
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
@@ -126,7 +126,7 @@ describe('Prison booking windows edit', () => {
 
       return request(app)
         .post(baseUrl)
-        .send({ minDays: { STAFF: 1 }, maxDays: { STAFF: 10 } })
+        .send({ minDays: { STAFF: '1' }, maxDays: { STAFF: '10' } })
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
@@ -146,11 +146,11 @@ describe('Prison booking windows edit', () => {
         expect.objectContaining({ path: 'maxDays.STAFF', msg: 'Enter a maximum booking window value of at least 1' }),
       ]
 
-      const expectedFormValues = { minDays: { STAFF: -1 }, maxDays: { STAFF: 0 } }
+      const expectedFormValues = { minDays: { STAFF: '-1' }, maxDays: { STAFF: '0' } }
 
       return request(app)
         .post(baseUrl)
-        .send({ minDays: { STAFF: -1 }, maxDays: { STAFF: 0 } })
+        .send({ minDays: { STAFF: '-1' }, maxDays: { STAFF: '0' } })
         .expect(302)
         .expect('Location', `/prisons/HEI/configuration/booking-windows/edit`)
         .expect(() => {
@@ -169,11 +169,11 @@ describe('Prison booking windows edit', () => {
         }),
       ]
 
-      const expectedFormValues = { minDays: { STAFF: 10 }, maxDays: { STAFF: 1 } }
+      const expectedFormValues = { minDays: { STAFF: '10' }, maxDays: { STAFF: '1' } }
 
       return request(app)
         .post(baseUrl)
-        .send({ minDays: { STAFF: 10 }, maxDays: { STAFF: 1 } })
+        .send({ minDays: { STAFF: '10' }, maxDays: { STAFF: '1' } })
         .expect(302)
         .expect('Location', `/prisons/HEI/configuration/booking-windows/edit`)
         .expect(() => {
@@ -192,11 +192,11 @@ describe('Prison booking windows edit', () => {
         }),
       ]
 
-      const expectedFormValues = { minDays: { STAFF: 10, PUBLIC: 1 }, maxDays: { STAFF: 1, PUBLIC: 14 } }
+      const expectedFormValues = { minDays: { STAFF: '10', PUBLIC: '1' }, maxDays: { STAFF: '1', PUBLIC: '14' } }
 
       return request(app)
         .post(baseUrl)
-        .send({ minDays: { STAFF: 10, PUBLIC: 1 }, maxDays: { STAFF: 1, PUBLIC: 14 } })
+        .send({ minDays: { STAFF: '10', PUBLIC: '1' }, maxDays: { STAFF: '1', PUBLIC: '14' } })
         .expect(302)
         .expect('Location', `/prisons/HEI/configuration/booking-windows/edit`)
         .expect(() => {
@@ -214,11 +214,11 @@ describe('Prison booking windows edit', () => {
         }),
       ]
 
-      const expectedFormValues = { minDays: { STAFF: 1 }, maxDays: { STAFF: 10 } }
+      const expectedFormValues = { minDays: { STAFF: '1' }, maxDays: { STAFF: '10' } }
 
       return request(app)
         .post(baseUrl)
-        .send({ minDays: { STAFF: 1 }, maxDays: { STAFF: 10 } })
+        .send({ minDays: { STAFF: '1' }, maxDays: { STAFF: '10' } })
         .expect(302)
         .expect('Location', `/prisons/HEI/configuration/booking-windows/edit`)
         .expect(() => {
@@ -234,7 +234,7 @@ describe('Prison booking windows edit', () => {
 
       return request(app)
         .post(baseUrl)
-        .send({ minDays: { STAFF: 2, PUBLIC: 3 }, maxDays: { STAFF: 28, PUBLIC: 14 } })
+        .send({ minDays: { STAFF: '2', PUBLIC: '3' }, maxDays: { STAFF: '28', PUBLIC: '14' } })
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration/booking-windows/edit`)
         .expect(() => {
@@ -244,8 +244,8 @@ describe('Prison booking windows edit', () => {
           expect(flashProvider.mock.calls.length).toBe(2)
           expect(flashProvider).toHaveBeenCalledWith('errors', [{ msg: '400 API error!' }])
           expect(flashProvider).toHaveBeenCalledWith('formValues', {
-            minDays: { STAFF: 2, PUBLIC: 3 },
-            maxDays: { STAFF: 28, PUBLIC: 14 },
+            minDays: { STAFF: '2', PUBLIC: '3' },
+            maxDays: { STAFF: '28', PUBLIC: '14' },
           })
         })
     })
