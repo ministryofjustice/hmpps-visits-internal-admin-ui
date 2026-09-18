@@ -207,6 +207,28 @@ describe('Prison booking windows edit', () => {
         })
     })
 
+    it('should handle missing PUBLIC client booking window values', () => {
+      const expectedValidationErrors = [
+        expect.objectContaining({
+          msg: 'Missing PUBLIC client booking window values',
+        }),
+      ]
+
+      const expectedFormValues = { minDays: { STAFF: 1 }, maxDays: { STAFF: 10 } }
+
+      return request(app)
+        .post(baseUrl)
+        .send({ minDays: { STAFF: 1 }, maxDays: { STAFF: 10 } })
+        .expect(302)
+        .expect('Location', `/prisons/HEI/configuration/booking-windows/edit`)
+        .expect(() => {
+          expect(flashProvider.mock.calls.length).toBe(2)
+          expect(flashProvider).toHaveBeenCalledWith('errors', expect.arrayContaining(expectedValidationErrors))
+          expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFormValues)
+          expect(prisonService.updatePrison).not.toHaveBeenCalled()
+        })
+    })
+
     it('should handle API errors by setting flash errors and redirecting to same page', () => {
       prisonService.updatePrison.mockRejectedValue({ responseStatus: 400, message: 'API error!' } as SanitisedError)
 
