@@ -37,7 +37,8 @@ export const formatDate = (dateToFormat: string, dateFormat = 'd MMMM yyyy'): st
 }
 
 export const responseErrorToFlashMessages = (error: SanitisedError): FlashErrorMessage[] => {
-  const flashError = [{ msg: `${error.responseStatus} ${error.message}` }]
+  const msg = error.responseStatus ? `${error.responseStatus} ${error.message}` : error.message
+  const flashError = [{ msg }]
 
   if (
     error.data &&

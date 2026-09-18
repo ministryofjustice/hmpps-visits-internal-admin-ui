@@ -49,17 +49,7 @@ export default class VisitSchedulerApiClient extends RestClient {
     return this.post(
       {
         path: '/admin/prisons/prison',
-        data: <PrisonDto>{
-          active: prison.active,
-          adultAgeYears: prison.adultAgeYears,
-          clients: prison.clients,
-          code: prison.code,
-          maxAdultVisitors: prison.maxAdultVisitors,
-          maxChildVisitors: prison.maxChildVisitors,
-          maxTotalVisitors: prison.maxTotalVisitors,
-          policyNoticeDaysMin: prison.policyNoticeDaysMin,
-          policyNoticeDaysMax: prison.policyNoticeDaysMax,
-        },
+        data: prison,
       },
       asSystem(),
     )
@@ -69,14 +59,7 @@ export default class VisitSchedulerApiClient extends RestClient {
     return this.put(
       {
         path: `/admin/prisons/prison/${prisonCode}`,
-        data: <UpdatePrisonDto>{
-          adultAgeYears: updatePrison.adultAgeYears,
-          maxAdultVisitors: updatePrison.maxAdultVisitors,
-          maxChildVisitors: updatePrison.maxChildVisitors,
-          maxTotalVisitors: updatePrison.maxTotalVisitors,
-          policyNoticeDaysMin: updatePrison.policyNoticeDaysMin,
-          policyNoticeDaysMax: updatePrison.policyNoticeDaysMax,
-        },
+        data: updatePrison,
       },
       asSystem(),
     )

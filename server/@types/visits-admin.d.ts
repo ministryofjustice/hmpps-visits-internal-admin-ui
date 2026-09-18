@@ -1,13 +1,9 @@
-import { PrisonDto, SessionCapacity } from '../data/visitSchedulerApiTypes'
+import { SessionCapacity } from '../data/visitSchedulerApiTypes'
 
 export type FlashErrorMessage = { msg: string }
 export type FlashFormValues = Record<string, unknown>
 
 type TextOrHtml = { text: string; html?: never } | { text?: never; html: string }
-
-export interface Prison extends PrisonDto {
-  name: string
-}
 
 export type VisitStatsSummary = {
   bookedCount: number

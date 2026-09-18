@@ -1,4 +1,3 @@
-import { UserClientDto } from '../../../../server/data/visitSchedulerApiTypes'
 import TestData from '../../../../server/routes/testutils/testData'
 import PrisonConfigPage from '../../../pages/prisons/configuration/prisonConfig'
 
@@ -31,7 +30,13 @@ context('Prison configuration - enabled services', () => {
       prisonConfigPage.deactivateService('PUBLIC')
       cy.task('stubDeactivatePrisonClientType', { prisonCode: prisonDto.code, type: 'STAFF' })
       cy.task('stubDeactivatePrisonClientType', { prisonCode: prisonDto.code, type: 'PUBLIC' })
-      cy.task('stubGetPrison', { ...prisonDto, clients: [] })
+      cy.task('stubGetPrison', {
+        ...prisonDto,
+        clients: [
+          TestData.staffPrisonUserClientDto({ active: false }),
+          TestData.publicPrisonUserClientDto({ active: false }),
+        ],
+      })
       prisonConfigPage.updateEnabledServices()
       prisonConfigPage.successMessage().contains('Enabled services have been updated')
       prisonConfigPage.prisonClientsLabel().contains('None')
@@ -45,10 +50,7 @@ context('Prison configuration - enabled services', () => {
       cy.task('stubActivatePrisonClientType', { prisonCode: prisonDto.code, type: 'PUBLIC' })
       cy.task('stubGetPrison', {
         ...prisonDto,
-        clients: <UserClientDto[]>[
-          { active: true, userType: 'STAFF' },
-          { active: true, userType: 'PUBLIC' },
-        ],
+        clients: [TestData.staffPrisonUserClientDto(), TestData.publicPrisonUserClientDto()],
       })
       prisonConfigPage.updateEnabledServices()
       prisonConfigPage.successMessage().contains('Enabled services have been updated')

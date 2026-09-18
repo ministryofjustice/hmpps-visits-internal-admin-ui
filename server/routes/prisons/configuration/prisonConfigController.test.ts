@@ -16,7 +16,9 @@ const prisonService = createMockPrisonService()
 const visitAllocationService = createMockVisitAllocationService()
 
 const activePrison = TestData.prison()
+const activePrisonDto = TestData.prisonDto()
 const inactivePrison = TestData.prison({ active: false })
+const inactivePrisonDto = TestData.prisonDto({ active: false })
 const prisonContactDetails = TestData.prisonContactDetails()
 const negativeBalanceCount = TestData.prisonNegativeBalanceCount()
 
@@ -61,7 +63,7 @@ describe('Prison configuration', () => {
             expect($('.moj-sub-navigation__link[aria-current]').text()).toBe('Configuration')
             expect($('.moj-sub-navigation__link[aria-current]').attr('href')).toBe('/prisons/HEI/configuration')
 
-            expect($('h2').eq(0).text().trim()).toContain('Booking window')
+            expect($('h2').eq(0).text().trim()).toContain('Booking windows')
             expect($('h2').eq(1).text().trim()).toContain('Contact details')
             expect($('h2').eq(2).text().trim()).toContain('Enabled services')
             expect($('h2').eq(3).text().trim()).toContain('Visitor configuration')
@@ -100,16 +102,30 @@ describe('Prison configuration', () => {
       })
     })
 
-    describe('Prison booking window', () => {
-      it('should display prison booking window information and edit action', () => {
+    describe('Prison booking windows', () => {
+      it('should display prison booking windows information and edit action', () => {
+        const prison = TestData.prison({
+          publicPrisonUserClient: TestData.publicPrisonUserClientDto({
+            active: false,
+            policyNoticeDaysMin: 3,
+            policyNoticeDaysMax: 14,
+          }),
+        })
+        prisonService.getPrison.mockResolvedValue(prison)
         return request(app)
           .get('/prisons/HEI/configuration')
           .expect('Content-Type', /html/)
           .expect(res => {
             const $ = cheerio.load(res.text)
-            expect($('.test-policy-notice-days-min').text().trim()).toBe('2 days')
-            expect($('.test-policy-notice-days-max').text().trim()).toBe('28 days')
-            expect($('[data-test="booking-window-edit"]').length).toBe(1)
+            expect($('[data-test="service-type-staff"]').text().trim()).toBe('STAFF')
+            expect($('[data-test="min-days-staff"]').text()).toBe('2 days')
+            expect($('[data-test="max-days-staff"]').text()).toBe('28 days')
+
+            expect($('[data-test="service-type-public"]').text().trim()).toMatch(/PUBLIC\s+\(not enabled\)/)
+            expect($('[data-test="min-days-public"]').text()).toBe('3 days')
+            expect($('[data-test="max-days-public"]').text()).toBe('14 days')
+
+            expect($('[data-test="booking-windows-edit"]').length).toBe(1)
           })
       })
     })
@@ -344,7 +360,7 @@ describe('Prison configuration', () => {
   describe('Change prison status', () => {
     describe('Activate a prison', () => {
       it('should activate prison and set flash message', () => {
-        prisonService.activatePrison.mockResolvedValue(activePrison)
+        prisonService.activatePrison.mockResolvedValue(activePrisonDto)
         prisonService.getPrisonName.mockResolvedValue(activePrison.name)
 
         return request(app)
@@ -386,7 +402,7 @@ describe('Prison configuration', () => {
 
     describe('Deactivate a prison', () => {
       it('should deactivate prison and set flash message', () => {
-        prisonService.deactivatePrison.mockResolvedValue(inactivePrison)
+        prisonService.deactivatePrison.mockResolvedValue(inactivePrisonDto)
         prisonService.getPrisonName.mockResolvedValue(activePrison.name)
 
         return request(app)

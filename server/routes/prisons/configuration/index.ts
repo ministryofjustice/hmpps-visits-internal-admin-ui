@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { Services } from '../../../services'
 import PrisonConfigController from './prisonConfigController'
 import AddEditContactDetailsController from './addEditContactDetailsController'
-import EditBookingWindowController from './editBookingWindowController'
+import EditBookingWindowsController from './editBookingWindowsController'
 import EditVisitorConfigController from './editVisitorConfigController'
 import VisitAllocationController from './visitAllocationController'
 
@@ -10,7 +10,7 @@ export default function routes(services: Services): Router {
   const router = Router()
 
   const prisonConfig = new PrisonConfigController(services.prisonService, services.visitAllocationService)
-  const editBookingWindowController = new EditBookingWindowController(services.prisonService)
+  const editBookingWindowsController = new EditBookingWindowsController(services.prisonService)
   const addEditContactDetailsController = new AddEditContactDetailsController(services.prisonService)
   const editVisitorConfigController = new EditVisitorConfigController(services.prisonService)
   const visitAllocationController = new VisitAllocationController(
@@ -20,11 +20,11 @@ export default function routes(services: Services): Router {
 
   router.get('/prisons/:prisonId/configuration', prisonConfig.view())
 
-  router.get('/prisons/:prisonId/configuration/booking-window/edit', editBookingWindowController.view())
+  router.get('/prisons/:prisonId/configuration/booking-windows/edit', editBookingWindowsController.view())
   router.post(
-    '/prisons/:prisonId/configuration/booking-window/edit',
-    editBookingWindowController.validate(),
-    editBookingWindowController.submit(),
+    '/prisons/:prisonId/configuration/booking-windows/edit',
+    editBookingWindowsController.validate(),
+    editBookingWindowsController.submit(),
   )
 
   router.get(
