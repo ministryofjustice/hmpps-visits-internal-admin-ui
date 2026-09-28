@@ -22,8 +22,6 @@ generic-service:
     ENVIRONMENT_NAME: STAGING
     APPLICATIONINSIGHTS_CONNECTION_STRING: null # disable App Insights for staging
 
-    FEATURE_AGE_RESTRICTIONS: true
-
 generic-prometheus-alerts:
   alertSeverity: visits-alerts-nonprod
   businessHoursOnly: true

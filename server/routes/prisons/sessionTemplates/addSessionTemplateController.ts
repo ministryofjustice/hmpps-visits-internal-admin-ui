@@ -13,7 +13,6 @@ import daysOfWeek from '../../../constants/daysOfWeek'
 import { getPublicClientStatus, responseErrorToFlashMessages } from '../../../utils/utils'
 import visitOrderDescriptions from '../../../constants/visitOrderRestriction'
 import { PrisonParams, PrisonReferenceParams } from '../../../@types/requestParameterTypes'
-import config from '../../../config'
 
 export default class AddSessionTemplateController {
   public constructor(
@@ -179,12 +178,6 @@ export default class AddSessionTemplateController {
         visitOrderRestriction: req.body.visitOrderRestriction,
         isAgeRestricted: req.body.isAgeRestricted === 'yes',
         ageRestriction: req.body.isAgeRestricted === 'yes' ? parseInt(req.body.ageRestriction, 10) : null,
-      }
-
-      // TODO remove when feature flag removed (ensures new properties aren't sent if not enabled)
-      if (!config.features.ageRestrictions.enabled) {
-        delete createSessionTemplateDto.isAgeRestricted
-        delete createSessionTemplateDto.ageRestriction
       }
 
       try {
