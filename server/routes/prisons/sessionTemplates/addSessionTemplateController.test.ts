@@ -13,7 +13,6 @@ import {
 import TestData from '../../testutils/testData'
 import { IncentiveGroup, CategoryGroup, LocationGroup } from '../../../data/visitSchedulerApiTypes'
 import { MoJAlert } from '../../../@types/visits-admin'
-import { setFeature } from '../../../data/testutils/mockFeature'
 
 let app: Express
 let flashData: FlashData
@@ -27,8 +26,6 @@ const locationGroupService = createMockLocationGroupService()
 const prison = TestData.prison()
 
 beforeEach(() => {
-  setFeature('ageRestrictions', { enabled: true })
-
   flashData = {}
   flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
@@ -165,28 +162,6 @@ describe('Add a session template', () => {
         expect($('[data-test="submit"]').text().trim()).toBe('Add')
       })
     })
-
-    it('should NOT render the age-restriction option if the feature is DISABLED', () => {
-      setFeature('ageRestrictions', { enabled: false })
-      app = appWithAllRoutes({
-        services: {
-          prisonService,
-          sessionTemplateService,
-          incentiveGroupService,
-          categoryGroupService,
-          locationGroupService,
-        },
-      })
-
-      const results = request(app).get(url)
-
-      return results.expect('Content-Type', /html/).expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('h1').text().trim()).toContain('Add session template')
-
-        expect($('#isAgeRestricted').length).toBe(0)
-      })
-    })
   })
 
   describe('POST /prisons/{:prisonId}/session-templates/add', () => {
@@ -262,65 +237,6 @@ describe('Add a session template', () => {
         .send(`locationGroupReferences=${locationGroupReferences[0]}`)
         .send(`locationGroupReferences=${locationGroupReferences[1]}`)
         .send(`hideInPublicServices=yes`)
-        .send(`isAgeRestricted=yes`)
-        .send('ageRestriction=18')
-
-      // Then
-      return results
-        .expect(302)
-        .expect('location', `/prisons/${prison.code}/session-templates/${sessionTemplate.reference}`)
-        .expect(() => {
-          expect(flashProvider.mock.calls.length).toBe(1)
-          expect(flashProvider).toHaveBeenCalledWith('messages', <MoJAlert>{
-            variant: 'success',
-            title: 'Session template created',
-            text: `Session template '${sessionTemplate.name}' has been created`,
-          })
-          expect(sessionTemplateService.createSessionTemplate).toHaveBeenCalledWith('user1', createSessionTemplateDto)
-        })
-    })
-
-    it('should NOT send age-restriction properties if feature is DISABLED', () => {
-      setFeature('ageRestrictions', { enabled: false })
-      app = appWithAllRoutes({
-        services: {
-          prisonService,
-          sessionTemplateService,
-          incentiveGroupService,
-          categoryGroupService,
-          locationGroupService,
-        },
-      })
-
-      const sessionTemplate = TestData.sessionTemplate()
-      sessionTemplateService.createSessionTemplate.mockResolvedValue(sessionTemplate)
-
-      const createSessionTemplateDto = TestData.createSessionTemplateDto()
-      delete createSessionTemplateDto.isAgeRestricted
-      delete createSessionTemplateDto.ageRestriction
-
-      // When
-      const results = request(app)
-        .post(url)
-        .send('name=session template name')
-        .send('dayOfWeek=MONDAY')
-        .send('startTime=13:00')
-        .send('endTime=14:00')
-        .send('weeklyFrequency=2')
-        .send('validFromDateDay=01')
-        .send('validFromDateMonth=02')
-        .send('validFromDateYear=2023')
-        .send('hasEndDate=yes')
-        .send('validToDateDay=31')
-        .send('validToDateMonth=12')
-        .send('validToDateYear=2024')
-        .send('visitOrderRestriction=VO_PVO')
-        .send('openCapacity=10')
-        .send('closedCapacity=5')
-        .send('visitRoom=visit room name')
-        .send('hasIncentiveGroups=no')
-        .send('hasCategoryGroups=no')
-        .send('hasLocationGroups=no')
         .send(`isAgeRestricted=yes`)
         .send('ageRestriction=18')
 

@@ -21,7 +21,5 @@ generic-service:
     STAFF_SERVICE_URL: "https://manage-prison-visits-dev.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: DEV
 
-    FEATURE_AGE_RESTRICTIONS: true
-
 generic-prometheus-alerts:
   businessHoursOnly: true
