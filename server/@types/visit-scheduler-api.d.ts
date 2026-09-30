@@ -1889,6 +1889,17 @@ export interface components {
     }
     /** @description Visit Session */
     AvailableVisitSessionDto: {
+      /**
+       * Format: int32
+       * @description Minimum required age for attending the session
+       * @example 18
+       */
+      ageRestriction: number
+      /**
+       * @description Determines if the age restriction is enabled for this session
+       * @example true
+       */
+      isAgeRestricted: boolean
       /** @description Session conflicts */
       sessionConflicts: 'AGE_RESTRICTION'[]
       /**
@@ -2785,6 +2796,12 @@ export interface components {
        */
       active: boolean
       /**
+       * @description Prison client type
+       * @example STAFF
+       * @enum {string}
+       */
+      clientType: 'STAFF' | 'PUBLIC'
+      /**
        * Format: int32
        * @description maximum number of days notice from the current date to booked a visit
        * @example 28
@@ -2797,11 +2814,12 @@ export interface components {
        */
       policyNoticeDaysMin: number
       /**
+       * @deprecated
        * @description User type
        * @example STAFF
        * @enum {string}
        */
-      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+      userType: 'STAFF' | 'PUBLIC'
     }
     PrisonerAlertCreatedUpdatedNotificationDto: {
       activeAlerts: string[]
@@ -2984,6 +3002,12 @@ export interface components {
     }
     /** @description Session schedule */
     SessionScheduleDto: {
+      /**
+       * Format: int32
+       * @description Minimum required age for attending the session
+       * @example 18
+       */
+      ageRestriction: number
       /** @description Determines behaviour of category groups. True will mean the category groups are inclusive, false means they are exclusive. */
       areCategoryGroupsInclusive: boolean
       /** @description Determines behaviour of incentive groups. True will mean the incentive groups are inclusive, false means they are exclusive. */
@@ -2992,6 +3016,11 @@ export interface components {
       areLocationGroupsInclusive: boolean
       /** @description The capacity for the session */
       capacity: components['schemas']['SessionCapacityDto']
+      /**
+       * @description Determines if the age restriction is enabled for this session
+       * @example true
+       */
+      isAgeRestricted: boolean
       /** @description Flag to indicate if the session is excluded for the date. True will indicate that the session is excluded. */
       isSessionExcluded: boolean
       /**
@@ -3249,18 +3278,6 @@ export interface components {
       maxTotalVisitors?: number | null
       /**
        * Format: int32
-       * @description maximum number of days notice from the current date to booked a visit
-       * @example 28
-       */
-      policyNoticeDaysMax?: number | null
-      /**
-       * Format: int32
-       * @description minimum number of days notice from the current date to booked a visit
-       * @example 2
-       */
-      policyNoticeDaysMin?: number | null
-      /**
-       * Format: int32
        * @description The limit per prison week, the number of remand visits that can be booked per week
        */
       remandVisitLimitPerWeek?: number | null
@@ -3376,7 +3393,7 @@ export interface components {
        * @example STAFF
        * @enum {string}
        */
-      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+      clientType: 'STAFF' | 'PUBLIC'
     }
     ValidationErrorResponse: {
       validationMessages: string[]
@@ -3705,6 +3722,12 @@ export interface components {
     VisitSessionDto: {
       /**
        * Format: int32
+       * @description Minimum required age for attending the session
+       * @example 18
+       */
+      ageRestriction: number
+      /**
+       * Format: int32
        * @description The count of closed visit bookings already reserved or booked for this session
        * @example 1
        */
@@ -3721,6 +3744,11 @@ export interface components {
        * @example 2020-11-01T14:30:00
        */
       endTimestamp: string
+      /**
+       * @description Determines if the age restriction is enabled for this session
+       * @example true
+       */
+      isAgeRestricted: boolean
       /**
        * Format: int32
        * @description The count of open visit bookings already reserved or booked for this session
@@ -4839,7 +4867,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        type: 'STAFF' | 'PUBLIC'
       }
       cookie?: never
     }
@@ -4897,7 +4925,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        type: 'STAFF' | 'PUBLIC'
       }
       cookie?: never
     }
@@ -5450,7 +5478,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        type: 'STAFF' | 'PUBLIC'
       }
       cookie?: never
     }
@@ -5508,7 +5536,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        type: 'STAFF' | 'PUBLIC'
       }
       cookie?: never
     }
@@ -5728,7 +5756,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        type: 'STAFF' | 'PUBLIC'
       }
       cookie?: never
     }
@@ -6499,7 +6527,7 @@ export interface operations {
          * @description userType
          * @example STAFF
          */
-        userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        userType: 'STAFF' | 'PUBLIC'
         /**
          * @description youngestVisitorAge
          * @example 18
@@ -6583,7 +6611,7 @@ export interface operations {
          * @description userType
          * @example STAFF
          */
-        userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        userType: 'STAFF' | 'PUBLIC'
         /**
          * @description youngestVisitorAge
          * @example 18

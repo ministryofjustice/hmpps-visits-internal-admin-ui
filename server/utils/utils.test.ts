@@ -114,20 +114,20 @@ describe('getPublicClientStatus', () => {
   const sessionTemplateBothActive = TestData.sessionTemplate()
   const sessionTemplateBothInactive = TestData.sessionTemplate({
     clients: [
-      { active: false, userType: 'STAFF' },
-      { active: false, userType: 'PUBLIC' },
+      { active: false, clientType: 'STAFF' },
+      { active: false, clientType: 'PUBLIC' },
     ],
   })
   const sessionTemplatePublicInactive = TestData.sessionTemplate({
     clients: [
-      { active: true, userType: 'STAFF' },
-      { active: false, userType: 'PUBLIC' },
+      { active: true, clientType: 'STAFF' },
+      { active: false, clientType: 'PUBLIC' },
     ],
   })
   const sessionTemplateStaffInactive = TestData.sessionTemplate({
     clients: [
-      { active: false, userType: 'STAFF' },
-      { active: true, userType: 'PUBLIC' },
+      { active: false, clientType: 'STAFF' },
+      { active: true, clientType: 'PUBLIC' },
     ],
   })
 

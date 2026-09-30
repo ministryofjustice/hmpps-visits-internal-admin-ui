@@ -42,8 +42,8 @@ context('Session templates - add', () => {
     permittedLocationGroups: [locationGroupOne, locationGroupTwo],
     sessionDateRange: { validFromDate: '2023-02-01', validToDate: '2024-12-31' },
     clients: [
-      { active: true, userType: 'STAFF' },
-      { active: false, userType: 'PUBLIC' },
+      { active: true, clientType: 'STAFF' },
+      { active: false, clientType: 'PUBLIC' },
     ],
     isAgeRestricted: true,
     ageRestriction: 16,

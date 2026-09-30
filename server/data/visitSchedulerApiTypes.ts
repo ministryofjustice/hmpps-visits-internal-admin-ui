@@ -18,15 +18,15 @@ export type UpdateLocationGroupDto = components['schemas']['UpdateLocationGroupD
 // Prison
 // A prison always has exactly one STAFF client, and optionally one PUBLIC client (SYSTEM / PRISONER are not used)
 export type PrisonUserClientDto = components['schemas']['PrisonUserClientDto']
-export type StaffPrisonUserClientDto = PrisonUserClientDto & { userType: 'STAFF' }
-export type PublicPrisonUserClientDto = PrisonUserClientDto & { userType: 'PUBLIC' }
+export type StaffPrisonUserClientDto = PrisonUserClientDto & { clientType: 'STAFF' }
+export type PublicPrisonUserClientDto = PrisonUserClientDto & { clientType: 'PUBLIC' }
 export type PrisonDto = Omit<components['schemas']['PrisonDto'], 'clients'> & {
   clients:
     | [StaffPrisonUserClientDto]
     | [StaffPrisonUserClientDto, PublicPrisonUserClientDto]
     | [PublicPrisonUserClientDto, StaffPrisonUserClientDto]
 }
-export type UserClientType = components['schemas']['UserClientDto']['userType']
+export type UserClientType = components['schemas']['UserClientDto']['clientType']
 export type UserClientDto = components['schemas']['UserClientDto']
 export type UpdatePrisonDto = components['schemas']['UpdatePrisonDto']
 

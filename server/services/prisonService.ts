@@ -81,7 +81,9 @@ export default class PrisonService {
     const prison: PrisonDto = {
       active: false,
       adultAgeYears: 18,
-      clients: [{ active: true, policyNoticeDaysMax: 28, policyNoticeDaysMin: 2, userType: 'STAFF' }],
+      clients: [
+        { active: true, policyNoticeDaysMax: 28, policyNoticeDaysMin: 2, clientType: 'STAFF', userType: 'STAFF' },
+      ],
       code: prisonCode,
       maxAdultVisitors: 3,
       maxChildVisitors: 3,
@@ -176,11 +178,11 @@ export default class PrisonService {
     }
   }
 
-  private getPrisonUserClient(clients: PrisonUserClientDto[], userType: 'STAFF'): StaffPrisonUserClientDto
+  private getPrisonUserClient(clients: PrisonUserClientDto[], clientType: 'STAFF'): StaffPrisonUserClientDto
 
-  private getPrisonUserClient(clients: PrisonUserClientDto[], userType: 'PUBLIC'): PublicPrisonUserClientDto | null
+  private getPrisonUserClient(clients: PrisonUserClientDto[], clientType: 'PUBLIC'): PublicPrisonUserClientDto | null
 
-  private getPrisonUserClient(clients: PrisonUserClientDto[], userType: 'STAFF' | 'PUBLIC') {
-    return clients.find(client => client.userType === userType) ?? null
+  private getPrisonUserClient(clients: PrisonUserClientDto[], clientType: 'STAFF' | 'PUBLIC') {
+    return clients.find(client => client.clientType === clientType) ?? null
   }
 }

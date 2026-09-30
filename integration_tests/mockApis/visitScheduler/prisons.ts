@@ -87,7 +87,7 @@ export default {
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: <UserClientDto>{ active: true, userType: type },
+        jsonBody: <UserClientDto>{ active: true, clientType: type },
       },
     })
   },
@@ -106,7 +106,7 @@ export default {
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: <UserClientDto>{ active: false, userType: type },
+        jsonBody: <UserClientDto>{ active: false, clientType: type },
       },
     })
   },

@@ -335,6 +335,11 @@ export interface components {
        * @example ABC1234
        */
       userName: string
+      /**
+       * @description The caseload from which the adjustment was made
+       * @example MDI
+       */
+      caseloadId?: string | null
     }
     PrisonerBalanceDto: {
       /**

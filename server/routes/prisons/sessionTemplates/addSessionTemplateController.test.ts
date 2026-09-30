@@ -204,8 +204,8 @@ describe('Add a session template', () => {
         includeLocationGroupType: false,
         locationGroupReferences,
         clients: [
-          { active: true, userType: 'STAFF' },
-          { active: false, userType: 'PUBLIC' },
+          { active: true, clientType: 'STAFF' },
+          { active: false, clientType: 'PUBLIC' },
         ],
         visitOrderRestriction: 'PVO',
         isAgeRestricted: true,

@@ -24,10 +24,10 @@ import {
 import type { Prison } from '../../services/prisonService'
 
 export default class TestData {
-  static userClientDto = ({ active = true, userType = 'STAFF' }: Partial<UserClientDto> = {}): UserClientDto =>
+  static userClientDto = ({ active = true, clientType = 'STAFF' }: Partial<UserClientDto> = {}): UserClientDto =>
     ({
       active,
-      userType,
+      clientType,
     }) as UserClientDto
 
   static staffPrisonUserClientDto = ({
@@ -38,6 +38,7 @@ export default class TestData {
     active,
     policyNoticeDaysMax,
     policyNoticeDaysMin,
+    clientType: 'STAFF',
     userType: 'STAFF',
   })
 
@@ -49,6 +50,7 @@ export default class TestData {
     active,
     policyNoticeDaysMax,
     policyNoticeDaysMin,
+    clientType: 'PUBLIC',
     userType: 'PUBLIC',
   })
 
@@ -56,7 +58,7 @@ export default class TestData {
   static prisonDto = ({
     active = true,
     adultAgeYears = 18,
-    clients = [{ active: true, policyNoticeDaysMax: 28, policyNoticeDaysMin: 2, userType: 'STAFF' }],
+    clients = [this.staffPrisonUserClientDto()],
     code = 'HEI',
     maxAdultVisitors = 3,
     maxChildVisitors = 3,
@@ -195,7 +197,7 @@ export default class TestData {
     visitType = 'SOCIAL',
     weeklyFrequency = 1,
     active = true,
-    clients = [this.userClientDto({ userType: 'PUBLIC' }), this.userClientDto({ userType: 'STAFF' })],
+    clients = [this.userClientDto({ clientType: 'PUBLIC' }), this.userClientDto({ clientType: 'STAFF' })],
     visitOrderRestriction = 'VO_PVO',
     isAgeRestricted = false,
     ageRestriction = null,
@@ -239,7 +241,7 @@ export default class TestData {
     incentiveLevelGroupReferences = [],
     includeLocationGroupType = true,
     locationGroupReferences = [],
-    clients = [this.userClientDto({ userType: 'STAFF' }), this.userClientDto({ userType: 'PUBLIC' })],
+    clients = [this.userClientDto({ clientType: 'STAFF' }), this.userClientDto({ clientType: 'PUBLIC' })],
     visitOrderRestriction = 'VO_PVO',
     isAgeRestricted = false,
     ageRestriction = null,
@@ -276,7 +278,7 @@ export default class TestData {
     incentiveLevelGroupReferences = [TestData.incentiveGroup().reference],
     includeLocationGroupType = true,
     locationGroupReferences = [TestData.locationGroup().reference],
-    clients = [this.userClientDto({ userType: 'PUBLIC' }), this.userClientDto({ userType: 'STAFF' })],
+    clients = [this.userClientDto({ clientType: 'PUBLIC' }), this.userClientDto({ clientType: 'STAFF' })],
     visitOrderRestriction = 'VO_PVO',
     isAgeRestricted = false,
     ageRestriction = null,

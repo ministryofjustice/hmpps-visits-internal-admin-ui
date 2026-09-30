@@ -82,7 +82,7 @@
             ]), rows) %}
 
             {%- for sessionTemplate in sessionTemplates -%}
-              {% set hasPublicClient = (sessionTemplate.clients | selectattr("active") | groupby("userType"))["PUBLIC"] | length %}
+              {% set hasPublicClient = (sessionTemplate.clients | selectattr("active") | groupby("clientType"))["PUBLIC"] | length %}
 
               {% set sessionStatusHtml -%}
                 <ul class="govuk-list">
