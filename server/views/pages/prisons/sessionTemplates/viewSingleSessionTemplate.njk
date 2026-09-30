@@ -1,4 +1,5 @@
 {% extends "partials/layout.njk" %}
+{% from "partials/activeOrInactiveTag.njk" import activeOrInactiveTag %}
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
 {%- from "govuk/components/back-link/macro.njk" import govukBackLink -%}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
@@ -82,10 +83,7 @@
             text: "Status"
           },
           value: {
-            html: govukTag({
-              text: "Active" if sessionTemplate.active == true else "Inactive",
-              classes: "govuk-tag--blue" if sessionTemplate.active else "govuk-tag--grey"
-            }),
+            html: activeOrInactiveTag(sessionTemplate.active),
             classes: "test-template-status"
           },
             classes: "test-template-status"

@@ -1,5 +1,6 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "partials/activeOrInactiveTag.njk" import activeOrInactiveTag %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
 {% from "components/subNavigation.njk" import subNavigation %}
@@ -87,10 +88,7 @@
               {% set sessionStatusHtml -%}
                 <ul class="govuk-list">
                   <li>
-                    {{ govukTag({
-                      text: "Active" if sessionTemplate.active else "Inactive",
-                      classes: "govuk-tag--blue" if sessionTemplate.active else "govuk-tag--grey"
-                    }) }}
+                    {{ activeOrInactiveTag(sessionTemplate.active) }}
                   </li>
 
                   {% if not hasPublicClient %}
