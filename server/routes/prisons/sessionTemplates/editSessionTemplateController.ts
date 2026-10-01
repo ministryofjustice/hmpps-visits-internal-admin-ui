@@ -154,8 +154,8 @@ export default class EditSessionTemplateController {
         includeLocationGroupType: req.body.locationGroupBehaviour !== 'exclude',
         locationGroupReferences: req.body.hasLocationGroups === 'yes' ? req.body.locationGroupReferences : [],
         clients: [
-          { active: true, userType: 'STAFF' },
-          { active: req.body.hideInPublicServices !== 'yes', userType: 'PUBLIC' },
+          { active: true, clientType: 'STAFF' },
+          { active: req.body.hideInPublicServices !== 'yes', clientType: 'PUBLIC' },
         ],
         visitOrderRestriction: req.body.visitOrderRestriction,
         isAgeRestricted: req.body.isAgeRestricted === 'yes',

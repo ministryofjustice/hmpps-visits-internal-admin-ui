@@ -48,12 +48,12 @@
       %}
       {% set prisonClientRows = [] %}
       {% for client in prisonClients %}
-        {% set serviceType = client.userType | lower %}
+        {% set serviceType = client.clientType | lower %}
         {% set prisonClientRows = (prisonClientRows.push([
           {
             html: govukTag({
-              text: client.userType,
-              classes: "govuk-tag--green" if client.userType == "STAFF" else "govuk-tag--purple"
+              text: client.clientType,
+              classes: "govuk-tag--green" if client.clientType == "STAFF" else "govuk-tag--purple"
             }) +
             (" (not enabled)" if not client.active),
             classes: "nowrap",

@@ -81,8 +81,8 @@ describe('Session templates listing page', () => {
     it('should show label if a template is hidden from public services', () => {
       const sessionTemplate = TestData.sessionTemplate({
         clients: [
-          { active: false, userType: 'PUBLIC' },
-          { active: true, userType: 'STAFF' },
+          { active: false, clientType: 'PUBLIC' },
+          { active: true, clientType: 'STAFF' },
         ],
       })
       sessionTemplateService.getSessionTemplates.mockResolvedValue([sessionTemplate])

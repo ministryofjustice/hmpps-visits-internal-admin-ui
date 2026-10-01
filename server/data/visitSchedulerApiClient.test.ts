@@ -8,8 +8,6 @@ import {
   CreateIncentiveGroupDto,
   CreateLocationGroupDto,
   CreateSessionTemplateDto,
-  UserClientDto,
-  UserClientType,
   RequestSessionTemplateVisitStatsDto,
   UpdateLocationGroupDto,
   UpdatePrisonDto,
@@ -149,18 +147,16 @@ describe('visitSchedulerApiClient', () => {
   describe('activatePrisonClientType', () => {
     it('should make call to activate the given client type for the given prison', async () => {
       const prisonCode = 'HEI'
-      const prisonUserClientType: UserClientType = 'STAFF'
-
-      const response: UserClientDto = { active: true, userType: 'STAFF' }
+      const staffPrisonUserClientDto = TestData.staffPrisonUserClientDto()
 
       nock(config.apis.visitScheduler.url)
-        .put(`/admin/prisons/prison/${prisonCode}/client/${prisonUserClientType}/activate`)
+        .put(`/admin/prisons/prison/${prisonCode}/client/STAFF/activate`)
         .matchHeader('authorization', 'Bearer test-system-token')
-        .reply(200, response)
+        .reply(200, staffPrisonUserClientDto)
 
-      const output = await visitSchedulerApiClient.activatePrisonClientType(prisonCode, prisonUserClientType)
+      const output = await visitSchedulerApiClient.activatePrisonClientType(prisonCode, 'STAFF')
 
-      expect(output).toStrictEqual(response)
+      expect(output).toStrictEqual(staffPrisonUserClientDto)
 
       expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
@@ -169,18 +165,16 @@ describe('visitSchedulerApiClient', () => {
   describe('deactivatePrisonClientType', () => {
     it('should make call to deactivate the given client type for the given prison', async () => {
       const prisonCode = 'HEI'
-      const prisonUserClientType: UserClientType = 'STAFF'
-
-      const response: UserClientDto = { active: false, userType: 'STAFF' }
+      const staffPrisonUserClientDto = TestData.staffPrisonUserClientDto({ active: false })
 
       nock(config.apis.visitScheduler.url)
-        .put(`/admin/prisons/prison/${prisonCode}/client/${prisonUserClientType}/deactivate`)
+        .put(`/admin/prisons/prison/${prisonCode}/client/STAFF/deactivate`)
         .matchHeader('authorization', 'Bearer test-system-token')
-        .reply(200, response)
+        .reply(200, staffPrisonUserClientDto)
 
-      const output = await visitSchedulerApiClient.deactivatePrisonClientType(prisonCode, prisonUserClientType)
+      const output = await visitSchedulerApiClient.deactivatePrisonClientType(prisonCode, 'STAFF')
 
-      expect(output).toStrictEqual(response)
+      expect(output).toStrictEqual(staffPrisonUserClientDto)
 
       expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
@@ -329,8 +323,8 @@ describe('visitSchedulerApiClient', () => {
           incentiveLevelGroupReferences: ['-inc~abc~de'],
           locationGroupReferences: ['-loc~abc~de'],
           clients: [
-            { active: true, userType: 'PUBLIC' },
-            { active: true, userType: 'STAFF' },
+            { active: true, clientType: 'PUBLIC' },
+            { active: true, clientType: 'STAFF' },
           ],
           visitOrderRestriction: 'VO_PVO',
           isAgeRestricted: false,

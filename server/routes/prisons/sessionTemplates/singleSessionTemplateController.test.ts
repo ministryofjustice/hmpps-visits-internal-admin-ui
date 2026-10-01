@@ -94,8 +94,8 @@ describe('Single session template page', () => {
       ]
       sessionTemplate.permittedLocationGroups = [{ locations: [], name: 'Location group 1', reference: 'loc-1-ref' }]
       sessionTemplate.clients = [
-        { active: true, userType: 'STAFF' },
-        { active: false, userType: 'PUBLIC' },
+        { active: true, clientType: 'STAFF' },
+        { active: false, clientType: 'PUBLIC' },
       ]
 
       return request(app)

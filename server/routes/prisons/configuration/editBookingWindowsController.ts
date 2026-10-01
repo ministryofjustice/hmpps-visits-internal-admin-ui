@@ -19,8 +19,8 @@ export default class EditBookingWindowsController {
       const { staffPrisonUserClient, publicPrisonUserClient } = prison
       const clients = [staffPrisonUserClient, publicPrisonUserClient].filter(Boolean)
       clients.forEach(client => {
-        minDays[client.userType] = client.policyNoticeDaysMin.toString()
-        maxDays[client.userType] = client.policyNoticeDaysMax.toString()
+        minDays[client.clientType] = client.policyNoticeDaysMin.toString()
+        maxDays[client.clientType] = client.policyNoticeDaysMax.toString()
       })
 
       const formValues = {

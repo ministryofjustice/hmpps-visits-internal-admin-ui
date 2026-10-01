@@ -40,8 +40,8 @@
               html:
                 "Booking windows: " +
                 govukTag({
-                  text: client.userType,
-                  classes: "govuk-tag--green" if client.userType == "STAFF" else "govuk-tag--purple"
+                  text: client.clientType,
+                  classes: "govuk-tag--green" if client.clientType == "STAFF" else "govuk-tag--purple"
                 }) +
                 (" (not enabled)" if not client.active else ""),
               classes: "govuk-fieldset__legend--m"
@@ -56,13 +56,13 @@
               hint: {
                 text: "Enter a minimum value in days"
               },
-              id: "minDays." + client.userType,
-              name: "minDays[" + client.userType + "]",
+              id: "minDays." + client.clientType,
+              name: "minDays[" + client.clientType + "]",
               classes: "govuk-input--width-2",
-              value: formValues.minDays[client.userType],
+              value: formValues.minDays[client.clientType],
               autocomplete: "off",
               spellcheck: false,
-              errorMessage: errors | findError("minDays." + client.userType)
+              errorMessage: errors | findError("minDays." + client.clientType)
             }) }}
 
             {{ govukInput({
@@ -73,13 +73,13 @@
               hint: {
                 text: "Enter a maximum value in days"
               },
-              id: "maxDays." + client.userType,
-              name: "maxDays[" + client.userType + "]",
+              id: "maxDays." + client.clientType,
+              name: "maxDays[" + client.clientType + "]",
               classes: "govuk-input--width-2",
-              value: formValues.maxDays[client.userType],
+              value: formValues.maxDays[client.clientType],
               autocomplete: "off",
               spellcheck: false,
-              errorMessage: errors | findError("maxDays." + client.userType)
+              errorMessage: errors | findError("maxDays." + client.clientType)
             }) }}
 
           {% endcall %}

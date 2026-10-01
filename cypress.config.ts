@@ -13,7 +13,6 @@ import prisons from './integration_tests/mockApis/visitScheduler/prisons'
 import sessionTemplates from './integration_tests/mockApis/visitScheduler/sessionTemplates'
 
 export default defineConfig({
-  allowCypressEnv: false,
   chromeWebSecurity: false,
   fixturesFolder: 'integration_tests/fixtures',
   screenshotsFolder: 'integration_tests/screenshots',

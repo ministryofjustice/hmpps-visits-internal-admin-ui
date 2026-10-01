@@ -1,6 +1,7 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "partials/activeOrInactiveTag.njk" import activeOrInactiveTag %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "partials/prisonClientTags.njk" import prisonClientTags %}
@@ -32,10 +33,7 @@
           attributes: { "data-test": "prison-name" }
         },
         {
-          html: govukTag({
-            text: "Active" if prison.active == true else "Inactive",
-            classes: "govuk-tag--blue" if prison.active else "govuk-tag--grey"
-          }),
+          html: activeOrInactiveTag(prison.active),
           attributes: { "data-test": "prison-status" }
         },
         {

@@ -64,6 +64,6 @@ export const responseErrorToFlashMessages = (error: SanitisedError): FlashErrorM
 }
 
 export const getPublicClientStatus = (sessionTemplate: SessionTemplate): string => {
-  const publicClient = sessionTemplate.clients.find(client => client.userType === 'PUBLIC')
+  const publicClient = sessionTemplate.clients.find(client => client.clientType === 'PUBLIC')
   return publicClient?.active === false ? 'yes' : 'no'
 }

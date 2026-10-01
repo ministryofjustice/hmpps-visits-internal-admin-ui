@@ -8,8 +8,8 @@ context('Session templates - update', () => {
   const prison = TestData.prison()
   const sessionTemplate = TestData.sessionTemplate({
     clients: [
-      { active: true, userType: 'STAFF' },
-      { active: false, userType: 'PUBLIC' },
+      { active: true, clientType: 'STAFF' },
+      { active: false, clientType: 'PUBLIC' },
     ],
     isAgeRestricted: true,
     ageRestriction: 16,
@@ -56,8 +56,8 @@ context('Session templates - update', () => {
       includeLocationGroupType: true,
       locationGroupReferences: [locationGroups.reference],
       clients: [
-        { active: true, userType: 'STAFF' },
-        { active: true, userType: 'PUBLIC' },
+        { active: true, clientType: 'STAFF' },
+        { active: true, clientType: 'PUBLIC' },
       ],
       visitOrderRestriction: 'VO_PVO',
       isAgeRestricted: false,
@@ -76,8 +76,8 @@ context('Session templates - update', () => {
       includeLocationGroupType: true,
       permittedLocationGroups: [locationGroups],
       clients: [
-        { active: true, userType: 'STAFF' },
-        { active: true, userType: 'PUBLIC' },
+        { active: true, clientType: 'STAFF' },
+        { active: true, clientType: 'PUBLIC' },
       ],
       isAgeRestricted: false,
       ageRestriction: null,
