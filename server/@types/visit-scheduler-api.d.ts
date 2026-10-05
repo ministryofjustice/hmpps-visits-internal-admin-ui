@@ -2765,18 +2765,6 @@ export interface components {
       maxTotalVisitors: number
       /**
        * Format: int32
-       * @description maximum number of days notice from the current date to booked a visit
-       * @example 28
-       */
-      policyNoticeDaysMax: number
-      /**
-       * Format: int32
-       * @description minimum number of days notice from the current date to booked a visit
-       * @example 2
-       */
-      policyNoticeDaysMin: number
-      /**
-       * Format: int32
        * @description The limit per prison week, the number of remand visits that can be booked per week
        * @default 3
        */
@@ -2813,13 +2801,6 @@ export interface components {
        * @example 2
        */
       policyNoticeDaysMin: number
-      /**
-       * @deprecated
-       * @description User type
-       * @example STAFF
-       * @enum {string}
-       */
-      userType: 'STAFF' | 'PUBLIC'
     }
     PrisonerAlertCreatedUpdatedNotificationDto: {
       activeAlerts: string[]

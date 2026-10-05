@@ -81,15 +81,11 @@ export default class PrisonService {
     const prison: PrisonDto = {
       active: false,
       adultAgeYears: 18,
-      clients: [
-        { active: true, policyNoticeDaysMax: 28, policyNoticeDaysMin: 2, clientType: 'STAFF', userType: 'STAFF' },
-      ],
+      clients: [{ active: true, policyNoticeDaysMax: 28, policyNoticeDaysMin: 2, clientType: 'STAFF' }],
       code: prisonCode,
       maxAdultVisitors: 3,
       maxChildVisitors: 3,
       maxTotalVisitors: 6,
-      policyNoticeDaysMin: 2,
-      policyNoticeDaysMax: 28,
       remandVisitLimitPerWeek: 3,
       weekStartDay: 'MONDAY',
     }
@@ -168,8 +164,6 @@ export default class PrisonService {
       maxAdultVisitors: prisonDto.maxAdultVisitors,
       maxChildVisitors: prisonDto.maxChildVisitors,
       maxTotalVisitors: prisonDto.maxTotalVisitors,
-      policyNoticeDaysMin: prisonDto.policyNoticeDaysMin,
-      policyNoticeDaysMax: prisonDto.policyNoticeDaysMax,
       remandVisitLimitPerWeek: prisonDto.remandVisitLimitPerWeek,
       weekStartDay: prisonDto.weekStartDay,
       name: this.prisonNames[prisonDto.code] || 'UNKNOWN',

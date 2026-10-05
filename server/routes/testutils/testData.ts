@@ -39,7 +39,6 @@ export default class TestData {
     policyNoticeDaysMax,
     policyNoticeDaysMin,
     clientType: 'STAFF',
-    userType: 'STAFF',
   })
 
   static publicPrisonUserClientDto = ({
@@ -51,7 +50,6 @@ export default class TestData {
     policyNoticeDaysMax,
     policyNoticeDaysMin,
     clientType: 'PUBLIC',
-    userType: 'PUBLIC',
   })
 
   // PrisonDto - raw data from Visit Scheduler
@@ -63,8 +61,6 @@ export default class TestData {
     maxAdultVisitors = 3,
     maxChildVisitors = 3,
     maxTotalVisitors = 6,
-    policyNoticeDaysMin = 2,
-    policyNoticeDaysMax = 28,
     remandVisitLimitPerWeek = 3,
     weekStartDay = 'MONDAY',
   }: Partial<PrisonDto> = {}): PrisonDto =>
@@ -76,8 +72,6 @@ export default class TestData {
       maxAdultVisitors,
       maxChildVisitors,
       maxTotalVisitors,
-      policyNoticeDaysMin,
-      policyNoticeDaysMax,
       remandVisitLimitPerWeek,
       weekStartDay,
     }) as PrisonDto
@@ -108,8 +102,6 @@ export default class TestData {
     maxChildVisitors = 3,
     maxTotalVisitors = 6,
     name = 'Hewell (HMP)',
-    policyNoticeDaysMin = 2,
-    policyNoticeDaysMax = 28,
     remandVisitLimitPerWeek = 3,
     weekStartDay = 'MONDAY',
   }: Partial<Prison> = {}): Prison =>
@@ -123,8 +115,6 @@ export default class TestData {
       maxChildVisitors,
       maxTotalVisitors,
       name,
-      policyNoticeDaysMin,
-      policyNoticeDaysMax,
       remandVisitLimitPerWeek,
       weekStartDay,
     }) as Prison
