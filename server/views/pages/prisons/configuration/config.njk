@@ -5,6 +5,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% set pageHeaderTitle = prison.name %}
 {% set pageTitle = applicationName + " - Configuration - " + pageHeaderTitle %}
@@ -37,9 +38,25 @@
 
       <h2 class="govuk-heading-m">Booking windows</h2>
 
-     <p class="govuk-body">Booking windows are counted in full days. For example, if the minimum window is 2 days and someone makes a request on Monday, the earliest available session will be Thursday (Tuesday and Wednesday are skipped).</p>
+      <h3 class="govuk-heading-s">Staff service</h3>
+      <p>
+        If the minimum window is set to 0 days, visits can be booked on the same day.
+        If the booking window is set to 1 day, visits can be booked the next day.
+      </p>
 
-     <p class="govuk-body">If the minimum window is set to 0 days, visits can be booked for the next day.</p>
+      <h3 class="govuk-heading-s">Public service</h3>
+      <p>
+        The public service uses complete working days (Monday to Friday excluding Bank Holidays).
+      </p>
+      {% call govukDetails({
+        summaryText: "Public service booking window example"
+      }) %}
+        For example, if the public booking window is set to 2 days and a booker attempts
+        to book a visit on a Thursday, the soonest available working day will be the Tuesday of
+        the next week. This is the earliest available next working day as Friday
+        (1st complete working day), Saturday, Sunday (non-working days) and Monday
+        (2nd complete working day) are skipped.
+      {% endcall %}
 
       {# Build prison client rows for booking windows #}
       {% set prisonClients =
@@ -154,7 +171,7 @@
       <hr class="govuk-section-break govuk-section-break--xl">
       <h2 class="govuk-heading-m">Enabled services</h2>
 
-      <p class="govuk-body">Select which services this prison should have enabled.</p>
+      <p>Select which services this prison should have enabled.</p>
 
       <form action="/prisons/{{ prison.code }}/update-enabled-services" data-test="prison-enabled-services-form" method="POST" novalidate>
 
