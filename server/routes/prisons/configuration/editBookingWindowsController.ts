@@ -108,8 +108,8 @@ export default class EditBookingWindowsController {
       body('minDays.PUBLIC')
         .trim()
         .optional()
-        .isInt({ min: 2 })
-        .withMessage('Enter a minimum booking window value of at least 2')
+        .isInt({ min: 1 })
+        .withMessage('Enter a minimum booking window value of at least 1')
         .bail()
         .if(body('maxDays.PUBLIC').exists().isInt())
         .custom((minDays, { req }) => {

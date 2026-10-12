@@ -92,10 +92,10 @@ describe('Prison booking windows edit', () => {
     it('should send valid data to edit booking windows and redirect to view template (STAFF and PUBLIC clients)', () => {
       const updatePrisonDto = TestData.updatePrisonDto({
         clients: [
-          TestData.staffPrisonUserClientDto({ policyNoticeDaysMin: 1, policyNoticeDaysMax: 10 }),
+          TestData.staffPrisonUserClientDto({ policyNoticeDaysMin: 0, policyNoticeDaysMax: 10 }),
           TestData.publicPrisonUserClientDto({
             active: false,
-            policyNoticeDaysMin: 2,
+            policyNoticeDaysMin: 1,
             policyNoticeDaysMax: 15,
           }),
         ],
@@ -103,7 +103,7 @@ describe('Prison booking windows edit', () => {
 
       return request(app)
         .post(baseUrl)
-        .send({ minDays: { STAFF: '1', PUBLIC: '2' }, maxDays: { STAFF: '10', PUBLIC: '15' } })
+        .send({ minDays: { STAFF: '0', PUBLIC: '1' }, maxDays: { STAFF: '10', PUBLIC: '15' } })
         .expect(302)
         .expect('Location', `/prisons/${prison.code}/configuration`)
         .expect(() => {
@@ -184,19 +184,19 @@ describe('Prison booking windows edit', () => {
         })
     })
 
-    it('should set validation errors when PUBLIC min is less than 2', () => {
+    it('should set validation errors when PUBLIC min is less than 1', () => {
       const expectedValidationErrors = [
         expect.objectContaining({
           path: 'minDays.PUBLIC',
-          msg: 'Enter a minimum booking window value of at least 2',
+          msg: 'Enter a minimum booking window value of at least 1',
         }),
       ]
 
-      const expectedFormValues = { minDays: { STAFF: '10', PUBLIC: '1' }, maxDays: { STAFF: '1', PUBLIC: '14' } }
+      const expectedFormValues = { minDays: { STAFF: '10', PUBLIC: '0' }, maxDays: { STAFF: '1', PUBLIC: '14' } }
 
       return request(app)
         .post(baseUrl)
-        .send({ minDays: { STAFF: '10', PUBLIC: '1' }, maxDays: { STAFF: '1', PUBLIC: '14' } })
+        .send({ minDays: { STAFF: '10', PUBLIC: '0' }, maxDays: { STAFF: '1', PUBLIC: '14' } })
         .expect(302)
         .expect('Location', `/prisons/HEI/configuration/booking-windows/edit`)
         .expect(() => {
