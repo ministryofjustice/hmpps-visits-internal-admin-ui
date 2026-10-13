@@ -26,5 +26,4 @@ generic-service:
     FEATURE_AGE_RESTRICTIONS: true
 
 generic-prometheus-alerts:
-  alertSeverity: visits-alerts-nonprod
   businessHoursOnly: true
