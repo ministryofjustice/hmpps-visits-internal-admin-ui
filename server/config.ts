@@ -104,8 +104,6 @@ export default {
   ingressUrl: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
   features: {
-    ageRestrictions: {
-      enabled: get('FEATURE_AGE_RESTRICTIONS', 'false') === 'true',
-    },
+    // Feature flags
   },
 }

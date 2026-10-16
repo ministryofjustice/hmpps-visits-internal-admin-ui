@@ -23,7 +23,5 @@ generic-service:
     NODE_USE_ENV_PROXY: "1"
     APPLICATION_INSIGHTS_NO_STATSBEAT: "true"
 
-    FEATURE_AGE_RESTRICTIONS: true
-
 generic-prometheus-alerts:
   businessHoursOnly: true
