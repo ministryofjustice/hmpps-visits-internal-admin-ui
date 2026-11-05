@@ -23,9 +23,9 @@ The app requires:
 
 It is simplest to use HMPPS Auth dev, in which case no dependencies need to be started locally.
 
-Install dependencies using `npm run setup`, ensuring you are using `node v24.x` and `npm v11.x`
+Install dependencies using `npm ci`, ensuring you are using `node v26.x` and `npm v12.x`
 
-Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json` and the CircleCI build config.
+Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json`.
 
 Using credentials from the dev namespace, create a [`.env`](.env) local settings file:
 ```bash
