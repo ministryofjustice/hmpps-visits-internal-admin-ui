@@ -64,7 +64,6 @@
   },
   "devDependencies": {
     "@ministryofjustice/eslint-config-hmpps": "^1.0.4",
-    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
     "@ministryofjustice/hmpps-precommit-hooks": "3.0.2",
     "@tsconfig/node26": "^26.0.1",
     "@types/bunyan": "^1.8.11",
