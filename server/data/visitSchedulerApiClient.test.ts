@@ -31,6 +31,10 @@ describe('visitSchedulerApiClient', () => {
     jest.resetAllMocks()
   })
 
+  afterAll(() => {
+    nock.restore()
+  })
+
   describe('getAllPrisons', () => {
     it('should return an array of all supported Prisons', async () => {
       const results = TestData.prisonDtos()

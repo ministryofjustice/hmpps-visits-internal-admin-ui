@@ -23,6 +23,10 @@ describe('visitAllocationApiClient', () => {
     jest.resetAllMocks()
   })
 
+  afterAll(() => {
+    nock.restore()
+  })
+
   describe('resetNegativeBalances', () => {
     it('should reset negative visit balances for prisoners in given prison', async () => {
       nock(config.apis.visitAllocation.url)

@@ -21,6 +21,10 @@ describe('prisonRegisterApiClient', () => {
     jest.resetAllMocks()
   })
 
+  afterAll(() => {
+    nock.restore()
+  })
+
   describe('getPrisonNames', () => {
     it('should return all prisons from the Prison Register', async () => {
       const prisonNames = TestData.prisonNames()
