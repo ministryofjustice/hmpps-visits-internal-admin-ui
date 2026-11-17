@@ -29,6 +29,10 @@ describe('bookerRegistryApiClient', () => {
     jest.resetAllMocks()
   })
 
+  afterAll(() => {
+    nock.restore()
+  })
+
   describe('Booker', () => {
     describe('getBookerByReference', () => {
       it('should get booker details for given reference', async () => {
