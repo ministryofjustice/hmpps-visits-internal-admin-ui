@@ -20,6 +20,7 @@ generic-service:
     VISIT_SCHEDULER_API_URL: "https://visit-scheduler-dev.prison.service.justice.gov.uk"
     STAFF_SERVICE_URL: "https://manage-prison-visits-dev.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: DEV
+    LOG_LEVEL: "debug"
 
 generic-prometheus-alerts:
   businessHoursOnly: true
