@@ -116,7 +116,7 @@
   },
   "allowScripts": {
     "@parcel/watcher@2.6.0": true,
-    "cypress@16.2.1": true,
+    "cypress@16.3.0": true,
     "dtrace-provider@0.8.8": false,
     "fsevents@2.3.3": false,
     "unrs-resolver@1.12.2": true
